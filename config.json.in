@@ -1,0 +1,21 @@
+{
+  "services": [
+    { "name": "fanboy-local",
+      "version": "*",
+      "url": "@@FANBOY_LOCAL_URL@@"
+    },
+    { "name": "manger-local",
+      "version": "*",
+      "url": "@@MANGER_LOCAL_URL@@"
+    },
+    { "name": "cloudkit",
+      "version": "*",
+      "url": "@@CLOUDKIT_URL@@"
+    },
+    { "name": "production",
+      "version": "*",
+      "url": "@@URL@@",
+      "secret": "@@SECRET@@"
+    }
+  ]
+}

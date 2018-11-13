@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+set -o xtrace
+
+SOURCE="${BASH_SOURCE[0]}"
+if [[ -h $SOURCE ]]; then
+  SOURCE="$( readlink "$SOURCE" )"
+fi
+
+DIR="$( cd -P "$( dirname "$SOURCE" )/../.." && pwd )"
+
+DEPS=(ola patron manger-kit fanboy-kit feedkit hattr nuke playback skull)
+
+clone() {
+  local host=https://github.com/michaelnisi
+  cd $DIR
+  for var in "${DEPS[@]}"
+  do
+    git clone "$host/${var}"
+  done
+
+}
+
+pull() {
+  for var in "${DEPS[@]}"
+  do
+    cd "${DIR}/${var}"
+    git checkout master
+    git pull
+  done
+}
+
+main() {
+  clone
+  pull
+}
+
+main

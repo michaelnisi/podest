@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -o xtrace
+
+SOURCE="${BASH_SOURCE[0]}"
+if [[ -h $SOURCE ]]; then
+  SOURCE="$( readlink "$SOURCE" )"
+fi
+
+SOURCE_ROOT="${SOURCE_ROOT:-$( cd -P "$( dirname "$SOURCE" )/.." && pwd )}"
+
+PLISTBUDDY=/usr/libexec/PlistBuddy
+INFO_PLIST="$SOURCE_ROOT/Podest/Info.plist"
+SETTINGS_PLIST="$SOURCE_ROOT/Settings.bundle/Root.plist"
+
+VERSION_NUMBER="$($PLISTBUDDY -c 'Print CFBundleShortVersionString' $INFO_PLIST)"
+BUILD_NUMBER="$($PLISTBUDDY -c 'Print CFBundleVersion' $INFO_PLIST)"
+VERSION="$VERSION_NUMBER ($BUILD_NUMBER)"
+
+$PLISTBUDDY -c "Set :PreferenceSpecifiers:4:DefaultValue $VERSION" $SETTINGS_PLIST

@@ -1,0 +1,25 @@
+# Xcode
+
+!default.mode1v3
+!default.mode2v3
+!default.pbxuser
+!default.perspectivev3
+*.hmap
+*.ipa
+*.mode1v3
+*.mode2v3
+*.moved-aside
+*.pbxuser
+*.perspectivev3
+*.playground
+*.xccheckout
+*.xcuserstate
+DerivedData
+build/
+xcuserdata
+
+# Podest
+
+*/config.json
+*/products.json
+.env
