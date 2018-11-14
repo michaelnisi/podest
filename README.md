@@ -1,6 +1,6 @@
 # Podest - Get your podcasts
 
-Podest is a podcast player app for iOS. Download on the [App Store](https://itunes.apple.com/us/app/podest/id794983364) and leave a rating or review to support this project.
+Podest is a podcast player app for iOS making podcasts simple. I’ve written about my motivation [here](https://troubled.pro/2018/10/podest.html). Download the app on the [App Store](https://itunes.apple.com/us/app/podest/id794983364) and leave a rating or review to support this project.
 
 ## Dependencies
 
@@ -21,7 +21,7 @@ Podest is a podcast player app for iOS. Download on the [App Store](https://itun
 
 ## Install
 
-To setup the project for development, cloning repos of dependencies to `../`, do.
+To setup for development, cloning repos of dependencies to `../`, do.
 
 ```
 ./tools/setup
@@ -32,6 +32,8 @@ Then some app configuration files need to be generated. Check the script to see 
 ```
 ./tools/configure
 ```
+
+Build the app using a local Xcode workspace.
 
 ## License
 
