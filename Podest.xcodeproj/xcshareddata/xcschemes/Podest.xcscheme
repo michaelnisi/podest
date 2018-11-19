@@ -58,6 +58,7 @@
       enableASanStackUseAfterReturn = "YES"
       enableThreadSanitizer = "YES"
       enableUBSanitizer = "YES"
+      disableMainThreadChecker = "YES"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
