@@ -66,6 +66,6 @@ OPEN SOURCE
 
 Podest is mostly open source. Find the source code on GitHub:
 
-https://github.com/michaelnisi
+https://github.com/michaelnisi/podest
 
 Follow me on Twitter: @michaelnisi
