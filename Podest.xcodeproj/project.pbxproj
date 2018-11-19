@@ -52,6 +52,7 @@
 		4CD7414D1CCD203A00BA33CE /* init.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD7414C1CCD203A00BA33CE /* init.swift */; };
 		4CE20ACC1A31C66C0052C360 /* SearchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE20ACB1A31C66C0052C360 /* SearchResultsController.swift */; };
 		4CE20AD01A31EAAD0052C360 /* SuggestionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CE20ACF1A31EAAD0052C360 /* SuggestionCell.xib */; };
+		4CE8586D21A16B9D00D206FA /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE8586C21A16B9D00D206FA /* Players.swift */; };
 		4CF21CF22063B0D100169E43 /* PlayerTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C49DF412058319400DC86E6 /* PlayerTransitionDelegate.swift */; };
 		4CF5674C207F362300C77C1D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF5674B207F362300C77C1D /* StoreKit.framework */; };
 		4E180F9A1F8394CC00976A3A /* Nuke.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E180F9B1F8394CC00976A3A /* Nuke.framework */; };
@@ -187,6 +188,7 @@
 		4CD7414C1CCD203A00BA33CE /* init.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = init.swift; sourceTree = "<group>"; };
 		4CE20ACB1A31C66C0052C360 /* SearchResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsController.swift; sourceTree = "<group>"; };
 		4CE20ACF1A31EAAD0052C360 /* SuggestionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SuggestionCell.xib; sourceTree = "<group>"; };
+		4CE8586C21A16B9D00D206FA /* Players.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Players.swift; sourceTree = "<group>"; };
 		4CF5674B207F362300C77C1D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		4E180F9B1F8394CC00976A3A /* Nuke.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Nuke.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E180FA41F83951A00976A3A /* FanboyKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FanboyKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -422,6 +424,15 @@
 			path = tables;
 			sourceTree = "<group>";
 		};
+		4CE8586B21A14EB300D206FA /* root */ = {
+			isa = PBXGroup;
+			children = (
+				4E7F291A1E7D799200E12846 /* RootViewController.swift */,
+				4CE8586C21A16B9D00D206FA /* Players.swift */,
+			);
+			path = root;
+			sourceTree = "<group>";
+		};
 		4E0CF69F1DCB353C005E01F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -479,7 +490,7 @@
 				4CD7414C1CCD203A00BA33CE /* init.swift */,
 				4ED4D4361EA470C90011C28C /* core.swift */,
 				4E8CA7061A126ADB004DE307 /* AppDelegate.swift */,
-				4E7F291A1E7D799200E12846 /* RootViewController.swift */,
+				4CE8586B21A14EB300D206FA /* root */,
 				4CD697041FEBC68600349580 /* queue */,
 				4CD697061FEBC72B00349580 /* search */,
 				4CD697051FEBC6DB00349580 /* episode */,
@@ -799,6 +810,7 @@
 				4C6FB92A204C41A1005C559E /* FileProxyDelegate.swift in Sources */,
 				4C6FB912204679FE005C559E /* FileRepository.swift in Sources */,
 				4C175AA6208AFA26003071CA /* StoreFSM.swift in Sources */,
+				4CE8586D21A16B9D00D206FA /* Players.swift in Sources */,
 				4C351CD11A7F5B7F00C5C88C /* SearchResultsDataSource.swift in Sources */,
 				4E65BB2E1F138BA500C7F1A3 /* UserSyncing.swift in Sources */,
 				4C6FB92C204C41A1005C559E /* FileProxying.swift in Sources */,

@@ -9,16 +9,13 @@
 import FeedKit
 import UIKit
 import os.log
-import Playback
 import AVKit
-import AVFoundation
 import Ola
 
 private let log = OSLog.disabled
 
 /// The root container view controller of this app, composing a split view
-/// controller, with two navigation controllers, and a player view
-/// controller.
+/// controller, with two navigation controllers, and a player view controller.
 class RootViewController: UIViewController {
 
   @IBOutlet var miniPlayerTop: NSLayoutConstraint!
@@ -27,33 +24,45 @@ class RootViewController: UIViewController {
   
   private var svc: UISplitViewController!
   
-  internal var minivc: MiniPlayerController!
-  private var playervc: PlayerViewController?
+  var minivc: MiniPlayerController!
+  var playervc: PlayerViewController?
   
   private var pnc: UINavigationController!
   private var snc: UINavigationController!
   
   weak var getDefaultEntry: Operation?
   
-  /// A stable reference to the queue view controller.
+  /// The singular queue view controller.
   private var qvc: QueueViewController {
-    get {
-      return pnc.viewControllers.first {
-        return $0 is QueueViewController
-      } as! QueueViewController
+    return pnc.viewControllers.first {
+      return $0 is QueueViewController
+    } as! QueueViewController
+  }
+
+  /// The singular episode view controller.
+  var episodeViewController: EpisodeViewController? {
+    guard let nc = svc.isCollapsed ? pnc : snc,
+      let vc = nc.topViewController as? EpisodeViewController else {
+        return nil
     }
+    return vc
+  }
+
+  /// The singular podcast view controller.
+  var listViewController: ListViewController? {
+    return pnc?.topViewController as? ListViewController
   }
   
   /// Hides the mini-player once during the lifetime of this object.
   lazy var hideMiniPlayerOnce: () = hideMiniPlayer(false)
   
-  private var miniPlayerConstant: CGFloat = 0
+  var miniPlayerConstant: CGFloat = 0
   
   /// A reference to the current player transition delegate. Unfortunately, we
   /// need a place to hold on to it.
-  private var playerTransition: PlayerTransitionDelegate?
+  var playerTransition: PlayerTransitionDelegate?
   
-  private struct SimplePlaybackState {
+  struct SimplePlaybackState {
     let entry: Entry
     let isPlaying: Bool
   }
@@ -63,7 +72,7 @@ class RootViewController: UIViewController {
   
   private var _playbackState: SimplePlaybackState?
   
-  private var playbackControlProxy: SimplePlaybackState? {
+  var playbackControlProxy: SimplePlaybackState? {
     get {
       return sQueue.sync {
         if _playbackState == nil {
@@ -190,23 +199,40 @@ extension RootViewController {
 // MARK: - ViewControllers
 
 /// There’s no dedicated presentation model, consider the view controller tree 
-/// as DOM, document object model, or better, application object model. We 
-/// derive state directly from ’ViewControllers’.
+/// as DOM, not a document object model, but an application object model. We
+/// derive state from ’ViewControllers’ or more *privately* from
+/// `RootViewController`.
 extension RootViewController: ViewControllers {
+
+  /// Updates children with `urls` of currently subscribed podcasts.
+  func updateIsSubscribed(using urls: Set<FeedURL>) {
+    os_log("updating is subscribed", log: log, type: .debug)
+
+    for child in pnc.children + snc.children {
+      guard let vc = child as? ListViewController else {
+        continue
+      }
+      vc.updateIsSubscribed(using: urls)
+    }
+  }
+
+  /// Updates children with `guids` of currently enqueued episodes.
+  func updateIsEnqueued(using guids: Set<EntryGUID>) {
+    os_log("updating is enqueued", log: log, type: .debug)
+
+    for child in pnc.children + snc.children {
+      guard let vc = child as? EpisodeViewController else {
+        continue
+      }
+      vc.updateIsEnqueued(using: guids)
+    }
+  }
   
   /// Updates the user’s queue. Doesn’t use UIKit APIs directly, you can call
   /// this from any dispatch queue.
   func update(completionHandler: ((Bool, Error?) -> Void)? = nil) {
     os_log("updating queue", log: log, type: .debug)
     qvc.update(completionHandler: completionHandler)
-  }
-  
-  var episodeViewController: EpisodeViewController? {
-    guard let nc = svc.isCollapsed ? pnc : snc,
-      let vc = nc.topViewController as? EpisodeViewController else {
-      return nil
-    }
-    return vc
   }
   
   /// Reloads queue, missing items might get fetched remotely, but the queue
@@ -340,7 +366,8 @@ extension RootViewController: ViewControllers {
     return evc
   }
 
-  private func makeEpisodeViewController(locator: EntryLocator) -> EpisodeViewController {
+  private func makeEpisodeViewController(
+    locator: EntryLocator) -> EpisodeViewController {
     let evc = initiateEpisodeViewController()
     evc.navigationDelegate = self
     evc.locator = locator
@@ -633,400 +660,4 @@ extension RootViewController: UISplitViewControllerDelegate {
     fatalError("unexpected splitViewController: showDetail")
   }
 }
-
-// MARK: - Players
-
-extension RootViewController: Players {
-  
-  private var miniLayout: NSLayoutConstraint {
-    get {
-      return view.constraints.first {
-        guard $0.isActive else {
-          return false
-        }
-        return $0.identifier == "Mini-Player-Layout-Top" ||
-          $0.identifier == "Mini-Player-Layout-Leading"
-      }!
-    }
-  }
-
-  var miniPlayerEdgeInsets: UIEdgeInsets {
-    get {
-      guard
-        miniLayout.identifier == "Mini-Player-Layout-Top",
-        miniLayout.constant != 0 else {
-        return UIEdgeInsets.zero
-      }
-      let bottom = minivc.view.frame.height - view.safeAreaInsets.bottom
-      return UIEdgeInsets(top: 0, left: 0, bottom: bottom, right: 0)
-    }
-  }
-
-  func hideMiniPlayer(_ animated: Bool) {
-    os_log("hiding mini-player", log: log, type: .debug)
-
-    func done() {
-      minivc.locator = nil
-    }
-    
-    guard animated else {
-      miniPlayerTop.constant = 0
-      miniPlayerBottom.constant = miniPlayerConstant
-      miniPlayerLeading.constant = 0
-      minivc.view.isHidden = true
-      view.layoutIfNeeded()
-      return done()
-    }
-    
-    if miniPlayerTop.isActive {
-      miniPlayerTop.constant = 0
-      miniPlayerBottom.constant = miniPlayerConstant
-      UIView.animate(withDuration: 0.3, animations: {
-        self.view.layoutIfNeeded()
-      }) { ok in
-        self.miniPlayerLeading.constant = 0
-        self.view.layoutIfNeeded()
-        self.minivc.view.isHidden = true
-        done()
-      }
-    } else {
-      miniPlayerLeading.constant = 0
-      UIView.animate(withDuration: 0.3, animations: {
-        self.view.layoutIfNeeded()
-      }) { ok in
-        self.miniPlayerTop.constant = 0
-        self.miniPlayerBottom.constant = self.miniPlayerConstant
-        self.view.layoutIfNeeded()
-        self.minivc.view.isHidden = true
-        done()
-      }
-    }
-  }
-  
-  func showMiniPlayer(_ animated: Bool) {
-    os_log("showing mini-player", log: log, type: .debug)
-
-    minivc.view.isHidden = false
-    
-    guard animated else {
-      os_log("** applying constant: %f",
-             log: log, type: .debug, miniPlayerConstant)
-
-      // Ignorantly setting both, for these are mutually exclusive.
-      miniPlayerLeading.constant = miniPlayerConstant
-      miniPlayerTop.constant = miniPlayerConstant
-
-      miniPlayerBottom.constant = 0
-
-      return view.layoutIfNeeded()
-    }
-
-    let isPortrait = miniPlayerTop.isActive
-    
-    if isPortrait {
-      os_log("animating portrait", log: log, type: .debug)
-
-      self.miniPlayerLeading.constant = self.miniPlayerConstant
-      self.view.layoutIfNeeded()
-      
-      miniPlayerTop.constant = miniPlayerConstant
-      miniPlayerBottom.constant = 0
-
-      UIView.animate(withDuration: 0.3, animations: {
-        self.view.layoutIfNeeded()
-      }) { ok in
-
-      }
-    } else {
-      os_log("animating landscape", log: log, type: .debug)
-
-      self.miniPlayerTop.constant = self.miniPlayerConstant
-      self.miniPlayerBottom.constant = 0
-      self.view.layoutIfNeeded()
-      
-      miniPlayerLeading.constant = miniPlayerConstant
-
-      UIView.animate(withDuration: 0.3, animations: {
-        self.view.layoutIfNeeded()
-      }) { ok in
-
-      }
-    }
-  }
-  
-  func play(_ entry: Entry) {
-    os_log("playing: %@", log: log, type: .debug, entry.title)
-
-    Podest.userQueue.enqueue(entries: [entry], belonging: .user) { enqueued, er in
-      if let error = er {
-        os_log("enqueue error: %{public}@",
-               log: log, type: .error, error as CVarArg)
-      }
-
-      if !enqueued.isEmpty {
-        os_log("enqueued to play: %@", log: log, type: .debug, enqueued)
-      }
-
-      do {
-        try Podest.userQueue.skip(to: entry)
-      } catch {
-        os_log("skip error: %{public}@",
-               log: log, type: .error, error as CVarArg)
-      }
-
-      self.playbackControlProxy = SimplePlaybackState(entry: entry, isPlaying: true)
-
-      Podest.playback.setCurrentEntry(entry)
-      Podest.playback.resume()
-    }
-  }
-  
-  func isPlaying(_ entry: Entry) -> Bool {
-    return Podest.playback.currentEntry == entry
-  }
-  
-  func pause() {
-    Podest.playback.pause()
-  }
-  
-  private static func makeNowPlaying() -> PlayerViewController {
-    let sb = UIStoryboard(name: "Player", bundle: Bundle.main)
-    let vc = sb.instantiateViewController(withIdentifier: "PlayerID")
-      as! PlayerViewController
-    return vc
-  }
-  
-  func showNowPlaying(entry: Entry) {
-    guard let now = playbackControlProxy else {
-      fatalError("need something to play")
-    }
-    
-    assert(entry == now.entry)
-
-    let vc = RootViewController.makeNowPlaying()
-    
-    vc.modalPresentationStyle = .custom
-    vc.navigationDelegate = self
-    
-    playervc = vc
-    
-    // Resetting nowPlaying to trigger updates.
-    playbackControlProxy = now
-
-    playerTransition = PlayerTransitionDelegate()
-    vc.transitioningDelegate = playerTransition
-    
-    present(vc, animated: true) { [weak self] in
-      self?.playerTransition = nil
-    }
-  }
-  
-  func hideNowPlaying(animated flag: Bool, completion: (() -> Void)?) {
-    guard presentedViewController is PlayerViewController else {
-      return
-    }
-    playervc = nil
-    playerTransition = PlayerTransitionDelegate()
-    presentedViewController?.transitioningDelegate = playerTransition
-    dismiss(animated: flag)  { [weak self] in
-      self?.playerTransition = nil
-      completion?()
-    }
-  }
-  
-  func showVideo(player: AVPlayer) {
-    DispatchQueue.main.async {
-      let vc = AVPlayerViewController()
-
-      // Preventing AVPlayerViewController from showing the status bar with
-      // two properties fails. To circumvent, we extend AVPlayerViewController
-      // at the bottom of this class. *
-      vc.modalPresentationCapturesStatusBarAppearance = false
-      vc.modalPresentationStyle = .fullScreen
-
-      vc.updatesNowPlayingInfoCenter = false
-
-      vc.player = player
-      
-      self.present(vc, animated: true) {
-        os_log("presented video player", log: log, type: .debug)
-      }
-    }
-  }
-  
-  func hideVideoPlayer() {
-    DispatchQueue.main.async {
-      guard self.presentedViewController is AVPlayerViewController else {
-        return
-      }
-
-      self.dismiss(animated: true) {
-        os_log("dismissed video player", log: log, type: .debug)
-      }
-    }
-  } 
-  
-}
-
-extension AVPlayerViewController {
-  override open var prefersStatusBarHidden: Bool {
-    let c = UITraitCollection(horizontalSizeClass: .compact)
-    return !traitCollection.containsTraits(in: c)
-  }
-}
-
-// MARK: - PlaybackDelegate
-
-extension RootViewController: PlaybackDelegate {
-  
-  func proxy(url: URL) -> URL? {
-    do {
-      return try Podest.files.url(for: url)
-    } catch {
-      os_log("returning nil: caught file proxy error: %{public}@",
-             log: log, error as CVarArg)
-      return nil
-    }
-  }
-  
-  var isPresentingNowPlaying: Bool {
-    return presentedViewController is PlayerViewController
-  }
-  
-  func playback(session: Playback, didChange state: PlaybackState) {
-    switch state {
-    case .paused(let entry, let error):
-      defer {
-        self.playbackControlProxy = SimplePlaybackState(entry: entry, isPlaying: false)
-      }
-      
-      guard let er = error else {
-        return
-      }
-      
-      let content: (String, String)? = {
-        switch er {
-        case .log, .unknown:
-          fatalError("unexpected error")
-        case .unreachable:
-          return (
-            "You’re Offline",
-            """
-            Your episode – \(entry.title) – can’t be played because you are \
-            not connected to the Internet.
-            
-            Turn off Airplane Mode or connect to Wi-Fi.
-            """
-          )
-//        case .unreachable:
-//          return (
-//            "Unreachable Content",
-//            """
-//            Your episode – \(entry.title) – can’t be played because it’s \
-//            currently unreachable.
-//
-//            Turn off Airplane Mode or connect to Wi-Fi.
-//            """
-//          )
-        case .failed:
-          return (
-            "Playback Error",
-            """
-            Sorry, playback of your episode – \(entry.title) – failed.
-            
-            Try later or, if this happens repeatedly, remove it from your Queue.
-            """
-          )
-        case .media:
-          return (
-            "Strange Data",
-            """
-            Your episode – \(entry.title) – cannot be played.
-            
-            It’s probably best to remove it from your Queue.
-            """
-          )
-        case .surprising(let surprisingError):
-          return (
-            "Interesting Problem",
-            """
-            Your episode – \(entry.title) – is puzzling like that:
-            \(surprisingError)
-            """
-          )
-        case .session:
-          return nil
-        }
-      }()
-      
-      guard let c = content else {
-        return
-      }
-      
-      DispatchQueue.main.async {
-        let alert = UIAlertController(
-          title: c.0, message: c.1, preferredStyle: .alert
-        )
-        
-        let ok = UIAlertAction(title: "OK", style: .default) { _ in
-          alert.dismiss(animated: true)
-        }
-        
-        alert.addAction(ok)
-        
-        // Now Playing or ourselves should be presenting the alert.
-        
-        let presenter = self.isPresentingNowPlaying ?
-          self.presentedViewController : self
-        presenter?.present(alert, animated: true, completion: nil)
-      }
-
-    case .listening(let entry):
-      self.playbackControlProxy = SimplePlaybackState(
-        entry: entry, isPlaying: true)
-      
-    case .preparing(let entry, let shouldPlay):
-      self.playbackControlProxy = SimplePlaybackState(
-        entry: entry, isPlaying: shouldPlay)
-
-    case .viewing(let entry, let player):
-      self.playbackControlProxy = SimplePlaybackState(
-        entry: entry, isPlaying: true)
-      
-      if !isPresentingNowPlaying {
-        self.showVideo(player: player)
-      }
-      
-    case .inactive(let error, let resuming):
-      if let er = error {
-        os_log("session error: %{public}@", log: log, type: .error,
-               er as CVarArg)
-        fatalError(String(describing: er))
-      }
-
-      guard !resuming else {
-        return
-      }
-
-      DispatchQueue.main.async {
-        self.hideMiniPlayer(true)
-      }
-    }
-  }
-
-  func nextItem() -> Entry? {
-    return Podest.userQueue.next()
-  }
-  
-  func previousItem() -> Entry? {
-    return Podest.userQueue.previous()
-  }
-  
-  func dismissVideo() {
-    hideVideoPlayer()
-  }
-  
-}
-
-
 

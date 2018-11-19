@@ -68,15 +68,6 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
     
     assert(observers.isEmpty)
-
-    observers.append(NotificationCenter.default.addObserver(
-      forName: .FKQueueDidChange,
-      object: Podest.userQueue,
-      queue: .main
-    ) { [weak self] notification in
-      dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
-      self?.reload()
-    })
   }
   
   private var invalidated = false
@@ -221,26 +212,30 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
   private var lastTimeFilesHaveBeenRemoved: TimeInterval = 0
 
-  /// Returns a block to check if downloaded files should be removed now, where
-  /// block creation time is used for comparison.
+  /// Returns a block for checking if downloaded files should be removed now,
+  /// where block creation time is used for comparison. It submits its work
+  /// to the main queue, calling the completionBlock from there.
   ///
   /// We do not want to do this IO too often, thus it’s limited to once per day
   /// per uptime, when no new data has been received from the triggering update
   /// and we are in the background.
-  private func makeShouldRemoveBlock() -> (Bool) -> Bool {
+  private func makeShouldRemoveBlock() -> (Bool, @escaping (Bool) -> Void) -> Void {
     let now = Date().timeIntervalSince1970
     let stale = now - lastTimeFilesHaveBeenRemoved > 86400
     
-    return { newData in
-      guard stale,
-        !newData,
-        UIApplication.shared.applicationState == .background else {
-        return false
+    return { newData, completionBlock in
+      DispatchQueue.main.async {
+        guard stale,
+          !newData,
+          UIApplication.shared.applicationState == .background else {
+          return completionBlock(false)
+        }
+
+        self.lastTimeFilesHaveBeenRemoved = now
+
+       completionBlock(true)
       }
 
-      self.lastTimeFilesHaveBeenRemoved = now
-
-      return true
     }
   }
   
@@ -271,15 +266,22 @@ final class QueueDataSource: NSObject, SectionedDataSource {
         // Executes completion block after preloading queue, sometimes removing
         // stale files.
         func preload(forwarding newData: Bool, updateError: Error?) -> Void {
-          let rm = shouldRemove(newData)
+          shouldRemove(newData) { rm in
+            dispatchPrecondition(condition: .onQueue(.main))
 
-          Podest.files.preloadQueue(removingFiles: rm) { error in
-            if let er = error {
-              os_log("queue preloading error: %{public}@",
-                     log: log, type: .debug, er as CVarArg)
-            }
-            DispatchQueue.main.async {
-              completionHandler?(newData, updateError)
+            os_log("preloading queue", log: log, type: .debug)
+
+            DispatchQueue.global().async {
+              Podest.files.preloadQueue(removingFiles: rm) { error in
+                if let er = error {
+                  os_log("queue preloading error: %{public}@",
+                         log: log, type: .debug, er as CVarArg)
+                }
+                DispatchQueue.main.async {
+                  os_log("updating complete", log: log, type: .debug)
+                  completionHandler?(newData, updateError)
+                }
+              }
             }
           }
         }
@@ -302,7 +304,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
             os_log("queue updating complete without data",
                    log: log, type: .debug)
           }
-          
+
           preload(forwarding: newData, updateError: error)
         }
       }

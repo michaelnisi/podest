@@ -264,10 +264,6 @@ final class QueueViewController: UITableViewController, Navigator {
   }
   
   // MARK: - Internals
-  
-  /// Assuming our data source will notify us. Without syncing, we initially
-  /// want to reload.
-  var needsReload = true
 
   // MARK: - Keeping Store Access
 
@@ -391,11 +387,6 @@ extension QueueViewController {
     // due to easier access to the split view controller state.
     searchResultsController.scrollToSelectedRow(animated: true)
     searchResultsController.deselect(isCollapsed: (splitViewController?.isCollapsed)!)
-
-    if needsReload {
-      dataSource.update()
-      needsReload = false
-    }
 
     super.viewDidAppear(animated)
   }

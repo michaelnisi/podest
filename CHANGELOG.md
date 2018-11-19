@@ -10,6 +10,10 @@ Reduce IO by removing stale downloads at more appropriate times.
 
 Better episode summary parsing, correcting spaces, skipping invalid URLs, etc.
 
+Sometimes it was not possible to enqueue an episode. Removing iCloud sync timers resolved this issue. Cleaning this code path, notification observing has been replaced by delegation.
+
+More of this app is open source now https://github.com/michaelnisi/podest
+
 ## 7.9.3 (2018-10-15)
 
 ### Hey there!

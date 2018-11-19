@@ -10,31 +10,36 @@ import CloudKit
 import FeedKit
 import UIKit
 import os.log
-import Playback
-import StoreKit
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "app")
 
+/// Receiving application events, AppDelegate is responsible for global things,
+/// namely triggering of background fetching, iCloud synchronization, and file
+/// downloading, providing a clear view over these central route entry points,
+/// close to their respective event sources.
+///
+/// Do not sync from anywhere else.
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
 
-  /// The root view controller of this app.
-  var root: RootViewController {
+  private var shouldRestoreState = true
+  private var shouldSaveState = true
+
+  /// The **root** view controller of this app.
+  private var root: RootViewController {
     dispatchPrecondition(condition: .onQueue(.main))
     return window?.rootViewController as! RootViewController
   }
 
-  /// Application level observers. Blocks of these observers must not run while
-  /// the app is not active.
+  /// Application level observers must only run while application is active.
   private var observers = [NSObjectProtocol]()
 
-  private var shouldRestoreState = true
-  private var shouldSaveState = true
+  /// `true` while pulling iCloud.
+  private var isPulling = false
 
-  // Offsetting overlaps with these ugly timers.
-  private var pullShot: DispatchSourceTimer? { willSet { pullShot?.cancel() } }
-  private var pushShot: DispatchSourceTimer? { willSet { pushShot?.cancel() } }
+  /// `true` while pushing to iCloud.
+  private var isPushing = false
 }
 
 // MARK: - Interpreting Background Fetch Results
@@ -80,11 +85,21 @@ extension AppDelegate {
   /// Pulls iCloud, integrates new data, and reloads the queue locally to update
   /// views for snapshotting.
   ///
+  /// Pulling has presedence over pushing.
+  ///
   /// - Parameters:
   ///   - completionBlock: The completion block executing on the main queue.
   /// when done.
   private func pull(completionBlock: ((UIBackgroundFetchResult) -> Void)? = nil) {
-    os_log("synchronizing with iCloud", log: log, type: .info)
+    dispatchPrecondition(condition: .onQueue(.main))
+
+    if isPushing {
+      os_log("** pulling iCloud while pushing", log: log)
+    } else {
+      os_log("pulling iCloud", log: log, type: .info)
+    }
+
+    isPulling = true
 
     Podest.iCloud.pull { newData, error in
       let result = AppDelegate.makeBackgroundFetchResult(newData, error)
@@ -99,27 +114,42 @@ extension AppDelegate {
                      log: log, type: .error, er as CVarArg)
             }
             DispatchQueue.main.async {
+              self.isPulling = false
               completionBlock?(result)
             }
           }
         }
       } else {
         DispatchQueue.main.async {
+          self.isPulling = false
           completionBlock?(result)
         }
       }
     }
   }
 
-  /// Pushes user data to iCloud.
+  /// Pushes user data to iCloud. **Must run on the main queue.**
   private func push(completionBlock: (() -> Void)? = nil) {
+    guard !isPulling, !isPushing else {
+      os_log("already syncing", log: log)
+      completionBlock?()
+      return
+    }
+
     os_log("pushing to iCloud", log: log, type: .info)
 
-    Podest.iCloud.push { error in
+    isPushing = true
+
+    Podest.iCloud.push { [weak self] error in
       if let er = error {
         os_log("push failed: %{public}@",
                log: log, type: .error, er as CVarArg)
       }
+
+      DispatchQueue.main.async {
+        self?.isPushing = false
+      }
+
       completionBlock?()
     }
   }
@@ -168,6 +198,13 @@ extension AppDelegate {
            log: log, type: .info, defaults)
 
     UserDefaults.standard.register(defaults: defaults)
+
+    os_log("setting delegates", log: log, type: .debug)
+
+    Podest.userQueue.queueDelegate = self
+    Podest.userLibrary.libraryDelegate = self
+
+    os_log("checking application state", log: log, type: .debug)
 
     switch application.applicationState {
     case .active, .inactive:
@@ -225,11 +262,10 @@ extension AppDelegate {
 
     // Asks root view controller to update (the user queue).
     //
-    // Pulling iCloud from here seems to be not advisable, it seems to prompt
-    // the OS to blacklist us. Confusingly, pushing seems to be fine.
+    // Pulling iCloud from here is not advisable, it gets us blacklisted.
+    // Confusingly, pushing seems acceptable.
     //
-    // 30 seconds of wall-clock time is plenty. Taking too long here traps with
-    // 0x8badf00d.
+    // 30 seconds of wall-clock time! Taking too long traps with 0x8badf00d.
     //
     // https://developer.apple.com/library/content/qa/qa1693/_index.html
 
@@ -296,14 +332,8 @@ extension AppDelegate {
 
     switch subscriptionID {
     case UserDB.subscriptionID:
-      // Receiving one notification per zone and queue and log zone changing
-      // in parallel, we are delaying our reaction to accumulate subsequent
-      // notifcations, arriving soon after.
-      pullShot = setTimeout(delay: .seconds(1), queue: .main) { [weak self] in
-        // Exceptionally passing a handler into the weeds. Don’t do this!
-        self?.pull(completionBlock: completionHandler)
-        self?.pullShot = nil
-      }
+      pull(completionBlock: completionHandler)
+
     default:
       os_log("failing fetch completion: unidentified subscription: %{public}@",
              log: log, type: .error, subscriptionID)
@@ -351,123 +381,31 @@ extension AppDelegate {
 
     os_log("adding observers", log: log, type: .info)
 
-    let nc = NotificationCenter.default
-
-    observers.append(nc.addObserver(
+    observers.append(NotificationCenter.default.addObserver(
       forName: .FKRemoteRequest,
       object: nil,
-      queue: .main) { _ in
-        guard case .active = application.applicationState else {
-          fatalError("application must be active")
-        }
-        Podest.networkActivity.increase()
+      queue: .main
+    ) { _ in
+      precondition(application.applicationState == .active)
+      Podest.networkActivity.increase()
     })
 
-    observers.append(nc.addObserver(
+    observers.append(NotificationCenter.default.addObserver(
       forName: .FKRemoteResponse,
       object: nil,
-      queue: .main) { _ in
-        guard case .active = application.applicationState else {
-          fatalError("application must be active")
-        }
-        Podest.networkActivity.decrease()
-    })
-
-    // MARK: Pushing and Preloading Enclosures
-    //
-    // Inlining pushing and preloading here. The `noSync` setting also disables
-    // queue preloading.
-
-    guard !Podest.settings.noSync else {
-      return
-    }
-
-    observers.append(nc.addObserver(
-      forName: .FKQueueDidChange,
-      object: Podest.userQueue,
       queue: .main
     ) { _ in
-      guard case .active = application.applicationState else {
-        fatalError("application must be active")
-      }
-
-      self.pushShot = setTimeout(delay: .seconds(3), queue: .main) { [weak self] in
-        self?.push()
-        self?.pushShot = nil
-      }
+      precondition(application.applicationState == .active)
+      Podest.networkActivity.decrease()
     })
 
-    observers.append(nc.addObserver(
-      forName: .FKSubscriptionsDidChange,
-      object: Podest.userLibrary,
-      queue: .main
-    ) { _ in
-      guard case .active = application.applicationState else {
-        fatalError("application must be active")
-      }
-
-      self.pushShot = setTimeout(delay: .seconds(3), queue: .main) { [weak self] in
-        self?.push()
-        self?.pushShot = nil
-      }
-    })
-
-    func makeURL(notification: Notification) -> URL? {
-      guard
-        let enclosureURL = notification.userInfo?["enclosureURL"] as? String,
-        let url = URL(string: enclosureURL) else {
-        os_log("received enqueue/dequeue notification without URL",
-               log: log, type: .error)
-        return nil
-      }
-      return url
-    }
-
-    observers.append(nc.addObserver(
-      forName: .FKQueueDidEnqueue,
-      object: Podest.userQueue,
-      queue: .main
-    ) { notification in
-      guard case .active = application.applicationState else {
-        fatalError("application must be active")
-      }
-
-      guard let url = makeURL(notification: notification) else {
-        return
-      }
-
-      os_log("preloading: %{public}@",
-             log: log, type: .info, url as CVarArg)
-
-      Podest.files.preload(url: url)
-    })
-
-    observers.append(nc.addObserver(
-      forName: .FKQueueDidDequeue,
-      object: Podest.userQueue,
-      queue: .main
-    ) { notification in
-      guard case .active = application.applicationState else {
-        fatalError("application must be active")
-      }
-
-      guard let url = makeURL(notification: notification) else {
-        return
-      }
-
-      os_log("cancelling download: %{public}@",
-             log: log, type: .info, url as CVarArg)
-
-      Podest.files.cancel(url: url)
-    })
   }
 
   private func removeObservers() {
     os_log("removing observers", log: log, type: .info)
 
-    let nc = NotificationCenter.default
     for observer in observers {
-      nc.removeObserver(observer)
+      NotificationCenter.default.removeObserver(observer)
     }
 
     observers.removeAll()
@@ -505,16 +443,8 @@ extension AppDelegate {
     closeFiles()
   }
 
-  private func resetTimers() {
-    pushShot = nil
-    pullShot = nil
-  }
-
   func applicationDidBecomeActive(_ application: UIApplication) {
     os_log("did become active", log: log, type: .info)
-
-    // Timers started in the background might still be around.
-    resetTimers()
 
     addObservers(application)
 
@@ -529,6 +459,7 @@ extension AppDelegate {
           }
 
           Podest.networkActivity.decrease()
+          self.isPulling = false
         }
       }
     }
@@ -541,7 +472,9 @@ extension AppDelegate {
 
     guard Podest.iCloud.isAccountStatusKnown else {
       os_log("accessing iCloud", log: log, type: .info)
+
       Podest.networkActivity.increase()
+      isPulling = true
 
       return Podest.iCloud.pull { _, error in
         if let er = error {
@@ -565,10 +498,54 @@ extension AppDelegate {
   }
 
   func applicationWillTerminate(_ application: UIApplication) {
-    // Doesn’t this pass applicationWillResignActive anyways?
     removeObservers()
     flush()
     closeFiles()
+  }
+
+}
+
+/// Handling Library Changes
+
+extension AppDelegate: LibraryDelegate {
+
+  func library(_ library: Subscribing, changed urls: Set<FeedURL>) {
+    DispatchQueue.main.async { [weak self] in
+      self?.root.updateIsSubscribed(using: urls)
+
+      self?.push()
+    }
+  }
+
+}
+
+/// Handling Queue Changes
+
+extension AppDelegate: QueueDelegate {
+
+  func queue(_ queue: Queueing, changed guids: Set<EntryGUID>) {
+    DispatchQueue.main.async { [weak self] in
+      self?.root.updateIsEnqueued(using: guids)
+      self?.root.reload()
+
+      self?.push()
+    }
+  }
+
+  func queue(_ queue: Queueing, enqueued: EntryGUID, enclosure: Enclosure?) {
+    guard let str = enclosure?.url, let url = URL(string: str) else {
+      return
+    }
+
+    Podest.files.preload(url: url)
+  }
+
+  func queue(_ queue: Queueing, dequeued: EntryGUID, enclosure: Enclosure?) {
+    guard let str = enclosure?.url, let url = URL(string: str) else {
+      return
+    }
+
+    Podest.files.cancel(url: url)
   }
 
 }

@@ -38,7 +38,8 @@ final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
       viewIfLoaded?.setNeedsLayout()
     }
   }
-  
+
+  /// `true` if this episode is in the queue.
   var isEnqueued: Bool = false {
     didSet {
       guard navigationItem.rightBarButtonItems == nil ||
@@ -48,6 +49,20 @@ final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
       
       configureNavigationItem()
     }
+  }
+
+  /// Updates the `isEnqueued` property using `enqueued` or the user queue.
+  func updateIsEnqueued(using enqueued: Set<EntryGUID>? = nil) -> Void {
+    guard let e = entry else {
+      return
+    }
+
+    guard let guids = enqueued else {
+      isEnqueued = Podest.userQueue.contains(entry: e)
+      return
+    }
+
+    isEnqueued = guids.contains(e.guid)
   }
 
   /// Returns `true` if neither entry, nor locator have been set.
@@ -116,13 +131,6 @@ final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
     view.addGestureRecognizer(tap)
 
     self.navigationItem.largeTitleDisplayMode = .never
-
-    NotificationCenter.default.addObserver(
-      forName: .FKQueueDidChange,
-      object: Podest.userQueue,
-      queue: .main) { [weak self] notification in
-      self?.updateIsEnqueued()
-    }
   }
 
   private func showMessage(_ msg: NSAttributedString) {
@@ -136,14 +144,6 @@ final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
     view.addSubview(messageView)
 
     messageView.attributedText = msg
-  }
-
-  private func updateIsEnqueued() -> Void {
-    guard let e = entry else {
-      return
-    }
-
-    isEnqueued = Podest.userQueue.contains(entry: e)
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -377,6 +377,10 @@ extension EpisodeViewController {
                  log: log, type: .error, er as CVarArg)
         }
 
+        if dequeued.isEmpty {
+          os_log("** not dequeued", log: log)
+        }
+
         DispatchQueue.main.async {
           viewController?.isEnqueued = !dequeued.contains(entry)
         }
@@ -490,10 +494,14 @@ extension EpisodeViewController {
 
     sender.isEnabled = false
     
-    Podest.userQueue.enqueue(entries: [entry], belonging: .user) { [weak self]
-      enqueued, error in
+    Podest.userQueue.enqueue(entries: [entry], belonging: .user) {
+      [weak self] enqueued, error in
       if let er = error {
         os_log("enqueue error: %{public}@", type: .error, er as CVarArg)
+      }
+
+      if enqueued.isEmpty {
+        os_log("** not enqueued", log: log)
       }
 
       DispatchQueue.main.async {

@@ -1,0 +1,414 @@
+//
+//  Players.swift
+//  Podest
+//
+//  Created by Michael Nisi on 18.11.18.
+//  Copyright © 2018 Michael Nisi. All rights reserved.
+//
+
+import FeedKit
+import UIKit
+import os.log
+import Playback
+import AVKit
+import AVFoundation
+import Ola
+
+private let log = OSLog.disabled
+
+// MARK: - Players
+
+extension RootViewController: Players {
+
+  private var miniLayout: NSLayoutConstraint {
+    get {
+      return view.constraints.first {
+        guard $0.isActive else {
+          return false
+        }
+        return $0.identifier == "Mini-Player-Layout-Top" ||
+          $0.identifier == "Mini-Player-Layout-Leading"
+        }!
+    }
+  }
+
+  var miniPlayerEdgeInsets: UIEdgeInsets {
+    get {
+      guard
+        miniLayout.identifier == "Mini-Player-Layout-Top",
+        miniLayout.constant != 0 else {
+          return UIEdgeInsets.zero
+      }
+      let bottom = minivc.view.frame.height - view.safeAreaInsets.bottom
+      return UIEdgeInsets(top: 0, left: 0, bottom: bottom, right: 0)
+    }
+  }
+
+  func hideMiniPlayer(_ animated: Bool) {
+    os_log("hiding mini-player", log: log, type: .debug)
+
+    func done() {
+      minivc.locator = nil
+    }
+
+    guard animated else {
+      miniPlayerTop.constant = 0
+      miniPlayerBottom.constant = miniPlayerConstant
+      miniPlayerLeading.constant = 0
+      minivc.view.isHidden = true
+      view.layoutIfNeeded()
+      return done()
+    }
+
+    if miniPlayerTop.isActive {
+      miniPlayerTop.constant = 0
+      miniPlayerBottom.constant = miniPlayerConstant
+      UIView.animate(withDuration: 0.3, animations: {
+        self.view.layoutIfNeeded()
+      }) { ok in
+        self.miniPlayerLeading.constant = 0
+        self.view.layoutIfNeeded()
+        self.minivc.view.isHidden = true
+        done()
+      }
+    } else {
+      miniPlayerLeading.constant = 0
+      UIView.animate(withDuration: 0.3, animations: {
+        self.view.layoutIfNeeded()
+      }) { ok in
+        self.miniPlayerTop.constant = 0
+        self.miniPlayerBottom.constant = self.miniPlayerConstant
+        self.view.layoutIfNeeded()
+        self.minivc.view.isHidden = true
+        done()
+      }
+    }
+  }
+
+  func showMiniPlayer(_ animated: Bool) {
+    os_log("showing mini-player", log: log, type: .debug)
+
+    minivc.view.isHidden = false
+
+    guard animated else {
+      os_log("** applying constant: %f",
+             log: log, type: .debug, miniPlayerConstant)
+
+      // Ignorantly setting both, for these are mutually exclusive.
+      miniPlayerLeading.constant = miniPlayerConstant
+      miniPlayerTop.constant = miniPlayerConstant
+
+      miniPlayerBottom.constant = 0
+
+      return view.layoutIfNeeded()
+    }
+
+    let isPortrait = miniPlayerTop.isActive
+
+    if isPortrait {
+      os_log("animating portrait", log: log, type: .debug)
+
+      self.miniPlayerLeading.constant = self.miniPlayerConstant
+      self.view.layoutIfNeeded()
+
+      miniPlayerTop.constant = miniPlayerConstant
+      miniPlayerBottom.constant = 0
+
+      UIView.animate(withDuration: 0.3, animations: {
+        self.view.layoutIfNeeded()
+      }) { ok in
+
+      }
+    } else {
+      os_log("animating landscape", log: log, type: .debug)
+
+      self.miniPlayerTop.constant = self.miniPlayerConstant
+      self.miniPlayerBottom.constant = 0
+      self.view.layoutIfNeeded()
+
+      miniPlayerLeading.constant = miniPlayerConstant
+
+      UIView.animate(withDuration: 0.3, animations: {
+        self.view.layoutIfNeeded()
+      }) { ok in
+
+      }
+    }
+  }
+
+  func play(_ entry: Entry) {
+    os_log("playing: %@", log: log, type: .debug, entry.title)
+
+    Podest.userQueue.enqueue(entries: [entry], belonging: .user) { enqueued, er in
+      if let error = er {
+        os_log("enqueue error: %{public}@",
+               log: log, type: .error, error as CVarArg)
+      }
+
+      if !enqueued.isEmpty {
+        os_log("enqueued to play: %@", log: log, type: .debug, enqueued)
+      }
+
+      do {
+        try Podest.userQueue.skip(to: entry)
+      } catch {
+        os_log("skip error: %{public}@",
+               log: log, type: .error, error as CVarArg)
+      }
+
+      self.playbackControlProxy = SimplePlaybackState(entry: entry, isPlaying: true)
+
+      Podest.playback.setCurrentEntry(entry)
+      Podest.playback.resume()
+    }
+  }
+
+  func isPlaying(_ entry: Entry) -> Bool {
+    return Podest.playback.currentEntry == entry
+  }
+
+  func pause() {
+    Podest.playback.pause()
+  }
+
+  private static func makeNowPlaying() -> PlayerViewController {
+    let sb = UIStoryboard(name: "Player", bundle: Bundle.main)
+    let vc = sb.instantiateViewController(withIdentifier: "PlayerID")
+      as! PlayerViewController
+    return vc
+  }
+
+  func showNowPlaying(entry: Entry) {
+    guard let now = playbackControlProxy else {
+      fatalError("need something to play")
+    }
+
+    assert(entry == now.entry)
+
+    let vc = RootViewController.makeNowPlaying()
+
+    vc.modalPresentationStyle = .custom
+    vc.navigationDelegate = self
+
+    playervc = vc
+
+    // Resetting nowPlaying to trigger updates.
+    playbackControlProxy = now
+
+    playerTransition = PlayerTransitionDelegate()
+    vc.transitioningDelegate = playerTransition
+
+    present(vc, animated: true) { [weak self] in
+      self?.playerTransition = nil
+    }
+  }
+
+  func hideNowPlaying(animated flag: Bool, completion: (() -> Void)?) {
+    guard presentedViewController is PlayerViewController else {
+      return
+    }
+    playervc = nil
+    playerTransition = PlayerTransitionDelegate()
+    presentedViewController?.transitioningDelegate = playerTransition
+    dismiss(animated: flag)  { [weak self] in
+      self?.playerTransition = nil
+      completion?()
+    }
+  }
+
+  func showVideo(player: AVPlayer) {
+    DispatchQueue.main.async {
+      let vc = AVPlayerViewController()
+
+      // Preventing AVPlayerViewController from showing the status bar with
+      // two properties fails. To circumvent, we extend AVPlayerViewController
+      // at the bottom of this class. *
+      vc.modalPresentationCapturesStatusBarAppearance = false
+      vc.modalPresentationStyle = .fullScreen
+
+      vc.updatesNowPlayingInfoCenter = false
+
+      vc.player = player
+
+      self.present(vc, animated: true) {
+        os_log("presented video player", log: log, type: .debug)
+      }
+    }
+  }
+
+  func hideVideoPlayer() {
+    DispatchQueue.main.async {
+      guard self.presentedViewController is AVPlayerViewController else {
+        return
+      }
+
+      self.dismiss(animated: true) {
+        os_log("dismissed video player", log: log, type: .debug)
+      }
+    }
+  }
+
+}
+
+extension AVPlayerViewController {
+  override open var prefersStatusBarHidden: Bool {
+    let c = UITraitCollection(horizontalSizeClass: .compact)
+    return !traitCollection.containsTraits(in: c)
+  }
+}
+
+// MARK: - PlaybackDelegate
+
+extension RootViewController: PlaybackDelegate {
+
+  func proxy(url: URL) -> URL? {
+    do {
+      return try Podest.files.url(for: url)
+    } catch {
+      os_log("returning nil: caught file proxy error: %{public}@",
+             log: log, error as CVarArg)
+      return nil
+    }
+  }
+
+  var isPresentingNowPlaying: Bool {
+    return presentedViewController is PlayerViewController
+  }
+
+  func playback(session: Playback, didChange state: PlaybackState) {
+    switch state {
+    case .paused(let entry, let error):
+      defer {
+        self.playbackControlProxy = SimplePlaybackState(entry: entry, isPlaying: false)
+      }
+
+      guard let er = error else {
+        return
+      }
+
+      let content: (String, String)? = {
+        switch er {
+        case .log, .unknown:
+          fatalError("unexpected error")
+        case .unreachable:
+          return (
+            "You’re Offline",
+            """
+            Your episode – \(entry.title) – can’t be played because you are \
+            not connected to the Internet.
+
+            Turn off Airplane Mode or connect to Wi-Fi.
+            """
+          )
+          //        case .unreachable:
+          //          return (
+          //            "Unreachable Content",
+          //            """
+          //            Your episode – \(entry.title) – can’t be played because it’s \
+          //            currently unreachable.
+          //
+          //            Turn off Airplane Mode or connect to Wi-Fi.
+          //            """
+        //          )
+        case .failed:
+          return (
+            "Playback Error",
+            """
+            Sorry, playback of your episode – \(entry.title) – failed.
+
+            Try later or, if this happens repeatedly, remove it from your Queue.
+            """
+          )
+        case .media:
+          return (
+            "Strange Data",
+            """
+            Your episode – \(entry.title) – cannot be played.
+
+            It’s probably best to remove it from your Queue.
+            """
+          )
+        case .surprising(let surprisingError):
+          return (
+            "Interesting Problem",
+            """
+            Your episode – \(entry.title) – is puzzling like that:
+            \(surprisingError)
+            """
+          )
+        case .session:
+          return nil
+        }
+      }()
+
+      guard let c = content else {
+        return
+      }
+
+      DispatchQueue.main.async {
+        let alert = UIAlertController(
+          title: c.0, message: c.1, preferredStyle: .alert
+        )
+
+        let ok = UIAlertAction(title: "OK", style: .default) { _ in
+          alert.dismiss(animated: true)
+        }
+
+        alert.addAction(ok)
+
+        // Now Playing or ourselves should be presenting the alert.
+
+        let presenter = self.isPresentingNowPlaying ?
+          self.presentedViewController : self
+        presenter?.present(alert, animated: true, completion: nil)
+      }
+
+    case .listening(let entry):
+      self.playbackControlProxy = SimplePlaybackState(
+        entry: entry, isPlaying: true)
+
+    case .preparing(let entry, let shouldPlay):
+      self.playbackControlProxy = SimplePlaybackState(
+        entry: entry, isPlaying: shouldPlay)
+
+    case .viewing(let entry, let player):
+      self.playbackControlProxy = SimplePlaybackState(
+        entry: entry, isPlaying: true)
+
+      if !isPresentingNowPlaying {
+        self.showVideo(player: player)
+      }
+
+    case .inactive(let error, let resuming):
+      if let er = error {
+        os_log("session error: %{public}@", log: log, type: .error,
+               er as CVarArg)
+        fatalError(String(describing: er))
+      }
+
+      guard !resuming else {
+        return
+      }
+
+      DispatchQueue.main.async {
+        self.hideMiniPlayer(true)
+      }
+    }
+  }
+
+  func nextItem() -> Entry? {
+    return Podest.userQueue.next()
+  }
+
+  func previousItem() -> Entry? {
+    return Podest.userQueue.previous()
+  }
+
+  func dismissVideo() {
+    hideVideoPlayer()
+  }
+
+}
+
+
+

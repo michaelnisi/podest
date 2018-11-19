@@ -69,13 +69,27 @@ final class ListViewController: UITableViewController, Navigator {
     }
   }
   
-  var isSubscribed: Bool = false {
+  private var isSubscribed: Bool = false {
     didSet {
       guard isSubscribed != oldValue else {
         return
       }
       configureNavigationItem(url: url!)
     }
+  }
+
+  /// Updates the `isSubscribed` property using `urls` or the user library.
+  func updateIsSubscribed(using urls: Set<FeedURL>? = nil) {
+    guard let url = self.url else {
+      return
+    }
+
+    guard let subscribed = urls else {
+      isSubscribed = Podest.userLibrary.has(subscription: url)
+      return
+    }
+
+    isSubscribed = subscribed.contains(url)
   }
   
   private var isRefreshing: Bool {
@@ -191,16 +205,6 @@ final class ListViewController: UITableViewController, Navigator {
     selectRow(with: entry, animated: animated)
   }
   
-  // MARK: - Notification Callbacks
-
-  private func updateIsSubscribed() {
-    guard let subscribedURL = url else {
-      return
-    }
-
-    isSubscribed = Podest.userLibrary.has(subscription: subscribedURL)
-  }
-  
 }
 
 // MARK: - UIViewController
@@ -275,13 +279,6 @@ extension ListViewController {
     summaryTextView?.isSelectable = false
     
     resetView()
-
-    NotificationCenter.default.addObserver(
-      forName: .FKSubscriptionsDidChange,
-      object: Podest.userLibrary,
-      queue: .main) { [weak self] notification in
-      self?.updateIsSubscribed()
-    }
   }
   
   private func updateIsCompact() {
