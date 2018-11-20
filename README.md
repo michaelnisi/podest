@@ -4,9 +4,10 @@ Podest is a podcast player app for iOS making podcasts simple. I’ve written ab
 
 ## Dependencies
 
-- [fanboy-kit](https://github.com/michaelnisi/fanboy-kit), Query iTunes
+- [fanboy-kit](https://github.com/michaelnisi/fanboy-kit), Search podcasts via proxy
 - [fileproxy](https://github.com/michaelnisi/fileproxy), Manage background downloads
 - [hattr](https://github.com/michaelnisi/hattr), Convert HTML to attributed strings
+- [manger-kit](https://github.com/michaelnisi/manger-kit), Request podcasts via proxy
 - [nuke](https://github.com/michaelnisi/nuke), A powerful image loading and caching system
 - [ola](https://github.com/michaelnisi/ola), Check reachability
 - [patron](https://github.com/michaelnisi/patron), JSON HTTP client
@@ -15,7 +16,6 @@ Podest is a podcast player app for iOS making podcasts simple. I’ve written ab
 ### Yet to be released as open source
 
 - [feedkit](https://github.com/michaelnisi/feedkit), Search and browse RSS feeds
-- [manger-kit](https://github.com/michaelnisi/manger-kit), Request RSS feeds
 - [playback](https://github.com/michaelnisi/playback), Play audio and video
 
 ## Services
