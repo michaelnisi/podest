@@ -11,7 +11,7 @@ import UIKit
 import os.log
 import Ola
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "qvc")
 
 private enum SearchState: Int {
   case dismissed, searching, suggesting

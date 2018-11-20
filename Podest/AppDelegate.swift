@@ -260,15 +260,6 @@ extension AppDelegate {
 
     dispatchPrecondition(condition: .onQueue(.main))
 
-    // Asks root view controller to update (the user queue).
-    //
-    // Pulling iCloud from here is not advisable, it gets us blacklisted.
-    // Confusingly, pushing seems acceptable.
-    //
-    // 30 seconds of wall-clock time! Taking too long traps with 0x8badf00d.
-    //
-    // https://developer.apple.com/library/content/qa/qa1693/_index.html
-
     root.update { newData, error in
       let result = AppDelegate.makeBackgroundFetchResult(newData, error)
 
