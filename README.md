@@ -12,11 +12,8 @@ Podest is a podcast player app for iOS making podcasts simple. I’ve written ab
 - [nuke](https://github.com/michaelnisi/nuke), A powerful image loading and caching system
 - [ola](https://github.com/michaelnisi/ola), Check reachability
 - [patron](https://github.com/michaelnisi/patron), JSON HTTP client
-- [skull](https://github.com/michaelnisi/skull), Swift SQLite
-
-### Yet to be released as open source
-
 - [playback](https://github.com/michaelnisi/playback), Play audio and video
+- [skull](https://github.com/michaelnisi/skull), Swift SQLite
 
 ## Services
 
