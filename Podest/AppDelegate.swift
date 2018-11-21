@@ -199,11 +199,6 @@ extension AppDelegate {
 
     UserDefaults.standard.register(defaults: defaults)
 
-    os_log("setting delegates", log: log, type: .debug)
-
-    Podest.userQueue.queueDelegate = self
-    Podest.userLibrary.libraryDelegate = self
-
     os_log("checking application state", log: log, type: .debug)
 
     switch application.applicationState {
@@ -266,6 +261,7 @@ extension AppDelegate {
       func done() {
         DispatchQueue.main.async {
           if application.applicationState != .active {
+            self.flush()
             self.closeFiles()
           }
           completionHandler(result)
@@ -276,12 +272,16 @@ extension AppDelegate {
         return done()
       }
 
-      // While we are active, an observer takes care of pushing, else we need
-      // to push manually before we are ready to leave.
-      if application.applicationState == .active {
-        done()
-      } else {
-        self.push {
+      // In non-active states pushing manually is required, because we are not
+      // observing queue or library changes. This enables us to execute the
+      // completion block, after pushing to iCloud has been completed. In
+      // background fetching, nothing can run after the completion handler.
+
+      switch application.applicationState {
+      case .active:
+        return done()
+      case .background, .inactive:
+        self.push() {
           done()
         }
       }
@@ -367,10 +367,14 @@ extension AppDelegate {
 
 extension AppDelegate {
 
-  private func addObservers(_ application: UIApplication) {
-    assert(observers.isEmpty)
+  /// Installs this object into the object tree, observing changes, etc.
+  private func install(_ application: UIApplication) {
+    precondition(observers.isEmpty)
 
-    os_log("adding observers", log: log, type: .info)
+    os_log("installing", log: log, type: .info)
+
+    Podest.userQueue.queueDelegate = self
+    Podest.userLibrary.libraryDelegate = self
 
     observers.append(NotificationCenter.default.addObserver(
       forName: .FKRemoteRequest,
@@ -392,8 +396,12 @@ extension AppDelegate {
 
   }
 
-  private func removeObservers() {
-    os_log("removing observers", log: log, type: .info)
+  /// Uninstalls this object from the object tree.
+  private func uninstall() {
+    os_log("uninstalling", log: log, type: .info)
+
+    Podest.userQueue.queueDelegate = nil
+    Podest.userLibrary.libraryDelegate = nil
 
     for observer in observers {
       NotificationCenter.default.removeObserver(observer)
@@ -428,7 +436,7 @@ extension AppDelegate {
   func applicationWillResignActive(_ application: UIApplication) {
     os_log("will resign active", log: log, type: .info)
 
-    removeObservers()
+    uninstall()
     Podest.networkActivity.reset()
     flush()
     closeFiles()
@@ -437,11 +445,9 @@ extension AppDelegate {
   func applicationDidBecomeActive(_ application: UIApplication) {
     os_log("did become active", log: log, type: .info)
 
-    addObservers(application)
+    install(application)
 
     func updateQueue() -> Void {
-      os_log("updating queue", log: log, type: .info)
-
       DispatchQueue.main.async {
         self.root.update { _, error in
           if let er = error {
@@ -489,7 +495,7 @@ extension AppDelegate {
   }
 
   func applicationWillTerminate(_ application: UIApplication) {
-    removeObservers()
+    uninstall()
     flush()
     closeFiles()
   }
