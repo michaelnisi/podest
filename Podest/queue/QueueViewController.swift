@@ -11,7 +11,7 @@ import UIKit
 import os.log
 import Ola
 
-private let log = OSLog(subsystem: "ink.codes.podest", category: "qvc")
+private let log = OSLog.disabled
 
 private enum SearchState: Int {
   case dismissed, searching, suggesting
@@ -40,13 +40,13 @@ final class QueueViewController: UITableViewController, Navigator {
     }
   }
 
-  var isDismissed: Bool { get { return state == .dismissed } }
+  var isDismissed: Bool {
+    return state == .dismissed
+  }
 
   private var term: String? // == searchBar.text?
   private var searchBar: UISearchBar {
-    get {
-      return searchController.searchBar
-    }
+    return searchController.searchBar
   }
 
   private func event(_ e: SearchEvent, term: String?) {

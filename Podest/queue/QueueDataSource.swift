@@ -239,12 +239,14 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     }
   }
   
-  /// Reloads and, minding a timely grace `window`, updates the queue.
-  /// **Always** asks the system to download media files in the background and
-  /// sometimes to remove unnecessary files.
+  /// Reloads the queue to get a starting point for updating and, minding a
+  /// timely grace `window`, an hour or so, updates the queue, checking if new
+  /// episodes are available. In any case asks the system to download enclosed
+  /// media files in the background, preloading episodes. Our fuzzy way of
+  /// preloading in limited batches, fetching all files eventually.
   ///
-  /// Since we are downloading to the cache directory, removing stale files
-  /// should be performed from time to time, but isn’t essential.
+  /// Despite downloading to the cache directory, we are removing stale files
+  /// at appropriate times.
   func update(
     minding window: TimeInterval = 3600,
     completionHandler: ((Bool, Error?) -> Void)? = nil)
@@ -255,21 +257,15 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     let shouldRemove = self.makeShouldRemoveBlock()
     
     func next() {
-      // Reloading first providing a starting point to update from.
       reload { error in
-        // In this block, errors are mostly just logged, not actually handled.
         if let er = error {
           os_log("tolerating queue reloading error: %{public}@",
                  log: log, String(describing: er))
         }
-        
-        // Executes completion block after preloading queue, sometimes removing
-        // stale files.
+
         func preload(forwarding newData: Bool, updateError: Error?) -> Void {
           shouldRemove(newData) { rm in
             dispatchPrecondition(condition: .onQueue(.main))
-
-            os_log("preloading queue", log: log, type: .debug)
 
             DispatchQueue.global().async {
               Podest.files.preloadQueue(removingFiles: rm) { error in
