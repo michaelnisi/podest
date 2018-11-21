@@ -149,11 +149,6 @@ protocol ViewControllers: Players {
   
   func showStore()
   
-  // MARK: Updating
-  
-  /// Updates the Queue.
-  func update(completionHandler: ((Bool, Error?) -> Void)?)
-  
   // MARK: Errors
   
   /// A general error callback for errors that should be handled centrally.
