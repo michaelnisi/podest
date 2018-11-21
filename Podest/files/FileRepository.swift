@@ -245,7 +245,12 @@ extension FileRepository: Downloading {
   }
 
   func flush() {
+    guard probe != nil else {
+      return
+    }
+
     os_log("releasing probe", log: log, type: .debug)
+    
     probe = nil
   }
 
@@ -338,7 +343,7 @@ extension FileRepository: Downloading {
                log: log, type: .error, accErr as CVarArg)
       }
 
-      // We are only removing files, while downloading is possible.
+      // We are only removing files while downloading is possible.
       guard downloading, removingFiles else {
         completionHandler?(er)
         return
@@ -350,12 +355,11 @@ extension FileRepository: Downloading {
         
         try self.fileProxy.removeAll(keeping: urls)
       } catch {
-        // Irrelevant really...
         os_log("removing files caught: %{public}@",
                log: log, error as CVarArg)
       }
       
-      os_log("files removed", log: log, type: .info)
+      os_log("removing files complete", log: log, type: .info)
       self.fileRemovingCount = 16
       completionHandler?(er)
     }
