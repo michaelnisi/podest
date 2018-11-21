@@ -230,15 +230,19 @@ extension RootViewController: ViewControllers {
   
   /// Updates the user’s queue. It’s safe to call this method from anywhere.
   ///
-  /// - Parameter completionHandler: The block to execute when the queue has
+  /// - Parameters:
+  ///   - completionHandler: The block to execute when the queue has
   /// been updated AND the view has been refreshed.
+  ///   - newData: `true` if new data has been received.
+  ///   - error: An error if something went wrong.
   ///
   /// Use this for background fetching, when this completion handler executes,
   /// we are ready for a new snapshot of the UI. This method is allowed 30
   /// seconds of wall-clock time before getting terminated with `0x8badf00d`.
   ///
   /// https://developer.apple.com/library/content/qa/qa1693/_index.html
-  func update(completionHandler: ((Bool, Error?) -> Void)? = nil) {
+  func update(
+    completionHandler: @escaping ((_ newData: Bool, _ error: Error?) -> Void)) {
     os_log("updating queue", log: log, type: .debug)
     qvc.update(completionHandler: completionHandler)
   }
