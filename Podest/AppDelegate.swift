@@ -373,9 +373,6 @@ extension AppDelegate {
 
     os_log("installing", log: log, type: .info)
 
-    Podest.userQueue.queueDelegate = self
-    Podest.userLibrary.libraryDelegate = self
-
     observers.append(NotificationCenter.default.addObserver(
       forName: .FKRemoteRequest,
       object: nil,
@@ -394,6 +391,7 @@ extension AppDelegate {
       Podest.networkActivity.decrease()
     })
 
+    // Deferring setting delegates: applicationDidBecomeActive(_ application:)
   }
 
   /// Uninstalls this object from the object tree.
@@ -456,6 +454,10 @@ extension AppDelegate {
           }
 
           Podest.networkActivity.decrease()
+
+          Podest.userQueue.queueDelegate = self
+          Podest.userLibrary.libraryDelegate = self
+
           self.isPulling = false
         }
       }
