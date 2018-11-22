@@ -1165,13 +1165,13 @@ extension UserClient: UserSyncing {
       guard error == nil else {
         switch error! {
         case QueueingError.outOfSync:
-          os_log("** fetching queue: out of sync", log: log)
+          os_log("fetching queue: out of sync", log: log)
 
           Podest.userQueue.populate(entriesBlock: nil) { error in
             if let er = error {
-              os_log("** fetching queued failed: %@", log: log, er as CVarArg)
+              os_log("fetching queued failed: %@", log: log, er as CVarArg)
             } else {
-              os_log("** fetching queued succeeded", log: log, type: .debug)
+              os_log("fetching queued succeeded", log: log, type: .debug)
             }
 
             completionBlock?()

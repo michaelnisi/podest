@@ -212,6 +212,9 @@ extension FileRepository: Downloading {
   
   func preload(url: URL) {
     DispatchQueue.global().async {
+      os_log("preloading: %{public}@",
+             log: log, type: .debug, url as CVarArg)
+
       do {
         let _ = try self.url(matching: url, streaming: false)
       } catch {
@@ -275,8 +278,6 @@ extension FileRepository: Downloading {
       completionHandler?(nil)
       return
     }
-    
-    os_log("fetching queue", log: log, type: .debug)
     
     var entriesBlockError: Error?
     var acc = [Entry]()

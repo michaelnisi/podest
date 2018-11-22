@@ -533,6 +533,7 @@ extension AppDelegate: QueueDelegate {
 
   func queue(_ queue: Queueing, enqueued: EntryGUID, enclosure: Enclosure?) {
     guard let str = enclosure?.url, let url = URL(string: str) else {
+      os_log("missing enclosure: %{public}@", log: log, type: .error, enqueued)
       return
     }
 
@@ -541,6 +542,7 @@ extension AppDelegate: QueueDelegate {
 
   func queue(_ queue: Queueing, dequeued: EntryGUID, enclosure: Enclosure?) {
     guard let str = enclosure?.url, let url = URL(string: str) else {
+      os_log("missing enclosure: %{public}@", log: log, type: .error, dequeued)
       return
     }
 
