@@ -21,17 +21,17 @@ class RootViewController: UIViewController {
   @IBOutlet var miniPlayerTop: NSLayoutConstraint!
   @IBOutlet var miniPlayerBottom: NSLayoutConstraint!
   @IBOutlet var miniPlayerLeading: NSLayoutConstraint!
-  
+
   private var svc: UISplitViewController!
-  
+
   var minivc: MiniPlayerController!
   var playervc: PlayerViewController?
-  
+
   private var pnc: UINavigationController!
   private var snc: UINavigationController!
-  
+
   weak var getDefaultEntry: Operation?
-  
+
   /// The singular queue view controller.
   private var qvc: QueueViewController {
     return pnc.viewControllers.first {
@@ -52,26 +52,26 @@ class RootViewController: UIViewController {
   var listViewController: ListViewController? {
     return pnc?.topViewController as? ListViewController
   }
-  
+
   /// Hides the mini-player once during the lifetime of this object.
   lazy var hideMiniPlayerOnce: () = hideMiniPlayer(false)
-  
+
   var miniPlayerConstant: CGFloat = 0
-  
+
   /// A reference to the current player transition delegate. Unfortunately, we
   /// need a place to hold on to it.
   var playerTransition: PlayerTransitionDelegate?
-  
+
   struct SimplePlaybackState {
     let entry: Entry
     let isPlaying: Bool
   }
-  
+
   /// An internal serial queue for synchronized access.
   private let sQueue = DispatchQueue(label: "ink.codes.podest.root.serial")
-  
+
   private var _playbackState: SimplePlaybackState?
-  
+
   var playbackControlProxy: SimplePlaybackState? {
     get {
       return sQueue.sync {
@@ -87,16 +87,16 @@ class RootViewController: UIViewController {
     set {
       sQueue.sync {
         _playbackState = newValue
-        
+
         var targets: [PlaybackControlDelegate] = [minivc]
         if let player = playervc {
           targets.append(player)
         }
-        
+
         DispatchQueue.main.async {
           self.showMiniPlayer(true)
         }
-        
+
         guard let now = _playbackState else {
           for t in targets {
             DispatchQueue.main.async {
@@ -105,7 +105,7 @@ class RootViewController: UIViewController {
           }
           return
         }
-        
+
         for t in targets {
           if now.isPlaying {
             DispatchQueue.main.async {
@@ -120,7 +120,7 @@ class RootViewController: UIViewController {
       }
     }
   }
-  
+
 }
 
 // MARK: - UIViewController
@@ -129,45 +129,47 @@ extension RootViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+
     svc = (children.first as! UISplitViewController)
     svc.delegate = self
 
     let ncs = svc.viewControllers as! [UINavigationController]
-    
+
     pnc = ncs.first
     pnc.delegate = self
+    pnc.view.backgroundColor = .white
     pnc.navigationBar.prefersLargeTitles = traitCollection.containsTraits(in:
       UITraitCollection(horizontalSizeClass: .compact))
-    
+
     snc = ncs.last
     snc.delegate = self
-    
+    snc.view.backgroundColor = .white
+
     minivc = (children.last as! MiniPlayerController)
     minivc.navigationDelegate = self
     miniPlayerConstant = miniPlayerTop.constant
-    
+
     qvc.navigationDelegate = self
 
     Podest.playback.delegate = self
-    
+
     // Setting this last for a reason.
     svc.preferredDisplayMode = .allVisible
   }
-  
+
   override func viewDidAppear(_ animated: Bool) {
     let _ = hideMiniPlayerOnce
-    
+
     super.viewDidAppear(animated)
   }
-  
+
   override func encodeRestorableState(with coder: NSCoder) {
     super.encodeRestorableState(with: coder)
-    
+
     coder.encode(svc, forKey: "SplitID")
     coder.encode(minivc, forKey: "MiniPlayerID")
   }
-  
+
   override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
     switch presentedViewController {
     case is AVPlayerViewController:
@@ -175,10 +177,10 @@ extension RootViewController {
     default:
       break
     }
-    
+
     super.dismiss(animated: flag, completion: completion)
   }
-  
+
   override func present(
     _ viewControllerToPresent: UIViewController,
     animated flag: Bool,
@@ -190,7 +192,7 @@ extension RootViewController {
     default:
       break
     }
-    
+
     super.present(
       viewControllerToPresent, animated: flag, completion: completion)
   }
@@ -198,7 +200,7 @@ extension RootViewController {
 
 // MARK: - ViewControllers
 
-/// There’s no dedicated presentation model, consider the view controller tree 
+/// There’s no dedicated presentation model, consider the view controller tree
 /// as DOM, not a document object model, but an application object model. We
 /// derive state from ’ViewControllers’ or more *privately* from
 /// `RootViewController`.
@@ -227,7 +229,7 @@ extension RootViewController: ViewControllers {
       vc.updateIsEnqueued(using: guids)
     }
   }
-  
+
   /// Updates the user’s queue. It’s safe to call this method from anywhere.
   ///
   /// - Parameters:
@@ -246,7 +248,7 @@ extension RootViewController: ViewControllers {
     os_log("updating queue", log: log, type: .debug)
     qvc.update(completionHandler: completionHandler)
   }
-  
+
   /// Reloads queue, missing items might get fetched remotely, but the queue
   /// isn’t updated, to save time. Use `update(completionHandler:)` to update.
   func reload(completionBlock: ((Error?) -> Void)? = nil) {
@@ -256,38 +258,38 @@ extension RootViewController: ViewControllers {
         os_log("reloading queue completed with error: %{public}@",
                log: log, er as CVarArg)
       }
-      
+
       os_log("updating views", log: log, type: .debug)
-      
+
       // View controllers should communicate clearly if they require their
       // APIs to be called on the main queue. Here, we don’t know.
-      
+
       DispatchQueue.main.async {
         self.playervc?.isForwardable = Podest.userQueue.isForwardable
         self.playervc?.isBackwardable = Podest.userQueue.isBackwardable
-        
+
         guard let evc = self.episodeViewController, let entry = evc.entry else {
           completionBlock?(error)
           return
         }
-        
+
         evc.isEnqueued = Podest.userQueue.contains(entry: entry)
         completionBlock?(error)
       }
     }
   }
-  
+
   func showStore() {
     os_log("showing store", log: log, type: .debug)
     let vc = svc.storyboard?.instantiateViewController(withIdentifier:
       "StoreReferenceID") as! UINavigationController
     present(vc, animated: true)
   }
-  
+
   func viewController(_ viewController: UIViewController, error: Error) {
     os_log("error: %{public}@, from: %{public}@", log: log,
            error as CVarArg, viewController)
-    
+
     switch viewController {
     case minivc:
       hideMiniPlayer(true)
@@ -295,12 +297,12 @@ extension RootViewController: ViewControllers {
       break
     }
   }
-  
+
   func resignSearch() {
     os_log("resigning search", log: log, type: .debug)
     qvc.resignFirstResponder()
   }
-  
+
   var feed: Feed? {
     get {
       guard let vc = pnc.topViewController as? ListViewController else {
@@ -322,7 +324,7 @@ extension RootViewController: ViewControllers {
 
     pnc.pushViewController(vc, animated: true)
   }
-  
+
   /// The currently selected entry. **Note** the distinction between displayed
   /// `entry` and `selectedEntry`.
   fileprivate var selectedEntry: Entry? {
@@ -390,28 +392,28 @@ extension RootViewController: ViewControllers {
     matching entry: Entry, viewController: T?) {
     viewController?.selectRow(with: entry, animated: false, scrollPosition: .middle)
   }
-  
+
   func show(entry: Entry) {
     os_log("showing entry: %{public}@", log: log, type: .debug, entry.description)
-    
+
     func go() {
       guard entry != self.entry else {
         return
       }
-      
+
       let evc = self.makeEpisodeViewController(entry: entry)
-      
+
       if self.svc.isCollapsed {
         self.pnc.pushViewController(evc, animated: true)
       } else {
         self.snc.setViewControllers([evc], animated: false)
       }
     }
-    
+
     guard isPresentingNowPlaying else {
       return go()
     }
-    
+
     switch pnc.topViewController {
     case let tvc as ListViewController:
       RootViewController.selectRow(matching: entry, viewController: tvc)
@@ -420,7 +422,7 @@ extension RootViewController: ViewControllers {
     default:
       break
     }
-    
+
     hideNowPlaying(animated: true) {
       go()
     }
@@ -430,11 +432,11 @@ extension RootViewController: ViewControllers {
     guard url != feed?.url else {
       return
     }
-    
+
     let browser = Podest.browser
-    
+
     var potentialFeed: Feed?
-    
+
     browser.feeds([url], ttl: .forever, feedsBlock: { error, feeds in
       guard error == nil else {
         fatalError()
@@ -463,7 +465,7 @@ extension RootViewController: ViewControllers {
   /// - Returns: Returns `true` if the URL has been successfully interpreted.
   func open(url: URL) -> Bool {
     os_log("opening: %{public}@", log: log, type: .debug, url as CVarArg)
-    
+
     switch url.host {
     case "feed":
       let comps = URLComponents(url: url, resolvingAgainstBaseURL: false)
@@ -496,13 +498,13 @@ extension RootViewController: UINavigationControllerDelegate {
   ) {
     os_log("navigationController willShow: %{public}@",
            log: log, type: .debug, viewController)
-    
+
     getDefaultEntry?.cancel()
 
     if var vc = viewController as? Navigator {
       vc.navigationDelegate = self
     }
-  
+
     if navigationController == pnc {
       switch viewController {
       case let vc as EpisodeViewController:
@@ -532,33 +534,33 @@ extension RootViewController: UINavigationControllerDelegate {
       }
     }
   }
-  
+
 }
 
 // MARK: - UISplitViewControllerDelegate
 
 extension RootViewController: UISplitViewControllerDelegate {
-  
+
   /// Resigns first responder on all view controllers in this tree.
   private func resignFirstResponders() {
     os_log("resigning first responders", log: log, type: .debug)
-    
+
     for nc in svc.viewControllers {
       for vc in nc.children {
         vc.resignFirstResponder()
       }
     }
   }
-  
+
   // MARK: Responding to Display Mode Changes
-  
+
   func splitViewController(
     _ svc: UISplitViewController,
     willChangeTo displayMode: UISplitViewController.DisplayMode
   ) {
     resignFirstResponders()
   }
-  
+
   // MARK: Collapsing and Expanding the Interface
 
   /// Returns view controllers of the collapsed primary view controller,
@@ -595,9 +597,9 @@ extension RootViewController: UISplitViewControllerDelegate {
   ) -> UIViewController? {
     os_log("primaryViewController forCollapsing",
            log: log, type: .debug)
-    
+
     assert(snc.topViewController is EpisodeViewController)
-    
+
     if let qvc = pnc.visibleViewController as? QueueViewController,
       !qvc.isDismissed {
       // Don’t interrupt searching, stick with the queue, don’t flip to the
@@ -606,7 +608,7 @@ extension RootViewController: UISplitViewControllerDelegate {
     }
 
     let vcs = viewControllers(forPrimaryCollapsed: pnc.viewControllers)
-    
+
     if let entry = self.entry ?? self.selectedEntry {
       let evc = makeEpisodeViewController(entry: entry)
       pnc.setViewControllers(vcs + [evc], animated: false)
@@ -627,7 +629,7 @@ extension RootViewController: UISplitViewControllerDelegate {
   ) -> Bool {
     os_log("splitViewController collapseSecondary onto primaryViewController",
            log: log, type: .debug)
-    
+
     return true
   }
 
@@ -637,7 +639,7 @@ extension RootViewController: UISplitViewControllerDelegate {
   ) -> UIViewController? {
     os_log("splitViewController separateSecondaryFrom primaryViewController",
            log: log, type: .debug)
-    
+
     if let entry = self.selectedEntry {
       let evc = makeEpisodeViewController(entry: entry)
       snc.setViewControllers([evc], animated: false)
@@ -650,12 +652,12 @@ extension RootViewController: UISplitViewControllerDelegate {
 
     let vcs = viewControllers(forPrimaryCollapsed: pnc.viewControllers)
     pnc.setViewControllers(vcs, animated: false)
-    
+
     return snc
   }
-  
+
   // MARK: Overriding the Presentation Behavior
-  
+
   func splitViewController(
     _ splitViewController: UISplitViewController,
     show vc: UIViewController,
@@ -663,7 +665,7 @@ extension RootViewController: UISplitViewControllerDelegate {
   ) -> Bool {
     fatalError("unexpected splitViewController: show")
   }
-  
+
   func splitViewController(
     _ splitViewController: UISplitViewController,
     showDetail vc: UIViewController,
