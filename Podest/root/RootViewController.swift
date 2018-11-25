@@ -16,7 +16,12 @@ private let log = OSLog.disabled
 
 /// The root container view controller of this app, composing a split view
 /// controller, with two navigation controllers, and a player view controller.
-class RootViewController: UIViewController {
+/// The `RootViewController` is mainly a proxy between components and, with its
+/// overseeing vista, supervises naigation and layout.
+///
+/// This class should be simple and stable glue code. More complex and dynamic
+/// things should be extracted, aiming for below 600 LOC.
+final class RootViewController: UIViewController {
 
   @IBOutlet var miniPlayerTop: NSLayoutConstraint!
   @IBOutlet var miniPlayerBottom: NSLayoutConstraint!
@@ -205,79 +210,6 @@ extension RootViewController {
 /// derive state from ’ViewControllers’ or more *privately* from
 /// `RootViewController`.
 extension RootViewController: ViewControllers {
-
-  /// Updates children with `urls` of currently subscribed podcasts.
-  func updateIsSubscribed(using urls: Set<FeedURL>) {
-    os_log("updating is subscribed", log: log, type: .debug)
-
-    for child in pnc.children + snc.children {
-      guard let vc = child as? ListViewController else {
-        continue
-      }
-      vc.updateIsSubscribed(using: urls)
-    }
-  }
-
-  /// Updates children with `guids` of currently enqueued episodes.
-  func updateIsEnqueued(using guids: Set<EntryGUID>) {
-    os_log("updating is enqueued", log: log, type: .debug)
-
-    for child in pnc.children + snc.children {
-      guard let vc = child as? EpisodeViewController else {
-        continue
-      }
-      vc.updateIsEnqueued(using: guids)
-    }
-  }
-
-  /// Updates the user’s queue. It’s safe to call this method from anywhere.
-  ///
-  /// - Parameters:
-  ///   - completionHandler: The block to execute when the queue has
-  /// been updated AND the view has been refreshed.
-  ///   - newData: `true` if new data has been received.
-  ///   - error: An error if something went wrong.
-  ///
-  /// Use this for background fetching, when this completion handler executes,
-  /// we are ready for a new snapshot of the UI. This method is allowed 30
-  /// seconds of wall-clock time before getting terminated with `0x8badf00d`.
-  ///
-  /// https://developer.apple.com/library/content/qa/qa1693/_index.html
-  func update(
-    completionHandler: @escaping ((_ newData: Bool, _ error: Error?) -> Void)) {
-    os_log("updating queue", log: log, type: .debug)
-    qvc.update(completionHandler: completionHandler)
-  }
-
-  /// Reloads queue, missing items might get fetched remotely, but the queue
-  /// isn’t updated, to save time. Use `update(completionHandler:)` to update.
-  func reload(completionBlock: ((Error?) -> Void)? = nil) {
-    os_log("reloading queue", log: log, type: .debug)
-    qvc.reload { error in
-      if let er = error {
-        os_log("reloading queue completed with error: %{public}@",
-               log: log, er as CVarArg)
-      }
-
-      os_log("updating views", log: log, type: .debug)
-
-      // View controllers should communicate clearly if they require their
-      // APIs to be called on the main queue. Here, we don’t know.
-
-      DispatchQueue.main.async {
-        self.playervc?.isForwardable = Podest.userQueue.isForwardable
-        self.playervc?.isBackwardable = Podest.userQueue.isBackwardable
-
-        guard let evc = self.episodeViewController, let entry = evc.entry else {
-          completionBlock?(error)
-          return
-        }
-
-        evc.isEnqueued = Podest.userQueue.contains(entry: entry)
-        completionBlock?(error)
-      }
-    }
-  }
 
   func showStore() {
     os_log("showing store", log: log, type: .debug)
@@ -482,6 +414,68 @@ extension RootViewController: ViewControllers {
       return false
     }
   }
+}
+
+// MARK: - Accessing User Library and Queue
+
+extension RootViewController: UserProxy {
+
+  func updateIsSubscribed(using urls: Set<FeedURL>) {
+    os_log("updating is subscribed", log: log, type: .debug)
+
+    for child in pnc.children + snc.children {
+      guard let vc = child as? ListViewController else {
+        continue
+      }
+      vc.updateIsSubscribed(using: urls)
+    }
+  }
+
+  func updateIsEnqueued(using guids: Set<EntryGUID>) {
+    os_log("updating is enqueued", log: log, type: .debug)
+
+    for child in pnc.children + snc.children {
+      guard let vc = child as? EpisodeViewController else {
+        continue
+      }
+      vc.updateIsEnqueued(using: guids)
+    }
+  }
+
+  func update(
+    completionHandler: @escaping ((_ newData: Bool, _ error: Error?) -> Void)) {
+    os_log("updating queue", log: log, type: .debug)
+    qvc.update(completionHandler: completionHandler)
+  }
+
+  func reload(completionBlock: ((Error?) -> Void)? = nil) {
+    os_log("reloading queue", log: log, type: .debug)
+    qvc.reload { error in
+      if let er = error {
+        os_log("reloading queue completed with error: %{public}@",
+               log: log, er as CVarArg)
+      }
+
+      os_log("updating views", log: log, type: .debug)
+
+      // View controllers should communicate clearly if they require their
+      // APIs to be called on the main queue. Here, we don’t know.
+
+      DispatchQueue.main.async {
+        self.playervc?.isForwardable = Podest.userQueue.isForwardable
+        self.playervc?.isBackwardable = Podest.userQueue.isBackwardable
+
+        guard let evc = self.episodeViewController, let entry = evc.entry else {
+          completionBlock?(error)
+          return
+        }
+
+        evc.isEnqueued = Podest.userQueue.contains(entry: entry)
+        completionBlock?(error)
+      }
+    }
+  }
+
 }
 
 // MARK: - UINavigationControllerDelegate

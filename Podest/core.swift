@@ -166,6 +166,37 @@ protocol ViewControllers: Players {
   func resignSearch()
 }
 
+/// Defines a callback interface to the user library and queue.
+protocol UserProxy {
+
+  /// Updates children with `urls` of currently subscribed podcasts.
+  func updateIsSubscribed(using urls: Set<FeedURL>)
+
+  /// Updates children with `guids` of currently enqueued episodes.
+  func updateIsEnqueued(using guids: Set<EntryGUID>)
+
+  /// Updates the user’s queue. It’s safe to call this method from anywhere.
+  ///
+  /// - Parameters:
+  ///   - completionHandler: The block to execute when the queue has
+  /// been updated AND the view has been refreshed.
+  ///   - newData: `true` if new data has been received.
+  ///   - error: An error if something went wrong.
+  ///
+  /// Use this for background fetching, when this completion handler executes,
+  /// we are ready for a new snapshot of the UI. This method is allowed 30
+  /// seconds of wall-clock time before getting terminated with `0x8badf00d`.
+  ///
+  /// [QA](https://developer.apple.com/library/content/qa/qa1693/_index.html)
+  func update(
+    completionHandler: @escaping ((_ newData: Bool, _ error: Error?) -> Void))
+
+  /// Reloads queue, missing items might get fetched remotely, but the queue
+  /// isn’t updated, to save time. Use `update(completionHandler:)` to update.
+  func reload(completionBlock: ((Error?) -> Void)?)
+
+}
+
 /// Defines `ViewControllers` users.
 protocol Navigator {
   var navigationDelegate: ViewControllers? { get set }
