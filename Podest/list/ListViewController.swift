@@ -108,11 +108,15 @@ final class ListViewController: UITableViewController, Navigator {
       guard let f = feed else {
         fatalError("ListViewController: feed cannot be nil")
       }
-      
-      _url = feed?.url
-      isSubscribed = Podest.userLibrary.has(subscription: f.url)
 
       feedChanged = f != oldValue || f.summary != oldValue?.summary
+
+      guard feedChanged else {
+        return
+      }
+
+      _url = feed?.url
+      updateIsSubscribed()
     }
   }
   
