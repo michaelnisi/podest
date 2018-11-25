@@ -306,20 +306,19 @@ final class QueueDataSource: NSObject, SectionedDataSource {
       }
     }
     
-    // For simulators not receiving remote notifications, during
-    // pull-to-refresh, we pull iCloud manually, making testing while
-    // working on sync less erratic.
+    // For simulators, not receiving remote notifications, we are pulling
+    // iCloud manually to make working on sync less erratic.
     
     #if arch(i386) || arch(x86_64)
     guard window <= 60 else {
       return next()
     }
 
-    os_log("** pulling iCloud in simulator", log: log, type: .debug)
+    os_log("** simulating iCloud pull", log: log)
 
     Podest.iCloud.pull { newData, error in
       if let er = error {
-        os_log("pulling iCloud failed: %{public}@",
+        os_log("** simulated iCloud pull failed: %{public}@",
                log: log, er as CVarArg)
       }
       next()

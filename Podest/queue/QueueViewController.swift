@@ -345,6 +345,7 @@ extension QueueViewController {
     tableView.prefetchDataSource = dataSource
     separatorInsetLeft = tableView.separatorInset.left
 
+
     // Setting the delegate first to make sure the store is in `interested` or
     // `subscribed` state to handle incoming transaction updates correctly.
     Podest.store.subscriberDelegate = self
@@ -376,7 +377,7 @@ extension QueueViewController {
     clearsSelectionOnViewWillAppear = (
       isCollapsed || isDifferent || isNotDismissed
     )
-    
+
     super.viewWillAppear(animated)
   }
 
@@ -387,6 +388,12 @@ extension QueueViewController {
     // due to easier access to the split view controller state.
     searchResultsController.scrollToSelectedRow(animated: true)
     searchResultsController.deselect(isCollapsed: (splitViewController?.isCollapsed)!)
+
+    // If the data source is empty, it’s this view’s initial appearance or the
+    // queue is actually empty and thus inexpensive to reload.
+    if dataSource.isEmpty {
+      dataSource.reload()
+    }
 
     super.viewDidAppear(animated)
   }
