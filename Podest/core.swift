@@ -175,7 +175,7 @@ protocol UserProxy {
   /// Updates children with `guids` of currently enqueued episodes.
   func updateIsEnqueued(using guids: Set<EntryGUID>)
 
-  /// Updates the user’s queue. It’s safe to call this method from anywhere.
+  /// Updates the user’s queue. **Must run on any dispatch queue.**
   ///
   /// - Parameters:
   ///   - completionHandler: The block to execute when the queue has
@@ -191,8 +191,10 @@ protocol UserProxy {
   func update(
     completionHandler: @escaping ((_ newData: Bool, _ error: Error?) -> Void))
 
-  /// Reloads queue, missing items might get fetched remotely, but the queue
-  /// isn’t updated, to save time. Use `update(completionHandler:)` to update.
+  /// Reloads queue, missing items might get fetched remotely, but saving time
+  /// the queue doesn’t get updated.
+  ///
+  /// Use `update(completionHandler:)` to update, which includes reloading.
   func reload(completionBlock: ((Error?) -> Void)?)
 
 }
