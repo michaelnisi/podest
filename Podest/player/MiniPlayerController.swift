@@ -91,6 +91,7 @@ Navigator, PlaybackControlDelegate {
       }
 
       locator = EntryLocator(entry: entry)
+      view.isHidden = false
 
       Podest.userQueue.enqueue(entries: [entry]) { enqueued, error in
         if let er = error {
@@ -176,6 +177,8 @@ Navigator, PlaybackControlDelegate {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+
+    view.isHidden = true
 
     view.sendSubviewToBack(titleLabel)
     insertEffect(below: titleLabel)
