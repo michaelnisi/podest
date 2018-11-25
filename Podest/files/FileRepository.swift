@@ -14,11 +14,25 @@ import Ola
 private let log = OSLog(subsystem: "ink.codes.podest", category: "files")
 
 final class FileRepository: NSObject {
-  
+
   private let userQueue: Queueing
-  
-  init(userQueue: Queueing) {
+  private let downloadMaximum: Int
+  private let removeMaximum: Int
+
+  /// Creates a new file repository.
+  ///
+  /// - Parameters:
+  ///   - userQueue: A user’s queue.
+  ///   - downloadMaximum: Limits download requests per batch (64).
+  ///   - removeMaximum: Limits file deltetions per batch (16).
+  init(
+    userQueue: Queueing,
+    downloadMaximum: Int = 64,
+    removeMaximum: Int = 16
+  ) {
     self.userQueue = userQueue
+    self.downloadMaximum = downloadMaximum
+    self.removeMaximum = removeMaximum
   }
   
   // MARK: Synchronized Access
@@ -87,8 +101,26 @@ final class FileRepository: NSObject {
     }
   }
 
-  /// Counts the number of files removed at once, limited to 16.
-  private var fileRemovingCount = 16
+  private var _fileRemovingCount: Int = 0
+
+  private func isBelowRemoveMaximum() -> Bool {
+    return sQueue.sync {
+      guard _fileRemovingCount < removeMaximum else {
+        return false
+      }
+      _fileRemovingCount = _fileRemovingCount + 1
+      return true
+    }
+  }
+
+  @discardableResult
+  private func resetRemoveCount() -> Int {
+    return sQueue.sync {
+      let oldValue = _fileRemovingCount
+      _fileRemovingCount = 0
+      return oldValue
+    }
+  }
 
 }
 
@@ -309,26 +341,18 @@ extension FileRepository: Downloading {
         }
         return URL(string: string)
       }
-      
-      // This is a heavy loop, limiting concurrent downloads to the first 64,
-      // for no particular reason really, relying on URLSession for doing the
-      // right thing. It’s just that after a fat sync, the queue can get really
-      // long, it’s not limited, so some arbitrary limit makes sense here, I
-      // guess. Initializing background ad infinitum doesn’t sound like a good
-      // idea, does it?
-      
-      let max = 64
-      var count = 0
+
+      var count = self.downloadMaximum
       
       for url in urls {
-        guard count < max else {
+        guard count > 0 else {
           os_log("aborting queue preloading: too many files", log: log)
           break
         }
         
         do {
           if !(try self.fileProxy.url(matching: url)).isFileURL {
-            count = count + 1
+            count = count - 1
           }
         } catch {
           proxyError = error
@@ -344,24 +368,25 @@ extension FileRepository: Downloading {
                log: log, type: .error, accErr as CVarArg)
       }
 
-      // We are only removing files while downloading is possible.
+      // We are only removing files while downloading new ones is possible.
       guard downloading, removingFiles else {
         completionHandler?(er)
         return
       }
       
       do {
-        os_log("removing files except: %{public}@",
-               log: log, type: .debug, urls)
+        os_log("removing all but: %{public}i",
+               log: log, type: .debug, urls.count)
         
         try self.fileProxy.removeAll(keeping: urls)
       } catch {
         os_log("removing files caught: %{public}@",
                log: log, error as CVarArg)
       }
-      
-      os_log("removing files complete", log: log, type: .info)
-      self.fileRemovingCount = 16
+
+      let removed = self.resetRemoveCount()
+      os_log("removed: %{public}i", log: log, type: .info, removed)
+
       completionHandler?(er)
     }
   }
@@ -382,14 +407,10 @@ extension FileRepository: FileProxyDelegate {
   func validate(_ proxy: FileProxying, removing url: URL, modified: Date) -> Bool {
     let stale = modified.timeIntervalSinceNow < 3600 * 24 * -3
 
-    guard fileRemovingCount > 0, stale else {
-      os_log("not removing: ( %i, %i )", log: log, type: .debug,
-             fileRemovingCount, stale)
-
+    guard isBelowRemoveMaximum(), stale else {
       return false
     }
 
-    fileRemovingCount = fileRemovingCount - 1
     os_log("removing: %@", log: log, type: .debug, url as CVarArg)
     return true
   }
