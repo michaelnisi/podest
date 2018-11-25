@@ -32,11 +32,15 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     return window?.rootViewController as! RootViewController
   }
 
-  /// Application level observers must only run while application is active.
-  private var observers = [NSObjectProtocol]()
-
   /// `true` while pulling iCloud.
-  private var isPulling = false
+  private var isPulling = false {
+    didSet {
+      dispatchPrecondition(condition: .onQueue(.main))
+      isPulling ?
+        Podest.networkActivity.increase() :
+        Podest.networkActivity.decrease()
+    }
+  }
 
   /// `true` while pushing to iCloud.
   private var isPushing = false
@@ -367,45 +371,20 @@ extension AppDelegate {
 
 extension AppDelegate {
 
-  /// Installs this object into the object tree, observing changes, etc.
+  /// Installs this object into our domain.
   private func install(_ application: UIApplication) {
-    precondition(observers.isEmpty)
-
     os_log("installing", log: log, type: .info)
 
-    observers.append(NotificationCenter.default.addObserver(
-      forName: .FKRemoteRequest,
-      object: nil,
-      queue: .main
-    ) { _ in
-      precondition(application.applicationState == .active)
-      Podest.networkActivity.increase()
-    })
-
-    observers.append(NotificationCenter.default.addObserver(
-      forName: .FKRemoteResponse,
-      object: nil,
-      queue: .main
-    ) { _ in
-      precondition(application.applicationState == .active)
-      Podest.networkActivity.decrease()
-    })
-
-    // Deferring setting delegates: applicationDidBecomeActive(_ application:)
+    Podest.userQueue.queueDelegate = self
+    Podest.userLibrary.libraryDelegate = self
   }
 
-  /// Uninstalls this object from the object tree.
+  /// Uninstalls this object from our domain.
   private func uninstall() {
     os_log("uninstalling", log: log, type: .info)
 
     Podest.userQueue.queueDelegate = nil
     Podest.userLibrary.libraryDelegate = nil
-
-    for observer in observers {
-      NotificationCenter.default.removeObserver(observer)
-    }
-
-    observers.removeAll()
   }
 
   private func closeFiles() {
@@ -443,8 +422,6 @@ extension AppDelegate {
   func applicationDidBecomeActive(_ application: UIApplication) {
     os_log("did become active", log: log, type: .info)
 
-    install(application)
-
     func updateQueue() -> Void {
       DispatchQueue.main.async {
         self.root.update { _, error in
@@ -453,34 +430,24 @@ extension AppDelegate {
                    log: log, er as CVarArg)
           }
 
-          Podest.networkActivity.decrease()
-
-          Podest.userQueue.queueDelegate = self
-          Podest.userLibrary.libraryDelegate = self
-
+          self.install(application)
           self.isPulling = false
         }
       }
     }
 
-    // We are updating the queue before leaving this scope.
-
-    guard !Podest.settings.noSync else {
-      return updateQueue()
-    }
-
     guard Podest.iCloud.isAccountStatusKnown else {
       os_log("accessing iCloud", log: log, type: .info)
 
-      Podest.networkActivity.increase()
-      isPulling = true
+      self.isPulling = true
 
-      return Podest.iCloud.pull { _, error in
+      Podest.iCloud.pull { _, error in
         if let er = error {
           os_log("iCloud: %{public}@", log: log, String(describing: er))
         }
         updateQueue()
       }
+      return
     }
 
     updateQueue()
