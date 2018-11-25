@@ -221,16 +221,19 @@ private final class Services: Decodable {
   }
 }
 
-/// Development settings for the app override user defaults.
+/// Additional **development** settings may override user defaults.
 struct Settings {
 
-  /// Disables iCloud syncing.
+  /// Despite disabling iCloud in Settings.app makes the better, more realistic,
+  /// environment, this argument can be used during development. Passing `true`
+  /// produces a NOP iCloud client at initialization time.
   let noSync: Bool
 
-  /// Removes local caches, losing all data.
+  /// Removes local caches for starting over.
   let flush: Bool
 
-  /// Prevents automatic downloading of media files.
+  /// Prevents automatic downloading of media files. Good for quick sessions in
+  /// simulators, where background downloads may be pointless.
   let noDownloading: Bool
 
 }
@@ -344,6 +347,10 @@ final private class Config {
   fileprivate lazy var user: UserLibrary = try! self.freshUserLibrary()
 
   fileprivate func makeUserClient() -> UserSyncing {
+    guard !settings.noSync else {
+      return NoUserClient()
+    }
+
     let host = service("cloudkit", at: "*")!.url
     guard let probe = Ola(host: host) else {
       fatalError("could not init probe: \(host)")

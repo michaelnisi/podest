@@ -646,7 +646,7 @@ extension UserClient {
       return .temporary(locator, timestamp, iTunes)
     }
     switch owner {
-    case .nobody:
+    case .nobody, .subscriber:
       return .temporary(locator, timestamp, iTunes)
     case .user:
       return .pinned(locator, timestamp, iTunes)
@@ -1190,7 +1190,7 @@ extension UserClient: UserSyncing {
     @escaping (_ newData: Bool, _ error: Error?) -> Void) {
     queue.addOperation {
       os_log("pulling from iCloud", log: log, type: .debug)
-
+      
       let status = self.reach()
       guard status == .reachable || status == .cellular else {
         return completionHandler(false, FeedKitError.offline)
@@ -1367,4 +1367,32 @@ extension UserClient {
   }
 
 }
+
+// MARK: - NOP
+
+/// A user client that does nothing.
+class NoUserClient: UserSyncing {
+
+  var isAccountStatusKnown: Bool {
+    os_log("claiming account status: no sync", log: log)
+    return true
+  }
+
+  func pull(completionHandler: @escaping (
+    _ newData: Bool, _ error: Error?) -> Void) {
+    os_log("not pulling: no sync", log: log)
+    completionHandler(false, nil)
+  }
+
+  func push(completionHandler: @escaping (_ error: Error?) -> Void) {
+    os_log("not pushing: no sync", log: log)
+    completionHandler(nil)
+  }
+
+  func resetAccountStatus() {
+    os_log("not resetting account status: no sync", log: log)
+  }
+
+}
+
 

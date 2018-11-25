@@ -117,5 +117,4 @@ protocol UserSyncing {
   
   /// Resets the currently in-memory cached account status.
   func resetAccountStatus()
-  
 }
