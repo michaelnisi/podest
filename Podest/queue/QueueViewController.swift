@@ -598,14 +598,14 @@ extension QueueViewController: EntryRowSelectable {}
 
 extension QueueViewController: EntryProvider {
 
-  /// The entry of the selected row, the first entry of the data source, or
-  /// `nil`.
+  /// Couple of options here, the currently selected entry, the entry in the
+  /// player, the first entry in the queue, or `nil`.
   var entry: Entry? {
-    get {
-      let indexPath = tableView.indexPathForSelectedRow ??
-        IndexPath(row: 0, section: 0)
-      return dataSource.entry(at: indexPath)
+    guard let indexPath = tableView.indexPathForSelectedRow else {
+      return Podest.playback.currentEntry ??
+        dataSource.entry(at: IndexPath(row: 0, section: 0))
     }
+    return dataSource.entry(at: indexPath)
   }
 
 }
