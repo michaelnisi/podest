@@ -10,9 +10,8 @@ import FeedKit
 import UIKit
 import os.log
 import AVKit
-import Ola
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "root")
 
 /// The root container view controller of this app, composing a split view
 /// controller, with two navigation controllers, and a player view controller.
@@ -205,10 +204,6 @@ extension RootViewController {
 
 // MARK: - ViewControllers
 
-/// There’s no dedicated presentation model, consider the view controller tree
-/// as DOM, not a document object model, but an application object model. We
-/// derive state from ’ViewControllers’ or more *privately* from
-/// `RootViewController`.
 extension RootViewController: ViewControllers {
 
   func showStore() {
@@ -335,10 +330,23 @@ extension RootViewController: ViewControllers {
 
       let evc = self.makeEpisodeViewController(entry: entry)
 
-      if self.svc.isCollapsed {
+      // So far an ongoing investigation shows that after display mode
+      // changes, while the video player is presented, the split view controller
+      // doesn’t report isCollapsed correctly, hence the additional checking of
+      // of the secondary’s children. I hate this, but I don’t know better yet.
+      // More analysis required.
+
+      let isCollapsed = snc.children.isEmpty || svc.isCollapsed
+
+      if isCollapsed {
+        os_log("pushing view controller: %{public}@",
+               log: log, type: .debug, evc)
         self.pnc.pushViewController(evc, animated: true)
       } else {
-        self.snc.setViewControllers([evc], animated: false)
+        let vcs = [evc]
+        os_log("setting view controllers: %{public}@",
+               log: log, type: .debug, vcs)
+        self.snc.setViewControllers(vcs, animated: false)
       }
     }
 
@@ -490,7 +498,7 @@ extension RootViewController: UINavigationControllerDelegate {
     willShow viewController: UIViewController,
     animated: Bool
   ) {
-    os_log("navigationController willShow: %{public}@",
+    os_log("navigationController: willShow: %{public}@",
            log: log, type: .debug, viewController)
 
     getDefaultEntry?.cancel()
@@ -552,22 +560,27 @@ extension RootViewController: UISplitViewControllerDelegate {
     _ svc: UISplitViewController,
     willChangeTo displayMode: UISplitViewController.DisplayMode
   ) {
+    os_log("splitViewController: willChangeTo: %{public}@",
+           log: log, type: .debug, String(describing: displayMode))
+
     resignFirstResponders()
   }
 
   // MARK: Collapsing and Expanding the Interface
 
-  /// Returns view controllers of the collapsed primary view controller,
-  /// embezzling episodes, and making sure every list gets an URL and no two
-  /// consecutive lists have the same URL.
+  /// Returns view controllers for the primary view controller, embezzling
+  /// episodes, making sure every list has a URL, and no two consecutive lists
+  /// have the same URL.
   ///
-  /// - Parameter vcs: The source view controllers to choose from.
+  /// - Parameter source: The source view controllers to choose from.
   ///
   /// - Returns: The resulting children of the primary view controller.
-  private func viewControllers(
-    forPrimaryCollapsed vcs: [UIViewController]
-  ) -> [UIViewController] {
-    let (_, vcs) = vcs.reduce(("", [UIViewController]())) { acc, vc in
+  private func viewControllersForPrimary(
+    reducing source: [UIViewController])-> [UIViewController] {
+    os_log("reducing for primary: %{public}@",
+           log: log, type: .debug, source)
+
+    let (_, vcs) = source.reduce(("", [UIViewController]())) { acc, vc in
       let (url, vcs) = acc
       switch vc {
       case let ls as ListViewController:
@@ -583,25 +596,19 @@ extension RootViewController: UISplitViewControllerDelegate {
       }
     }
 
+    os_log("reduced for primary: %{public}@",
+           log: log, type: .debug, vcs)
+
     return vcs
   }
 
   func primaryViewController(
     forCollapsing splitViewController: UISplitViewController
   ) -> UIViewController? {
-    os_log("primaryViewController forCollapsing",
-           log: log, type: .debug)
+    os_log("primaryViewController: forCollapsing: %{public}@",
+           log: log, type: .debug, splitViewController)
 
-    assert(snc.topViewController is EpisodeViewController)
-
-    if let qvc = pnc.visibleViewController as? QueueViewController,
-      !qvc.isDismissed {
-      // Don’t interrupt searching, stick with the queue, don’t flip to the
-      // current episode.
-      return pnc
-    }
-
-    let vcs = viewControllers(forPrimaryCollapsed: pnc.viewControllers)
+    let vcs = viewControllersForPrimary(reducing: pnc.viewControllers)
 
     if let entry = self.entry ?? self.selectedEntry {
       let evc = makeEpisodeViewController(entry: entry)
@@ -621,8 +628,19 @@ extension RootViewController: UISplitViewControllerDelegate {
     collapseSecondary secondaryViewController: UIViewController,
     onto primaryViewController: UIViewController
   ) -> Bool {
-    os_log("splitViewController collapseSecondary onto primaryViewController",
-           log: log, type: .debug)
+    os_log("splitViewController: collapseSecondary: onto: %{public}@",
+           log: log, type: .debug, primaryViewController)
+
+    guard
+      let nc = secondaryViewController as? UINavigationController,
+      nc.topViewController is EpisodeViewController,
+      nc == snc else {
+      os_log("not collapsible: unexpected secondary: %{public}@",
+             log: log, type: .error, secondaryViewController)
+      fatalError()
+    }
+
+    nc.setViewControllers([], animated: false)
 
     return true
   }
@@ -631,8 +649,8 @@ extension RootViewController: UISplitViewControllerDelegate {
     _ splitViewController: UISplitViewController,
     separateSecondaryFrom primaryViewController: UIViewController
   ) -> UIViewController? {
-    os_log("splitViewController separateSecondaryFrom primaryViewController",
-           log: log, type: .debug)
+    os_log("splitViewController: separateSecondaryFrom: %{public}@",
+           log: log, type: .debug, primaryViewController)
 
     if let entry = self.selectedEntry {
       let evc = makeEpisodeViewController(entry: entry)
@@ -644,7 +662,7 @@ extension RootViewController: UISplitViewControllerDelegate {
       os_log("separating without entry", log: log, type: .error)
     }
 
-    let vcs = viewControllers(forPrimaryCollapsed: pnc.viewControllers)
+    let vcs = viewControllersForPrimary(reducing: pnc.viewControllers)
     pnc.setViewControllers(vcs, animated: false)
 
     return snc
@@ -657,7 +675,7 @@ extension RootViewController: UISplitViewControllerDelegate {
     show vc: UIViewController,
     sender: Any?
   ) -> Bool {
-    fatalError("unexpected splitViewController: show")
+    fatalError("unexpected delegation")
   }
 
   func splitViewController(
@@ -665,7 +683,7 @@ extension RootViewController: UISplitViewControllerDelegate {
     showDetail vc: UIViewController,
     sender: Any?
   ) -> Bool {
-    fatalError("unexpected splitViewController: showDetail")
+    fatalError("unexpected delegation")
   }
 }
 
