@@ -175,7 +175,9 @@ protocol UserProxy {
   /// Updates children with `guids` of currently enqueued episodes.
   func updateIsEnqueued(using guids: Set<EntryGUID>)
 
-  /// Updates the user’s queue. **Must run on any dispatch queue.**
+  /// Updates the user’s queue including downloading, encapsulated into a
+  /// stand-alone operation with a callback block, designed for background
+  /// fetching.
   ///
   /// - Parameters:
   ///   - completionHandler: The block to execute when the queue has

@@ -276,10 +276,11 @@ extension AppDelegate {
         return done()
       }
 
-      // In non-active states pushing manually is required, because we are not
-      // observing queue or library changes. This enables us to execute the
-      // completion block, after pushing to iCloud has been completed. In
-      // background fetching, nothing can run after the completion handler.
+      // In non-active states, being uninstalled, pushing manually is required,
+      // because we are not observing queue or library changes. This allows us
+      // to execute the completion block after pushing to iCloud, a requirement
+      // of the background fetching, nothing must run after the completion
+      // handler.
 
       switch application.applicationState {
       case .active:
@@ -371,7 +372,7 @@ extension AppDelegate {
 
 extension AppDelegate {
 
-  /// Installs this object into our domain.
+  /// Installs this object into the object tree (of our domain).
   private func install(_ application: UIApplication) {
     os_log("installing", log: log, type: .info)
 
@@ -379,7 +380,7 @@ extension AppDelegate {
     Podest.userLibrary.libraryDelegate = self
   }
 
-  /// Uninstalls this object from our domain.
+  /// Uninstalls this object from the object tree.
   private func uninstall() {
     os_log("uninstalling", log: log, type: .info)
 
