@@ -14,7 +14,7 @@ Sometimes it was not possible to enqueue an episode. Removing iCloud sync timers
 
 Flipping the device between portrait and landscape while playing video would sometimes impair navigation, I’m happy to report that this annoyance has been resolved.
 
-100% open source https://github.com/michaelnisi/podest
+All open source https://github.com/michaelnisi/podest
 
 ## 7.9.3 (2018-10-15)
 
