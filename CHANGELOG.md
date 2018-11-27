@@ -2,7 +2,7 @@
 
 ### Files Fly
 
-This patch contains bug fixes and small improvements.
+100% open source, bug fixes, and small improvements.
 
 Prevent rare crash during background downloading by correctly invalidating reachability probes.
 
