@@ -94,10 +94,8 @@ extension RootViewController: Players {
       os_log("** applying constant: %f",
              log: log, type: .debug, miniPlayerConstant)
 
-      // Ignorantly setting both, for these are mutually exclusive.
       miniPlayerLeading.constant = miniPlayerConstant
       miniPlayerTop.constant = miniPlayerConstant
-
       miniPlayerBottom.constant = 0
 
       return view.layoutIfNeeded()
@@ -108,31 +106,15 @@ extension RootViewController: Players {
     if isPortrait {
       os_log("animating portrait", log: log, type: .debug)
 
-      self.miniPlayerLeading.constant = self.miniPlayerConstant
-      self.view.layoutIfNeeded()
-
+      miniPlayerLeading.constant = miniPlayerConstant
       miniPlayerTop.constant = miniPlayerConstant
       miniPlayerBottom.constant = 0
-
-      UIView.animate(withDuration: 0.3, animations: {
-        self.view.layoutIfNeeded()
-      }) { ok in
-
-      }
     } else {
       os_log("animating landscape", log: log, type: .debug)
 
-      self.miniPlayerTop.constant = self.miniPlayerConstant
-      self.miniPlayerBottom.constant = 0
-      self.view.layoutIfNeeded()
-
+      miniPlayerTop.constant = miniPlayerConstant
+      miniPlayerBottom.constant = 0
       miniPlayerLeading.constant = miniPlayerConstant
-
-      UIView.animate(withDuration: 0.3, animations: {
-        self.view.layoutIfNeeded()
-      }) { ok in
-
-      }
     }
   }
 
@@ -250,6 +232,7 @@ extension RootViewController: Players {
 
 }
 
+/// *
 extension AVPlayerViewController {
   override open var prefersStatusBarHidden: Bool {
     let c = UITraitCollection(horizontalSizeClass: .compact)
