@@ -1,10 +1,10 @@
 # Keywords
 
-pod,pods,podcast,podcasts,podcatcher,radio,browser,player,audio,video,watch,listen,tv,queue
+audio,browser,catcher,listen,player,pod,podcast,podcasts,podcatcher,pods,queue,radio,tv,video,watch
 
 # Promotional Text
 
-100% open source! Four-week free trial! Full version for one year via in-app purchase, with three favorable prices to choose from. Download the app for details.
+Four-week free trial! Full version for one year via in-app purchase, with three favorable prices to choose from. Download the app for details.
 
 # Description
 
