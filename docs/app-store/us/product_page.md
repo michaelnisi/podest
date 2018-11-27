@@ -1,10 +1,10 @@
 # Keywords
 
-podcasts,shows,episodes,radio,queue,browser,podcatcher,player,audio,video,streaming,watch,listen
+pod,pods,podcast,podcasts,podcatcher,radio,browser,player,audio,video,watch,listen,tv,queue
 
 # Promotional Text
 
-Four-week free trial! Full version for one year via in-app purchase, with three favorable prices to choose from. Download the app for details.
+100% open source! Four-week free trial! Full version for one year via in-app purchase, with three favorable prices to choose from. Download the app for details.
 
 # Description
 
@@ -64,7 +64,7 @@ Automatic updates only keep the latest episode of a podcast in your queue. This 
 
 OPEN SOURCE
 
-Podest is mostly open source. Find the source code on GitHub:
+Podest is open source. Find the source code on GitHub:
 
 https://github.com/michaelnisi/podest
 

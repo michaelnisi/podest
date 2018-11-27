@@ -1,4 +1,4 @@
-## 7.9.4 (2018-11-13)
+## 7.9.4 (2018-11-27)
 
 ### Files Fly
 
@@ -12,7 +12,9 @@ Better episode summary parsing, correcting spaces, skipping invalid URLs, etc.
 
 Sometimes it was not possible to enqueue an episode. Removing iCloud sync timers resolved this issue. Cleaning this code path, notification observing has been replaced by delegation.
 
-More of this app is open source now https://github.com/michaelnisi/podest
+Flipping the device between portrait and landscape while playing video would sometimes impair navigation, I’m happy to report that this annoyance has been resolved.
+
+100% open source https://github.com/michaelnisi/podest
 
 ## 7.9.3 (2018-10-15)
 
