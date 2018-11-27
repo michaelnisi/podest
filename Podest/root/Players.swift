@@ -21,27 +21,23 @@ private let log = OSLog.disabled
 extension RootViewController: Players {
 
   private var miniLayout: NSLayoutConstraint {
-    get {
-      return view.constraints.first {
-        guard $0.isActive else {
-          return false
-        }
-        return $0.identifier == "Mini-Player-Layout-Top" ||
-          $0.identifier == "Mini-Player-Layout-Leading"
-        }!
-    }
+    return view.constraints.first {
+      guard $0.isActive else {
+        return false
+      }
+      return $0.identifier == "Mini-Player-Layout-Top" ||
+        $0.identifier == "Mini-Player-Layout-Leading"
+    }!
   }
 
   var miniPlayerEdgeInsets: UIEdgeInsets {
-    get {
-      guard
-        miniLayout.identifier == "Mini-Player-Layout-Top",
-        miniLayout.constant != 0 else {
-          return UIEdgeInsets.zero
-      }
-      let bottom = minivc.view.frame.height - view.safeAreaInsets.bottom
-      return UIEdgeInsets(top: 0, left: 0, bottom: bottom, right: 0)
+    guard
+      miniLayout.identifier == "Mini-Player-Layout-Top",
+      miniLayout.constant != 0 else {
+      return UIEdgeInsets.zero
     }
+    let bottom = minivc.view.frame.height - view.safeAreaInsets.bottom
+    return UIEdgeInsets(top: 0, left: 0, bottom: bottom, right: 0)
   }
 
   func hideMiniPlayer(_ animated: Bool) {
@@ -116,6 +112,10 @@ extension RootViewController: Players {
       miniPlayerBottom.constant = 0
       miniPlayerLeading.constant = miniPlayerConstant
     }
+
+    UIViewPropertyAnimator(duration: 0.3, curve: .easeOut) {
+      self.view.layoutIfNeeded()
+    }.startAnimation()
   }
 
   func play(_ entry: Entry) {

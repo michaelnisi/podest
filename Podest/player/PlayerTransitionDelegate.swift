@@ -194,7 +194,7 @@ extension PlayerPresentationAnimator: UIViewControllerAnimatedTransitioning {
 
     miniPlayerView?.alpha = 0
 
-    let anim = UIViewPropertyAnimator(duration: duration * 0.3, curve: .easeInOut) {
+    let anim = UIViewPropertyAnimator(duration: duration * 0.6, curve: .easeInOut) {
       snapshot.center = offsetCenter
       snapshot.alpha = 0
     }
