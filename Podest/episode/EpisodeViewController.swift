@@ -241,19 +241,7 @@ final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
       return showMessage(StringRepository.noEpisodeSelected())
     }
     
-    // The thing about these images: once we have an entry, we should be able to
-    // assume that we already have the image URLs, because an entry cannot exist
-    // without its parent feed, which knows the image URLs. Orphans are
-    // impossible, thus a programming error.
-    
-    // Force UIKit to surpress default UIButton animation, which would interfere
-    // with our view transition.
-    
-    UIView.performWithoutAnimation {
-      feedButton.setTitle(entry.feedTitle, for: .normal)
-      feedButton.layoutIfNeeded()
-    }
-    
+    feedButton.setTitle(entry.feedTitle, for: .normal)
     updatedLabel.text = StringRepository.string(from: entry.updated)
     
     if let duration = entry.duration,
@@ -309,6 +297,11 @@ final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
 
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
+
+    // Here’s the thing about these images, once we have an entry, we can
+    // assume that we already have the image URLs, because an entry cannot
+    // exist without its parent feed, which provides the image URLs. Orphans
+    // are undefined and thus considered a programming error.
 
     guard !imageLoaded, let entry = self.entry else {
       return
