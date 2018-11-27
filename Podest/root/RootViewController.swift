@@ -11,7 +11,7 @@ import UIKit
 import os.log
 import AVKit
 
-private let log = OSLog(subsystem: "ink.codes.podest", category: "root")
+private let log = OSLog.disabled
 
 /// The root container view controller of this app, composing a split view
 /// controller, with two navigation controllers, and a player view controller.
