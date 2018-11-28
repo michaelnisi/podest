@@ -56,6 +56,11 @@ extension RootViewController: Players {
       return done()
     }
 
+    // For now this app has no state—I can think of—where animated hiding
+    // would be executed. Should we remove this code path?
+
+    os_log("** unexpectedly animating", log: log)
+
     if miniPlayerTop.isActive {
       miniPlayerTop.constant = 0
       miniPlayerBottom.constant = miniPlayerConstant
@@ -97,9 +102,7 @@ extension RootViewController: Players {
       return view.layoutIfNeeded()
     }
 
-    let isPortrait = miniPlayerTop.isActive
-
-    if isPortrait {
+    if miniPlayerTop.isActive {
       os_log("animating portrait", log: log, type: .debug)
 
       miniPlayerLeading.constant = miniPlayerConstant
@@ -202,12 +205,8 @@ extension RootViewController: Players {
     DispatchQueue.main.async {
       let vc = AVPlayerViewController()
 
-      // Preventing AVPlayerViewController from showing the status bar with
-      // two properties fails. To circumvent, we extend AVPlayerViewController
-      // at the bottom of this class. *
-      vc.modalPresentationCapturesStatusBarAppearance = false
+      vc.modalPresentationCapturesStatusBarAppearance = true
       vc.modalPresentationStyle = .fullScreen
-
       vc.updatesNowPlayingInfoCenter = false
 
       vc.player = player
@@ -232,12 +231,14 @@ extension RootViewController: Players {
 
 }
 
-/// *
+/// This extension hides the status bar in landscape.
 extension AVPlayerViewController {
+
   override open var prefersStatusBarHidden: Bool {
     let c = UITraitCollection(horizontalSizeClass: .compact)
     return !traitCollection.containsTraits(in: c)
   }
+
 }
 
 // MARK: - PlaybackDelegate
