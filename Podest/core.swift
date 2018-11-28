@@ -26,7 +26,12 @@ protocol Players {
   // MARK: Mini Player
 
   var miniPlayerEdgeInsets: UIEdgeInsets { get }
+
+  /// Shows the mini-player or does nothing.
   func showMiniPlayer(_ animated: Bool)
+
+  /// Hides the mini-player and/or resets values. Should be used to install
+  /// the mini-player initially.
   func hideMiniPlayer(_ animated: Bool)
   
   // MARK: Now Playing

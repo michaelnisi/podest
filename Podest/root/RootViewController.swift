@@ -57,8 +57,8 @@ final class RootViewController: UIViewController {
     return pnc?.topViewController as? ListViewController
   }
 
-  /// Hides the mini-player once during the lifetime of this object.
-  lazy var hideMiniPlayerOnce: () = hideMiniPlayer(false)
+  /// This one-shot block installs the mini-player.
+  lazy var installMiniPlayer: () = hideMiniPlayer(false)
 
   var miniPlayerConstant: CGFloat = 0
 
@@ -162,8 +162,7 @@ extension RootViewController {
   }
 
   override func viewDidAppear(_ animated: Bool) {
-    let _ = hideMiniPlayerOnce
-
+    let _ = installMiniPlayer
     super.viewDidAppear(animated)
   }
 
@@ -490,6 +489,22 @@ extension RootViewController: UserProxy {
 
 extension RootViewController: UINavigationControllerDelegate {
 
+  /// Configures `viewController` for the secondary navigation controller,
+  /// the details view.
+  private func configureDetails(showing viewController: UIViewController) {
+    switch viewController {
+    case let vc as EpisodeViewController:
+      os_log("setting left bar button item", log: log, type: .debug)
+      vc.navigationItem.leftBarButtonItem = svc.displayModeButtonItem
+
+      if vc.isEmpty {
+        os_log("no episode selected", log: log)
+      }
+    default:
+      fatalError("\(viewController): restricted to episodes")
+    }
+  }
+
   /// This method is called before one of our main navigation controllers,
   /// primary or secondary, shows a view controller, a good place for final
   /// adjustments.
@@ -524,16 +539,7 @@ extension RootViewController: UINavigationControllerDelegate {
     }
 
     if navigationController == snc {
-      switch viewController {
-      case let vc as EpisodeViewController:
-        vc.navigationItem.leftBarButtonItem = svc.displayModeButtonItem
-
-        if vc.isEmpty {
-          os_log("no episode selected", log: log)
-        }
-      default:
-        fatalError("\(viewController): restricted to episodes")
-      }
+      configureDetails(showing: viewController)
     }
   }
 
@@ -645,6 +651,19 @@ extension RootViewController: UISplitViewControllerDelegate {
     return true
   }
 
+  /// Tries to create and return an episode view controller representing our
+  /// current entry or locator if we got one.
+  private func makeEpisodeViewController() -> EpisodeViewController? {
+    if let entry = self.selectedEntry {
+      return makeEpisodeViewController(entry: entry)
+    } else if let locator = self.locator {
+      os_log("probably restoring state", log: log, type: .debug)
+      return makeEpisodeViewController(locator: locator)
+    } else {
+      return nil
+    }
+  }
+
   func splitViewController(
     _ splitViewController: UISplitViewController,
     separateSecondaryFrom primaryViewController: UIViewController
@@ -652,11 +671,8 @@ extension RootViewController: UISplitViewControllerDelegate {
     os_log("splitViewController: separateSecondaryFrom: %{public}@",
            log: log, type: .debug, primaryViewController)
 
-    if let entry = self.selectedEntry {
-      let evc = makeEpisodeViewController(entry: entry)
-      snc.setViewControllers([evc], animated: false)
-    } else if let locator = self.locator { // Restoring state
-      let evc = makeEpisodeViewController(locator: locator)
+    if let evc = makeEpisodeViewController() {
+      configureDetails(showing: evc)
       snc.setViewControllers([evc], animated: false)
     } else {
       os_log("separating without entry", log: log, type: .error)
