@@ -46,10 +46,10 @@
                                         <rect key="frame" x="544" y="515.5" width="352" height="179"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacingType="standard" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ne9-Mo-10I" userLabel="Titles Stack View">
-                                                <rect key="frame" x="48" y="0.0" width="256" height="85.5"/>
+                                                <rect key="frame" x="149.5" y="0.0" width="53" height="85.5"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z7d-Kf-Ps7">
-                                                        <rect key="frame" x="110" y="0.0" width="36" height="108.5"/>
+                                                        <rect key="frame" x="8.5" y="0.0" width="36" height="108.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                         <state key="normal" title="Title">
                                                             <color key="titleColor" name="Purple"/>
@@ -59,15 +59,12 @@
                                                         </connections>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Subtitle" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ekm-6g-GfE">
-                                                        <rect key="frame" x="101.5" y="67.5" width="53" height="18"/>
+                                                        <rect key="frame" x="0.0" y="67.5" width="53" height="18"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" priority="999" constant="256" id="l4e-Dc-yjk"/>
-                                                </constraints>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="M9G-2Q-29L" userLabel="Controls Stack View">
                                                 <rect key="frame" x="48" y="93.5" width="256" height="85.5"/>
@@ -103,7 +100,7 @@
                                                     </button>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="256" id="UaA-Sb-kWJ"/>
+                                                    <constraint firstAttribute="width" priority="999" constant="256" id="UaA-Sb-kWJ"/>
                                                 </constraints>
                                             </stackView>
                                         </subviews>
