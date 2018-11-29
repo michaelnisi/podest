@@ -1,4 +1,4 @@
-## 7.9.4 (2018-11-27)
+## 7.9.4 (2018-11-29)
 
 ### Files Fly
 
@@ -14,7 +14,11 @@ Sometimes it was not possible to enqueue an episode. Removing iCloud sync timers
 
 Flipping the device between portrait and landscape while playing video would sometimes impair navigation, I’m happy to report that this annoyance has been resolved.
 
-All open source https://github.com/michaelnisi/podest
+Automatic selection when entering landscape with no episode selected now picks the episode currently in the player.
+
+Transitioning animations from mini-player to player and vice versa have been improved.
+
+All source code has been released https://github.com/michaelnisi/podest
 
 ## 7.9.3 (2018-10-15)
 
