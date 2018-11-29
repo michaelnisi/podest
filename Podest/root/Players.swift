@@ -20,6 +20,10 @@ private let log = OSLog.disabled
 
 extension RootViewController: Players {
 
+  var isMiniPlayerHidden: Bool {
+    return minivc.viewIfLoaded?.isHidden ?? true
+  }
+
   private var miniLayout: NSLayoutConstraint {
     return view.constraints.first {
       guard $0.isActive else {

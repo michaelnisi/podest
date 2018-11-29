@@ -1,0 +1,122 @@
+//
+//  PlayerTransitionDelegate.swift
+//  Podest
+//
+//  Created by Michael Nisi on 13.03.18.
+//  Copyright © 2018 Michael Nisi. All rights reserved.
+//
+
+import UIKit
+import os.log
+
+// MARK: - PlayerPresentationController
+
+/// The player presentation controller is setup, but not in use yet.
+class PlayerPresentationController: UIPresentationController {}
+
+class PlayerAnimator: NSObject {
+
+  let duration: TimeInterval
+  let log: OSLog
+
+  init(duration: TimeInterval = 0.3, log: OSLog = .disabled) {
+    self.duration = duration
+    self.log = log
+  }
+
+  /// Returns the hero it finds in `viewController`.
+  static func findHero(viewController: UIViewController) -> UIView? {
+    switch viewController {
+    case let vc as PlayerViewController:
+      return vc.heroImage
+    case let vc as MiniPlayerController:
+      // TODO: Remove case, this is not a thing
+      return vc.hero
+    case let vc as RootViewController:
+      guard !vc.isMiniPlayerHidden else {
+        return nil
+      }
+      return vc.minivc.hero
+    default:
+      return nil
+    }
+  }
+
+  /// Adds a snaphot of the hero in the from view controller to the container.
+  static func addHero(
+    using transitionContext: UIViewControllerContextTransitioning) -> UIView? {
+    guard
+      let vc = transitionContext.viewController(forKey: .from),
+      let source = findHero(viewController: vc) else {
+      return nil
+    }
+
+    let cv = transitionContext.containerView
+
+    // Would prefer using view, but lost patience converting coordinates.
+    // let view = transitionContext.view(forKey: .from)!
+
+    let center = source.superview!.convert(source.center, to: cv)
+    let width = source.bounds.width
+
+    let target = source.snapshotView(afterScreenUpdates: false)!
+
+    target.bounds = CGRect(x: 0, y: 0, width: width, height: width)
+    target.center = center
+
+    cv.addSubview(target)
+
+    return target
+  }
+
+  static func makeCFAffineTransform(
+    view: UIView,
+    traitCollection: UITraitCollection
+  ) -> (Bool, CGAffineTransform) {
+    let isVerticallyCompact = traitCollection.containsTraits(
+      in: UITraitCollection(verticalSizeClass: .compact))
+
+    let t = isVerticallyCompact ?
+      CGAffineTransform(translationX: view.bounds.width, y: 0) :
+      CGAffineTransform(translationX: 0, y: view.bounds.height)
+
+    return (isVerticallyCompact, t)
+  }
+
+}
+
+// MARK: - PlayerTransitionDelegate
+
+final class PlayerTransitionDelegate: NSObject {}
+
+extension PlayerTransitionDelegate: UIViewControllerTransitioningDelegate {
+  
+  func presentationController(
+    forPresented presented: UIViewController,
+    presenting: UIViewController?,
+    source: UIViewController
+  ) -> UIPresentationController? {
+    switch presented {
+    case is PlayerViewController:
+      return PlayerPresentationController(
+        presentedViewController: presented, presenting: presenting)
+    default:
+      return nil
+    }
+  }
+  
+  func animationController(
+    forPresented presented: UIViewController,
+    presenting: UIViewController,
+    source: UIViewController
+  ) -> UIViewControllerAnimatedTransitioning? {
+    return PlayerPresentationAnimator()
+  }
+  
+  func animationController(
+    forDismissed dismissed: UIViewController
+  ) -> UIViewControllerAnimatedTransitioning? {
+    return PlayerDismissalAnimator()
+  }
+  
+}
