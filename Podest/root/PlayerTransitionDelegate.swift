@@ -11,9 +11,12 @@ import os.log
 
 // MARK: - PlayerPresentationController
 
-/// The player presentation controller is setup, but not in use yet.
+/// Manages the presentation of the player view controller.
 class PlayerPresentationController: UIPresentationController {}
 
+// MARK: - PlayerAnimator
+
+/// A base class for animators in the player presentation.
 class PlayerAnimator: NSObject {
 
   let duration: TimeInterval

@@ -18,12 +18,15 @@ final class FKImageCell: FKTextCell {
   private static var defaultImage: UIImage!
   
   private func loadImage(for item: Imaginable) -> UITableViewCell {
-    // Setting default image to prevent preloading of a smaller placeholder
-    // image. We have to be quick here.
-
-    thumbImageView.image = FKImageCell.defaultImage
-
-    Podest.images.loadImage(for: item, into: thumbImageView, quality: .medium)
+    Podest.images.loadImage(
+      representing: item,
+      into: thumbImageView,
+      options: FKImageLoadingOptions(
+        fallbackImage: FKImageCell.defaultImage,
+        quality: .medium,
+        isDirect: true
+      )
+    )
 
     return self
   }

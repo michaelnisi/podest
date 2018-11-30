@@ -54,9 +54,13 @@ extension PlayerDismissalAnimator: UIViewControllerAnimatedTransitioning {
 
     let cv = transitionContext.containerView
 
+    // Hiding titles and controls
+
     let hidingEpisode = PlayerDismissalAnimator.makeEpisodeAnimator(
       transitionContext: tc, duration: duration)
     hidingEpisode?.startAnimation()
+
+    // Setting up the main animation
 
     let (isVerticallyCompact, t) = PlayerAnimator.makeCFAffineTransform(
       view: cv, traitCollection: from.traitCollection)

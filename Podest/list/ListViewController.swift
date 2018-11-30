@@ -359,10 +359,11 @@ extension ListViewController {
 
     if !isCompact, let f = feed, let hero = heroImage, hero.tag != f.hashValue {
       os_log("** loading image", log: log, type: .debug)
-      hero.image = nil
+
+      // What kind of hacker is using tags?
       hero.tag = f.hashValue
       
-      Podest.images.loadImage(for: f, into: hero)
+      Podest.images.loadImage(representing: f, into: hero)
     }
 
     var tableHeaderViewChanged = traitsChanged

@@ -77,7 +77,6 @@ Navigator, PlaybackControlDelegate {
 
   internal var isPlaying: Bool = false {
     didSet {
-      // Setting this directly to keep view udpating simple.
       playSwitch?.isOn = isPlaying
     }
   }
@@ -122,6 +121,26 @@ Navigator, PlaybackControlDelegate {
     swipe.direction = isLandscape ? .right : .down
   }
 
+  // MARK: - Image Loading
+
+  private var needsImage = false
+
+  private func loadImage() {
+    guard let entry = self.entry else {
+      return
+    }
+
+    Podest.images.loadImage(
+      representing: entry,
+      into: heroImage,
+      options: FKImageLoadingOptions(
+        fallbackImage: UIImage.init(named: "Oval"),
+        quality: .high,
+        isDirect: false
+      )
+    )
+  }
+
   // MARK: - UIViewController
 
   override func viewDidLoad() {
@@ -139,6 +158,18 @@ Navigator, PlaybackControlDelegate {
     view.addGestureRecognizer(swipe)
   }
 
+
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+
+    guard needsImage else {
+      return
+    }
+
+    loadImage()
+    needsImage = false
+  }
+
   override func viewWillLayoutSubviews() {
     defer {
       super.viewWillLayoutSubviews()
@@ -152,40 +183,35 @@ Navigator, PlaybackControlDelegate {
       fatalError("player view controller: entry required")
     }
 
-    titleButton.setTitle(entry.title, for: .normal)
+    UIView.performWithoutAnimation {
+      titleButton.setTitle(entry.title, for: .normal)
+    }
+
     subtitleLabel.text = entry.feedTitle
 
     playSwitch.isOn = isPlaying
     forwardButton.isEnabled = Podest.userQueue.isForwardable
     backwardButton.isEnabled = Podest.userQueue.isBackwardable
+
+    // Only allowing image reloading after view did appear.
+    needsImage = shouldReloadImage && true
     
     needsUpdate = false
-
-    // Resetting for loading the image after update was needed.
-    imageLoaded = false
   }
 
-  /// Remembers if the hero image has been loaded.
-  private var imageLoaded = false
-
-  override func viewDidLayoutSubviews() {
-    super.viewDidLayoutSubviews()
-
-    guard !imageLoaded, let entry = self.entry else {
-      return
-    }
-
-    // For loading images in dynamic sizes, we need the layout first.
-
-    heroImage.image = nil
-    Podest.images.loadImage(for: entry, into: heroImage)
-
-    imageLoaded = true
-  }
+  private var shouldReloadImage = false
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
+
     configureSwipe()
+    loadImage()
+    shouldReloadImage = true
+  }
+
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    shouldReloadImage = false
   }
 
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

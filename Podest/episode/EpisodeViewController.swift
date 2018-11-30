@@ -307,11 +307,7 @@ final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
       return
     }
 
-    // For loading images in dynamic sizes, we need the layout first.
-
-    avatar.image = nil
-    Podest.images.loadImage(for: entry, into: avatar)
-
+    Podest.images.loadImage(representing: entry, into: avatar)
     imageLoaded = true
   }
 

@@ -89,7 +89,7 @@ extension PlayerPresentationAnimator: UIViewControllerAnimatedTransitioning {
     }
 
     miniPlayerView = from.minivc.view
-    animateMiniPlayer(using: transitionContext)
+//    animateMiniPlayer(using: transitionContext)
 
     anim.addCompletion { [weak self] finalPosition in
       self?.miniPlayerView?.alpha = 1

@@ -220,7 +220,7 @@ Navigator, PlaybackControlDelegate {
 
     titleLabel.text = entry.title
 
-    Podest.images.loadImage(for: entry, into: hero)
+    Podest.images.loadImage(representing: entry, into: hero)
     //    Podest.playback.currentEntry = entry
 
     playSwitch.isOn = isPlaying
