@@ -16,8 +16,14 @@ final class FKImageCell: FKTextCell {
   
   // Default image for resetting.
   private static var defaultImage: UIImage!
+
+  private func resetImage() {
+    thumbImageView.image = FKImageCell.defaultImage
+  }
   
   private func loadImage(for item: Imaginable) -> UITableViewCell {
+    resetImage()
+
     Podest.images.loadImage(
       representing: item,
       into: thumbImageView,
