@@ -209,7 +209,7 @@ extension RootViewController: Players {
     DispatchQueue.main.async {
       let vc = AVPlayerViewController()
 
-      vc.modalPresentationCapturesStatusBarAppearance = true
+      vc.modalPresentationCapturesStatusBarAppearance = false
       vc.modalPresentationStyle = .fullScreen
       vc.updatesNowPlayingInfoCenter = false
 
