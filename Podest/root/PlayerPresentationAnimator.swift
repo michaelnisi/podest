@@ -9,9 +9,7 @@
 import UIKit
 import os.log
 
-final class PlayerPresentationAnimator: PlayerAnimator {
-  private weak var miniPlayerView: UIView?
-}
+final class PlayerPresentationAnimator: PlayerAnimator {}
 
 extension PlayerPresentationAnimator: UIViewControllerAnimatedTransitioning {
 
@@ -21,79 +19,77 @@ extension PlayerPresentationAnimator: UIViewControllerAnimatedTransitioning {
     return duration
   }
 
-  /// Slightly animates the mini-player of the *from* view controller.
-  private func animateMiniPlayer(
-    using transitionContext: UIViewControllerContextTransitioning) {
-    guard transitionContext.isAnimated,
-      let from = transitionContext.viewController(
-        forKey: .from) as? RootViewController,
-      let snapshot = miniPlayerView?.snapshotView(afterScreenUpdates: false),
-      let superview = miniPlayerView?.superview else {
-      return
+  /// Adds a snapshot of the player to the container, hiding the image, for
+  /// we are about to animate into position.
+  private static func makeBackground(
+    containerView: UIView,
+    player: PlayerViewController
+  ) -> UIView? {
+    player.heroImage.alpha = 0
+
+    guard let snapshot = player.view.snapshotView(
+      afterScreenUpdates: true) else {
+      return nil
     }
 
-    let cv = transitionContext.containerView
+    player.heroImage.alpha = 1
+    containerView.addSubview(snapshot)
 
-    let center = superview.convert(from.minivc.view.center, to: cv)
-    let isVerticallyCompact = from.traitCollection.containsTraits(
-      in: UITraitCollection(verticalSizeClass: .compact))
-
-    cv.addSubview(snapshot)
-    snapshot.center = center
-
-    let offsetCenter = !isVerticallyCompact ?
-      CGPoint(x: center.x, y: center.y - 64) :
-      CGPoint(x: center.x - 64, y: center.y)
-
-    miniPlayerView?.alpha = 0
-
-    let anim = UIViewPropertyAnimator(
-      duration: duration * 2 / 3, curve: .easeInOut) {
-      snapshot.center = offsetCenter
-      snapshot.alpha = 0
-    }
-
-    anim.addCompletion { _ in
-      snapshot.removeFromSuperview()
-    }
-
-    anim.startAnimation()
+    return snapshot
   }
 
   func animateTransition(
     using transitionContext: UIViewControllerContextTransitioning) {
     os_log("animating presentation transition", log: log, type: .debug)
 
+    // Stage
+
     let tc = transitionContext
+    let cv = transitionContext.containerView
+
+    // Getting at our main characters
 
     guard tc.isAnimated,
       let to = tc.viewController(forKey: .to) as? PlayerViewController,
-      let from = tc.viewController(forKey: .from) as? RootViewController else {
-//      let hero = PlayerAnimator.addHero(using: tc) else {
+      let bg = PlayerPresentationAnimator.makeBackground(
+        containerView: cv, player: to),
+      let hero = PlayerAnimator.addHero(using: tc) else {
       return
     }
-    
-    let cv = transitionContext.containerView
+
+    // Present
 
     cv.addSubview(to.view)
+
+    // On your marks
+
+    to.view.isHidden = true
+    to.view.layoutIfNeeded()
 
     let (_, t) = PlayerAnimator.makeCFAffineTransform(
       view: cv, traitCollection: to.traitCollection)
 
-    to.view.transform = t
-    to.doneButton.alpha = 0
+    bg.transform = t
+
+    // Animate
+
+    let heroCenter = to.container.convert(to.heroImage.center, to: cv)
+    let heroBounds = to.heroImage.bounds
 
     let anim = UIViewPropertyAnimator(duration: duration, curve: .easeInOut) {
-      to.view.transform = CGAffineTransform.identity
-      to.doneButton.alpha = 1
+      bg.transform = CGAffineTransform.identity
+
+      hero.center = heroCenter
+      hero.bounds = heroBounds
     }
 
-    miniPlayerView = from.minivc.view
-//    animateMiniPlayer(using: transitionContext)
+    anim.addCompletion { finalPosition in
+      bg.removeFromSuperview()
+      hero.removeFromSuperview()
 
-    anim.addCompletion { [weak self] finalPosition in
-      self?.miniPlayerView?.alpha = 1
-      self?.miniPlayerView = nil
+      to.animationEnded(hero)
+      to.view.isHidden = false
+
       transitionContext.completeTransition(true)
     }
 

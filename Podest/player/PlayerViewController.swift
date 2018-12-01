@@ -25,6 +25,7 @@ Navigator, PlaybackControlDelegate {
   @IBOutlet weak var backwardButton: UIButton!
   @IBOutlet weak var forwardButton: UIButton!
   @IBOutlet weak var episode: UIStackView!
+  @IBOutlet weak var container: UIStackView!
   
   // MARK: - Actions
 
@@ -138,7 +139,19 @@ Navigator, PlaybackControlDelegate {
         quality: .high,
         isDirect: false
       )
-    )
+    ) { [weak self] in
+      self?.heroSnapshot?.removeFromSuperview()
+    }
+  }
+
+  private var heroSnapshot: UIView?
+
+  /// A way to pass the hero snapshot from the player presention animator,
+  /// when the animation ended. That snapshot makes an appropriate placeholder,
+  /// while we are loading the image.
+  func animationEnded(_ hero: UIView) {
+    view.addSubview(hero)
+    heroSnapshot = hero
   }
 
   // MARK: - UIViewController
