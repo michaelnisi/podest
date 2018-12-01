@@ -184,12 +184,22 @@ extension RootViewController: Players {
     // Resetting nowPlaying to trigger updates.
     playbackControlProxy = now
 
-    playerTransition = PlayerTransitionDelegate()
-    vc.transitioningDelegate = playerTransition
+    // Using a setter to drive this important change is unfortunate. Turns out,
+    // we could use callback now, for knowing when it’s done. Working around
+    // the issue by installing a callback on the view controller.
 
-    present(vc, animated: true) { [weak self] in
-      self?.playerTransition = nil
+    vc.entryChangedBlock = { [weak self] entry in
+      dispatchPrecondition(condition: .onQueue(.main))
+      self?.playerTransition = PlayerTransitionDelegate()
+
+      vc.transitioningDelegate = self?.playerTransition
+      vc.entryChangedBlock = nil
+
+      self?.present(vc, animated: true) {
+        self?.playerTransition = nil
+      }
     }
+
   }
 
   func hideNowPlaying(animated flag: Bool, completion: (() -> Void)?) {

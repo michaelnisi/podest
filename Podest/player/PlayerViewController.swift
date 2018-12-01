@@ -18,7 +18,7 @@ Navigator, PlaybackControlDelegate {
   // MARK: Outlets
 
   @IBOutlet weak var doneButton: UIButton!
-  @IBOutlet var heroImage: UIImageView!
+  @IBOutlet weak var heroImage: UIImageView!
   @IBOutlet weak var titleButton: UIButton!
   @IBOutlet weak var subtitleLabel: UILabel!
   @IBOutlet weak var playSwitch: PlaySwitch!
@@ -58,25 +58,74 @@ Navigator, PlaybackControlDelegate {
     navigationDelegate?.show(entry: entry!)
   }
 
-  // MARK: - Internals
+  // MARK: - Configuration
 
-  private var needsUpdate = false {
+  private func loadImage(_ entry: Entry) {
+    Podest.images.loadImage(
+      representing: entry,
+      into: heroImage,
+      options: FKImageLoadingOptions(
+        fallbackImage: UIImage.init(named: "Oval"),
+        quality: .high,
+        isDirect: false
+      )
+    ) { [weak self] in
+      self?.heroSnapshot?.removeFromSuperview()
+    }
+  }
+
+  private var heroSnapshot: UIView?
+
+  /// A way to pass the hero snapshot from the player presentation animator,
+  /// when the animation ended. That snapshot makes an appropriate placeholder,
+  /// while we are loading the image.
+  func animationEnded(_ hero: UIView) {
+    guard let entry = self.entry else {
+      return
+    }
+
+    view.addSubview(hero)
+    heroSnapshot = hero
+
+    loadImage(entry)
+  }
+
+  private func configureView(_ entry: Entry) {
+    UIView.performWithoutAnimation {
+      titleButton.setTitle(entry.title, for: .normal)
+    }
+
+    subtitleLabel.text = entry.feedTitle
+
+    playSwitch.isOn = isPlaying
+    forwardButton.isEnabled = Podest.userQueue.isForwardable
+    backwardButton.isEnabled = Podest.userQueue.isBackwardable
+  }
+
+  private func update() {
+    guard viewIfLoaded != nil, let entry = self.entry else {
+      return
+    }
+    
+    configureView(entry)
+    loadImage(entry)
+  }
+
+  var entry: Entry? {
     didSet {
-      if needsUpdate {
-        DispatchQueue.main.async { [weak self] in
-          self?.view?.setNeedsLayout()
-        }
+      guard entry != oldValue else {
+        return
       }
+
+      update()
+      entryChangedBlock?(entry)
     }
   }
 
-  internal var entry: Entry? {
-    didSet {
-      needsUpdate = entry != oldValue || needsUpdate
-    }
-  }
+  /// The block to execute for entry changes.
+  var entryChangedBlock: ((Entry?) -> Void)?
 
-  internal var isPlaying: Bool = false {
+  var isPlaying: Bool = false {
     didSet {
       playSwitch?.isOn = isPlaying
     }
@@ -122,38 +171,6 @@ Navigator, PlaybackControlDelegate {
     swipe.direction = isLandscape ? .right : .down
   }
 
-  // MARK: - Image Loading
-
-  private var needsImage = false
-
-  private func loadImage() {
-    guard let entry = self.entry else {
-      return
-    }
-
-    Podest.images.loadImage(
-      representing: entry,
-      into: heroImage,
-      options: FKImageLoadingOptions(
-        fallbackImage: UIImage.init(named: "Oval"),
-        quality: .high,
-        isDirect: false
-      )
-    ) { [weak self] in
-      self?.heroSnapshot?.removeFromSuperview()
-    }
-  }
-
-  private var heroSnapshot: UIView?
-
-  /// A way to pass the hero snapshot from the player presention animator,
-  /// when the animation ended. That snapshot makes an appropriate placeholder,
-  /// while we are loading the image.
-  func animationEnded(_ hero: UIView) {
-    view.addSubview(hero)
-    heroSnapshot = hero
-  }
-
   // MARK: - UIViewController
 
   override func viewDidLoad() {
@@ -171,60 +188,14 @@ Navigator, PlaybackControlDelegate {
     view.addGestureRecognizer(swipe)
   }
 
-
-  override func viewDidLayoutSubviews() {
-    super.viewDidLayoutSubviews()
-
-    guard needsImage else {
-      return
-    }
-
-    loadImage()
-    needsImage = false
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    update()
   }
-
-  override func viewWillLayoutSubviews() {
-    defer {
-      super.viewWillLayoutSubviews()
-    }
-
-    guard needsUpdate else {
-      return
-    }
-
-    guard let entry = self.entry else {
-      fatalError("player view controller: entry required")
-    }
-
-    UIView.performWithoutAnimation {
-      titleButton.setTitle(entry.title, for: .normal)
-    }
-
-    subtitleLabel.text = entry.feedTitle
-
-    playSwitch.isOn = isPlaying
-    forwardButton.isEnabled = Podest.userQueue.isForwardable
-    backwardButton.isEnabled = Podest.userQueue.isBackwardable
-
-    // Only allowing image reloading after view did appear.
-    needsImage = shouldReloadImage && true
-    
-    needsUpdate = false
-  }
-
-  private var shouldReloadImage = false
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-
-    configureSwipe()
-    loadImage()
-    shouldReloadImage = true
-  }
-
-  override func viewDidDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
-    shouldReloadImage = false
+    update()
   }
 
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
