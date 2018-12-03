@@ -12,7 +12,45 @@ import os.log
 
 private let log = OSLog.disabled
 
-class PlayerViewController: UIViewController,
+/// An abstract player view controller for common player things.
+class SomePlayerViewController: UIViewController {
+
+  /// Returns `true` if we are vertically compact.
+  var isLandscape: Bool {
+    return traitCollection.containsTraits(
+      in: UITraitCollection(verticalSizeClass: .compact))
+  }
+
+}
+
+// MARK: - UIGestureRecognizerDelegate
+
+/// Cancelling gesture recognizers within screen edge pan gestures. For example,
+/// players should not respond, when swiping down for Notification Center.
+extension SomePlayerViewController: UIGestureRecognizerDelegate {
+
+  func gestureRecognizer(
+    _ gestureRecognizer: UIGestureRecognizer,
+    shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+  ) -> Bool {
+    switch gestureRecognizer {
+    case is UISwipeGestureRecognizer:
+      return !(otherGestureRecognizer is UIScreenEdgePanGestureRecognizer)
+    default:
+      return false
+    }
+  }
+
+  func gestureRecognizer(
+    _ gestureRecognizer: UIGestureRecognizer,
+    shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer
+  ) -> Bool {
+    return gestureRecognizer is UIScreenEdgePanGestureRecognizer
+  }
+
+}
+
+final class PlayerViewController: SomePlayerViewController,
 Navigator, PlaybackControlDelegate {
 
   // MARK: Outlets
@@ -149,7 +187,8 @@ Navigator, PlaybackControlDelegate {
 
   // MARK: - Swiping
 
-  var swipe: UISwipeGestureRecognizer!
+  var swipeRight: UISwipeGestureRecognizer!
+  var swipeDown: UISwipeGestureRecognizer!
 
   @objc func onSwipe(sender: UISwipeGestureRecognizer) {
     os_log("swipe received", log: log, type: .debug)
@@ -162,19 +201,26 @@ Navigator, PlaybackControlDelegate {
     }
   }
 
-  private var isLandscape: Bool {
-    return traitCollection.containsTraits(
-      in: UITraitCollection(verticalSizeClass: .compact))
-  }
-
-  private func configureSwipe() {
-    swipe.direction = isLandscape ? .right : .down
+  deinit {
+    os_log("** deinit", log: log, type: .debug)
   }
 
   // MARK: - UIViewController
 
+  private func addDismissingSwipe() -> UISwipeGestureRecognizer {
+    let swipe = UISwipeGestureRecognizer(target: self, action: #selector(onSwipe))
+    view.addGestureRecognizer(swipe)
+    return swipe
+  }
+
   override func viewDidLoad() {
     super.viewDidLoad()
+
+    swipeRight = addDismissingSwipe()
+    swipeRight.direction = .right
+
+    swipeDown = addDismissingSwipe()
+    swipeDown.direction = .down
 
     titleButton.titleLabel?.numberOfLines = 2
     titleButton.titleLabel?.textAlignment = .center
@@ -183,9 +229,6 @@ Navigator, PlaybackControlDelegate {
     subtitleLabel.numberOfLines = 2
 
     playSwitch.isExclusiveTouch = true
-
-    swipe = UISwipeGestureRecognizer(target: self, action: #selector(onSwipe))
-    view.addGestureRecognizer(swipe)
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -196,21 +239,6 @@ Navigator, PlaybackControlDelegate {
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     update()
-  }
-
-  override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-    super.traitCollectionDidChange(previousTraitCollection)
-    configureSwipe()
-  }
-
-  // MARK: - UIStateRestoring
-
-  override func encodeRestorableState(with coder: NSCoder) {
-    super.encodeRestorableState(with: coder)
-  }
-
-  override func decodeRestorableState(with coder: NSCoder) {
-    super.decodeRestorableState(with: coder)
   }
 
 }
