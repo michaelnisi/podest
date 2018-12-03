@@ -43,16 +43,26 @@ extension PlayerDismissalAnimator: UIViewControllerAnimatedTransitioning {
     os_log("animating dismissal transition", log: log, type: .debug)
 
     let tc = transitionContext
+    let cv = transitionContext.containerView
 
-    guard tc.isAnimated,
-      let from = tc.viewController(forKey: .from)as? PlayerViewController,
+    // Dismissing player view controllers only.
+
+    guard
+      let from = tc.viewController(forKey: .from)as? PlayerViewController else {
+      return transitionContext.completeTransition(false)
+    }
+
+    guard tc.isAnimated else {
+      from.viewIfLoaded?.removeFromSuperview()
+      return transitionContext.completeTransition(true)
+    }
+
+    guard
       let to = tc.viewController(forKey: .to)as? RootViewController,
       let hero = PlayerAnimator.addHero(using: tc),
       let mini = to.minivc.view else {
-      return
+      return transitionContext.completeTransition(false)
     }
-
-    let cv = transitionContext.containerView
 
     // Hiding titles and controls
 
@@ -62,8 +72,10 @@ extension PlayerDismissalAnimator: UIViewControllerAnimatedTransitioning {
 
     // Setting up the main animation
 
-    let (isVerticallyCompact, t) = PlayerAnimator.makeCFAffineTransform(
-      view: cv, traitCollection: from.traitCollection)
+    let o = Orientation(traitCollection: to.traitCollection)
+
+    let d = o == .horizontal ? cv.bounds.width : cv.bounds.height
+    let t = PlayerAnimator.makeOffset(orientation: o, distance: d)
 
     let heroCenter = to.minivc.view.convert(to.minivc.hero.center, to: cv)
     let heroBounds = to.minivc.hero.bounds
@@ -82,7 +94,7 @@ extension PlayerDismissalAnimator: UIViewControllerAnimatedTransitioning {
     let center = mini.center
 
     // A slight offset for blending into the motion.
-    let offsetCenter = !isVerticallyCompact ?
+    let offsetCenter = o == .vertical ?
       CGPoint(x: center.x, y: center.y - 64) :
       CGPoint(x: center.x - 64, y: center.y)
 
@@ -95,7 +107,12 @@ extension PlayerDismissalAnimator: UIViewControllerAnimatedTransitioning {
     }, delayFactor: 2 / 3)
 
     anim.addCompletion { finalPosition in
-      hero.removeFromSuperview()
+      precondition(finalPosition == .end)
+
+      for v in [hero, from.view] {
+        v?.removeFromSuperview()
+      }
+
       transitionContext.completeTransition(true)
     }
 

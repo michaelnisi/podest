@@ -32,9 +32,6 @@ class PlayerAnimator: NSObject {
     switch viewController {
     case let vc as PlayerViewController:
       return vc.heroImage
-    case let vc as MiniPlayerController:
-      // TODO: Remove case, this is not a thing
-      return vc.hero
     case let vc as RootViewController:
       guard !vc.isMiniPlayerHidden else {
         return nil
@@ -72,18 +69,16 @@ class PlayerAnimator: NSObject {
     return target
   }
 
-  static func makeCFAffineTransform(
-    view: UIView,
-    traitCollection: UITraitCollection
-  ) -> (Bool, CGAffineTransform) {
-    let isVerticallyCompact = traitCollection.containsTraits(
-      in: UITraitCollection(verticalSizeClass: .compact))
+  /// Returns snapshot of `view` added to `containerView`.
+  static
+    func addSnapshot(using view: UIView, to containerView: UIView) -> UIView? {
+    guard let snapshot = view.snapshotView(afterScreenUpdates: true) else {
+      return nil
+    }
 
-    let t = isVerticallyCompact ?
-      CGAffineTransform(translationX: view.bounds.width, y: 0) :
-      CGAffineTransform(translationX: 0, y: view.bounds.height)
+    containerView.addSubview(snapshot)
 
-    return (isVerticallyCompact, t)
+    return snapshot
   }
 
   enum Orientation {

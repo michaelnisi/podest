@@ -19,23 +19,9 @@ extension PlayerPresentationAnimator: UIViewControllerAnimatedTransitioning {
     return duration
   }
 
-  /// Returns snapshot of `view` added to `containerView`.
-  private static
-  func addSnapshot(_ view: UIView, _ containerView: UIView) -> UIView? {
-    guard let snapshot = view.snapshotView(afterScreenUpdates: true) else {
-      return nil
-    }
-
-    containerView.addSubview(snapshot)
-
-    return snapshot
-  }
-
-  /// Adds a snapshot of the player to the container.
-  private static func makeBackground(
-    _ containerView: UIView,
-    _ player: PlayerViewController
-  ) -> UIView? {
+  /// Adds a snapshot of the `player` view to `containerView`.
+  static func addSnapshot(
+    using player: PlayerViewController, to containerView: UIView) -> UIView? {
     player.heroImage.alpha = 0
     player.doneButton.alpha = 0
 
@@ -44,7 +30,7 @@ extension PlayerPresentationAnimator: UIViewControllerAnimatedTransitioning {
       player.doneButton.alpha = 1
     }
 
-    return addSnapshot(player.view, containerView)
+    return addSnapshot(using: player.view, to: containerView)
   }
 
   func animateTransition(
@@ -56,24 +42,38 @@ extension PlayerPresentationAnimator: UIViewControllerAnimatedTransitioning {
     let tc = transitionContext
     let cv = transitionContext.containerView
 
-    // Adding snapshots for animation.
+    // Presenting in a fixed constellation only.
 
-    guard tc.isAnimated,
+    guard
       let to = tc.viewController(forKey: .to) as? PlayerViewController,
-      let bg = PlayerPresentationAnimator.makeBackground(cv, to),
-      let header = PlayerPresentationAnimator.addSnapshot(to.doneButton, cv),
-      let hero = PlayerAnimator.addHero(using: tc) else {
-      return
+      let from = tc.viewController(forKey: .from) as? RootViewController else {
+      return transitionContext.completeTransition(false)
     }
 
+    cv.addSubview(to.view)
+
+    guard tc.isAnimated else {
+      return transitionContext.completeTransition(true)
+    }
+
+    // Finding sprites.
+
+    guard
+      let fv = PlayerAnimator.addSnapshot(using: from.view, to: cv),
+      let bg = PlayerPresentationAnimator.addSnapshot(using: to, to: cv),
+      let hero = PlayerAnimator.addHero(using: tc),
+      let header = PlayerAnimator.addSnapshot(using: to.doneButton, to: cv) else {
+      return transitionContext.completeTransition(true)
+    }
+
+    // Hiding original views during animation.
+
+    to.view.isHidden = true
     to.view.layoutIfNeeded()
 
-    // Adding the main view and hiding it while animating.
+    from.view.isHidden = true
 
-    cv.addSubview(to.view)
-    to.view.isHidden = true
-
-    // Placing snapshots/sprites on their initial marks.
+    // Placing snapshots on their initial marks.
 
     let o = Orientation(traitCollection: to.traitCollection)
 
@@ -82,26 +82,40 @@ extension PlayerPresentationAnimator: UIViewControllerAnimatedTransitioning {
 
     header.alpha = 0
     header.center = to.view.convert(to.doneButton.center, to: cv)
-    header.transform = PlayerAnimator.makeOffset(orientation: o, distance: 256)
+    header.transform = PlayerAnimator.makeOffset(orientation: o, distance: d)
 
     // Setting up and starting the animation, cleaning up in the completion
     // block.
 
     let anim = UIViewPropertyAnimator(duration: duration, curve: .easeInOut) {
-      header.alpha = 1
-      header.transform = CGAffineTransform.identity
+      header.transform = .identity
 
       hero.center = to.container.convert(to.heroImage.center, to: cv)
       hero.bounds = to.heroImage.bounds
 
-      bg.transform = CGAffineTransform.identity
+      bg.transform = .identity
+
+      fv.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
     }
 
+    // Shortening the visible path of the done button.
+
+    anim.addAnimations({
+      header.alpha = 1
+    }, delayFactor: 0.1)
+
     anim.addCompletion { finalPosition in
-      for v in [header, bg, hero] { v.removeFromSuperview() }
+      precondition(finalPosition == .end)
+
+      for v in [header, bg, hero, fv] {
+        v.removeFromSuperview()
+      }
 
       to.animationEnded(hero)
       to.view.isHidden = false
+
+      from.minivc.hero.isHidden = false
+      from.view.isHidden = false
 
       transitionContext.completeTransition(true)
     }
