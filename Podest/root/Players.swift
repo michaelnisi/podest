@@ -188,12 +188,19 @@ extension RootViewController: Players {
     // we could use callback now, for knowing when it’s done. Working around
     // the issue by installing a callback on the view controller.
 
-    vc.entryChangedBlock = { [weak self] entry in
+    vc.entryChangedBlock = { [weak self] changedEntry in
       dispatchPrecondition(condition: .onQueue(.main))
-      self?.playerTransition = PlayerTransitionDelegate()
 
+      defer {
+        vc.entryChangedBlock = nil
+      }
+
+      guard changedEntry == entry else {
+        return
+      }
+
+      self?.playerTransition = PlayerTransitionDelegate()
       vc.transitioningDelegate = self?.playerTransition
-      vc.entryChangedBlock = nil
 
       self?.present(vc, animated: true) {
         self?.playerTransition = nil

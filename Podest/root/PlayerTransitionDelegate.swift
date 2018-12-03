@@ -86,6 +86,24 @@ class PlayerAnimator: NSObject {
     return (isVerticallyCompact, t)
   }
 
+  enum Orientation {
+    case vertical, horizontal
+
+    init(traitCollection: UITraitCollection) {
+      let isVerticallyCompact = traitCollection.containsTraits(
+        in: UITraitCollection(verticalSizeClass: .compact))
+      self = isVerticallyCompact ? .horizontal : .vertical
+    }
+  }
+
+  static func makeOffset(
+    orientation: PlayerAnimator.Orientation, distance: CGFloat
+  ) -> CGAffineTransform {
+    return orientation == .horizontal ?
+      CGAffineTransform(translationX: distance, y: 0) :
+      CGAffineTransform(translationX: 0, y: distance)
+  }
+
 }
 
 // MARK: - PlayerTransitionDelegate

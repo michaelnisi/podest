@@ -19,73 +19,86 @@ extension PlayerPresentationAnimator: UIViewControllerAnimatedTransitioning {
     return duration
   }
 
-  /// Adds a snapshot of the player to the container, hiding the image, for
-  /// we are about to animate into position.
-  private static func makeBackground(
-    containerView: UIView,
-    player: PlayerViewController
-  ) -> UIView? {
-    player.heroImage.alpha = 0
-
-    guard let snapshot = player.view.snapshotView(
-      afterScreenUpdates: true) else {
+  /// Returns snapshot of `view` added to `containerView`.
+  private static
+  func addSnapshot(_ view: UIView, _ containerView: UIView) -> UIView? {
+    guard let snapshot = view.snapshotView(afterScreenUpdates: true) else {
       return nil
     }
 
-    player.heroImage.alpha = 1
     containerView.addSubview(snapshot)
 
     return snapshot
+  }
+
+  /// Adds a snapshot of the player to the container.
+  private static func makeBackground(
+    _ containerView: UIView,
+    _ player: PlayerViewController
+  ) -> UIView? {
+    player.heroImage.alpha = 0
+    player.doneButton.alpha = 0
+
+    defer {
+      player.heroImage.alpha = 1
+      player.doneButton.alpha = 1
+    }
+
+    return addSnapshot(player.view, containerView)
   }
 
   func animateTransition(
     using transitionContext: UIViewControllerContextTransitioning) {
     os_log("animating presentation transition", log: log, type: .debug)
 
-    // Stage
+    // Setting handy refs for our context.
 
     let tc = transitionContext
     let cv = transitionContext.containerView
 
-    // Getting at our main characters
+    // Adding snapshots for animation.
 
     guard tc.isAnimated,
       let to = tc.viewController(forKey: .to) as? PlayerViewController,
-      let bg = PlayerPresentationAnimator.makeBackground(
-        containerView: cv, player: to),
+      let bg = PlayerPresentationAnimator.makeBackground(cv, to),
+      let header = PlayerPresentationAnimator.addSnapshot(to.doneButton, cv),
       let hero = PlayerAnimator.addHero(using: tc) else {
       return
     }
 
-    // Present
-
-    cv.addSubview(to.view)
-
-    // On your marks
-
-    to.view.isHidden = true
     to.view.layoutIfNeeded()
 
-    let (_, t) = PlayerAnimator.makeCFAffineTransform(
-      view: cv, traitCollection: to.traitCollection)
+    // Adding the main view and hiding it while animating.
 
-    bg.transform = t
+    cv.addSubview(to.view)
+    to.view.isHidden = true
 
-    // Animate
+    // Placing snapshots/sprites on their initial marks.
 
-    let heroCenter = to.container.convert(to.heroImage.center, to: cv)
-    let heroBounds = to.heroImage.bounds
+    let o = Orientation(traitCollection: to.traitCollection)
+
+    let d = o == .horizontal ? cv.bounds.width : cv.bounds.height
+    bg.transform = PlayerAnimator.makeOffset(orientation: o, distance: d)
+
+    header.alpha = 0
+    header.center = to.view.convert(to.doneButton.center, to: cv)
+    header.transform = PlayerAnimator.makeOffset(orientation: o, distance: 256)
+
+    // Setting up and starting the animation, cleaning up in the completion
+    // block.
 
     let anim = UIViewPropertyAnimator(duration: duration, curve: .easeInOut) {
-      bg.transform = CGAffineTransform.identity
+      header.alpha = 1
+      header.transform = CGAffineTransform.identity
 
-      hero.center = heroCenter
-      hero.bounds = heroBounds
+      hero.center = to.container.convert(to.heroImage.center, to: cv)
+      hero.bounds = to.heroImage.bounds
+
+      bg.transform = CGAffineTransform.identity
     }
 
     anim.addCompletion { finalPosition in
-      bg.removeFromSuperview()
-      hero.removeFromSuperview()
+      for v in [header, bg, hero] { v.removeFromSuperview() }
 
       to.animationEnded(hero)
       to.view.isHidden = false
