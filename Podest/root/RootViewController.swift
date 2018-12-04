@@ -60,6 +60,7 @@ final class RootViewController: UIViewController {
   /// This one-shot block installs the mini-player.
   lazy var installMiniPlayer: () = hideMiniPlayer(false)
 
+  /// The width or height of the mini-player, taken from the storyboard.
   var miniPlayerConstant: CGFloat = 0
 
   /// A reference to the current player transition delegate. Unfortunately, we
@@ -139,15 +140,16 @@ extension RootViewController {
 
     let ncs = svc.viewControllers as! [UINavigationController]
 
+    for nc in ncs {
+      nc.view.backgroundColor = .white
+      nc.delegate = self
+    }
+
     pnc = ncs.first
-    pnc.delegate = self
-    pnc.view.backgroundColor = .white
     pnc.navigationBar.prefersLargeTitles = traitCollection.containsTraits(in:
       UITraitCollection(horizontalSizeClass: .compact))
 
     snc = ncs.last
-    snc.delegate = self
-    snc.view.backgroundColor = .white
 
     minivc = (children.last as! MiniPlayerController)
     minivc.navigationDelegate = self

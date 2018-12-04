@@ -99,7 +99,7 @@ extension RootViewController: Players {
       os_log("** applying constant: %f",
              log: log, type: .debug, miniPlayerConstant)
 
-      miniPlayerLeading.constant = miniPlayerConstant
+      miniPlayerLeading.constant = miniPlayerConstant - view.safeAreaInsets.right
       miniPlayerTop.constant = miniPlayerConstant
       miniPlayerBottom.constant = 0
 
@@ -117,7 +117,7 @@ extension RootViewController: Players {
 
       miniPlayerTop.constant = miniPlayerConstant
       miniPlayerBottom.constant = 0
-      miniPlayerLeading.constant = miniPlayerConstant
+      miniPlayerLeading.constant = miniPlayerConstant - view.safeAreaInsets.right
     }
 
     UIViewPropertyAnimator(duration: 0.3, curve: .easeOut) {
