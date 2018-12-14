@@ -16,9 +16,13 @@ import Ola
 
 private let log = OSLog.disabled
 
-// MARK: - Players
-
 extension RootViewController: Players {
+  // Implementation of Players is broken down into caterogized extensions below.
+}
+
+// MARK: - Placing the Mini-Player
+
+extension RootViewController {
 
   var isMiniPlayerHidden: Bool {
     return minivc.viewIfLoaded?.isHidden ?? true
@@ -29,18 +33,21 @@ extension RootViewController: Players {
       guard $0.isActive else {
         return false
       }
+
       return $0.identifier == "Mini-Player-Layout-Top" ||
         $0.identifier == "Mini-Player-Layout-Leading"
-    }!
+      }!
   }
 
   var miniPlayerEdgeInsets: UIEdgeInsets {
     guard
       miniLayout.identifier == "Mini-Player-Layout-Top",
       miniLayout.constant != 0 else {
-      return UIEdgeInsets.zero
+      return .zero
     }
+
     let bottom = minivc.view.frame.height - view.safeAreaInsets.bottom
+
     return UIEdgeInsets(top: 0, left: 0, bottom: bottom, right: 0)
   }
 
@@ -56,7 +63,9 @@ extension RootViewController: Players {
       miniPlayerBottom.constant = miniPlayerConstant
       miniPlayerLeading.constant = 0
       minivc.view.isHidden = true
+
       view.layoutIfNeeded()
+
       return done()
     }
 
@@ -68,6 +77,7 @@ extension RootViewController: Players {
     if miniPlayerTop.isActive {
       miniPlayerTop.constant = 0
       miniPlayerBottom.constant = miniPlayerConstant
+
       UIView.animate(withDuration: 0.3, animations: {
         self.view.layoutIfNeeded()
       }) { ok in
@@ -78,13 +88,17 @@ extension RootViewController: Players {
       }
     } else {
       miniPlayerLeading.constant = 0
+
       UIView.animate(withDuration: 0.3, animations: {
         self.view.layoutIfNeeded()
       }) { ok in
         self.miniPlayerTop.constant = 0
         self.miniPlayerBottom.constant = self.miniPlayerConstant
+
         self.view.layoutIfNeeded()
+
         self.minivc.view.isHidden = true
+        
         done()
       }
     }
@@ -125,6 +139,12 @@ extension RootViewController: Players {
     }.startAnimation()
   }
 
+}
+
+// MARK: - Controlling Playback
+
+extension RootViewController {
+
   func play(_ entry: Entry) {
     os_log("playing: %@", log: log, type: .debug, entry.title)
 
@@ -159,6 +179,12 @@ extension RootViewController: Players {
   func pause() {
     Podest.playback.pause()
   }
+
+}
+
+// MARK: - Presenting the Audio Player
+
+extension RootViewController {
 
   private static func makeNowPlaying() -> PlayerViewController {
     let sb = UIStoryboard(name: "Player", bundle: Bundle.main)
@@ -216,11 +242,18 @@ extension RootViewController: Players {
     playervc = nil
     playerTransition = PlayerTransitionDelegate()
     presentedViewController?.transitioningDelegate = playerTransition
+
     dismiss(animated: flag)  { [weak self] in
       self?.playerTransition = nil
       completion?()
     }
   }
+
+}
+
+// MARK: - Presenting the Video Player
+
+extension RootViewController {
 
   func showVideo(player: AVPlayer) {
     DispatchQueue.main.async {
@@ -251,6 +284,7 @@ extension RootViewController: Players {
   }
 
 }
+
 
 /// This extension hides the status bar in landscape.
 extension AVPlayerViewController {
