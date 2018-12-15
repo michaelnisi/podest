@@ -420,7 +420,7 @@ extension QueueViewController {
   
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
-    selectCurrentRow(animated: false, scrollPosition: .middle)
+    selectCurrentRow(animated: false, scrollPosition: .none)
    
     var insets = tableView.separatorInset
     insets.left = view.safeAreaInsets.left + separatorInsetLeft
