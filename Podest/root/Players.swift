@@ -98,7 +98,7 @@ extension RootViewController {
         self.view.layoutIfNeeded()
 
         self.minivc.view.isHidden = true
-        
+
         done()
       }
     }
@@ -187,7 +187,7 @@ extension RootViewController {
 extension RootViewController {
 
   private static func makeNowPlaying() -> PlayerViewController {
-    let sb = UIStoryboard(name: "Player", bundle: Bundle.main)
+    let sb = UIStoryboard(name: "Player", bundle: .main)
     let vc = sb.instantiateViewController(withIdentifier: "PlayerID")
       as! PlayerViewController
     return vc
@@ -211,7 +211,7 @@ extension RootViewController {
     playbackControlProxy = now
 
     // Using a setter to drive this important change is unfortunate. Turns out,
-    // we could use callback now, for knowing when it’s done. Working around
+    // we could need a callback now, for knowing when it’s done. Working around
     // the issue by installing a callback on the view controller.
 
     vc.entryChangedBlock = { [weak self] changedEntry in
@@ -281,6 +281,11 @@ extension RootViewController {
         os_log("dismissed video player", log: log, type: .debug)
       }
     }
+  }
+
+  var isPlayerPresented: Bool {
+    return presentedViewController is AVPlayerViewController ||
+      presentedViewController is PlayerViewController
   }
 
 }

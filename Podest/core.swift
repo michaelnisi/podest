@@ -18,13 +18,19 @@ import AVFoundation
 protocol Players {
   
   // MARK: Essentials
-  
+
+  /// Starts playing `entry`.
   func play(_ entry: Entry)
+
+  /// Pause playback.
   func pause()
+
+  /// Returns `true` if `entry` is playing.
   func isPlaying(_ entry: Entry) -> Bool
   
   // MARK: Mini Player
 
+  /// The mini-player edge insets, updated for device orientation.
   var miniPlayerEdgeInsets: UIEdgeInsets { get }
 
   /// Shows the mini-player or does nothing.
@@ -35,13 +41,22 @@ protocol Players {
   func hideMiniPlayer(_ animated: Bool)
   
   // MARK: Now Playing
-  
+
+  /// Presents the main player with `entry`.
   func showNowPlaying(entry: Entry)
+
+  /// Dismisses the main player.
   func hideNowPlaying(animated flag: Bool, completion: (() -> Void)?)
+
+  /// `true` if the main player, audio or video, is visible at the moment.
+  var isPlayerPresented: Bool { get }
   
   // MARK: Video
-  
+
+  /// Presents video `player`.
   func showVideo(player: AVPlayer)
+
+  /// Hides video player.
   func hideVideoPlayer()
   
 }
