@@ -1161,7 +1161,7 @@ extension UserClient: UserSyncing {
   /// after reloading the queue to re-synchronize user state, we aren’t handling
   /// errors here, but just casually log them.
   private func synchronizeUserLibrary(completionBlock: (() -> Void)?) {
-    Podest.userLibrary.synchronize { error in
+    Podest.userLibrary.synchronize { _, _, error in
       guard error == nil else {
         switch error! {
         case QueueingError.outOfSync:
