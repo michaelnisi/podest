@@ -56,10 +56,10 @@ extension PlayerPresentationAnimator: UIViewControllerAnimatedTransitioning {
       return transitionContext.completeTransition(true)
     }
 
-    // Finding sprites.
+    // Finding sprites and taking snapshots.
 
     guard
-      let fv = PlayerAnimator.addSnapshot(using: from.view, to: cv),
+      let fv = PlayerAnimator.addSnapshot(using: from.view, to: cv, afterScreenUpdates: false),
       let bg = PlayerPresentationAnimator.addSnapshot(using: to, to: cv),
       let hero = PlayerAnimator.addHero(using: tc),
       let header = PlayerAnimator.addSnapshot(using: to.doneButton, to: cv) else {
@@ -69,8 +69,6 @@ extension PlayerPresentationAnimator: UIViewControllerAnimatedTransitioning {
     // Hiding original views during animation.
 
     to.view.isHidden = true
-    to.view.layoutIfNeeded()
-
     from.view.isHidden = true
 
     // Placing snapshots on their initial marks.
@@ -96,6 +94,7 @@ extension PlayerPresentationAnimator: UIViewControllerAnimatedTransitioning {
       bg.transform = .identity
 
       fv.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+      fv.alpha = 0.6
     }
 
     // Shortening the visible path of the done button.
