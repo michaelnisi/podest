@@ -12,11 +12,17 @@ import os.log
 // MARK: - PlayerPresentationController
 
 /// Manages the presentation of the player view controller.
+///
+/// Does nothing at the moment, all animating in the two player animators.
+///
+/// - PlayerDismissalAnimator
+/// - PlayerPresentationAnimator
 class PlayerPresentationController: UIPresentationController {}
 
 // MARK: - PlayerAnimator
 
-/// A base class for animators in the player presentation.
+/// A base class, providing common functions, for the animators in the player
+/// presentation.
 class PlayerAnimator: NSObject {
 
   let duration: TimeInterval
@@ -70,9 +76,13 @@ class PlayerAnimator: NSObject {
   }
 
   /// Returns snapshot of `view` added to `containerView`.
-  static
-    func addSnapshot(using view: UIView, to containerView: UIView) -> UIView? {
-    guard let snapshot = view.snapshotView(afterScreenUpdates: true) else {
+  static func addSnapshot(
+    using view: UIView,
+    to containerView: UIView,
+    afterScreenUpdates: Bool = true
+  ) -> UIView? {
+    guard let snapshot = view.snapshotView(
+      afterScreenUpdates: afterScreenUpdates) else {
       return nil
     }
 
