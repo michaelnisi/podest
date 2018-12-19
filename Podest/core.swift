@@ -77,7 +77,7 @@ protocol EntryIndexPathMapping {
   
 }
 
-/// Lets us select a row with an entry.
+/// Selects and deselects table view rows.
 protocol EntryRowSelectable {
   
   associatedtype DataSource: EntryIndexPathMapping
@@ -85,34 +85,39 @@ protocol EntryRowSelectable {
   var dataSource: DataSource { get }
   
   @discardableResult func selectRow(
-    with entry: Entry,
+    representing entry: Entry?,
     animated: Bool,
     scrollPosition: UITableView.ScrollPosition
   ) -> Bool
+
+  func clearSelection(_ animated: Bool)
   
 }
 
-/// Defaults for UITableViewControllers.
 extension EntryRowSelectable where Self: UITableViewController {
 
   @discardableResult func selectRow(
-    with entry: Entry,
+    representing entry: Entry?,
     animated: Bool,
-    scrollPosition: UITableView.ScrollPosition = .middle
+    scrollPosition: UITableView.ScrollPosition = .none
   ) -> Bool {
     guard viewIfLoaded?.window != nil,
-      let ip = dataSource.indexPath(matching: entry) else {
-        if let indexPathForSelectedRow = tableView.indexPathForSelectedRow {
-          tableView.deselectRow(at: indexPathForSelectedRow, animated: animated)
-        }
-        return false
+      let e = entry,
+      let ip = dataSource.indexPath(matching: e) else {
+      if let indexPathForSelectedRow = tableView.indexPathForSelectedRow {
+        tableView.deselectRow(at: indexPathForSelectedRow, animated: animated)
+      }
+      return false
     }
     
     tableView.selectRow(at: ip, animated: animated, scrollPosition: scrollPosition)
-    
+
     return true
   }
-  
+
+  func clearSelection(_ animated: Bool) {
+    selectRow(representing: nil, animated: animated)
+  }
 }
 
 /// Useful default action sheet things.
@@ -184,6 +189,10 @@ protocol ViewControllers: Players {
   
   /// Resigns search from being first responder.
   func resignSearch()
+
+  /// `true` if the main split view controller is collapsed. Default is `true`.
+  var isCollapsed: Bool { get }
+
 }
 
 /// Defines a callback interface to the user library and queue.

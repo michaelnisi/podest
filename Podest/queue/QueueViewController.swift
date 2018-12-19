@@ -13,112 +13,23 @@ import Ola
 
 private let log = OSLog.disabled
 
-private enum SearchState: Int {
-  case dismissed, searching, suggesting
-}
-
-private enum SearchEvent {
-  case suggest, search, dismiss
-}
-
 /// The `QueueViewController` is the initial/main view controller of this app,
 /// it renders the user’s queued episodes and, in its navigation item, provides
 /// the global search.
 final class QueueViewController: UITableViewController, Navigator {
 
-  private var searchController: UISearchController!
-  private var searchResultsController: SearchResultsController!
-
-  // MARK: - Search FSM
-
-  private var state = SearchState.dismissed {
-    didSet {
-      os_log("queue: new state: %{public}@, old state: %{public}@",
-             log: log, type: .debug,
-             String(describing: state), String(describing: oldValue)
-      )
-    }
-  }
-
-  var isDismissed: Bool {
-    return state == .dismissed
-  }
-
-  private var term: String? // == searchBar.text?
-  private var searchBar: UISearchBar {
-    return searchController.searchBar
-  }
-
-  private func event(_ e: SearchEvent, term: String?) {
-    let src = searchResultsController
-
-    self.term = term
-
-    switch state {
-    case .dismissed:
-      switch e {
-      case .dismiss:
-        break
-      case .search:
-        src?.search(term!)
-        state = .searching
-      case .suggest:
-        guard term != nil, term != "" else {
-          break
-        }
-        src?.suggest(term!)
-        state = .suggesting
-      }
-    case .suggesting:
-      switch e {
-      case .dismiss:
-        src?.reset()
-        state = .dismissed
-      case .search:
-        if searchBar.text != term {
-          searchBar.text = term
-        }
-
-        if searchBar.isFirstResponder {
-          searchBar.resignFirstResponder()
-        }
-
-        src?.search(term!)
-        state = .searching
-      case .suggest:
-        src?.suggest(term!)
-        state = .suggesting
-      }
-    case .searching:
-      switch e {
-      case .dismiss:
-        src?.reset()
-        state = .dismissed
-      case .search:
-        src?.search(term!)
-        state = .searching
-      case .suggest:
-        src?.suggest(term!)
-        state = .suggesting
-      }
-    }
-  }
-
-  func suggest(_ term: String) {
-    event(.suggest, term: term)
-  }
-
-  func search(_ term: String) {
-    event(.search, term: term)
-  }
-
-  func dismiss() {
-    event(.dismiss, term: nil)
-  }
-
   // MARK: - Navigator
 
-  var navigationDelegate: ViewControllers?
+  /// The navigations delegate gets forwarded to the search proxy.
+  var navigationDelegate: ViewControllers? {
+    didSet {
+      searchProxy.navigationDelegate = navigationDelegate
+    }
+  }
+
+  var isSearchDismissed: Bool {
+    return searchProxy.isSearchDismissed
+  }
 
   // MARK: - Data Source
 
@@ -126,12 +37,15 @@ final class QueueViewController: UITableViewController, Navigator {
   /// animations are running, pull-to-refresh or swipe editing.
   private var deferred: (Updates, Error?)?
 
-  private func selectCurrentRow(animated: Bool, scrollPosition: UITableView.ScrollPosition) {
+  private func selectCurrentRow(
+    animated: Bool,
+    scrollPosition: UITableView.ScrollPosition
+  ) {
     guard viewIfLoaded?.window != nil,
       let entry = self.navigationDelegate?.entry else {
         return
     }
-    selectRow(with: entry, animated: animated, scrollPosition: scrollPosition)
+    selectRow(representing: entry, animated: animated, scrollPosition: scrollPosition)
   }
   
   var isFirstRun = true
@@ -193,7 +107,7 @@ final class QueueViewController: UITableViewController, Navigator {
             self?.showMessage(StringRepository.emptyQueue())
           } else {
             self?.selectCurrentRow(
-              animated: animated, scrollPosition: scrollPosition)
+              animated: animated, scrollPosition: .none)
           }
           
           self?.navigationItem.hidesSearchBarWhenScrolling = !isEmpty
@@ -290,15 +204,8 @@ final class QueueViewController: UITableViewController, Navigator {
   /// Orignal separator inset left from IB.
   private var separatorInsetLeft: CGFloat!
 
-}
-
-// MARK: - UIResponder
-
-extension QueueViewController {
-
-  @discardableResult override func resignFirstResponder() -> Bool {
-    return searchBar.resignFirstResponder() && super.resignFirstResponder()
-  }
+  /// A state machine handling events from the search controller.
+  private var searchProxy: SearchControllerProxy!
 
 }
 
@@ -306,45 +213,64 @@ extension QueueViewController {
 
 extension QueueViewController {
   
-  @objc func refreshControlValueChanged(_ sender:AnyObject) {
+  @objc func refreshControlValueChanged(_ sender: UIRefreshControl) {
+    guard sender.isRefreshing else {
+      return
+    }
+
     dataSource.update(minding: 60)
   }
 
   func makeRefreshControl() -> UIRefreshControl {
     let rc = UIRefreshControl()
     let action = #selector(refreshControlValueChanged)
+
     rc.addTarget(self, action: action, for: .valueChanged)
+
     return rc
+  }
+
+  private func makeSearchProxy() -> (UISearchController, SearchControllerProxy) {
+    let searchResultsController = SearchResultsController()
+    searchResultsController.searchSeparatorInset = tableView.separatorInset
+    
+    let searchController = UISearchController(
+      searchResultsController: searchResultsController
+    )
+
+    searchController.hidesNavigationBarDuringPresentation = true
+
+    let fsm = SearchControllerProxy(
+      searchController: searchController,
+      searchResultsController: searchResultsController
+    )
+
+    return (searchController, fsm)
   }
 
   override func viewDidLoad() {
     super.viewDidLoad()
 
     definesPresentationContext = true
-    navigationItem.title = "Queue"
 
-    refreshControl = makeRefreshControl()
+    let (searchController, searchProxy) = makeSearchProxy()
 
-    searchResultsController = SearchResultsController()
-    searchResultsController.delegate = self
-    searchResultsController.searchSeparatorInset = tableView.separatorInset
-
-    searchController = UISearchController(
-      searchResultsController: searchResultsController
-    )
-    searchController.delegate = self
-    searchController.searchResultsUpdater = self
-    searchBar.delegate = self
+    searchProxy.install()
 
     navigationItem.searchController = searchController
-    navigationItem.largeTitleDisplayMode = .always
-//    navigationItem.hidesSearchBarWhenScrolling = false
+    navigationItem.title = "Queue"
+    navigationItem.largeTitleDisplayMode = .never
+
+    self.searchProxy = searchProxy
 
     Cells.registerFKImageCell(with: tableView)
+    
     tableView.dataSource = dataSource
     tableView.prefetchDataSource = dataSource
-    separatorInsetLeft = tableView.separatorInset.left
 
+    clearsSelectionOnViewWillAppear = true
+
+    separatorInsetLeft = tableView.separatorInset.left
 
     // Setting the delegate first to make sure the store is in `interested` or
     // `subscribed` state to handle incoming transaction updates correctly.
@@ -372,7 +298,7 @@ extension QueueViewController {
   override func viewWillAppear(_ animated: Bool) {
     let isCollapsed = (splitViewController?.isCollapsed)!
     let isDifferent = entry != navigationDelegate?.entry
-    let isNotDismissed = state != .dismissed
+    let isNotDismissed = !searchProxy.isSearchDismissed
 
     clearsSelectionOnViewWillAppear = (
       isCollapsed || isDifferent || isNotDismissed
@@ -382,35 +308,15 @@ extension QueueViewController {
   }
 
   override func viewDidAppear(_ animated: Bool) {
-    searchController.isActive = state != .dismissed
-
-    // Managing the selection of search results controller here from here,
-    // due to easier access to the split view controller state.
-    searchResultsController.scrollToSelectedRow(animated: true)
-    searchResultsController.deselect(isCollapsed: (splitViewController?.isCollapsed)!)
-
     // If the data source is empty, it’s this view’s initial appearance or the
     // queue is actually empty and thus inexpensive to reload.
     if dataSource.isEmpty {
       dataSource.reload()
     }
 
+    searchProxy.deselect(animated)
+
     super.viewDidAppear(animated)
-  }
-  
-  override func viewWillLayoutSubviews() {
-    defer {
-      super.viewWillLayoutSubviews()
-    }
-
-    guard !(refreshControl?.isRefreshing)! else {
-      return
-    }
-
-    let insets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
-
-    tableView.scrollIndicatorInsets = insets
-    tableView.contentInset = insets
   }
 
   override func viewDidDisappear(_ animated: Bool) {
@@ -420,25 +326,22 @@ extension QueueViewController {
   
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
-    selectCurrentRow(animated: false, scrollPosition: .none)
-   
-    var insets = tableView.separatorInset
-    insets.left = view.safeAreaInsets.left + separatorInsetLeft
-    tableView.separatorInset = insets
-  }
-  
-  // MARK: Managing State Restoration
 
-  // Encountering layout issues with the search controller, state restoration
-  // is disabled for now. In fact, it‘s questionable if it‘s required at all:
-  // restoring search UI is kind of clunky.
+    var separatorInset = tableView.separatorInset
+    separatorInset.left = view.safeAreaInsets.left + separatorInsetLeft
+    tableView.separatorInset = separatorInset
 
-  override func encodeRestorableState(with coder: NSCoder) {
-    super.encodeRestorableState(with: coder)
-  }
+    let insets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
+    tableView.scrollIndicatorInsets = insets
+    tableView.contentInset = insets
 
-  override func decodeRestorableState(with coder: NSCoder) {
-    super.decodeRestorableState(with: coder)
+    refreshControl = makeRefreshControl()
+
+    if splitViewController!.isCollapsed {
+      clearSelection(true)
+    } else {
+      selectCurrentRow(animated: true, scrollPosition: .none)
+    }
   }
 
 }
@@ -460,7 +363,7 @@ extension QueueViewController {
         guard let (updates, error) = self?.deferred else {
           return
         }
-        
+
         self?.dataSource.updateCompletionBlock?(updates, error, nil)
       }
     }
@@ -489,7 +392,9 @@ extension QueueViewController {
     let h = dataSource.makeDequeueHandler(forRowAt: indexPath, of: tableView)
     let a = UIContextualAction(style: .destructive, title: nil, handler: h)
     let img = UIImage(named: "Trash")
+
     a.image = img
+
     return a
   }
 
@@ -499,7 +404,9 @@ extension QueueViewController {
   ) -> UISwipeActionsConfiguration? {
     let actions = [makeDequeueAction(forRowAt: indexPath)]
     let conf = UISwipeActionsConfiguration(actions: actions)
+
     conf.performsFirstActionWithFullSwipe = true
+
     return conf
   }
 
@@ -507,84 +414,16 @@ extension QueueViewController {
     _ tableView: UITableView,
     didEndEditingRowAt indexPath: IndexPath?) {
     super.tableView(tableView, didEndEditingRowAt: indexPath)
+
     guard
       let (updates, error) = self.deferred,
       let cb = dataSource.updateCompletionBlock else {
       return
     }
+
     // Waiting just a tiny bit for the swipe animation to finish.
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
       cb(updates, error, nil)
-    }
-  }
-
-}
-
-// MARK: - UISearchBarDelegate
-
-extension QueueViewController: UISearchBarDelegate {
-
-  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-    guard let text = searchBar.text else {
-      return
-    }
-    search(text)
-  }
-
-}
-
-// MARK: - UISearchResultsUpdating
-
-extension QueueViewController: UISearchResultsUpdating {
-
-  func updateSearchResults(for sc: UISearchController) {
-    guard let text = sc.searchBar.text, text != term else {
-      return
-    }
-    suggest(text)
-  }
-
-}
-
-// MARK: - UISearchControllerDelegate
-
-extension QueueViewController: UISearchControllerDelegate {
-
-  func willDismissSearchController(_ sc: UISearchController) {
-    dismiss()
-  }
-
-}
-
-// MARK: - SearchResultsControllerDelegate
-
-extension QueueViewController: SearchResultsControllerDelegate {
-
-  private func show(feed: Feed) {
-    navigationDelegate?.show(feed: feed)
-  }
-
-  private func show(entry: Entry) {
-    if let svc = splitViewController, !svc.isCollapsed,
-      searchBar.isFirstResponder {
-      searchBar.resignFirstResponder()
-    }
-    navigationDelegate?.show(entry: entry)
-  }
-
-  func searchResultsController(
-    _ searchResultsController: SearchResultsController,
-    didSelectFind find: Find
-  ) {
-    switch find {
-    case .recentSearch(let feed):
-      show(feed: feed)
-    case .suggestedEntry(let entry):
-      show(entry: entry)
-    case .suggestedFeed(let feed), .foundFeed(let feed):
-      show(feed: feed)
-    case .suggestedTerm(let suggestion):
-      search(suggestion.term)
     }
   }
 
@@ -605,6 +444,7 @@ extension QueueViewController: EntryProvider {
       return Podest.playback.currentEntry ??
         dataSource.entry(at: IndexPath(row: 0, section: 0))
     }
+
     return dataSource.entry(at: indexPath)
   }
 
@@ -655,6 +495,3 @@ extension QueueViewController: StoreAccessDelegate {
   }
 
 }
-
-
-
