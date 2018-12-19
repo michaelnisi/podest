@@ -29,6 +29,8 @@ final class ListViewController: UITableViewController, Navigator {
   private var traitsChanged = false
   
   /// If the header should be hidden, because height is compact, this is `true`.
+  ///
+  /// How confusingly named, talking about the view, not the device. Notice!
   var isCompact: Bool = false {
     didSet {
       guard let url = self.url else {
@@ -48,12 +50,12 @@ final class ListViewController: UITableViewController, Navigator {
         header = tableView.tableHeaderView
         tableView.tableHeaderView = nil
 
-        clearSelection(false)
+        selectCurrentRow(animated: false)
       } else {
         tableView.tableHeaderView = header
         header = nil
 
-        selectCurrentRow(animated: false)
+        clearSelection(false)
       }
 
       tableView.layoutTableHeaderView()
@@ -332,12 +334,16 @@ extension ListViewController {
       // completely synchronized yet, so we sync and wait before configuring
       // the navigation item.
 
-      Podest.userLibrary.synchronize { _, _, error in
+      Podest.userLibrary.synchronize { [weak self] urls, _, error in
         if let er = error {
           switch er {
           case QueueingError.outOfSync(let queue, let guids):
-            os_log("** out of sync: ( queue: %i, guids: %i )",
-                   log: log, type: .debug, queue, guids)
+            if queue == 0, guids != 0 {
+              os_log("queue not populated", log: log, type: .debug)
+            } else {
+              os_log("** out of sync: ( queue: %i, guids: %i )",
+                     log: log, type: .debug, queue, guids)
+            }
           default:
             fatalError("probably a database error: \(er)")
           }
@@ -347,7 +353,8 @@ extension ListViewController {
           guard let url = self?.url else {
             return
           }
-          self?.isSubscribed = Podest.userLibrary.has(subscription: url)
+
+          self?.isSubscribed = urls?.contains(url) ?? false
         }
       }
     }
@@ -658,7 +665,7 @@ extension ListViewController {
            log: log, type: .debug, self)
     
     let items = makeRightBarButtonItems(url: url)
-    
+
     navigationItem.setRightBarButtonItems(items, animated: true)
   }
   
