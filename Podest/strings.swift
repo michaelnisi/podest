@@ -12,27 +12,146 @@ import os.log
 
 private let log = OSLog.disabled
 
-/// `StringRepository` provides static functions to make the more expensive
-/// Strings.
+/// Cached string formatting.
 class StringRepository {
 
   private static var naturalDateFormatter: DateFormatter = {
     let df = DateFormatter()
+
     df.timeStyle = .none
     df.dateStyle = .medium
+
     let locale = Locale(identifier: "en_US")
+
     df.locale = locale
     df.doesRelativeDateFormatting = true
+
     return df
   }()
+
+  private static var entries: NSCache<NSString, NSAttributedString> = {
+    let cache = NSCache<NSString, NSAttributedString>()
+
+    cache.countLimit = 256
+
+    return cache
+  }()
   
+  private struct EntryAttributes {
+
+    static var p: NSParagraphStyle = {
+      var p = NSMutableParagraphStyle()
+
+      p.lineSpacing = 2
+
+      return p
+    }()
+
+    let title1: [NSAttributedString.Key: Any] = [
+      .font: UIFont.systemFont(ofSize: 28, weight: .bold),
+      .foregroundColor: UIColor.darkText,
+      .paragraphStyle: p
+    ]
+
+    let h1: [NSAttributedString.Key: Any] = [
+      .font: UIFont.systemFont(ofSize: 18, weight: .bold),
+      .foregroundColor: UIColor.darkText,
+      .paragraphStyle: EntryAttributes.p
+    ]
+
+    let body: [NSAttributedString.Key: Any] = [
+      .font: UIFont.systemFont(ofSize: 18, weight: .medium),
+      .foregroundColor: UIColor(named: "Asphalt")!,
+      .paragraphStyle: p
+    ]
+
+    let caption1: [NSAttributedString.Key: Any] = [
+      .font: UIFont.preferredFont(forTextStyle: .caption1),
+      .foregroundColor: UIColor.lightGray
+    ]
+
+  }
+  
+  private static var entryAttributes = EntryAttributes()
+
+  static func purge() {
+    durations.removeAllObjects()
+    entries.removeAllObjects()
+    episodeCellSubtitles.removeAllObjects()
+  }
+
+}
+
+// MARK: - Entries and Feeds
+
+extension StringRepository {
+
+  /// Returns an attributed String produced from an entry’s or feed’s summary.
+  static func attribute(summary: String?) -> NSAttributedString {
+    let html = HTMLAttributor()
+
+    os_log("attributing: %@",
+           log: log, type: .debug, String(describing: summary))
+
+    let str = summary ?? """
+      Unfortunately, I have no summary for this awesome content, at this time.
+    """
+
+    do {
+      let tree = try html.parse(str)
+
+      var styles = HTMLAttributor.defaultStyles
+
+      styles["root"] = entryAttributes.body
+      styles["a"] = entryAttributes.body
+      styles["h1"] = entryAttributes.h1
+
+      return try html.attributedString(tree, styles: styles)
+    } catch {
+      os_log("parsing summary failed: %@", log: log, error as CVarArg)
+      return NSAttributedString(string: str, attributes: entryAttributes.body)
+    }
+  }
+
+
+  /// Synchronously, produces an attributed string for `entry`.
+  static func string(for entry: Entry) -> NSAttributedString {
+    if let cached = entries.object(forKey: entry.guid as NSString) {
+      return cached
+    }
+
+    let attrString = NSMutableAttributedString(
+      string: entry.title, attributes: entryAttributes.title1)
+
+    func newline() {
+      attrString.append(NSAttributedString(
+        string: "\n\n", attributes: entryAttributes.body))
+    }
+
+    newline()
+
+    attrString.append(attribute(summary: entry.summary))
+
+    entries.setObject(attrString, forKey: entry.guid as NSString)
+
+    return attrString
+  }
+
+}
+
+// MARK: - Times and Dates
+
+extension StringRepository {
+
   static func string(from date: Date) -> String {
     return naturalDateFormatter.string(from: date)
   }
 
   private static var durations: NSCache<NSNumber, NSString> = {
     let c = NSCache<NSNumber, NSString>()
+
     c.countLimit = 1024
+
     return c
   }()
 
@@ -52,172 +171,82 @@ class StringRepository {
 
     if d < 3600 {
       let minutes = d / 60
-      
+
       guard minutes >= 1 else {
         let s = d == 1 ? "second" : "seconds"
         return done("\(d) \(s)")
       }
-      
+
       let m = minutes == 1 ? "minute" : "minutes"
       return done("\(minutes) \(m)")
     }
 
     let hours = d / 3600
     let h = hours == 1 ? "hour" : "hours"
-
     let minutes = (d % 3600) / 60
 
     guard minutes != 0 else {
       return done("\(hours) \(h)")
     }
-  
+
     let m = minutes == 1 ? "minute" : "minutes"
 
     return done("\(hours) \(h) \(minutes) \(m)")
   }
 
-  private static var entries: NSCache<NSString, NSAttributedString> = {
-    let cache = NSCache<NSString, NSAttributedString>()
-    cache.countLimit = 256
-    return cache
-  }()
-  
-  private struct EntryAttributes {
-    let title1: [NSAttributedString.Key: Any] = [
-      .font: UIFont.preferredFont(forTextStyle: .title1),
-      .foregroundColor: UIColor.darkGray
-    ]
+}
 
-    let caption1: [NSAttributedString.Key: Any] = [
-      .font: UIFont.preferredFont(forTextStyle: .caption1),
-      .foregroundColor: UIColor.lightGray
-    ]
-    
-    let body: [NSAttributedString.Key: Any] = [
-      .font: UIFont.preferredFont(forTextStyle: .body)
-    ]
-  }
-  
-  private static var entryAttributes = EntryAttributes()
-  
-  /// Returns an attributed String produced from an entry’s or feed’s summary.
-  static func attribute(summary: String?) -> NSAttributedString {
-    let html = HTMLAttributor()
+// MARK: - Cells
 
-    os_log("attributing: %@",
-           log: log, type: .debug, String(describing: summary))
+extension StringRepository {
 
-    let str = summary ?? "Unfortunately, I have no summary for this awesome content, at this time."
-    
-    do {
-      let tree = try html.parse(str)
-      return try html.attributedString(tree)
-    } catch {
-      os_log("parsing summary failed: %@", log: log, error as CVarArg)
-      return NSAttributedString(string: str, attributes: entryAttributes.body)
-    }
-  }
-  
-  private static func footer(for entry: Entry) -> NSAttributedString {
-    let duration = string(from: entry.duration) ?? ""
-    let updated = string(from: entry.updated)
-    let author = entry.author ?? ""
-    let str = "\(duration)\n\(updated) by \(author)"
-    
-    return NSAttributedString(string: str, attributes: entryAttributes.caption1)
-  }
-  
-  private func subtitle(for entry: Entry) -> NSAttributedString? {
-    guard let feedTitle = entry.feedTitle else {
-      return nil
-    }
-    
-    let url = URL(string: "\(Podest.scheme)://\(Podest.domain)/feed?url=\(entry.feed)")
-    let attributes: [NSAttributedString.Key : Any] = [
-      .font: UIFont.preferredFont(forTextStyle: .headline),
-      .link: url as AnyObject
-    ]
-    
-    return NSAttributedString(string: feedTitle, attributes: attributes)
-  }
-  
-  /// Synchronously, produces an attributed string for `entry`.
-  static func string(for entry: Entry) -> NSAttributedString {
-    if let cached = entries.object(forKey: entry.guid as NSString) {
-      return cached
-    }
-
-    let attrString = NSMutableAttributedString(
-      string: entry.title, attributes: entryAttributes.title1)
-    
-    func newline() {
-      attrString.append(NSAttributedString(string: "\n\n"))
-    }
-    
-    newline()
-//    
-//    if let attrSubtitle = subtitle(for: entry) {
-//      attrString.append(attrSubtitle)
-//      newline()
-//    }
-//    
-    attrString.append(attribute(summary: entry.summary))
-//    newline()
-//    
-//    attrString.append(footer(for: entry))
-
-    entries.setObject(attrString, forKey: entry.guid as NSString)
-    
-    return attrString
-  }
-  
-  static func purge() {
-    durations.removeAllObjects()
-    entries.removeAllObjects()
-    episodeCellSubtitles.removeAllObjects()
-  }
-  
-  // MARK: Feed Cell Subtitles
-  
   static var feedCellSubtitles: NSCache<NSNumber, NSString> = {
     let c = NSCache<NSNumber, NSString>()
+
     c.countLimit = 1024
+
     return c
   }()
-  
+
   static func feedCellSubtitle(for feed: Feed) -> String {
     let key = feed.hashValue as NSNumber
+
     guard let subtitle = feedCellSubtitles.object(forKey: key) else {
       var subtitle = ""
-      
+
       if let author = feed.author {
         subtitle.append(author)
       } else {
         os_log("no author: %@", feed.title)
       }
-      
+
       if let updated = feed.updated, updated != Date(timeIntervalSince1970: 0) {
-        subtitle.append("\n\(string(from: updated))")
+        subtitle.append(", \(string(from: updated))")
       } else {
         os_log("embezzling updated: %@", feed.title)
       }
-      
+
       feedCellSubtitles.setObject(subtitle as NSString, forKey: key)
+
       return subtitle
     }
+
     return subtitle as String
   }
-  
+
   // MARK: Episode Cell Subtitles
-  
+
   private static var episodeCellSubtitles: NSCache<NSNumber, NSString> = {
     let c = NSCache<NSNumber, NSString>()
+
     c.countLimit = 1024
+
     return c
   }()
-  
+
   static func episodeCellSubtitle(for entry: Entry) -> String {
     let key = entry.hashValue as NSNumber
+
     guard let subtitle = episodeCellSubtitles.object(forKey: key) else {
       let updated = string(from: entry.updated)
       let subtitle: String = {
@@ -226,12 +255,15 @@ class StringRepository {
         }
         return updated
       }()
+
       episodeCellSubtitles.setObject(subtitle as NSString, forKey: key)
+
       return subtitle
     }
+    
     return subtitle as String
   }
-  
+
 }
 
 // MARK: - User Messages
