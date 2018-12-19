@@ -10,32 +10,44 @@ import UIKit
 import FeedKit
 import os.log
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "episode")
 
 final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
 
-  // MARK: - API
+  @IBOutlet var avatar: UIImageView!
+  @IBOutlet var feedButton: UIButton!
+  @IBOutlet var updatedLabel: UILabel!
+  @IBOutlet var durationLabel: UILabel!
+  @IBOutlet var content: UITextView!
+  @IBOutlet var scrollView: UIScrollView!
 
-  var locator: EntryLocator? {
-    didSet {
-      guard locator != oldValue else {
-        return
-      }
-    }
-  }
-  
+  /// The locator of the current entry or `nil`.
+  ///
+  /// Set before `viewWillAppear(_:)`, it’s used to fetch the matching entry.
+  var locator: EntryLocator?
+
+  /// A changed flag for efficiency.
   private var entryChanged = false
 
   var entry: Entry? {
     didSet {
       entryChanged = entry != oldValue
-      
+
       if let e = entry {
         locator = EntryLocator(entry: e)
-        updateIsEnqueued()
+      } else {
+        locator = nil
       }
 
-      viewIfLoaded?.setNeedsLayout()
+      guard entryChanged, viewIfLoaded != nil else {
+        return
+      }
+
+      loadImage()
+      updateIsEnqueued()
+      configureView()
+
+      entryChanged = false
     }
   }
 
@@ -51,46 +63,16 @@ final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
     }
   }
 
-  /// Updates the `isEnqueued` property using `enqueued` or the user queue.
-  func updateIsEnqueued(using enqueued: Set<EntryGUID>? = nil) -> Void {
-    guard let e = entry else {
-      return
-    }
-
-    guard let guids = enqueued else {
-      isEnqueued = Podest.userQueue.contains(entry: e)
-      return
-    }
-
-    isEnqueued = guids.contains(e.guid)
-  }
-
-  /// Returns `true` if neither entry, nor locator have been set.
+  /// Returns `true` if neither entry nor locator have been set.
   var isEmpty: Bool {
-    get {
-      return entry == nil && locator == nil
-    }
+    return entry == nil && locator == nil
   }
-
-  // MARK: - Internals
-
-  @IBOutlet var avatar: UIImageView!
-
-  @IBOutlet var feedButton: UIButton!
-  @IBOutlet var updatedLabel: UILabel!
-  @IBOutlet var durationLabel: UILabel!
-  
-  // MARK: Navigator
 
   /// The **required** navigation delegate.
   var navigationDelegate: ViewControllers?
 
-  // MARK: - UIViewController
-
   /// Enables us to cancel the fetching entries operation.
   weak private var fetchingEntries: Operation?
-
-  @IBOutlet weak var content: UITextView!
 
   @objc func selectFeed() {
     guard let url = entry?.feed else {
@@ -99,18 +81,22 @@ final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
     navigationDelegate?.openFeed(url: url)
   }
 
-  // MARK: State Transitions
+  /// The size of the currently loaded image.
+  private var imageLoaded: CGSize = .zero
 
-  @IBOutlet var scrollView: UIScrollView!
+  /// Restored content offset from state preservation.
+  private var restoredContentOffset: CGPoint?
 
-  /// Additionally to `onDrag`, dismissing the keyboard `onTap`.
-  @objc func onTap(_ sender: Any) {
-    navigationDelegate?.resignSearch()
-  }
+  /// Restore frame size from state preservation.
+  private var restoredFrameSize: CGSize?
+
+}
+
+// MARK: - UIViewController
+
+extension EpisodeViewController {
 
   override func viewDidLoad() {
-    super.viewDidLoad()
-    
     resetView()
 
     feedButton.titleLabel?.numberOfLines = 2
@@ -123,38 +109,25 @@ final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
     }
 
     content.delegate = self
+    navigationItem.largeTitleDisplayMode = .never
 
-    scrollView.keyboardDismissMode = .onDrag
-
-    let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
-    tap.numberOfTapsRequired = 1
-    view.addGestureRecognizer(tap)
-
-    self.navigationItem.largeTitleDisplayMode = .never
-  }
-
-  private func showMessage(_ msg: NSAttributedString) {
-    os_log("episode: showing message", log: log, type: .debug)
-    let nib = UINib(nibName: "ListBackgroundView", bundle: Bundle.main)
-    guard let messageView = nib.instantiate(withOwner: nil)
-      .first as? ListBackgroundView else {
-      fatalError("Failed to initiate view")
-    }
-    messageView.frame = view.frame
-    view.addSubview(messageView)
-
-    messageView.attributedText = msg
+    super.viewDidLoad()
   }
 
   override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-
-    guard entry == nil else {
-      return updateIsEnqueued()
+    defer {
+      super.viewWillAppear(animated)
     }
-    
-    guard let locator = self.locator else {
-      return configureView()
+
+    if entryChanged {
+      loadImage()
+      configureView()
+      updateIsEnqueued()
+      entryChanged = false
+    }
+
+    guard let locator = self.locator, entry == nil else {
+      return
     }
 
     fetchingEntries?.cancel()
@@ -163,13 +136,12 @@ final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
 
     fetchingEntries = Podest.browser.entries(
       [locator.including], entriesBlock: { error, entries in
-      if let er = error {
-        os_log("entry block error: %{public}@", log: log, type: .error,
-               String(describing: er))
-      }
-      DispatchQueue.main.async {
+        if let er = error {
+          os_log("entry block error: %{public}@", log: log, type: .error,
+                 String(describing: er))
+        }
+
         acc.append(contentsOf: entries)
-      }
     }) { [weak self] error in
       guard error == nil else {
         if let msg = StringRepository.message(describing: error!) {
@@ -179,44 +151,27 @@ final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
         }
         return
       }
-      
-      // At launch, during state restoration, the user library might not be
-      // completely synchronized yet, so we sync and wait before configuring
-      // the navigation item.
-      Podest.userLibrary.synchronize { error in
-        if let er = error {
-          switch er {
-          case QueueingError.outOfSync(let queue, let guids):
-            os_log("** out of sync: ( queue: %i, guids: %i )",
-                   log: log, type: .debug, queue, guids)
-          default:
-            fatalError("probably a database error: \(er)")
-          }
-        }
 
-        // Queue and guids don’t have to be in sync for checking if this entry
-        // in enqueued.
-
+      guard let e = acc.first else {
+        let title = self?.title ?? ""
+        let message = StringRepository.noEpisode(with: title)
         DispatchQueue.main.async { [weak self] in
-          self?.isEnqueued = Podest.userQueue.contains(entry: acc.first!)
+          self?.showMessage(message)
         }
+        return
       }
 
       DispatchQueue.main.async {
-        guard let e = acc.first else {
-          let q = DispatchQueue.global(qos: .userInteractive)
-          return q.async { [weak self] in
-            let title = self?.title ?? ""
-            let message = StringRepository.noEpisode(with: title)
-            DispatchQueue.main.async { [weak self] in
-              self?.showMessage(message)
-            }
-          }
-        }
-        
         self?.entry = e
       }
+    }
+  }
 
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+
+    if isEmpty {
+      showMessage(StringRepository.noEpisodeSelected())
     }
   }
 
@@ -226,95 +181,25 @@ final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
     fetchingEntries?.cancel()
     content?.isSelectable = false
   }
-  
+
   override func traitCollectionDidChange(
     _ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
-    os_log("resigning first responder", log: log)
+
     content?.resignFirstResponder()
-  }
-  
-  private func configureView() -> Void {
-    assert(viewIfLoaded != nil)
 
-    guard let entry = self.entry else {
-      return showMessage(StringRepository.noEpisodeSelected())
-    }
-    
-    feedButton.setTitle(entry.feedTitle, for: .normal)
-    updatedLabel.text = StringRepository.string(from: entry.updated)
-    
-    if let duration = entry.duration,
-      let text = StringRepository.string(from: duration) {
-      durationLabel.text = text
-    } else {
-      durationLabel.isHidden = true
-    }
-
-    DispatchQueue.global(qos: .userInteractive).async { [weak self] in
-      let attributedText = StringRepository.string(for: entry)
-      DispatchQueue.main.async {
-        self?.content?.attributedText = attributedText
-
-        if let offset = self?.restoredContentOffset,
-          self?.restoredFrameSize == self?.scrollView.frame.size {
-          self?.scrollView?.contentOffset = offset
-          self?.restoredContentOffset = nil
-        }
-
-        self?.content?.isHidden = false
-
-        UIViewPropertyAnimator(duration: 0.2, curve: .easeOut) {
-          self?.content?.alpha = 1
-        }.startAnimation()
-      }
-    }
-  }
-  
-  private func resetView() {
-    feedButton.setTitle(nil, for: .normal)
-    updatedLabel.text  = nil
-    durationLabel.text = nil
-    content.isHidden = true
-    content.alpha = 0
-  }
-  
-  override func viewWillLayoutSubviews() {
-    let insets = navigationDelegate?.miniPlayerEdgeInsets ?? UIEdgeInsets.zero
+    let insets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
     scrollView.contentInset = insets
     scrollView.scrollIndicatorInsets = insets
-    
-    if entryChanged {
-      entry != nil ? configureView() : resetView()
-      entryChanged = false
-    }
-   
-    super.viewWillLayoutSubviews()
+
+    loadImage()
   }
 
-  /// Remembers if the hero image has been set or loaded.
-  private var imageLoaded = false
+}
 
-  override func viewDidLayoutSubviews() {
-    super.viewDidLayoutSubviews()
+// MARK: - State Preservation and Restoration
 
-    // Here’s the thing about these images, once we have an entry, we can
-    // assume that we already have the image URLs, because an entry cannot
-    // exist without its parent feed, which provides the image URLs. Orphans
-    // are undefined and thus considered a programming error.
-
-    guard !imageLoaded, let entry = self.entry else {
-      return
-    }
-
-    Podest.images.loadImage(representing: entry, into: avatar)
-    imageLoaded = true
-  }
-
-  // MARK: State Preservation and Restoration
-
-  private var restoredContentOffset: CGPoint?
-  private var restoredFrameSize: CGSize?
+extension EpisodeViewController {
 
   override func encodeRestorableState(with coder: NSCoder) {
     super.encodeRestorableState(with: coder)
@@ -332,8 +217,133 @@ final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
 
     super.decodeRestorableState(with: coder)
   }
+
 }
 
+// MARK: - Updating View, Image, and Navigation Item
+
+extension EpisodeViewController {
+
+  private func showMessage(_ msg: NSAttributedString) {
+    os_log("episode: showing message", log: log, type: .debug)
+
+    let nib = UINib(nibName: "ListBackgroundView", bundle: Bundle.main)
+
+    guard let messageView = nib.instantiate(withOwner: nil)
+      .first as? ListBackgroundView else {
+        fatalError("Failed to initiate view")
+    }
+
+    messageView.frame = view.frame
+    view.addSubview(messageView)
+
+    messageView.attributedText = msg
+  }
+
+  /// Updates the `isEnqueued` property using `enqueued` or the user queue.
+  func updateIsEnqueued(using enqueued: Set<EntryGUID>? = nil) -> Void {
+    os_log("updating is enqueued: %@", log: log, type: .debug, self)
+
+    guard let e = entry else {
+      navigationItem.rightBarButtonItems = nil
+      return
+    }
+
+    guard let guids = enqueued else {
+      if Podest.userQueue.isEmpty, Podest.userLibrary.hasNoSubscriptions {
+        // At launch, during state restoration, the user library might not be
+        // completely synchronized yet, so we sync and wait before configuring
+        // the navigation item. We are misusing isEmpty to check that.
+
+        Podest.userLibrary.synchronize { [weak self] _, guids, error in
+          if let er = error {
+            switch er {
+            case QueueingError.outOfSync(let queue, let guids):
+              if queue == 0, guids != 0 {
+                os_log("queue not populated", log: log, type: .debug)
+              } else {
+                os_log("** out of sync: ( queue: %i, guids: %i )",
+                       log: log, type: .debug, queue, guids)
+              }
+            default:
+              fatalError("probably a database error: \(er)")
+            }
+          }
+
+          DispatchQueue.main.async {
+            self?.isEnqueued = guids?.contains(e.guid) ?? false
+          }
+        }
+      } else {
+        isEnqueued = Podest.userQueue.contains(entry: e)
+      }
+      return
+    }
+
+    isEnqueued = guids.contains(e.guid)
+  }
+
+  /// Loads the hero image.
+  ///
+  /// Here’s the thing about these images, once we have an entry, we can assume
+  /// that we already have the image URLs, because an entry cannot exist without
+  /// its parent feed, which provides the image URLs. Orphans are undefined and
+  /// thus considered a programming error. To load the correct image though, we
+  /// have to know its size, depending on the layout.
+  private func loadImage() {
+    guard imageLoaded != avatar.image?.size, let entry = self.entry else {
+      return
+    }
+
+    Podest.images.loadImage(representing: entry, into: avatar)
+
+    imageLoaded = avatar.image?.size ?? .zero
+  }
+
+  private func resetView() {
+    UIView.performWithoutAnimation {
+      feedButton.setTitle(nil, for: .normal)
+    }
+    updatedLabel.text  = nil
+    durationLabel.text = nil
+    content.attributedText = nil
+  }
+
+  private func configureView() -> Void {
+    assert(viewIfLoaded != nil)
+
+    guard let entry = self.entry else {
+      return resetView()
+    }
+
+    UIView.performWithoutAnimation {
+      feedButton.setTitle(entry.feedTitle, for: .normal)
+    }
+
+    updatedLabel.text = StringRepository.string(from: entry.updated)
+
+    if let duration = entry.duration,
+      let text = StringRepository.string(from: duration) {
+      durationLabel.text = text
+    } else {
+      durationLabel.isHidden = true
+    }
+
+    DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+      let attributedText = StringRepository.string(for: entry)
+      DispatchQueue.main.async {
+        self?.content?.attributedText = attributedText
+
+        if let offset = self?.restoredContentOffset,
+          self?.restoredFrameSize == self?.scrollView.frame.size {
+          self?.scrollView?.contentOffset = offset
+          self?.restoredContentOffset = nil
+        }
+      }
+    }
+  }
+
+}
 
 // MARK: - UIResponder
 
