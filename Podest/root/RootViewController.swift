@@ -57,7 +57,7 @@ final class RootViewController: UIViewController {
     return pnc?.topViewController as? ListViewController
   }
 
-  /// This one-shot block installs the mini-player.
+  /// This one-shot block installs the mini-player, initially.
   lazy var installMiniPlayer: () = hideMiniPlayer(false)
 
   /// The width or height of the mini-player, taken from the storyboard.
@@ -67,6 +67,7 @@ final class RootViewController: UIViewController {
   /// need a place to hold on to it.
   var playerTransition: PlayerTransitionDelegate?
 
+  /// Stores simplified playback state.
   struct SimplePlaybackState {
     let entry: Entry
     let isPlaying: Bool
@@ -207,6 +208,10 @@ extension RootViewController {
 
 extension RootViewController: ViewControllers {
 
+  var isCollapsed: Bool {
+    return splitViewController?.isCollapsed ?? true
+  }
+
   func showStore() {
     os_log("showing store", log: log, type: .debug)
     let vc = svc.storyboard?.instantiateViewController(withIdentifier:
@@ -318,7 +323,7 @@ extension RootViewController: ViewControllers {
 
   private static func selectRow<T: EntryRowSelectable>(
     matching entry: Entry, viewController: T?) {
-    viewController?.selectRow(with: entry, animated: false, scrollPosition: .middle)
+    viewController?.selectRow(representing: entry, animated: false, scrollPosition: .middle)
   }
 
   func show(entry: Entry) {
@@ -618,7 +623,7 @@ extension RootViewController: UISplitViewControllerDelegate {
 
     let vcs = viewControllersForPrimary(reducing: pnc.viewControllers)
 
-    if let entry = self.entry ?? self.selectedEntry {
+    if qvc.isSearchDismissed, let entry = self.entry ?? self.selectedEntry {
       let evc = makeEpisodeViewController(entry: entry)
       pnc.setViewControllers(vcs + [evc], animated: false)
     } else if let locator = self.locator { // restoring state
