@@ -47,13 +47,16 @@ final class ListViewController: UITableViewController, Navigator {
       if isCompact {
         header = tableView.tableHeaderView
         tableView.tableHeaderView = nil
+
+        clearSelection(false)
       } else {
         tableView.tableHeaderView = header
         header = nil
+
+        selectCurrentRow(animated: false)
       }
 
       tableView.layoutTableHeaderView()
-      selectCurrentRow(animated: false)
     }
   }
   
@@ -192,9 +195,12 @@ final class ListViewController: UITableViewController, Navigator {
   /// Our table view data source, providing feed and entries.
   lazy var dataSource: ListDataSource = {
     dispatchPrecondition(condition: .onQueue(.main))
+
     let ds = ListDataSource(browser: Podest.browser)
+
     ds.feedCompletionBlock = makeFeedCompletionBlock()
     ds.updatesCompletionBlock = makeUpdatesCompletionBlock()
+
     return ds
   }()
   
@@ -206,7 +212,7 @@ final class ListViewController: UITableViewController, Navigator {
       return
     }
 
-    selectRow(with: entry, animated: animated)
+    selectRow(representing: entry, animated: animated)
   }
   
 }
@@ -217,10 +223,13 @@ extension ListViewController {
 
   private var canForceFeed: Bool {
     let now = Date().timeIntervalSince1970
+
     guard now - forcedFeed > 3600 else {
       return false
     }
+
     forcedFeed = now
+
     return true
   }
   
@@ -258,7 +267,9 @@ extension ListViewController {
   private func makeRefreshControl() -> UIRefreshControl {
     let rc = UIRefreshControl()
     let action = #selector(refreshControlValueChanged)
+
     rc.addTarget(self, action: action, for: .valueChanged)
+
     return rc
   }
   
@@ -299,8 +310,10 @@ extension ListViewController {
   override func traitCollectionDidChange(
     _ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
+
     resignFirstResponder()
     updateIsCompact()
+
     traitsChanged = true
   }
   
@@ -319,7 +332,7 @@ extension ListViewController {
       // completely synchronized yet, so we sync and wait before configuring
       // the navigation item.
 
-      Podest.userLibrary.synchronize { error in
+      Podest.userLibrary.synchronize { _, _, error in
         if let er = error {
           switch er {
           case QueueingError.outOfSync(let queue, let guids):
@@ -354,6 +367,7 @@ extension ListViewController {
     }
 
     let insets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
+
     tableView.scrollIndicatorInsets = insets
     tableView.contentInset = insets
 
@@ -475,6 +489,7 @@ extension ListViewController: EntryProvider {
   
   var entry: Entry? {
     let ip = tableView.indexPathForSelectedRow ?? IndexPath(row: 0, section: 0)
+
     return dataSource.entry(at: ip)
   }
   
@@ -530,6 +545,7 @@ extension ListViewController {
   
   private static func makeUnsubscribeAction(feed: Feed) -> UIAlertAction {
     let t = NSLocalizedString("Unsubscribe", comment: "Unsubscribe podcast")
+
     return UIAlertAction(title: t, style: .destructive) { action in
       Podest.userLibrary.unsubscribe(feed.url) { error in
         if let er = error {
@@ -579,6 +595,7 @@ extension ListViewController {
   
   @objc func onAction(_ sender: Any) {
     let alert = makeShareController()
+
     self.present(alert, animated: true, completion: nil)
   }
   
@@ -604,21 +621,25 @@ extension ListViewController {
 
   @objc func onRemove(_ sender: UIBarButtonItem) {
     let alert = makeRemoveController()
+
     if let presenter = alert.popoverPresentationController {
       presenter.barButtonItem = sender
     }
+
     self.present(alert, animated: true, completion: nil)
   }
   
   private func makeSubscribeButton(url: FeedURL) -> UIBarButtonItem {
     if isSubscribed {
       let t = NSLocalizedString("Unsubscribe", comment: "Unsubscribe podcast")
+
       return UIBarButtonItem(
         title: t, style: .done, target: self, action: #selector(onRemove)
       )
     }
     
     let t = NSLocalizedString("Subscribe", comment: "Subscribe podcast")
+
     return UIBarButtonItem(
       title: t, style: .done, target: self, action: #selector(onAdd)
     )
@@ -626,7 +647,9 @@ extension ListViewController {
   
   private func makeRightBarButtonItems(url: FeedURL) -> [UIBarButtonItem] {
     var items = isCompact ? [] : [makeActionButton()]
+
     items.append(makeSubscribeButton(url: url))
+
     return items
   }
   
@@ -635,6 +658,7 @@ extension ListViewController {
            log: log, type: .debug, self)
     
     let items = makeRightBarButtonItems(url: url)
+    
     navigationItem.setRightBarButtonItems(items, animated: true)
   }
   
