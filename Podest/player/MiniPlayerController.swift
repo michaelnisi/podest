@@ -67,11 +67,16 @@ Navigator, PlaybackControlDelegate {
     }
   }
 
+  /// We don’t have to update while the main player is being used.
+  private var shouldUpdate: Bool {
+    return !(navigationDelegate?.isPlayerPresented ?? false)
+  }
+
   private var needsUpdate = false {
     didSet {
-      if needsUpdate {
+      if shouldUpdate, needsUpdate {
         DispatchQueue.main.async { [weak self] in
-          self?.view?.setNeedsLayout()
+          self?.viewIfLoaded?.setNeedsLayout()
         }
       }
     }
@@ -207,6 +212,16 @@ Navigator, PlaybackControlDelegate {
     configureSwipe()
   }
 
+  private func loadImage(representing entry: Entry) {
+    let opts = FKImageLoadingOptions(
+      fallbackImage: UIImage(named: "Oval"),
+      quality: .high,
+      isDirect: true
+    )
+
+    Podest.images.loadImage(representing: entry, into: hero, options: opts)
+  }
+
   override func viewWillLayoutSubviews() {
     defer {
       super.viewWillLayoutSubviews()
@@ -219,13 +234,10 @@ Navigator, PlaybackControlDelegate {
     }
 
     titleLabel.text = entry.title
-
-    Podest.images.loadImage(representing: entry, into: hero)
-    //    Podest.playback.currentEntry = entry
-
     playSwitch.isOn = isPlaying
-
     renderedGUID = entry.guid
+
+    loadImage(representing: entry)
 
     needsUpdate = false
   }
@@ -324,6 +336,7 @@ extension MiniPlayerController {
     }
   }
 
+  /// Configures swipe for device orientation.
   private func configureSwipe() {
     swipe.direction = isLandscape ? .left : .up
   }

@@ -98,21 +98,28 @@ Navigator, PlaybackControlDelegate {
 
   // MARK: - Configuration
 
-  private func loadImage(_ entry: Entry) {
+  private var isAllowedToLoadImage = false
+
+  private func loadImage(_ entry: Entry, heroSnapshot: UIView? =  nil, isDirect: Bool = false) {
+    if heroSnapshot == nil {
+      guard isAllowedToLoadImage else {
+        return
+      }
+    }
+
     Podest.images.loadImage(
       representing: entry,
       into: heroImage,
       options: FKImageLoadingOptions(
-        fallbackImage: UIImage.init(named: "Oval"),
+        fallbackImage: UIImage(named: "Oval"),
         quality: .high,
-        isDirect: false
+        isDirect: isDirect
       )
     ) { [weak self] in
-      self?.heroSnapshot?.removeFromSuperview()
+      heroSnapshot?.removeFromSuperview()
+      self?.isAllowedToLoadImage = true
     }
   }
-
-  private var heroSnapshot: UIView?
 
   /// A way to pass the hero snapshot from the player presentation animator,
   /// when the animation ended. That snapshot makes an appropriate placeholder,
@@ -123,9 +130,8 @@ Navigator, PlaybackControlDelegate {
     }
 
     view.addSubview(hero)
-    heroSnapshot = hero
 
-    loadImage(entry)
+    loadImage(entry, heroSnapshot: hero, isDirect: true)
   }
 
   private func configureView(_ entry: Entry) {
@@ -140,18 +146,24 @@ Navigator, PlaybackControlDelegate {
     backwardButton.isEnabled = Podest.userQueue.isBackwardable
   }
 
+  private var needsUpdate = false
+
   private func update() {
-    guard viewIfLoaded != nil, let entry = self.entry else {
+    guard needsUpdate, viewIfLoaded != nil, let entry = self.entry else {
       return
     }
     
     configureView(entry)
     loadImage(entry)
+
+    needsUpdate = false
   }
 
   var entry: Entry? {
     didSet {
-      guard entry != oldValue else {
+      needsUpdate = entry != oldValue
+
+      guard needsUpdate else {
         return
       }
 
@@ -233,11 +245,6 @@ Navigator, PlaybackControlDelegate {
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    update()
-  }
-
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
     update()
   }
 
