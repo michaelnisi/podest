@@ -10,7 +10,7 @@ import UIKit
 import FeedKit
 import os.log
 
-private let log = OSLog(subsystem: "ink.codes.podest", category: "episode")
+private let log = OSLog.disabled
 
 final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
 
