@@ -10,6 +10,9 @@ import UIKit
 
 /// A slightly modified flow layout, always recomputing the size of items and
 /// views in the layout.
+///
+/// For its weak performance characteristics, only advisable for very short
+/// fixed lists, like this list of three products.
 class ProductsLayout: UICollectionViewFlowLayout {
   
   override func invalidationContext(
@@ -60,14 +63,20 @@ final class ProductsViewController: UICollectionViewController {
     return ds
   }()
   
+}
+
+// MARK: - UIViewController
+
+extension ProductsViewController {
+
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+
     navigationItem.title = "In-App Purchases"
     navigationItem.largeTitleDisplayMode = .always
     navigationItem.rightBarButtonItem = UIBarButtonItem(
       barButtonSystemItem: .done, target: self, action: #selector(onDone))
-    
+
     guard let cv = collectionView else {
       fatalError("collectionView expected")
     }
@@ -76,18 +85,18 @@ final class ProductsViewController: UICollectionViewController {
       UINib(nibName: "MessageCollectionViewCell", bundle: Bundle.main),
       forCellWithReuseIdentifier: ProductsDataSource.messageCellID
     )
-    
+
     cv.register(
       UINib(nibName: "ProductCell", bundle: Bundle.main),
       forCellWithReuseIdentifier: ProductsDataSource.productCellID
     )
-    
+
     cv.register(
       UINib(nibName: "ProductsHeader", bundle: Bundle.main),
       forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
       withReuseIdentifier: ProductsDataSource.productsHeaderID
     )
-    
+
     cv.register(
       UINib(nibName: "ProductsHeader", bundle: Bundle.main),
       forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
@@ -95,9 +104,10 @@ final class ProductsViewController: UICollectionViewController {
     )
 
     let layout = ProductsLayout()
+    
     layout.minimumInteritemSpacing = 20
     layout.minimumLineSpacing = 30
-    
+
     cv.collectionViewLayout = layout
     cv.contentInsetAdjustmentBehavior = .always
     cv.allowsSelection = false
@@ -108,7 +118,7 @@ final class ProductsViewController: UICollectionViewController {
     super.viewDidAppear(animated)
     Podest.store.update()
   }
-  
+
 }
 
 private extension UICollectionView {
@@ -116,13 +126,29 @@ private extension UICollectionView {
   var safeContentBounds: CGSize {
     let l = safeAreaInsets.left + contentInset.left
     let r = safeAreaInsets.right + contentInset.right
+
     let w = bounds.width - l - r
     
     let t = safeAreaInsets.top + contentInset.top
     let b = safeAreaInsets.bottom + contentInset.bottom
+
     let h = bounds.height - t - b
     
     return CGSize(width: w, height: h)
+  }
+
+  var maxWidth: CGFloat {
+    let layout = collectionViewLayout as! UICollectionViewFlowLayout
+
+    return safeContentBounds.width -
+      layout.sectionInset.left - layout.sectionInset.right
+  }
+
+  var maxHeight: CGFloat {
+    let layout = collectionViewLayout as! UICollectionViewFlowLayout
+
+    return safeContentBounds.height -
+      layout.sectionInset.top - layout.sectionInset.bottom
   }
   
   var isSpacious: Bool {
@@ -193,41 +219,13 @@ extension ProductsViewController: UICollectionViewDelegateFlowLayout {
     layout collectionViewLayout: UICollectionViewLayout,
     sizeForItemAt indexPath: IndexPath
   ) -> CGSize {
-    let bounds = collectionView.bounds
-
-    let contentInset = collectionView.contentInset
-    let layout = collectionViewLayout as! UICollectionViewFlowLayout
-    let sectionInset = layout.sectionInset
-    let safeAreaInsets = collectionView.safeAreaInsets
-    
     let item = dataSource.storeItem(where: indexPath)
-    
-    let left = max(
-      safeAreaInsets.left,
-      sectionInset.left - contentInset.left
-    )
-    
-    let right = max(
-      safeAreaInsets.right,
-      sectionInset.right - contentInset.right
-    )
-    
+
     switch item {
     case .failed, .thanks, .offline, .empty, .loading, .restoring:
-      let top = max(
-        safeAreaInsets.top,
-        sectionInset.top - contentInset.top
-      )
-      
-      let bottom = max(
-        safeAreaInsets.bottom,
-        sectionInset.bottom - contentInset.bottom
-      )
-      
-      let w = bounds.width - left - right
-      let h = bounds.height - top - bottom
-      
-      return CGSize(width: w, height: h)
+      let w = min(collectionView.maxWidth, collectionView.maxHeight)
+
+      return CGSize(width: w, height: w)
     case .product:
       let layout = collectionViewLayout as! UICollectionViewFlowLayout
       return productItemSize(within: collectionView, layout: layout)

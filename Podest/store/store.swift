@@ -85,7 +85,7 @@ extension NetworkActivityIndicating {
   func reset() {}
 }
 
-//MARK: - API
+// MARK: - API
 
 /// Enumerates possible presentation layer error types, grouping StoreKit and
 /// other errors into five simplified buckets.
