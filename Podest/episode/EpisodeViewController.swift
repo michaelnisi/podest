@@ -191,6 +191,12 @@ extension EpisodeViewController {
     let insets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
     scrollView.contentInset = insets
     scrollView.scrollIndicatorInsets = insets
+  }
+
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+
+    // Loading image of suitable size.
 
     loadImage()
   }
@@ -283,7 +289,8 @@ extension EpisodeViewController {
     isEnqueued = guids.contains(e.guid)
   }
 
-  /// Loads the hero image.
+  /// Loads hero in suitable size. If the image size hasn’t changed since the
+  /// last time the image has been loaded, this is a NOP.
   ///
   /// Here’s the thing about these images, once we have an entry, we can assume
   /// that we already have the image URLs, because an entry cannot exist without
@@ -304,6 +311,7 @@ extension EpisodeViewController {
     UIView.performWithoutAnimation {
       feedButton.setTitle(nil, for: .normal)
     }
+
     updatedLabel.text  = nil
     durationLabel.text = nil
     content.attributedText = nil
