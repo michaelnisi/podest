@@ -1,8 +1,8 @@
-## 7.9.4 (2018-11-29)
+## 7.9.4 (2018-12-19)
 
 ### Files Fly
 
-100% open source, bug fixes, and small improvements.
+100% open source, bug fixes, and small improvements. This is a packed update, here’s the rundown:
 
 Prevent rare crash during background downloading by correctly invalidating reachability probes.
 
@@ -12,13 +12,21 @@ Better episode summary parsing, correcting spaces, skipping invalid URLs, etc.
 
 Sometimes it was not possible to enqueue an episode. Removing iCloud sync timers resolved this issue. Cleaning this code path, notification observing has been replaced by delegation.
 
-Flipping the device between portrait and landscape while playing video would sometimes impair navigation, I’m happy to report that this annoyance has been resolved.
+Flipping the device between portrait and landscape while playing video would sometimes impair navigation, this annoyance has been resolved.
 
 Automatic selection when entering landscape with no episode selected now picks the episode currently in the player.
 
 Transitioning animations from mini-player to player and vice versa have been improved.
 
-All source code has been released https://github.com/michaelnisi/podest
+For larger screens, images in suitable sizes are loaded. A thin gray frame has been added around images.
+
+Typography has been improved by moving to larger font sizes.
+
+Moving between portrait and landscape modes while searching is solid now.
+
+And most importantly, Podest is fully open source now. All source code is on GitHub.
+
+https://github.com/michaelnisi/podest
 
 ## 7.9.3 (2018-10-15)
 
