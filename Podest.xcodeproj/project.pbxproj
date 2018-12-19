@@ -57,6 +57,7 @@
 		4CE8586D21A16B9D00D206FA /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE8586C21A16B9D00D206FA /* Players.swift */; };
 		4CF21CF22063B0D100169E43 /* PlayerTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C49DF412058319400DC86E6 /* PlayerTransitionDelegate.swift */; };
 		4CF5674C207F362300C77C1D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF5674B207F362300C77C1D /* StoreKit.framework */; };
+		4CFEE33821C7B101008B2EC0 /* SearchControllerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFEE33721C7B101008B2EC0 /* SearchControllerProxy.swift */; };
 		4E180F9A1F8394CC00976A3A /* Nuke.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E180F9B1F8394CC00976A3A /* Nuke.framework */; };
 		4E180F9C1F8394D900976A3A /* Nuke.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E180F9B1F8394CC00976A3A /* Nuke.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4E180F9D1F83951A00976A3A /* FanboyKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E180FA41F83951A00976A3A /* FanboyKit.framework */; };
@@ -194,6 +195,7 @@
 		4CE6957021AFAD570060F5A6 /* PlayerPresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerPresentationAnimator.swift; sourceTree = "<group>"; };
 		4CE8586C21A16B9D00D206FA /* Players.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Players.swift; sourceTree = "<group>"; };
 		4CF5674B207F362300C77C1D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		4CFEE33721C7B101008B2EC0 /* SearchControllerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchControllerProxy.swift; sourceTree = "<group>"; };
 		4E180F9B1F8394CC00976A3A /* Nuke.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Nuke.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E180FA41F83951A00976A3A /* FanboyKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FanboyKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E180FA51F83951A00976A3A /* FeedKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FeedKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -387,6 +389,7 @@
 		4CD697061FEBC72B00349580 /* search */ = {
 			isa = PBXGroup;
 			children = (
+				4CFEE33721C7B101008B2EC0 /* SearchControllerProxy.swift */,
 				4C351CD01A7F5B7E00C5C88C /* SearchResultsDataSource.swift */,
 				4CE20ACB1A31C66C0052C360 /* SearchResultsController.swift */,
 				4CE20ACF1A31EAAD0052C360 /* SuggestionCell.xib */,
@@ -819,6 +822,7 @@
 				4C6FB912204679FE005C559E /* FileRepository.swift in Sources */,
 				4C175AA6208AFA26003071CA /* StoreFSM.swift in Sources */,
 				4CE8586D21A16B9D00D206FA /* Players.swift in Sources */,
+				4CFEE33821C7B101008B2EC0 /* SearchControllerProxy.swift in Sources */,
 				4C351CD11A7F5B7F00C5C88C /* SearchResultsDataSource.swift in Sources */,
 				4E65BB2E1F138BA500C7F1A3 /* UserSyncing.swift in Sources */,
 				4C6FB92C204C41A1005C559E /* FileProxying.swift in Sources */,
@@ -901,12 +905,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 4;
+				DYLIB_CURRENT_VERSION = 5;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PodKit/Info.plist;
@@ -936,12 +940,12 @@
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 4;
+				DYLIB_CURRENT_VERSION = 5;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PodKit/Info.plist;
@@ -1124,7 +1128,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1147,7 +1151,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
