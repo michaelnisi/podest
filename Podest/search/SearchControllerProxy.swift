@@ -69,7 +69,7 @@ final class SearchControllerProxy: NSObject {
     }
   }
 
-  /// `true` if users are currently not using search.
+  /// `true` if the search controller is not active. The default state.
   var isSearchDismissed: Bool {
     return state == .dismissed
   }
@@ -176,6 +176,10 @@ extension SearchControllerProxy: UISearchBarDelegate {
 extension SearchControllerProxy: UISearchResultsUpdating {
 
   func updateSearchResults(for sc: UISearchController) {
+    guard state != .dismissed else {
+      return
+    }
+
     suggest(sc.searchBar.text ?? "")
   }
 
