@@ -47,8 +47,9 @@ final class RootViewController: UIViewController {
   var episodeViewController: EpisodeViewController? {
     guard let nc = svc.isCollapsed ? pnc : snc,
       let vc = nc.topViewController as? EpisodeViewController else {
-        return nil
+      return nil
     }
+
     return vc
   }
 
@@ -623,7 +624,9 @@ extension RootViewController: UISplitViewControllerDelegate {
 
     let vcs = viewControllersForPrimary(reducing: pnc.viewControllers)
 
-    if qvc.isSearchDismissed, let entry = self.entry ?? self.selectedEntry {
+    os_log("search dismissed: %i", log: log, type: .debug, qvc.isSearchDismissed)
+
+    if let entry = self.entry ?? self.selectedEntry {
       let evc = makeEpisodeViewController(entry: entry)
       pnc.setViewControllers(vcs + [evc], animated: false)
     } else if let locator = self.locator { // restoring state
