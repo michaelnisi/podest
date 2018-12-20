@@ -29,15 +29,13 @@ final class ListViewController: UITableViewController, Navigator {
   private var traitsChanged = false
   
   /// If the header should be hidden, because height is compact, this is `true`.
-  ///
-  /// How confusingly named, talking about the view, not the device. Notice!
-  var isCompact: Bool = false {
+  var isViewCompact: Bool = false {
     didSet {
       guard let url = self.url else {
         fatalError("missing URL")
       }
       
-      guard isCompact != oldValue else {
+      guard isViewCompact != oldValue else {
         if navigationItem.rightBarButtonItems == nil {
           configureNavigationItem(url: url)
         }
@@ -46,7 +44,7 @@ final class ListViewController: UITableViewController, Navigator {
       
       configureNavigationItem(url: url)
       
-      if isCompact {
+      if isViewCompact {
         header = tableView.tableHeaderView
         tableView.tableHeaderView = nil
 
@@ -55,7 +53,9 @@ final class ListViewController: UITableViewController, Navigator {
         tableView.tableHeaderView = header
         header = nil
 
-        clearSelection(false)
+        if viewIfLoaded?.window != nil {
+          clearSelection(true)
+        }
       }
 
       tableView.layoutTableHeaderView()
@@ -299,7 +299,7 @@ extension ListViewController {
   }
   
   private func updateIsCompact() {
-    isCompact = {
+    isViewCompact = {
       guard let svc = splitViewController else {
         return false
       }
@@ -378,7 +378,7 @@ extension ListViewController {
     tableView.scrollIndicatorInsets = insets
     tableView.contentInset = insets
 
-    if !isCompact, let f = feed, let hero = heroImage, hero.tag != f.hashValue {
+    if !isViewCompact, let f = feed, let hero = heroImage, hero.tag != f.hashValue {
       os_log("** loading image", log: log, type: .debug)
 
       // What kind of hacker is using tags?
@@ -653,7 +653,7 @@ extension ListViewController {
   }
   
   private func makeRightBarButtonItems(url: FeedURL) -> [UIBarButtonItem] {
-    var items = isCompact ? [] : [makeActionButton()]
+    var items = isViewCompact ? [] : [makeActionButton()]
 
     items.append(makeSubscribeButton(url: url))
 
