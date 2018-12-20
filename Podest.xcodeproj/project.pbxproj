@@ -24,6 +24,7 @@
 		4C351CD11A7F5B7F00C5C88C /* SearchResultsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C351CD01A7F5B7E00C5C88C /* SearchResultsDataSource.swift */; };
 		4C3CDC282085A6C300BADBF8 /* StoreButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3CDC272085A6C300BADBF8 /* StoreButton.swift */; };
 		4C471523210F4F6F008D9E32 /* ReceiptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C471522210F4F6F008D9E32 /* ReceiptTests.swift */; };
+		4C5F4E7C21CB79A300156D56 /* EntryRowSelectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5F4E7B21CB79A300156D56 /* EntryRowSelectable.swift */; };
 		4C6FB90F2045C3BB005C559E /* files.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6FB90E2045C3BB005C559E /* files.swift */; };
 		4C6FB912204679FE005C559E /* FileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6FB911204679FE005C559E /* FileRepository.swift */; };
 		4C6FB92A204C41A1005C559E /* FileProxyDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6FB926204C41A0005C559E /* FileProxyDelegate.swift */; };
@@ -163,6 +164,7 @@
 		4C3CDC272085A6C300BADBF8 /* StoreButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreButton.swift; sourceTree = "<group>"; };
 		4C471522210F4F6F008D9E32 /* ReceiptTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptTests.swift; sourceTree = "<group>"; };
 		4C49DF412058319400DC86E6 /* PlayerTransitionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTransitionDelegate.swift; sourceTree = "<group>"; };
+		4C5F4E7B21CB79A300156D56 /* EntryRowSelectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryRowSelectable.swift; sourceTree = "<group>"; };
 		4C6FB90E2045C3BB005C559E /* files.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = files.swift; sourceTree = "<group>"; };
 		4C6FB911204679FE005C559E /* FileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileRepository.swift; sourceTree = "<group>"; };
 		4C6FB926204C41A0005C559E /* FileProxyDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileProxyDelegate.swift; path = ../../fileproxy/Sources/fileproxy/FileProxyDelegate.swift; sourceTree = "<group>"; };
@@ -424,6 +426,7 @@
 			isa = PBXGroup;
 			children = (
 				4CD6970A1FEBFEB900349580 /* SectionedDataSource.swift */,
+				4C5F4E7B21CB79A300156D56 /* EntryRowSelectable.swift */,
 				4CD6970C1FEBFF0D00349580 /* Updates.swift */,
 				4CD6970E1FEBFFBC00349580 /* Cells.swift */,
 			);
@@ -800,6 +803,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4CE20ACC1A31C66C0052C360 /* SearchResultsController.swift in Sources */,
+				4C5F4E7C21CB79A300156D56 /* EntryRowSelectable.swift in Sources */,
 				4EF1A3511EB837D100E41F84 /* PlaySwitch.swift in Sources */,
 				4C1F57A92081C0690067AB7C /* ProductsDataSource.swift in Sources */,
 				4CF21CF22063B0D100169E43 /* PlayerTransitionDelegate.swift in Sources */,

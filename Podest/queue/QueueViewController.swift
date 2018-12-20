@@ -37,17 +37,6 @@ final class QueueViewController: UITableViewController, Navigator {
   /// animations are running, pull-to-refresh or swipe editing.
   private var deferred: (Updates, Error?)?
 
-  private func selectCurrentRow(
-    animated: Bool,
-    scrollPosition: UITableView.ScrollPosition
-  ) {
-    guard viewIfLoaded?.window != nil,
-      let entry = self.navigationDelegate?.entry else {
-        return
-    }
-    selectRow(representing: entry, animated: animated, scrollPosition: scrollPosition)
-  }
-  
   var isFirstRun = true
   
   var shouldAnimate: Bool {

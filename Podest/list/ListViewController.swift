@@ -207,15 +207,6 @@ final class ListViewController: UITableViewController, Navigator {
   }()
   
   var navigationDelegate: ViewControllers?
-
-  /// Synchronizes selection with the navigation delegate.
-  private func selectCurrentRow(animated: Bool) {
-    guard let entry = navigationDelegate?.entry else {
-      return
-    }
-
-    selectRow(representing: entry, animated: animated)
-  }
   
 }
 

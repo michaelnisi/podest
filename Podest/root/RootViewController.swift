@@ -322,11 +322,6 @@ extension RootViewController: ViewControllers {
     return evc
   }
 
-  private static func selectRow<T: EntryRowSelectable>(
-    matching entry: Entry, viewController: T?) {
-    viewController?.selectRow(representing: entry, animated: false, scrollPosition: .middle)
-  }
-
   func show(entry: Entry) {
     os_log("showing entry: %{public}@", log: log, type: .debug, entry.description)
 
@@ -359,15 +354,6 @@ extension RootViewController: ViewControllers {
 
     guard isPresentingNowPlaying else {
       return go()
-    }
-
-    switch pnc.topViewController {
-    case let tvc as ListViewController:
-      RootViewController.selectRow(matching: entry, viewController: tvc)
-    case let tvc as QueueViewController:
-      RootViewController.selectRow(matching: entry, viewController: tvc)
-    default:
-      break
     }
 
     hideNowPlaying(animated: true) {

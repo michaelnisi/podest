@@ -12,7 +12,7 @@ import Foundation
 import FeedKit
 import AVFoundation
 
-// MARK: - Controller
+// MARK: - Audio and Video Playback
 
 /// Playback section of the `ViewControllers` protocol.
 protocol Players {
@@ -61,6 +61,8 @@ protocol Players {
   
 }
 
+// MARK: - Accessing Entries
+
 /// Often we are only interested in the entry represented by participants.
 protocol EntryProvider {
   
@@ -77,48 +79,7 @@ protocol EntryIndexPathMapping {
   
 }
 
-/// Selects and deselects table view rows.
-protocol EntryRowSelectable {
-  
-  associatedtype DataSource: EntryIndexPathMapping
-  
-  var dataSource: DataSource { get }
-  
-  @discardableResult func selectRow(
-    representing entry: Entry?,
-    animated: Bool,
-    scrollPosition: UITableView.ScrollPosition
-  ) -> Bool
-
-  func clearSelection(_ animated: Bool)
-  
-}
-
-extension EntryRowSelectable where Self: UITableViewController {
-
-  @discardableResult func selectRow(
-    representing entry: Entry?,
-    animated: Bool,
-    scrollPosition: UITableView.ScrollPosition = .none
-  ) -> Bool {
-    guard viewIfLoaded?.window != nil,
-      let e = entry,
-      let ip = dataSource.indexPath(matching: e) else {
-      if let indexPathForSelectedRow = tableView.indexPathForSelectedRow {
-        tableView.deselectRow(at: indexPathForSelectedRow, animated: animated)
-      }
-      return false
-    }
-    
-    tableView.selectRow(at: ip, animated: animated, scrollPosition: scrollPosition)
-
-    return true
-  }
-
-  func clearSelection(_ animated: Bool) {
-    selectRow(representing: nil, animated: animated)
-  }
-}
+// MARK: - Presenting Action Sheets
 
 /// Useful default action sheet things.
 protocol ActionSheetPresenting {}
@@ -154,6 +115,8 @@ extension ActionSheetPresenting where Self: UIViewController {
   }
   
 }
+
+// MARK: - Navigating
 
 /// The global controller API, the **root** view controller. This is the **Truth**.
 /// Instead of reaching deep into the controller hierarchy, things that need
@@ -193,6 +156,15 @@ protocol ViewControllers: Players {
 
 }
 
+/// Defines `ViewControllers` users, enabling them to navigate.
+protocol Navigator {
+
+  var navigationDelegate: ViewControllers? { get set }
+  
+}
+
+// MARK: - Accessing User Library and Queue
+
 /// Defines a callback interface to the user library and queue.
 protocol UserProxy {
 
@@ -226,46 +198,4 @@ protocol UserProxy {
   /// Use `update(completionHandler:)` to update, which includes reloading.
   func reload(completionBlock: ((Error?) -> Void)?)
 
-}
-
-/// Defines `ViewControllers` users, enabling them to navigate.
-protocol Navigator {
-  var navigationDelegate: ViewControllers? { get set }
-}
-
-// MARK: - Operation
-
-/// A simple abstract operation super class, implementing KVO of mandatory
-/// properties: `isExecuting` and `isFinished`.
-class PodestOperation: Operation {
-  
-  fileprivate var _executing: Bool = false
-
-  override final var isExecuting: Bool {
-    get { return _executing }
-    set {
-      guard newValue != _executing else {
-        fatalError("FeedKitOperation: already executing")
-      }
-      willChangeValue(forKey: "isExecuting")
-      _executing = newValue
-      didChangeValue(forKey: "isExecuting")
-    }
-  }
-  
-  fileprivate var _finished: Bool = false
-  
-  override final var isFinished: Bool {
-    get { return _finished }
-    set {
-      guard newValue != _finished else {
-        // Just to be extra annoying.
-        fatalError("FeedKitOperation: already finished")
-      }
-      willChangeValue(forKey: "isFinished")
-      _finished = newValue
-      didChangeValue(forKey: "isFinished")
-    }
-  }
-  
 }
