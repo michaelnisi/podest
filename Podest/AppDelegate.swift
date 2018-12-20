@@ -235,6 +235,43 @@ extension AppDelegate {
 
 }
 
+// MARK: - Managing Interface Geometry
+
+extension AppDelegate {
+
+  func application(
+    _ application: UIApplication,
+    supportedInterfaceOrientationsFor window: UIWindow?
+  ) -> UIInterfaceOrientationMask {
+
+    let o = window?.rootViewController?.supportedInterfaceOrientations
+
+    guard let tc = window?.traitCollection else {
+      return o ?? .portrait
+    }
+
+    let regular = UITraitCollection(traitsFrom: [
+      UITraitCollection(horizontalSizeClass: .regular),
+      UITraitCollection(verticalSizeClass: .regular)
+    ])
+
+    if tc.containsTraits(in: regular) {
+      return o ?? .allButUpsideDown
+    } else {
+      guard let w = window else {
+        return o ?? .portrait
+      }
+
+      let s = min(w.bounds.width, w.bounds.height)
+
+      // Allowing Max, XR, and Plus sizes.
+
+      return s >= 414 ? .allButUpsideDown : .portrait
+    }
+  }
+
+}
+
 // MARK: - Opening a URL-Specified Resource
 
 extension AppDelegate {
