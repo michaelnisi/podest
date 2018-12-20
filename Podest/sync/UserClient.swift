@@ -986,7 +986,7 @@ extension UserClient {
       if  diff > 0 {
         os_log("** %i modifications not saved", log: log, type: .debug, diff)
       } else {
-        os_log("all modifcations saved", log: log, type: .debug)
+        os_log("all modifications saved", log: log, type: .debug)
       }
 
       do {

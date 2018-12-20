@@ -61,7 +61,7 @@ protocol Players {
   
 }
 
-/// Regularly entries need to be passed around.
+/// Often we are only interested in the entry represented by participants.
 protocol EntryProvider {
   
   /// Provides an entry that makes sense in this context.
@@ -186,11 +186,9 @@ protocol ViewControllers: Players {
   func openFeed(url: String)
   
   // MARK: UI
-  
-  /// Resigns search from being first responder.
-  func resignSearch()
 
-  /// `true` if the main split view controller is collapsed. Default is `true`.
+  /// An additional property to check wether the main split view controller, to
+  /// which some participants might not have access, is collapsed or not.
   var isCollapsed: Bool { get }
 
 }
@@ -230,7 +228,7 @@ protocol UserProxy {
 
 }
 
-/// Defines `ViewControllers` users.
+/// Defines `ViewControllers` users, enabling them to navigate.
 protocol Navigator {
   var navigationDelegate: ViewControllers? { get set }
 }

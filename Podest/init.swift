@@ -2,7 +2,7 @@
 //  init.swift
 //  Podest
 //
-//  Initialize global state
+//  Initializing shared state
 //
 //  Created by Michael Nisi on 24/04/16.
 //  Copyright © 2016 Michael Nisi. All rights reserved.
