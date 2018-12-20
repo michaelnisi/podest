@@ -15,7 +15,6 @@ class MessageCollectionViewCell: UICollectionViewCell {
   override func awakeFromNib() {
     super.awakeFromNib()
     // Initialization code
-
   }
 
 }

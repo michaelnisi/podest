@@ -174,13 +174,20 @@ private extension UICollectionView {
 
 // MARK: - UICollectionViewDelegateFlowLayout
 
-/// Assuming three products, a header, and a footer.
+/// Assuming three products, framed by a header and a footer, and displaying
+/// of messages, provided as single items by the data source.
 extension ProductsViewController: UICollectionViewDelegateFlowLayout {
   
-  func productItemSize(
+  func itemSize(
     within collectionView: UICollectionView,
     layout: UICollectionViewFlowLayout
   ) -> CGSize {
+    guard !dataSource.isMessage else {
+      let w = min(collectionView.maxWidth, collectionView.maxHeight)
+
+      return CGSize(width: w, height: w)
+    }
+
     let width = collectionView.safeContentBounds.width
     let spacing = 2 * layout.minimumInteritemSpacing
     let itemsPerRow = collectionView.itemsPerRow
@@ -195,15 +202,11 @@ extension ProductsViewController: UICollectionViewDelegateFlowLayout {
     layout collectionViewLayout: UICollectionViewLayout,
     insetForSectionAt section: Int
   ) -> UIEdgeInsets {
-    guard !dataSource.isMessage else {
-      return .zero
-    }
-    
     let bounds = collectionView.safeContentBounds
-    let itemsPerRow = collectionView.itemsPerRow
+    let itemsPerRow = dataSource.isMessage ? 1 : collectionView.itemsPerRow
     
     let layout = collectionViewLayout as! UICollectionViewFlowLayout
-    let p = productItemSize(within: collectionView, layout: layout)
+    let p = itemSize(within: collectionView, layout: layout)
   
     let items = p.width * itemsPerRow
     let columnSpacing = layout.minimumInteritemSpacing * (itemsPerRow - 1)
@@ -228,7 +231,7 @@ extension ProductsViewController: UICollectionViewDelegateFlowLayout {
       return CGSize(width: w, height: w)
     case .product:
       let layout = collectionViewLayout as! UICollectionViewFlowLayout
-      return productItemSize(within: collectionView, layout: layout)
+      return itemSize(within: collectionView, layout: layout)
     }
   }
   
