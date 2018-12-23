@@ -49,13 +49,17 @@ final class FileRepository: NSObject {
           _fileProxy = FileProxy(
             identifier: "ink.codes.playback",
             maxBytes: .max,
+            maxTasksPerSession: 16,
             delegate: self
           )
+
           return _fileProxy!
         }
+
         return _fileProxy!
       }
     }
+    
     set {
       sQueue.sync {
         _fileProxy = newValue
@@ -208,7 +212,7 @@ extension FileRepository: Downloading {
   ) {
     fileProxy.handleEventsForBackgroundURLSession(
       identifier: identifier,
-      completionHandler: completionHandler
+      completionBlock: completionHandler
     )
   }
 
