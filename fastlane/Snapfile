@@ -1,0 +1,26 @@
+# Take some snapshots
+
+number_of_retries 0
+stop_after_first_error true
+
+workspace "/Users/michael/Desktop/podest.xcworkspace/"
+
+launch_arguments([
+  "-ink.codes.podest.nodown YES"
+])
+
+languages([
+  "en-US",
+])
+
+devices([
+  "iPad Pro (9.7-inch)",
+  "iPad Pro (10.5-inch)",
+  "iPad Pro (11-inch)",
+  "iPad Pro (12.9-inch) (3rd generation)",
+  "iPhone SE",
+  "iPhone 8",
+  "iPhone 8 Plus",
+  "iPhone X",
+  "iPhone XS Max"
+])

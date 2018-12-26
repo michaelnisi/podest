@@ -25,6 +25,8 @@
 		4C3CDC282085A6C300BADBF8 /* StoreButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3CDC272085A6C300BADBF8 /* StoreButton.swift */; };
 		4C471523210F4F6F008D9E32 /* ReceiptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C471522210F4F6F008D9E32 /* ReceiptTests.swift */; };
 		4C5F4E7C21CB79A300156D56 /* EntryRowSelectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5F4E7B21CB79A300156D56 /* EntryRowSelectable.swift */; };
+		4C6AE30A21CFFB7900476E7E /* PodestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6AE30921CFFB7900476E7E /* PodestUITests.swift */; };
+		4C6AE31221CFFCB900476E7E /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6AE31121CFFCB900476E7E /* SnapshotHelper.swift */; };
 		4C6FB90F2045C3BB005C559E /* files.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6FB90E2045C3BB005C559E /* files.swift */; };
 		4C6FB912204679FE005C559E /* FileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6FB911204679FE005C559E /* FileRepository.swift */; };
 		4C6FB92A204C41A1005C559E /* FileProxyDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6FB926204C41A0005C559E /* FileProxyDelegate.swift */; };
@@ -114,6 +116,13 @@
 			remoteGlobalIDString = 4C010A0E2101D6E90006CB53;
 			remoteInfo = PodKit;
 		};
+		4C6AE30C21CFFB7900476E7E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4E8CA6F91A126ADB004DE307 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4E8CA7001A126ADB004DE307;
+			remoteInfo = Podest;
+		};
 		4EF5E1091E9400B400A95D3D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4E8CA6F91A126ADB004DE307 /* Project object */;
@@ -165,6 +174,18 @@
 		4C471522210F4F6F008D9E32 /* ReceiptTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptTests.swift; sourceTree = "<group>"; };
 		4C49DF412058319400DC86E6 /* PlayerTransitionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTransitionDelegate.swift; sourceTree = "<group>"; };
 		4C5F4E7B21CB79A300156D56 /* EntryRowSelectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryRowSelectable.swift; sourceTree = "<group>"; };
+		4C6AE30721CFFB7900476E7E /* PodestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PodestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C6AE30921CFFB7900476E7E /* PodestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodestUITests.swift; sourceTree = "<group>"; };
+		4C6AE30B21CFFB7900476E7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4C6AE31121CFFCB900476E7E /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SnapshotHelper.swift; path = fastlane/SnapshotHelper.swift; sourceTree = SOURCE_ROOT; };
+		4C6AE31321D0023600476E7E /* FanboyKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FanboyKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C6AE31521D0023600476E7E /* FeedKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FeedKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C6AE31721D0023600476E7E /* MangerKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MangerKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C6AE31921D0023600476E7E /* Nuke.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Nuke.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C6AE31B21D0023600476E7E /* Ola.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Ola.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C6AE31D21D0023600476E7E /* Patron.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Patron.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C6AE31F21D0023600476E7E /* Playback.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Playback.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C6AE32121D0023600476E7E /* Skull.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Skull.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C6FB90E2045C3BB005C559E /* files.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = files.swift; sourceTree = "<group>"; };
 		4C6FB911204679FE005C559E /* FileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileRepository.swift; sourceTree = "<group>"; };
 		4C6FB926204C41A0005C559E /* FileProxyDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileProxyDelegate.swift; path = ../../fileproxy/Sources/fileproxy/FileProxyDelegate.swift; sourceTree = "<group>"; };
@@ -265,6 +286,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4C6AE30421CFFB7900476E7E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4E8CA6FE1A126ADB004DE307 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -310,6 +338,16 @@
 				4C010A1E2101D6E90006CB53 /* Info.plist */,
 			);
 			path = PodKitTests;
+			sourceTree = "<group>";
+		};
+		4C6AE30821CFFB7900476E7E /* PodestUITests */ = {
+			isa = PBXGroup;
+			children = (
+				4C6AE30921CFFB7900476E7E /* PodestUITests.swift */,
+				4C6AE31121CFFCB900476E7E /* SnapshotHelper.swift */,
+				4C6AE30B21CFFB7900476E7E /* Info.plist */,
+			);
+			path = PodestUITests;
 			sourceTree = "<group>";
 		};
 		4C6FB910204679C2005C559E /* files */ = {
@@ -448,6 +486,14 @@
 		4E0CF69F1DCB353C005E01F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4C6AE31321D0023600476E7E /* FanboyKit.framework */,
+				4C6AE31521D0023600476E7E /* FeedKit.framework */,
+				4C6AE31721D0023600476E7E /* MangerKit.framework */,
+				4C6AE31921D0023600476E7E /* Nuke.framework */,
+				4C6AE31B21D0023600476E7E /* Ola.framework */,
+				4C6AE31D21D0023600476E7E /* Patron.framework */,
+				4C6AE31F21D0023600476E7E /* Playback.framework */,
+				4C6AE32121D0023600476E7E /* Skull.framework */,
 				4C010A2A2101DBB00006CB53 /* FeedKit.framework */,
 				4CF5674B207F362300C77C1D /* StoreKit.framework */,
 				4E180FA41F83951A00976A3A /* FanboyKit.framework */,
@@ -479,6 +525,7 @@
 				4E8CA71B1A126ADC004DE307 /* PodestTests */,
 				4C010A102101D6E90006CB53 /* PodKit */,
 				4C010A1B2101D6E90006CB53 /* PodKitTests */,
+				4C6AE30821CFFB7900476E7E /* PodestUITests */,
 				4E8CA7021A126ADB004DE307 /* Products */,
 				4E0CF69F1DCB353C005E01F9 /* Frameworks */,
 			);
@@ -491,6 +538,7 @@
 				4E8CA7181A126ADC004DE307 /* PodestTests.xctest */,
 				4C010A0F2101D6E90006CB53 /* PodKit.framework */,
 				4C010A172101D6E90006CB53 /* PodKitTests.xctest */,
+				4C6AE30721CFFB7900476E7E /* PodestUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -603,6 +651,24 @@
 			productReference = 4C010A172101D6E90006CB53 /* PodKitTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		4C6AE30621CFFB7900476E7E /* PodestUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C6AE31021CFFB7900476E7E /* Build configuration list for PBXNativeTarget "PodestUITests" */;
+			buildPhases = (
+				4C6AE30321CFFB7900476E7E /* Sources */,
+				4C6AE30421CFFB7900476E7E /* Frameworks */,
+				4C6AE30521CFFB7900476E7E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4C6AE30D21CFFB7900476E7E /* PBXTargetDependency */,
+			);
+			name = PodestUITests;
+			productName = PodestUITests;
+			productReference = 4C6AE30721CFFB7900476E7E /* PodestUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		4E8CA7001A126ADB004DE307 /* Podest */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4E8CA7221A126ADC004DE307 /* Build configuration list for PBXNativeTarget "Podest" */;
@@ -647,7 +713,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftMigration = 0720;
-				LastSwiftUpdateCheck = 0940;
+				LastSwiftUpdateCheck = 1010;
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = "Michael Nisi";
 				TargetAttributes = {
@@ -662,6 +728,11 @@
 						DevelopmentTeam = X23V32HT8X;
 						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
+					};
+					4C6AE30621CFFB7900476E7E = {
+						CreatedOnToolsVersion = 10.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 4E8CA7001A126ADB004DE307;
 					};
 					4E8CA7001A126ADB004DE307 = {
 						CreatedOnToolsVersion = 6.1;
@@ -707,6 +778,7 @@
 				4E8CA7171A126ADC004DE307 /* PodestTests */,
 				4C010A0E2101D6E90006CB53 /* PodKit */,
 				4C010A162101D6E90006CB53 /* PodKitTests */,
+				4C6AE30621CFFB7900476E7E /* PodestUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -724,6 +796,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C010A282101D84F0006CB53 /* products.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C6AE30521CFFB7900476E7E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -795,6 +874,15 @@
 			files = (
 				4C471523210F4F6F008D9E32 /* ReceiptTests.swift in Sources */,
 				4C010A1D2101D6E90006CB53 /* PodKitTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C6AE30321CFFB7900476E7E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C6AE30A21CFFB7900476E7E /* PodestUITests.swift in Sources */,
+				4C6AE31221CFFCB900476E7E /* SnapshotHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -871,6 +959,11 @@
 			target = 4C010A0E2101D6E90006CB53 /* PodKit */;
 			targetProxy = 4C010A192101D6E90006CB53 /* PBXContainerItemProxy */;
 		};
+		4C6AE30D21CFFB7900476E7E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4E8CA7001A126ADB004DE307 /* Podest */;
+			targetProxy = 4C6AE30C21CFFB7900476E7E /* PBXContainerItemProxy */;
+		};
 		4EF5E10A1E9400B400A95D3D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4E8CA7001A126ADB004DE307 /* Podest */;
@@ -909,12 +1002,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 7;
+				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PodKit/Info.plist;
@@ -944,12 +1037,12 @@
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 7;
+				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PodKit/Info.plist;
@@ -1014,6 +1107,60 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		4C6AE30E21CFFB7900476E7E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = PodestUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.PodestUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Podest;
+			};
+			name = Debug;
+		};
+		4C6AE30F21CFFB7900476E7E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = PodestUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.PodestUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Podest;
 			};
 			name = Release;
 		};
@@ -1132,7 +1279,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1155,7 +1302,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1219,6 +1366,15 @@
 			buildConfigurations = (
 				4C010A222101D6E90006CB53 /* Debug */,
 				4C010A232101D6E90006CB53 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4C6AE31021CFFB7900476E7E /* Build configuration list for PBXNativeTarget "PodestUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C6AE30E21CFFB7900476E7E /* Debug */,
+				4C6AE30F21CFFB7900476E7E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

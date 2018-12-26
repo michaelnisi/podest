@@ -23,3 +23,20 @@ xcuserdata
 */config.json
 */products.json
 .env
+
+# Fastlane
+
+fastlane/metadata/review_information/email_address.txt
+fastlane/metadata/review_information/phone_number.txt
+
+fastlane/metadata/trade_representative_contact_information/address_line1.txt
+fastlane/metadata/trade_representative_contact_information/city_name.txt
+fastlane/metadata/trade_representative_contact_information/email_address.txt
+fastlane/metadata/trade_representative_contact_information/phone_number.txt
+fastlane/metadata/trade_representative_contact_information/postal_code.txt
+fastlane/metadata/trade_representative_contact_information/trade_name.txt
+
+fastlane/Preview.html
+fastlane/Snapfile
+fastlane/report.xml
+fastlane/screenshots

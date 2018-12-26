@@ -1,13 +1,3 @@
-# Keywords
-
-audio,browser,catcher,listen,player,pod,podcast,podcasts,podcatcher,pods,queue,radio,tv,video,watch
-
-# Promotional Text
-
-Four-week free trial! Full version for one year via in-app purchase, with three favorable prices to choose from. Download the app for details.
-
-# Description
-
 Wether hundreds of subscriptions or just a quick listen, get your podcasts with Podest. With its familiar user interface and full-text search, it’s easy to find a good show. Podest updates your queue efficiently in the background, without draining your battery. If you love podcasts and look for a simple way to enjoy them, without sign up or tracking, try this streamlined podcast player.
 
 TOP FEATURES
