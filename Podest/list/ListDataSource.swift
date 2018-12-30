@@ -149,7 +149,7 @@ extension ListDataSource {
     dispatchPrecondition(condition: .notOnQueue(.main))
 
     let sections = self.sections(for: items)
-    let updates = self.update(merging: sections)
+    let updates = ListDataSource.makeUpdates(old: self.sections, new: sections)
     
     self.sections = sections
     
@@ -389,6 +389,17 @@ extension ListDataSource {
 
 extension ListDataSource: UITableViewDataSource {
 
+  /// Registers nib objects with `tableView` under identifiers.
+  static func registerCells(with tableView: UITableView) {
+    let cells = [
+      (Cells.subtitle.nib, Cells.subtitle.id)
+    ]
+
+    for cell in cells {
+      tableView.register(cell.0, forCellReuseIdentifier: cell.1)
+    }
+  }
+
   func numberOfSections(in tableView: UITableView) -> Int {
     return sections.count
   }
@@ -409,8 +420,14 @@ extension ListDataSource: UITableViewDataSource {
     switch item {
     case .entry(let entry):
       let cell = tableView.dequeueReusableCell(
-        withIdentifier: Cells.text.id, for: indexPath) as! FKTextCell
-      return cell.configure(with: entry)
+        withIdentifier: Cells.subtitle.id, for: indexPath
+      ) as! SubtitleTableViewCell
+
+      cell.textLabel?.text = entry.title
+      cell.detailTextLabel?.text = StringRepository.episodeCellSubtitle(for: entry)
+      cell.imageView?.image = nil
+
+      return cell
     }
   }
   

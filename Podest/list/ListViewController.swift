@@ -276,8 +276,11 @@ extension ListViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    Cells.registerFKTextCell(with: tableView)
-    
+    ListDataSource.registerCells(with: tableView)
+
+    tableView.rowHeight = UITableView.automaticDimension
+    tableView.estimatedRowHeight = 104
+
     navigationItem.largeTitleDisplayMode = .never
     
     tableView.dataSource = dataSource
