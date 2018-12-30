@@ -12,10 +12,11 @@ import os.log
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "queue")
 
-/// `QueueDataSource` provides enqueued entries and subscribed feeds.
+/// Enumerates items.
 enum QueuedData: Equatable {
   case entry(Entry)
   case feed(Feed)
+  case message(NSAttributedString)
   
   static func ==(lhs: QueuedData, rhs: QueuedData) -> Bool {
     switch (lhs, rhs) {
@@ -23,15 +24,17 @@ enum QueuedData: Equatable {
       return a == b
     case (.feed(let a), .feed(let b)):
       return a == b
-    case (.entry, _), (.feed, _):
+    case (.message(let a), .message(let b)):
+      return a == b
+    case (.entry, _), (.feed, _), (.message, _):
       return false
     }
   }
 }
 
-/// Identifies sections.
+/// Enumerates section identifiers.
 enum QueuedSectionID: Int {
-  case entry, feed
+  case entry, feed, message
 }
 
 /// Provides access to queue and subscription data.
@@ -43,31 +46,24 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   private var sQueue = DispatchQueue(
     label: "ink.codes.podest.QueueDataSource-\(UUID().uuidString).sQueue")
   
-  private var worker = DispatchQueue(
-    label: "ink.codes.podest.QueueDataSource-\(UUID().uuidString).worker")
-  
-  private var _sections = [Section<QueuedData>]()
-  
+  private var _sections = [Section<QueuedData>(
+    id: QueuedSectionID.message.rawValue,
+    items: [.message(StringRepository.loadingQueue())]
+  )]
+
+  /// Accessing the sections of the table view is synchronized.
   var sections: [Section<QueuedData>] {
     get {
-      return sQueue.sync {
-        return _sections
-      }
+      return sQueue.sync { _sections }
     }
     set {
-      sQueue.sync {
-        _sections = newValue
-      }
+      sQueue.sync { _sections = newValue }
     }
   }
-  
-  private var observers = [NSObjectProtocol]()
-  
-  /// Adds all observers.
-  func activate() {
-    dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
-    
-    assert(observers.isEmpty)
+
+  /// This data source is showing a message.
+  var isMessage: Bool {
+    return sections.first?.id == QueuedSectionID.message.rawValue
   }
   
   private var invalidated = false
@@ -75,13 +71,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   /// Removes all observers.
   func invalidate() {
     dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
-    
-    for observer in observers {
-      NotificationCenter.default.removeObserver(observer)
-    }
-    observers.removeAll()
-    
-    updateCompletionBlock = nil
+
     reloading?.cancel()
     
     invalidated = true
@@ -100,57 +90,84 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   deinit {
     precondition(invalidated)
   }
-  
-  /// Submitted when queue has been updated. Consumers must apply `completion`
-  /// block when they are done, we are making time for snapshots with this.
-  var updateCompletionBlock: ((Updates, Error?, _ completion: (() -> Void)?) -> Void)?
 
-  private static func makeSections(items: [QueuedData]) -> [Section<QueuedData>] {
+  private static func makeSections(
+    items: [QueuedData],
+    error: Error? = nil
+  ) -> [Section<QueuedData>] {
+    var messages = Section<QueuedData>(
+      id: QueuedSectionID.message.rawValue)
+
+    guard !items.isEmpty else {
+      let text = (error != nil ?
+        StringRepository.message(describing: error!) : nil)
+        ?? StringRepository.emptyQueue()
+      messages.append(item: .message(text))
+      return [messages]
+    }
+
     var entries = Section<QueuedData>(
       id: QueuedSectionID.entry.rawValue, title: "Episodes")
+
     var feeds = Section<QueuedData>(
       id: QueuedSectionID.feed.rawValue, title: "Podcasts")
-    
+
     for item in items {
       switch item {
       case .entry:
         entries.append(item: item)
       case .feed:
         feeds.append(item: item)
+      case .message:
+        messages.append(item: item)
       }
+    }
+
+    guard messages.isEmpty else {
+      precondition(messages.count == 1)
+      return [messages]
     }
     
     return [entries, feeds].filter {
-      !$0.items.isEmpty
+      !$0.isEmpty
     }
   }
-  
-  private func merge(items: [QueuedData]) -> Updates {
-    assert(!Thread.isMainThread)
 
-    let sections = QueueDataSource.makeSections(items: items)
-    let updates = self.update(merging: sections)
-    
-    self.sections = sections
+  /// Drafts sections and updates, diffing `items` and current sections.
+  private static func makeUpdates(
+    sections current: [Section<QueuedData>],
+    items: [QueuedData],
+    error: Error? = nil
+  ) -> ([Section<QueuedData>], Updates) {
+    let sections = QueueDataSource.makeSections(items: items, error: error)
+    let updates = QueueDataSource.makeUpdates(old: current, new: sections)
 
-    return updates
+    return (sections, updates)
   }
 
   private weak var reloading: Operation?
 
-  /// Reloads the queue locally, without updating, but fetching missing items
-  /// remotely.
-  func reload(completionBlock: ((Error?) -> Void)? = nil) {
+  /// Reloads the queue locally, fetching missing items remotely if necessary,
+  /// without committing sections. That’s our users’ job, preferably in
+  /// `performBatchUpdates(_:completion:)`.
+  ///
+  /// - Parameters:
+  ///   - completionBlock: A block that executes on the main queue when
+  /// reloading completes, receiving new, not yet committed sections, the diff,
+  /// and an error if something went wrong.
+  func reload(completionBlock: (([Section<QueuedData>], Updates, Error?) -> Void)? = nil) {
+    dispatchPrecondition(condition: .onQueue(.main))
+
     if completionBlock == nil {
       guard reloading == nil else {
         os_log("ignoring redundant queue reloading request", log: log)
         return
       }
     }
-    
+
     var acc = [QueuedData]()
 
-    os_log("locally reloading queue", log: log, type: .debug)
+    os_log("reloading queue", log: log, type: .debug)
 
     reloading = userQueue.populate(entriesBlock: { entries, error in
       os_log("accumulating reloaded entries", log: log, type: .debug)
@@ -174,25 +191,14 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
       dispatchPrecondition(condition: .notOnQueue(.main))
 
-      let relevantError: Error? = {
-        guard let er = error as? FeedKitError else {
-          return error
-        }
-        switch er {
-        case .cancelledByUser:
-          os_log("reloading cancelled by user", log: log, type: .debug)
-          return nil
-        default:
-          return er
-        }
-      }()
+      let (sections, updates) = QueueDataSource.makeUpdates(
+        sections: self.sections,
+        items: acc,
+        error: error ?? self.updateError
+      )
 
-      let updates = self.merge(items: acc)
-
-      self.updateCompletionBlock?(updates, relevantError) {
-        DispatchQueue.global().async {
-          completionBlock?(relevantError)
-        }
+      DispatchQueue.main.async {
+        completionBlock?(sections, updates, error)
       }
     }
   }
@@ -238,76 +244,82 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
     }
   }
+
+  private var _updateError: Error?
+
+  private var updateError: Error? {
+    get { return sQueue.sync { _updateError } }
+    set { sQueue.sync { _updateError = newValue } }
+  }
   
-  /// Reloads the queue to get a starting point for updating and, minding a
-  /// timely grace `window`, an hour or so, updates the queue, checking if new
-  /// episodes are available. In any case asks the system to download enclosed
-  /// media files in the background, preloading episodes. Our fuzzy way of
-  /// preloading in limited batches, fetching all files eventually.
+  /// Updates the queue, reloading current items to update from, and asks the
+  /// system to download enclosed media files in the background. Fuzzy
+  /// preloading of episodes in limited batches, aquiring all files eventually.
   ///
-  /// Despite downloading to the cache directory, we are removing stale files
-  /// at appropriate times.
+  /// Too frequent updates are ignored. Despite downloading to the cache
+  /// directory, we are removing stale files at appropriate times. Batches are
+  /// limited to 64 files for downloads and 16 files for deletions.
+  ///
+  /// - Parameters:
+  ///   - window: Threshold in seconds, below which, after reloading and before
+  /// preloading, updating is skipped.
+  ///   - completionHandler: This block gets submitted to the main queue when
+  /// all is done, receiving a Boolean, indicating new data, and an error value
+  /// if something went wrong.
   func update(
     minding window: TimeInterval = 3600,
+    considering error: Error? = nil,
     completionHandler: ((Bool, Error?) -> Void)? = nil)
   {
     os_log("updating queue", log: log, type: .debug)
 
-    let shouldUpdate = self.shouldUpdate(outside: window)
+    updateError = error
+
+    let shouldUpdate = self.shouldUpdate()
     let shouldRemove = self.makeShouldRemoveBlock()
-    
-    func next() {
-      reload { error in
-        if let er = error {
-          os_log("tolerating queue reloading error: %{public}@",
-                 log: log, String(describing: er))
-        }
 
-        func preload(forwarding newData: Bool, updateError: Error?) -> Void {
-          shouldRemove(newData) { rm in
-            dispatchPrecondition(condition: .onQueue(.main))
+    func preload(forwarding newData: Bool, updateError: Error?) -> Void {
+      shouldRemove(newData) { rm in
+        dispatchPrecondition(condition: .onQueue(.main))
 
-            DispatchQueue.global().async {
-              Podest.files.preloadQueue(removingFiles: rm) { error in
-                if let er = error {
-                  os_log("queue preloading error: %{public}@",
-                         log: log, type: .debug, er as CVarArg)
-                }
-                DispatchQueue.main.async {
-                  os_log("updating complete", log: log, type: .debug)
-                  completionHandler?(newData, updateError)
-                }
-              }
+        DispatchQueue.global().async {
+          Podest.files.preloadQueue(removingFiles: rm) { error in
+            if let er = error {
+              os_log("queue preloading error: %{public}@",
+                     log: log, type: .debug, er as CVarArg)
+            }
+
+            DispatchQueue.main.async {
+              os_log("updating complete", log: log, type: .debug)
+              completionHandler?(newData, updateError)
             }
           }
         }
-        
-        guard shouldUpdate else {
-          os_log("ignoring excessive queue update request",
-                 log: log, type: .debug)
-          return preload(forwarding: false, updateError: nil)
+      }
+    }
+
+    func next() {
+      guard shouldUpdate else {
+        os_log("ignoring excessive queue update request",
+               log: log, type: .debug)
+        return preload(forwarding: false, updateError: nil)
+      }
+
+      Podest.userLibrary.update { newData, error in
+        if let er = error {
+          os_log("updating error: %{public}@", log: log, er as CVarArg)
+          self.updateError = error
         }
 
-        Podest.userLibrary.update { newData, error in
-          if let er = error {
-            os_log("queue updating error: %{public}@",
-                   log: log, type: .debug, er as CVarArg)
-          }
-          if newData {
-            os_log("queue updating complete with new data",
-                   log: log, type: .debug)
-          } else {
-            os_log("queue updating complete without data",
-                   log: log, type: .debug)
-          }
+        os_log("queue updating complete: %{public}i",
+               log: log, type: .debug, newData)
 
-          preload(forwarding: newData, updateError: error)
-        }
+        preload(forwarding: newData, updateError: error)
       }
     }
     
     // For simulators, not receiving remote notifications, we are pulling
-    // iCloud manually to make working on sync less erratic.
+    // iCloud manually, making working on iCloud sync less erratic.
     
     #if arch(i386) || arch(x86_64)
     guard window <= 60 else {
@@ -345,11 +357,24 @@ final class QueueDataSource: NSObject, SectionedDataSource {
       }
     }
   }
+
 }
 
 // MARK: - Configuring a Table View
 
 extension QueueDataSource: UITableViewDataSource {
+
+  /// Registers nib objects with `tableView` under identifiers.
+  static func registerCells(with tableView: UITableView) {
+    let cells = [
+      (Cells.message.nib, Cells.message.id),
+      (Cells.subtitle.nib, Cells.subtitle.id)
+    ]
+
+    for cell in cells {
+      tableView.register(cell.0, forCellReuseIdentifier: cell.1)
+    }
+  }
   
   func numberOfSections(in tableView: UITableView) -> Int {
     return sections.count
@@ -365,17 +390,47 @@ extension QueueDataSource: UITableViewDataSource {
     guard let item = itemAt(indexPath: indexPath) else {
       fatalError("no item at index path: \(indexPath)")
     }
+
+    tableView.separatorStyle = .singleLine
     
     switch item {
     case .entry(let entry):
       let cell = tableView.dequeueReusableCell(
-        withIdentifier: Cells.image.id, for: indexPath) as! FKImageCell
-      return cell.configure(with: entry)
+        withIdentifier: Cells.subtitle.id, for: indexPath
+      ) as! SubtitleTableViewCell
+
+      cell.item = entry
+      cell.textLabel?.text = entry.title
+      cell.detailTextLabel?.text = StringRepository.episodeCellSubtitle(for: entry)
+      cell.imageView?.image = UIImage(named: "Oval")
+      cell.imageQuality = .high
+    
+      return cell
     case .feed:
       // We might reuse the feed cell from search here.
       fatalError("niy")
+    case .message(let text):
+      let cell = tableView.dequeueReusableCell(
+        withIdentifier: Cells.message.id, for: indexPath
+      ) as! MessageTableViewCell
+
+      cell.titleLabel.attributedText = text
+      cell.selectionStyle = .none
+      cell.targetHeight = tableView.bounds.height * 0.6
+
+      tableView.separatorStyle = .none
+
+      return cell
     }
-    
+  }
+
+  func tableView(
+    _ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    if case .message? = itemAt(indexPath: indexPath) {
+      return false
+    }
+
+    return true
   }
   
 }
@@ -391,7 +446,7 @@ extension QueueDataSource: EntryIndexPathMapping {
     switch item {
     case .entry(let entry):
       return entry
-    case .feed:
+    case .feed, .message:
       return nil
     }
   }
@@ -467,6 +522,9 @@ extension QueueDataSource: UITableViewDataSourcePrefetching  {
     _ tableView: UITableView,
     prefetchRowsAt indexPaths: [IndexPath]) {
     let images = self.images
+
+    // Jumping through extra hoops for smooth scrolling is worth it.
+
     DispatchQueue.global().async {
       let items = self.imaginables(for: indexPaths)
       let size = CGSize(width: 60, height: 60)
@@ -479,6 +537,7 @@ extension QueueDataSource: UITableViewDataSourcePrefetching  {
     _ tableView: UITableView,
     cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
     let images = self.images
+
     DispatchQueue.global().async {
       guard let reqs = self.requests else {
         return

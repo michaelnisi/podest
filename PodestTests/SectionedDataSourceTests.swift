@@ -58,7 +58,7 @@ class SectionedDataSourceTests: XCTestCase {
       self.items = items
       
       let sections = TestDataSource.makeSections(items: items)
-      let updates = self.update(merging: sections)
+      let updates = self.add(merging: sections)
       
       self.sections = sections
       

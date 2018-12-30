@@ -174,11 +174,12 @@ protocol UserProxy {
   /// Updates children with `guids` of currently enqueued episodes.
   func updateIsEnqueued(using guids: Set<EntryGUID>)
 
-  /// Updates the user’s queue including downloading, encapsulated into a
-  /// stand-alone operation with a callback block, designed for background
-  /// fetching.
+  /// Updates the user’s queue, requesting downloads included, encapsulated
+  /// into a stand-alone operation with a callback block, designed for
+  /// background fetching.
   ///
   /// - Parameters:
+  ///   - error: An upstream error to consider while updating.
   ///   - completionHandler: The block to execute when the queue has
   /// been updated AND the view has been refreshed.
   ///   - newData: `true` if new data has been received.
@@ -190,6 +191,7 @@ protocol UserProxy {
   ///
   /// [QA](https://developer.apple.com/library/content/qa/qa1693/_index.html)
   func update(
+    considering error: Error?,
     completionHandler: @escaping ((_ newData: Bool, _ error: Error?) -> Void))
 
   /// Reloads queue, missing items might get fetched remotely, but saving time

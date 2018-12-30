@@ -113,19 +113,22 @@ extension AppDelegate {
 
         DispatchQueue.main.async {
           self.root.reload { error in
+            dispatchPrecondition(condition: .onQueue(.main))
+
             if let er = error {
               os_log("reloading queue failed: %{public}@",
                      log: log, type: .error, er as CVarArg)
             }
-            DispatchQueue.main.async {
-              self.isPulling = false
-              completionBlock?(result)
-            }
+
+            self.isPulling = false
+
+            completionBlock?(result)
           }
         }
       } else {
         DispatchQueue.main.async {
           self.isPulling = false
+
           completionBlock?(result)
         }
       }
@@ -313,11 +316,10 @@ extension AppDelegate {
         return done()
       }
 
-      // In non-active states, being uninstalled, pushing manually is required,
-      // because we are not observing queue or library changes. This allows us
-      // to execute the completion block after pushing to iCloud, a requirement
-      // of the background fetching, nothing must run after the completion
-      // handler.
+      // In non-active states, being uninstalled, not receiving queue or library
+      // changes, we must push manually. Providing us with a callback, we can
+      // execute after pushing to iCloud, a requirement of background fetching.
+      // Nothing must run after its completion handler.
 
       switch application.applicationState {
       case .active:
@@ -460,9 +462,9 @@ extension AppDelegate {
   func applicationDidBecomeActive(_ application: UIApplication) {
     os_log("did become active", log: log, type: .info)
 
-    func updateQueue() -> Void {
+    func updateQueue(considering syncError: Error? = nil) -> Void {
       DispatchQueue.main.async {
-        self.root.update { _, error in
+        self.root.update(considering: syncError) { _, error in
           if let er = error {
             os_log("updating queue produced error: %{public}@",
                    log: log, er as CVarArg)
@@ -483,7 +485,8 @@ extension AppDelegate {
         if let er = error {
           os_log("iCloud: %{public}@", log: log, String(describing: er))
         }
-        updateQueue()
+
+        updateQueue(considering: error)
       }
       return
     }
@@ -528,6 +531,8 @@ extension AppDelegate: LibraryDelegate {
 extension AppDelegate: QueueDelegate {
 
   func queue(_ queue: Queueing, changed guids: Set<EntryGUID>) {
+    // TODO: Wait! What?
+
     DispatchQueue.main.async { [weak self] in
       self?.root.updateIsEnqueued(using: guids)
       self?.root.reload()

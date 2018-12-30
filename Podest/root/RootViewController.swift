@@ -148,8 +148,7 @@ extension RootViewController {
     }
 
     pnc = ncs.first
-    pnc.navigationBar.prefersLargeTitles = traitCollection.containsTraits(in:
-      UITraitCollection(horizontalSizeClass: .compact))
+    pnc.navigationBar.prefersLargeTitles = true
 
     snc = ncs.last
 
@@ -444,14 +443,18 @@ extension RootViewController: UserProxy {
   }
 
   func update(
+    considering error: Error? = nil,
     completionHandler: @escaping ((_ newData: Bool, _ error: Error?) -> Void)) {
     os_log("updating queue", log: log, type: .debug)
-    qvc.update(completionHandler: completionHandler)
+    qvc.update(considering: error, completionHandler: completionHandler)
   }
 
   func reload(completionBlock: ((Error?) -> Void)? = nil) {
     os_log("reloading queue", log: log, type: .debug)
+
     qvc.reload { error in
+      dispatchPrecondition(condition: .onQueue(.main))
+
       if let er = error {
         os_log("reloading queue completed with error: %{public}@",
                log: log, er as CVarArg)
@@ -459,21 +462,17 @@ extension RootViewController: UserProxy {
 
       os_log("updating views", log: log, type: .debug)
 
-      // View controllers should communicate clearly if they require their
-      // APIs to be called on the main queue. Here, we don’t know.
+      self.playervc?.isForwardable = Podest.userQueue.isForwardable
+      self.playervc?.isBackwardable = Podest.userQueue.isBackwardable
 
-      DispatchQueue.main.async {
-        self.playervc?.isForwardable = Podest.userQueue.isForwardable
-        self.playervc?.isBackwardable = Podest.userQueue.isBackwardable
-
-        guard let evc = self.episodeViewController, let entry = evc.entry else {
-          completionBlock?(error)
-          return
-        }
-
-        evc.isEnqueued = Podest.userQueue.contains(entry: entry)
+      guard let evc = self.episodeViewController, let entry = evc.entry else {
         completionBlock?(error)
+        return
       }
+
+      evc.isEnqueued = Podest.userQueue.contains(entry: entry)
+      
+      completionBlock?(error)
     }
   }
 
@@ -633,13 +632,15 @@ extension RootViewController: UISplitViewControllerDelegate {
     os_log("splitViewController: collapseSecondary: onto: %{public}@",
            log: log, type: .debug, primaryViewController)
 
+    // TODO: Handle nc.topViewController == nil
+
     guard
       let nc = secondaryViewController as? UINavigationController,
-      nc.topViewController is EpisodeViewController,
       nc == snc else {
       os_log("not collapsible: unexpected secondary: %{public}@",
              log: log, type: .error, secondaryViewController)
       fatalError()
+
     }
 
     nc.setViewControllers([], animated: false)

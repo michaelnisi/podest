@@ -20,11 +20,13 @@ func setTimeout(
   delay: DispatchTimeInterval,
   queue: DispatchQueue,
   handler: @escaping () -> Void
-  ) -> DispatchSourceTimer {
+) -> DispatchSourceTimer {
   let leeway: DispatchTimeInterval = .nanoseconds(100)
   let timer = DispatchSource.makeTimerSource(queue: queue)
+
   timer.setEventHandler(handler: handler)
-  timer.schedule(deadline: DispatchTime.now() + delay, leeway: leeway)
+  timer.schedule(deadline: .now() + delay, leeway: leeway)
   timer.resume()
+
   return timer
 }

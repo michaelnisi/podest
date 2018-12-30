@@ -325,6 +325,15 @@ extension StringRepository {
     
     return StringRepository.makeMessage(title: title, hint: hint)
   }
+
+  static func loadingQueue() -> NSAttributedString {
+    let title = "Loading"
+    let hint = """
+      Please wait while your Queue is being synchronized.
+      """
+
+    return StringRepository.makeMessage(title: title, hint: hint)
+  }
   
   static func noEpisode(with title: String) -> NSAttributedString {
     let bold: [NSAttributedString.Key : Any] = [
@@ -364,25 +373,17 @@ extension StringRepository {
   }
 
   static var offline: NSAttributedString {
-    let title = "You’re offline"
+    let title = "You’re Offline"
     let hint = "Turn off Airplane Mode or connect to Wi-Fi."
     
     return StringRepository.makeMessage(title: title, hint: hint)
   }
   
   static func unknown(_ error: Error) -> NSAttributedString {
-    let bold: [NSAttributedString.Key : Any] = [
-      .font: UIFont.preferredFont(forTextStyle: .headline)
-    ]
-    
-    let a = NSMutableAttributedString(string: "😓 Eww, an unknown error – ")
-    let b = NSAttributedString(string: "\(error)", attributes: bold)
-    let c = NSAttributedString(string: " – occurred.")
-    
-    a.append(b)
-    a.append(c)
-    
-    return a
+    let title = "I’m Sorry"
+    let hint = error.localizedDescription
+
+    return StringRepository.makeMessage(title: title, hint: hint)
   }
   
   /// Returns an error message describing `error`, applying three conditions:

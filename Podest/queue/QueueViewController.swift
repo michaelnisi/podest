@@ -33,129 +33,92 @@ final class QueueViewController: UITableViewController, Navigator {
 
   // MARK: - Data Source
 
-  /// Deferred, temporarily cached, updates to apply later, likely, while
-  /// animations are running, pull-to-refresh or swipe editing.
-  private var deferred: (Updates, Error?)?
+  lazy var dataSource: QueueDataSource = {
+    dispatchPrecondition(condition: .onQueue(.main))
 
-  var isFirstRun = true
-  
-  var shouldAnimate: Bool {
-    guard navigationController?.topViewController == self else {
-      return false
+    return QueueDataSource(
+      userQueue: Podest.userQueue,
+      images: Podest.images
+    )
+  }()
+
+  /// Reloads the table view.
+  ///
+  /// - Parameters:
+  ///   - animated: A flag to disable animations.
+  ///   - completionBlock: Submitted to the main queue when the table view has
+  /// has been reloaded.
+  ///
+  /// NOP if the table view is in editing mode.
+  func reload(_ animated: Bool = true, completionBlock: ((Error?) -> Void)? = nil) {
+    guard !tableView.isEditing else {
+      completionBlock?(nil)
+      return
     }
-    
-    if isShowingMessage {
-      return false
-    } else if dataSource.isEmpty {
-      return false
-    } else if deferred != nil {
-      return false
-    } else if isFirstRun {
-      return false
-    }
-    
-    return true
-  }
 
-  /// Produces a simple closure that updates the table view.
-  private func makeUpdateCompletionBlock() -> ((Updates, Error?, (() -> Void)?) -> Void) {
-    return { [weak self] updates, error, completion in
-      DispatchQueue.main.async { [weak self] in
-        os_log("entering queue update completion block: %{public}@",
-               log: log, type: .debug,
-               String(describing: updates))
+    dataSource.reload { [weak self] sections, updates, error in
+      func done() {
+        self?.selectCurrentRow(animated: false, scrollPosition: .none)
+        completionBlock?(nil)
+      }
+
+      guard !updates.isEmpty else {
+        return done()
+      }
+
+      guard animated else {
+        self?.dataSource.sections = sections
         
-        guard error == nil else {
-          if let msg = StringRepository.message(describing: error!) {
-            self?.showMessage(msg)
+        self?.tableView.reloadData()
+        return done()
+      }
 
-            completion?()
-            return
-          }
+      self?.tableView.performBatchUpdates({
+        self?.dataSource.sections = sections
 
-          fatalError("unhandled error: \(error!)")
-        }
-        
-        let shouldAnimate = self?.shouldAnimate ?? false
-        let isEditing = self?.tableView.isEditing ?? false
-
-        guard let rc = self?.refreshControl, !rc.isRefreshing, !isEditing else {
-          os_log("deferring queue updates", log: log, type: .debug)
-          self?.deferred = (updates, error)
-
-          completion?()
-          return
-        }
-
-        // Completion block for after reloading or animating.
-        func done(animated: Bool, scrollPosition: UITableView.ScrollPosition) {
-          let isEmpty = self?.dataSource.isEmpty ?? true
-          
-          if isEmpty {
-            os_log("queue is empty", log: log, type: .debug)
-            self?.showMessage(StringRepository.emptyQueue())
-          } else {
-            self?.selectCurrentRow(
-              animated: animated, scrollPosition: .none)
-          }
-          
-          self?.navigationItem.hidesSearchBarWhenScrolling = !isEmpty
-          self?.deferred = nil
-
-          completion?()
-        }
-        
-        guard !updates.isEmpty else {
-          os_log("leaving queue: no updates", log: log, type: .debug)
-          return done(animated: false, scrollPosition: .none)
-        }
-
-        self?.hideMessage()
-        self?.isFirstRun = false
-        
         let t = self?.tableView
-        
-        guard shouldAnimate else {
-          t?.reloadData()
-          let scrollPosition: UITableView.ScrollPosition = {
-            return self?.deferred == nil ? .middle : .none
-          }()
-          return done(animated: false, scrollPosition: scrollPosition)
-        }
-        
-        self?.tableView.performBatchUpdates({ [weak t] in
-          t?.deleteRows(at: updates.rowsToDelete, with: .automatic)
-          t?.insertRows(at: updates.rowsToInsert, with: .automatic)
-          t?.reloadRows(at: updates.rowsToReload, with: .automatic)
 
-          t?.deleteSections(updates.sectionsToDelete, with: .automatic)
-          t?.insertSections(updates.sectionsToInsert, with: .automatic)
-          t?.reloadSections(updates.sectionsToReload, with: .automatic)
-        }) { finished in
-          done(animated: false, scrollPosition: .none)
-        }
+        t?.deleteRows(at: updates.rowsToDelete, with: .none)
+        t?.insertRows(at: updates.rowsToInsert, with: .none)
+        t?.reloadRows(at: updates.rowsToReload, with: .none)
+
+        t?.deleteSections(updates.sectionsToDelete, with: .none)
+        t?.insertSections(updates.sectionsToInsert, with: .none)
+        t?.reloadSections(updates.sectionsToReload, with: .none)
+      }) { _ in
+        done()
       }
     }
   }
 
-  lazy var dataSource: QueueDataSource = {
-    dispatchPrecondition(condition: .onQueue(.main))
+  /// Updates the queue, fetching new episodes using the remote service.
+  ///
+  /// - Parameters:
+  ///   - error: An upstream error to consider while updating.
+  ///   - completionHandler: Submitted to the main queue when the table view
+  /// has been updated.
+  ///
+  /// The frequency of subsequent updates is limited.
+  func update(
+    considering error: Error? = nil,
+    completionHandler: ((Bool, Error?) -> Void)? = nil
+  ) {
+    let isInitial = dataSource.isEmpty || dataSource.isMessage
 
-    let ds = QueueDataSource(userQueue: Podest.userQueue, images: Podest.images)
-    ds.updateCompletionBlock = makeUpdateCompletionBlock()
-    ds.activate()
+    guard isInitial || dataSource.shouldUpdate() else {
+      completionHandler?(false, nil)
+      return
+    }
 
-    return ds
-  }()
-  
-  /// Forwards update request and completion handler to data source.
-  func update(completionHandler: ((Bool, Error?) -> Void)?) {
-    dataSource.update(completionHandler: completionHandler)
-  }
+    let animated = !isInitial
 
-  /// Forwards reload request and completion handler to data source.
-  func reload(completionBlock: ((Error?) -> Void)?) {
-    dataSource.reload(completionBlock: completionBlock)
+    reload(animated) { [weak self] initialReloadError in
+      self?.dataSource.update(considering: error) { newData, updateError in
+        self?.reload { error in
+          completionHandler?(newData, updateError ?? error)
+        }
+      }
+    }
   }
 
   // MARK: - Store Reachability
@@ -165,8 +128,6 @@ final class QueueViewController: UITableViewController, Navigator {
       probe?.invalidate()
     }
   }
-  
-  // MARK: - Internals
 
   // MARK: - Keeping Store Access
 
@@ -189,25 +150,31 @@ final class QueueViewController: UITableViewController, Navigator {
       updateStoreButton()
     }
   }
-  
-  /// Orignal separator inset left from IB.
-  private var separatorInsetLeft: CGFloat!
 
   /// A state machine handling events from the search controller.
   private var searchProxy: SearchControllerProxy!
 
+  /// Saving the refresh control hiding animation.
+  private var refreshControlTimer: DispatchSourceTimer? {
+    willSet {
+      refreshControlTimer?.cancel()
+    }
+  }
+
 }
 
-// MARK: - UIViewController
+// MARK: - UIRefreshControl
 
 extension QueueViewController {
-  
+
   @objc func refreshControlValueChanged(_ sender: UIRefreshControl) {
-    guard sender.isRefreshing else {
+    guard sender.isRefreshing,
+      refreshControlTimer == nil,
+      dataSource.shouldUpdate() else {
       return
     }
 
-    dataSource.update(minding: 60)
+    dataSource.update()
   }
 
   func makeRefreshControl() -> UIRefreshControl {
@@ -218,6 +185,31 @@ extension QueueViewController {
 
     return rc
   }
+
+  override func scrollViewDidEndDragging(
+    _ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    guard let rc = refreshControl, rc.isRefreshing else {
+      return
+    }
+
+    DispatchQueue.main.async {
+      rc.endRefreshing()
+    }
+
+    refreshControlTimer = setTimeout(delay: .milliseconds(600), queue: .main) {
+      [weak self] in
+      self?.refreshControlTimer = nil
+
+      self?.reload()
+    }
+
+  }
+
+}
+
+// MARK: - UIViewController
+
+extension QueueViewController {
 
   private func makeSearchProxy() -> (UISearchController, SearchControllerProxy) {
     let searchResultsController = SearchResultsController()
@@ -248,18 +240,23 @@ extension QueueViewController {
 
     navigationItem.searchController = searchController
     navigationItem.title = "Queue"
-    navigationItem.largeTitleDisplayMode = .never
+    navigationItem.largeTitleDisplayMode = .automatic
 
     self.searchProxy = searchProxy
 
-    Cells.registerFKImageCell(with: tableView)
-    
+    QueueDataSource.registerCells(with: tableView)
+
+    tableView.rowHeight = UITableView.automaticDimension
+    tableView.estimatedRowHeight = 104
+
+    var separatorInset = tableView.separatorInset
+    separatorInset.left = UITableView.automaticDimension
+    tableView.separatorInset = separatorInset
+
     tableView.dataSource = dataSource
     tableView.prefetchDataSource = dataSource
 
     clearsSelectionOnViewWillAppear = true
-
-    separatorInsetLeft = tableView.separatorInset.left
 
     // Setting the delegate first to make sure the store is in `interested` or
     // `subscribed` state to handle incoming transaction updates correctly.
@@ -297,12 +294,6 @@ extension QueueViewController {
   }
 
   override func viewDidAppear(_ animated: Bool) {
-    // If the data source is empty, it’s this view’s initial appearance or the
-    // queue is actually empty and thus inexpensive to reload.
-    if dataSource.isEmpty {
-      dataSource.reload()
-    }
-
     searchProxy.deselect(animated)
 
     super.viewDidAppear(animated)
@@ -315,10 +306,6 @@ extension QueueViewController {
   
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
-
-    var separatorInset = tableView.separatorInset
-    separatorInset.left = view.safeAreaInsets.left + separatorInsetLeft
-    tableView.separatorInset = separatorInset
 
     let insets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
     tableView.scrollIndicatorInsets = insets
@@ -335,34 +322,20 @@ extension QueueViewController {
 
 }
 
-// MARK: - UIScrollViewDelegate
+// MARK: - UITableViewDelegate
 
 extension QueueViewController {
 
-  override func scrollViewDidEndDragging(
-    _ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-    DispatchQueue.main.async { [weak self ] in
-      guard let rc = self?.refreshControl, rc.isRefreshing else {
-        return
-      }
-      
-      rc.endRefreshing()
-      
-      DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-        guard let (updates, error) = self?.deferred else {
-          return
-        }
-
-        self?.dataSource.updateCompletionBlock?(updates, error, nil)
-      }
+  override func tableView(
+    _ tableView: UITableView,
+    willSelectRowAt indexPath: IndexPath
+  ) -> IndexPath? {
+    if case .message? = dataSource.itemAt(indexPath: indexPath) {
+      return nil
     }
+
+    return indexPath
   }
-
-}
-
-// MARK: - UITableViewController: UITableViewDelegate
-
-extension QueueViewController {
 
   override func tableView(
     _ tableView: UITableView,
@@ -371,6 +344,7 @@ extension QueueViewController {
     guard let entry = dataSource.entry(at: indexPath) else {
       return
     }
+
     navigationDelegate?.show(entry: entry)
   }
 
@@ -402,18 +376,7 @@ extension QueueViewController {
   override func tableView(
     _ tableView: UITableView,
     didEndEditingRowAt indexPath: IndexPath?) {
-    super.tableView(tableView, didEndEditingRowAt: indexPath)
-
-    guard
-      let (updates, error) = self.deferred,
-      let cb = dataSource.updateCompletionBlock else {
-      return
-    }
-
-    // Waiting just a tiny bit for the swipe animation to finish.
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-      cb(updates, error, nil)
-    }
+    reload()
   }
 
 }
