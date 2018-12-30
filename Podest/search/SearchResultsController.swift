@@ -68,7 +68,6 @@ final class SearchResultsController: UITableViewController {
   func update(_ items: [Find], separatorInset: UIEdgeInsets? = nil) {
     assert(items.count ==  Set(items).count)
 
-    tableView.separatorInset = separatorInset ?? originalSeparatorInset
     adjustInsets()
     
     /// Disabling animations is not safe during cancellation, for its
@@ -215,10 +214,6 @@ final class SearchResultsController: UITableViewController {
     }
   }
 
-  /// The original separator inset of the table view, assuming it doesn’t
-  /// change dynamically.
-  private var originalSeparatorInset: UIEdgeInsets!
-
 }
 
 // MARK: - UIViewController
@@ -233,11 +228,14 @@ extension SearchResultsController {
     tableView.keyboardDismissMode = .onDrag
     tableView.contentInsetAdjustmentBehavior = .never
 
-    Cells.registerSuggestionCell(with: tableView)
-    Cells.registerSearchResultCell(with: tableView)
-    Cells.registerFKImageCell(with: tableView)
+    SearchResultsDataSource.registerCells(with: tableView)
 
-    originalSeparatorInset = tableView.separatorInset
+    tableView.rowHeight = UITableView.automaticDimension
+    tableView.estimatedRowHeight = 64
+
+    var separatorInset = tableView.separatorInset
+    separatorInset.left = UITableView.automaticDimension
+    tableView.separatorInset = separatorInset
 
     clearsSelectionOnViewWillAppear = true
   }
@@ -259,8 +257,6 @@ extension SearchResultsController {
       bottom: bottom ?? tableView.scrollIndicatorInsets.bottom,
       right: tableView.scrollIndicatorInsets.right
     )
-
-    originalSeparatorInset = originalSeparatorInset ?? tableView.separatorInset
   }
 
   private func clearSelection(_ animated: Bool = false) {

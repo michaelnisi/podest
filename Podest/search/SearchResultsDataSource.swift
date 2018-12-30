@@ -65,7 +65,7 @@ final class SearchResultsDataSource: NSObject, SearchResults, SectionedDataSourc
   /// - Returns: Required table view updates for the items.
   func updatesForItems(items: [Find]) -> Updates {
     let sections = sectionsFor(items: items)
-    let updates = self.update(merging: sections)
+    let updates = SearchResultsDataSource.makeUpdates(old: self.sections, new: sections)
     
     self.sections = sections
     
@@ -81,6 +81,19 @@ final class SearchResultsDataSource: NSObject, SearchResults, SectionedDataSourc
 // MARK: - UITableViewDataSource
 
 extension SearchResultsDataSource: UITableViewDataSource {
+
+  /// Registers nib objects with `tableView` under identifiers.
+  static func registerCells(with tableView: UITableView) {
+    let cells = [
+      (Cells.message.nib, Cells.message.id),
+      (Cells.subtitle.nib, Cells.subtitle.id),
+      (Cells.suggestion.nib, Cells.suggestion.id)
+    ]
+
+    for cell in cells {
+      tableView.register(cell.0, forCellReuseIdentifier: cell.1)
+    }
+  }
   
   func numberOfSections(in tableView: UITableView) -> Int {
     return sections.count
@@ -111,23 +124,40 @@ extension SearchResultsDataSource: UITableViewDataSource {
       let cell = tableView.dequeueReusableCell(
         withIdentifier: Cells.suggestion.id, for: indexPath)
       cell.textLabel?.text = sug.term
+
       return cell
     case .recentSearch(let feed), .suggestedFeed(let feed):
       let cell = tableView.dequeueReusableCell(
-        withIdentifier: Cells.result.id, for: indexPath)
+        withIdentifier: Cells.subtitle.id, for: indexPath
+      ) as! SubtitleTableViewCell
+
+      cell.item = nil
       cell.textLabel?.text = feed.title
       cell.detailTextLabel?.text = feed.author
+      cell.imageView?.image = nil
+
       return cell
     case .suggestedEntry(let entry):
       let cell = tableView.dequeueReusableCell(
-        withIdentifier: Cells.result.id, for: indexPath)
+        withIdentifier: Cells.subtitle.id, for: indexPath
+      ) as! SubtitleTableViewCell
+
+      cell.item = nil
       cell.textLabel?.text = entry.title
       cell.detailTextLabel?.text = entry.feedTitle
+      cell.imageView?.image = nil
+
       return cell
     case .foundFeed(let feed):
       let cell = tableView.dequeueReusableCell(
-        withIdentifier: Cells.image.id, for: indexPath) as! FKImageCell
-      cell.configure(with: feed)
+        withIdentifier: Cells.subtitle.id, for: indexPath
+      ) as! SubtitleTableViewCell
+
+      cell.item = feed
+      cell.textLabel?.text = feed.title
+      cell.detailTextLabel?.text = StringRepository.feedCellSubtitle(for: feed)
+      cell.imageView?.image = UIImage(named: "Oval")
+
       return cell
     }
   }
