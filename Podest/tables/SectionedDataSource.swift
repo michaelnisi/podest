@@ -9,15 +9,40 @@
 import Foundation
 import UIKit
 
+struct Cell {
+  let id: String
+  let nib: UINib
+}
+
+struct Cells {
+
+  static let suggestion = Cell(
+    id: "SuggestionCellID",
+    nib: UINib(nibName: "SuggestionCell", bundle: .main)
+  )
+
+  static let message = Cell(
+    id: "MessageTableViewCellID",
+    nib: UINib(nibName: "MessageTableViewCell", bundle: .main)
+  )
+
+  static let subtitle = Cell(
+    id: "SubtitleTableViewCellID",
+    nib: UINib(nibName: "SubtitleTableViewCell", bundle: .main)
+  )
+
+}
+
 /// A section of a table view data model.
 struct Section<Item: Equatable>: Equatable{
   let id: Int
-  let title: String
-  var items = [Item]()
+  let title: String?
+  var items: [Item]
   
-  init(id: Int, title: String) {
+  init(id: Int, title: String? = nil, items: [Item] = [Item]()) {
     self.id = id
     self.title = title
+    self.items = items
   }
   
   /// The number of items in this section.
@@ -26,6 +51,14 @@ struct Section<Item: Equatable>: Equatable{
   /// Append item to end of section.
   mutating func append(item: Item) {
     items.append(item)
+  }
+
+  var isEmpty: Bool {
+    return items.isEmpty
+  }
+
+  var first: Item? {
+    return items.first
   }
   
   static func ==(lhs: Section, rhs: Section) -> Bool {
@@ -41,22 +74,20 @@ protocol SectionedDataSource: class {
 extension SectionedDataSource {
 
   /// Returns updates after merging `sections` into `itemsByIndexPath`.
-  ///
-  /// - Parameter sections: The sections to merge.
-  func update(merging sections: [Section<Item>]) -> Updates {
+  static func makeUpdates(old: [Section<Item>], new: [Section<Item>]) -> Updates {
     let updates = Updates()
-    let numberOfSections = self.sections.count
+    let numberOfSections = old.count
     
-    for (n, section) in sections.enumerated() {
+    for (n, section) in new.enumerated() {
       var rows = 0
       var items: [Item]?
       if numberOfSections <= n {
         updates.insertSection(at: n)
       } else {
-        let prev = self.sections[n]
+        let prev = old[n]
         rows = prev.count
         items = prev.items
-        if section != prev || sections.count != self.sections.count {
+        if section != prev || new.count != old.count {
           updates.reloadSection(at: n)
         }
       }
@@ -80,7 +111,7 @@ extension SectionedDataSource {
       }
     }
     var y = numberOfSections
-    while y > sections.count {
+    while y > new.count {
       y -= 1
       updates.deleteSection(at: y)
     }
@@ -106,6 +137,8 @@ extension SectionedDataSource {
     return section.items[indexPath.row]
   }
   
-  var isEmpty: Bool { return sections.isEmpty }
+  var isEmpty: Bool {
+    return sections.isEmpty
+  }
   
 }
