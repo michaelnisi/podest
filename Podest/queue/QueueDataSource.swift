@@ -12,41 +12,39 @@ import os.log
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "queue")
 
-/// Enumerates items.
-enum QueuedData: Equatable {
-  case entry(Entry)
-  case feed(Feed)
-  case message(NSAttributedString)
-  
-  static func ==(lhs: QueuedData, rhs: QueuedData) -> Bool {
-    switch (lhs, rhs) {
-    case (.entry(let a), .entry(let b)):
-      return a == b
-    case (.feed(let a), .feed(let b)):
-      return a == b
-    case (.message(let a), .message(let b)):
-      return a == b
-    case (.entry, _), (.feed, _), (.message, _):
-      return false
-    }
-  }
-}
-
 /// Provides access to queue and subscription data.
 final class QueueDataSource: NSObject, SectionedDataSource {
   
-  typealias Item = QueuedData
+  /// Enumerates queue data source item types.
+  enum Item: Equatable {
+    case entry(Entry)
+    case feed(Feed)
+    case message(NSAttributedString)
+
+    static func ==(lhs: Item, rhs: Item) -> Bool {
+      switch (lhs, rhs) {
+      case (.entry(let a), .entry(let b)):
+        return a == b
+      case (.feed(let a), .feed(let b)):
+        return a == b
+      case (.message(let a), .message(let b)):
+        return a == b
+      case (.entry, _), (.feed, _), (.message, _):
+        return false
+      }
+    }
+  }
   
   /// An internal serial queue for synchronized access.
   private var sQueue = DispatchQueue(
     label: "ink.codes.podest.QueueDataSource-\(UUID().uuidString).sQueue")
   
-  private var _sections = [Section<QueuedData>(
+  private var _sections = [Section<Item>(
     items: [.message(StringRepository.loadingQueue())]
   )]
 
   /// Accessing the sections of the table view is synchronized.
-  var sections: [Section<QueuedData>] {
+  var sections: [Section<Item>] {
     get {
       return sQueue.sync { _sections }
     }
@@ -90,10 +88,10 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   }
 
   private static func makeSections(
-    items: [QueuedData],
+    items: [Item],
     error: Error? = nil
-  ) -> [Section<QueuedData>] {
-    var messages = Section<QueuedData>()
+  ) -> [Section<Item>] {
+    var messages = Section<Item>()
 
     guard !items.isEmpty else {
       let text = (error != nil ?
@@ -103,8 +101,8 @@ final class QueueDataSource: NSObject, SectionedDataSource {
       return [messages]
     }
 
-    var entries = Section<QueuedData>(title: "Episodes")
-    var feeds = Section<QueuedData>(title: "Podcasts")
+    var entries = Section<Item>(title: "Episodes")
+    var feeds = Section<Item>(title: "Podcasts")
 
     for item in items {
       switch item {
@@ -129,10 +127,10 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
   /// Drafts updates from `items` and `error` with `sections` as current state.
   private static func makeUpdates(
-    sections current: [Section<QueuedData>],
-    items: [QueuedData],
+    sections current: [Section<Item>],
+    items: [Item],
     error: Error? = nil
-  ) -> ([Section<QueuedData>], Updates) {
+  ) -> ([Section<Item>], Updates) {
     let sections = makeSections(items: items, error: error)
     let updates = makeUpdates(old: current, new: sections)
 
@@ -149,7 +147,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   ///   - completionBlock: A block that executes on the main queue when
   /// reloading completes, receiving new, not yet committed sections, the diff,
   /// and an error if something went wrong.
-  func reload(completionBlock: (([Section<QueuedData>], Updates, Error?) -> Void)? = nil) {
+  func reload(completionBlock: (([Section<Item>], Updates, Error?) -> Void)? = nil) {
     dispatchPrecondition(condition: .onQueue(.main))
 
     if completionBlock == nil {
@@ -159,7 +157,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
       }
     }
 
-    var acc = [QueuedData]()
+    var acc = [Item]()
 
     os_log("reloading queue", log: log, type: .debug)
 

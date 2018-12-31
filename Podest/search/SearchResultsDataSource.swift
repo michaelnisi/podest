@@ -9,23 +9,6 @@
 import Foundation
 import FeedKit
 
-/// Enumerates types of items provided by the search results data source.
-enum SearchResultsData: Equatable {
-  case find(Find)
-  case message(NSAttributedString)
-
-  static func ==(lhs: SearchResultsData, rhs: SearchResultsData) -> Bool {
-    switch (lhs, rhs) {
-    case (.find(let a), .find(let b)):
-      return a == b
-    case (.message(let a), .message(let b)):
-      return a == b
-    case (.find, _), (.message, _):
-      return false
-    }
-  }
-}
-
 /// A table view data source for searching.
 ///
 /// This data source executes a single operation at a time. Overlapping
@@ -33,9 +16,24 @@ enum SearchResultsData: Equatable {
 /// operations are executed, but receive unchanged sections and empty updates.
 final class SearchResultsDataSource: NSObject, SectionedDataSource {
 
-  typealias Item = SearchResultsData
+  /// Enumerates types of items provided by the search results data source.
+  enum Item: Equatable {
+    case find(Find)
+    case message(NSAttributedString)
+
+    static func ==(lhs: Item, rhs: Item) -> Bool {
+      switch (lhs, rhs) {
+      case (.find(let a), .find(let b)):
+        return a == b
+      case (.message(let a), .message(let b)):
+        return a == b
+      case (.find, _), (.message, _):
+        return false
+      }
+    }
+  }
   
-  var sections = [Section<SearchResultsData>]()
+  var sections = [Section<Item>]()
 
   private var requests: [ImageRequest]?
 
@@ -47,6 +45,8 @@ final class SearchResultsDataSource: NSObject, SectionedDataSource {
   ///   - repo: The API to use for searching.
   init(repo: Searching) {
     self.repo = repo
+
+    super.init()
   }
 
   /// The current search or suggest operation.
@@ -64,10 +64,10 @@ extension SearchResultsDataSource {
 
   private static func makeSections(
     term: String,
-    sections current: [Section<SearchResultsData>],
+    sections current: [Section<Item>],
     items: [Find],
     error: Error? = nil
-  ) -> [Section<SearchResultsData>] {
+  ) -> [Section<Item>] {
     guard error == nil else {
       if let text = StringRepository.message(describing: error!) {
         return [Section(items: [.message(text)])]
@@ -92,10 +92,10 @@ extension SearchResultsDataSource {
       return [Section(items: [.message(text)])]
     }
 
-    var results = Section<SearchResultsData>(title: "Top Hits")
-    var sugs = Section<SearchResultsData>(title: "iTunes Search")
-    var feeds = Section<SearchResultsData>(title: "Podcasts")
-    var entries = Section<SearchResultsData>(title: "Episodes")
+    var results = Section<Item>(title: "Top Hits")
+    var sugs = Section<Item>(title: "iTunes Search")
+    var feeds = Section<Item>(title: "Podcasts")
+    var entries = Section<Item>(title: "Episodes")
 
     for item in items {
       switch item {
@@ -116,10 +116,10 @@ extension SearchResultsDataSource {
   /// Drafts updates from `items` and `error` with `sections` as current state.
   private static func makeUpdates(
     term: String,
-    sections current: [Section<SearchResultsData>],
+    sections current: [Section<Item>],
     items: [Find],
     error: Error? = nil
-  ) -> ([Section<SearchResultsData>], Updates) {
+  ) -> ([Section<Item>], Updates) {
     let sections = makeSections(
       term: term,
       sections: current,
@@ -140,7 +140,7 @@ extension SearchResultsDataSource {
 
   func suggest(
     term: String,
-    completionBlock: (([Section<SearchResultsData>], Updates, Error?) -> Void)?
+    completionBlock: (([Section<Item>], Updates, Error?) -> Void)?
   ) {
     dispatchPrecondition(condition: .onQueue(.main))
 
@@ -189,7 +189,7 @@ extension SearchResultsDataSource {
 
   func search(
     term: String,
-    completionBlock: (([Section<SearchResultsData>], Updates, Error?) -> Void)?
+    completionBlock: (([Section<Item>], Updates, Error?) -> Void)?
   ) {
     dispatchPrecondition(condition: .onQueue(.main))
 

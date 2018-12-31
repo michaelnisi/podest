@@ -14,7 +14,7 @@ private let log = OSLog.disabled
 
 private enum ListDataSourceEvent {
   case feedFetched(Feed?, Error?)
-  case entriesFetched([ListDataSource.ListData]?, Error?)
+  case entriesFetched([ListDataSource.Item]?, Error?)
   case cancel
   case update(ListDataSource.UpdateRequest)
 }
@@ -42,19 +42,24 @@ final class ListDataSource: NSObject, SectionedDataSource {
   }
   
   /// Enumerates types of items that can be listed by this data source.
-  enum ListData {
+  enum Item: Equatable {
     case entry(Entry)
+
+    static func ==(lhs: Item, rhs: Item) -> Bool {
+      switch (lhs, rhs) {
+      case (.entry(let a), .entry(let b)):
+        return a == b
+      }
+    }
   }
-  
-  typealias Item = ListData
-  
+
   /// An internal serial queue for synchronized access.
   let sQueue = DispatchQueue(
     label: "ink.codes.podest.ListDataSource-\(UUID().uuidString).serial")
 
-  var _sections = [Section<ListData>]()
+  var _sections = [Section<Item>]()
 
-  var sections:  [Section<ListData>] {
+  var sections:  [Section<Item>] {
     get {
       return sQueue.sync {
         _sections
@@ -77,6 +82,8 @@ final class ListDataSource: NSObject, SectionedDataSource {
   ///   - browser: The Browsing API for fetching feeds and entries.
   init(browser: Browsing) {
     self.browser = browser
+
+    super.init()
   }
   
   private var state = ListDataSourceState.ready
@@ -117,12 +124,12 @@ extension ListDataSource {
   
   func removeAll() {
     DispatchQueue.global().async { [weak self] in
-      let _ = self?.updates(for: [ListData]())
+      let _ = self?.updates(for: [Item]())
     }
   }
   
-  private func sections(for items: [ListData]) -> [Section<ListData>] {
-    var entries = Section<ListData>(title: "Episodes")
+  private func sections(for items: [Item]) -> [Section<Item>] {
+    var entries = Section<Item>(title: "Episodes")
     
     for item in items {
       switch item {
@@ -136,7 +143,7 @@ extension ListDataSource {
     }
   }
   
-  private func updates(for items: [ListData]) -> Updates {
+  private func updates(for items: [Item]) -> Updates {
     os_log("ListDataSource: updates for items: %@",
            log: log, type: .debug, items)
     
@@ -196,7 +203,7 @@ extension ListDataSource {
         return a.compare(b) == .orderedDescending
       }
       
-      let items = sorted.map { ListData.entry($0) }
+      let items = sorted.map { Item.entry($0) }
       
       // Errors are merely informative if we got items.
       let er = error ?? prevError ?? entriesErrors.first
@@ -459,18 +466,3 @@ extension ListDataSource: EntryIndexPathMapping {
   }
 
 }
-
-// MARK: - ListData
-
-extension ListDataSource.ListData: Equatable {
-  static func ==(
-    lhs: ListDataSource.ListData,
-    rhs: ListDataSource.ListData
-  ) -> Bool {
-    switch (lhs, rhs) {
-    case (.entry(let a), .entry(let b)):
-      return a == b
-    }
-  }
-}
-

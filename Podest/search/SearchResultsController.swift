@@ -68,7 +68,7 @@ final class SearchResultsController: UITableViewController {
   /// Returns a shared completion block for updating.
   private func makeUpdatingBlock(
     completionBlock: ((Error?) -> Void)?
-  ) -> (([Section<SearchResultsData>], Updates, Error?) -> Void) {
+  ) -> (([Section<SearchResultsDataSource.Item>], Updates, Error?) -> Void) {
     return { [weak self] sections, updates, error in
       guard !updates.isEmpty else {
         completionBlock?(error)
