@@ -351,18 +351,10 @@ extension StringRepository {
   }
   
   static func noResult(for term: String) -> NSAttributedString {
-    let bold: [NSAttributedString.Key : Any] = [
-      .font: UIFont.preferredFont(forTextStyle: .headline)
-    ]
-    
-    let a = NSMutableAttributedString(string: "Your search – ")
-    let b = NSAttributedString(string: "\(term)", attributes: bold)
-    let c = NSAttributedString(string: " – did not match anything.")
+    let title = "No Results"
+    let hint = "We didn’t find anything for “\(term)”. Try something else."
 
-    a.append(b)
-    a.append(c)
-
-    return a
+    return makeMessage(title: title, hint: hint)
   }
   
   static var serviceUnavailable: NSAttributedString {
@@ -376,14 +368,14 @@ extension StringRepository {
     let title = "You’re Offline"
     let hint = "Turn off Airplane Mode or connect to Wi-Fi."
     
-    return StringRepository.makeMessage(title: title, hint: hint)
+    return makeMessage(title: title, hint: hint)
   }
   
   static func unknown(_ error: Error) -> NSAttributedString {
     let title = "I’m Sorry"
     let hint = error.localizedDescription
 
-    return StringRepository.makeMessage(title: title, hint: hint)
+    return makeMessage(title: title, hint: hint)
   }
   
   /// Returns an error message describing `error` or `nil` if the error can be

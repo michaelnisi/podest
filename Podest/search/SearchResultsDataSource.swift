@@ -68,7 +68,6 @@ extension SearchResultsDataSource {
     items: [Find],
     error: Error? = nil
   ) -> [Section<SearchResultsData>] {
-
     guard error == nil else {
       if let text = StringRepository.message(describing: error!) {
         return [Section(items: [.message(text)])]
@@ -84,6 +83,13 @@ extension SearchResultsDataSource {
       }
 
       return []
+    }
+
+    if items.count == 1,
+      case .suggestedTerm(let suggestion)? = items.first,
+      suggestion.term == term {
+      let text = StringRepository.noResult(for: term)
+      return [Section(items: [.message(text)])]
     }
 
     var results = Section<SearchResultsData>(title: "Top Hits")
