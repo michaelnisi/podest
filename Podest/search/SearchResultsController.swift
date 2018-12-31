@@ -75,6 +75,9 @@ final class SearchResultsController: UITableViewController {
         return
       }
 
+      // There must be a smarter place for adjusting insets.
+      self?.adjustInsets()
+
       guard !sections.isEmpty else {
         self?.dataSource.sections = sections
         self?.tableView.reloadData()
