@@ -386,7 +386,10 @@ extension StringRepository {
     return StringRepository.makeMessage(title: title, hint: hint)
   }
   
-  /// Returns an error message describing `error`, applying three conditions:
+  /// Returns an error message describing `error` or `nil` if the error can be
+  /// ignored.
+  ///
+  /// Here’s the reasoning behind these messages.
   ///
   /// - A message is available and should be shown to the user.
   /// - No message is required, returning `nil`, the error can be ignored.

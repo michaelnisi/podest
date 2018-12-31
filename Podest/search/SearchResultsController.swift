@@ -32,7 +32,7 @@ protocol SearchResultsControllerDelegate: Navigator {
 
 final class SearchResultsController: UITableViewController {
   
-  private let dataSource: SearchResults = SearchResultsDataSource()
+  private let dataSource = SearchResultsDataSource(repo: Podest.finder)
 
   func deselect(_ animated: Bool) {
     guard let indexPath = tableView.indexPathForSelectedRow else {
@@ -65,153 +65,63 @@ final class SearchResultsController: UITableViewController {
 
   var delegate: SearchResultsControllerDelegate?
 
-  func update(_ items: [Find], separatorInset: UIEdgeInsets? = nil) {
-    assert(items.count ==  Set(items).count)
+  /// Returns a shared completion block for updating.
+  private func makeUpdatingBlock(
+    completionBlock: ((Error?) -> Void)?
+  ) -> (([Section<SearchResultsData>], Updates, Error?) -> Void) {
+    return { [weak self] sections, updates, error in
+      guard !updates.isEmpty else {
+        completionBlock?(error)
+        return
+      }
 
-    adjustInsets()
-    
-    /// Disabling animations is not safe during cancellation, for its
-    /// interference with UISearchController’s deactictivation animation,
-    /// preventing it from removing the 'Cancel' button from the search bar.
+      guard !sections.isEmpty else {
+        self?.dataSource.sections = sections
+        self?.tableView.reloadData()
+        completionBlock?(error)
+        return
+      }
 
-    guard !items.isEmpty else {
-      let _ = dataSource.updatesForItems(items: items)
-      return tableView.reloadData()
-    }
-    
-    let t = self.tableView!
-    
-    t.performBatchUpdates({
-      // Should be quick, under one millisecond.
-      let updates: Updates = dataSource.updatesForItems(items: items)
-      
-      UIView.setAnimationsEnabled(false)
-      
-      t.deleteRows(at: updates.rowsToDelete, with: .none)
-      t.insertRows(at: updates.rowsToInsert, with: .none)
-      t.reloadRows(at: updates.rowsToReload, with: .none)
-      
-      t.deleteSections(updates.sectionsToDelete, with: .none)
-      t.insertSections(updates.sectionsToInsert, with: .none)
-      t.reloadSections(updates.sectionsToReload, with: .none)
-    }) { [weak self] ok in
-      assert(ok)
+      self?.tableView.performBatchUpdates({
+        UIView.setAnimationsEnabled(false)
 
-      UIView.setAnimationsEnabled(true)
-      
-      self?.scrollToFirstRow(animated: false)
+        self?.dataSource.sections = sections
+
+        let t = self?.tableView
+
+        t?.deleteRows(at: updates.rowsToDelete, with: .fade)
+        t?.insertRows(at: updates.rowsToInsert, with: .fade)
+        t?.reloadRows(at: updates.rowsToReload, with: .fade)
+
+        t?.deleteSections(updates.sectionsToDelete, with: .none)
+        t?.insertSections(updates.sectionsToInsert, with: .none)
+        t?.reloadSections(updates.sectionsToReload, with: .none)
+      }) { _ in
+        UIView.setAnimationsEnabled(true)
+        completionBlock?(error)
+      }
     }
   }
 
-  weak var operation: Operation? {
-    willSet {
-      operation?.cancel()
-    }
+  func search(_ term: String, completionBlock: ((Error?) -> Void)? = nil) {
+    dataSource.search(
+      term: term,
+      completionBlock: makeUpdatingBlock(completionBlock: completionBlock)
+    )
   }
 
-  /// Get ready!
-  fileprivate func ready() {
-    operation = nil
-    hideMessage()
-  }
-  
-  func reset() {
-    assert(Thread.isMainThread)
-    update([])
-    ready()
-  }
-
-  // Our search repository/container, handling operations for us.
-  lazy fileprivate var repo = Podest.finder
-  
-  func suggest(_ term: String) {
-    let ignored = CharacterSet(charactersIn: " ")
-    let trimmed = term.trimmingCharacters(in: ignored)
-    
-    guard !trimmed.isEmpty else {
-      return reset()
-    }
-
-    ready()
-
-    var items = [Find]()
-
-    operation = repo.suggest(term, perFindGroupBlock: { error, finds in
-      guard error == nil else {
-        fatalError(String(describing: error))
-      }
-      
-      DispatchQueue.main.async {
-        items += finds
-      }
-    }) { [weak self] error in
-      guard error == nil else {
-        return DispatchQueue.main.async {
-          // Aborting default error handling if we have gotten items.
-          guard items.isEmpty else {
-            self?.update(items)
-            return
-          }
-          if let message = StringRepository.message(describing: error!) {
-            self?.clear(showing: message)
-          }
-        }
-      }
-
-      DispatchQueue.main.async { [weak self] in
-        guard !items.isEmpty else {
-          return
-        }
-        self?.update(items)
-      }
-    }
+  func suggest(_ term: String, completionBlock: ((Error?) -> Void)? = nil) {
+    dataSource.suggest(
+      term: term,
+      completionBlock: makeUpdatingBlock(completionBlock: completionBlock)
+    )
   }
   
-  fileprivate func clear(showing message: NSAttributedString) {
-    showMessage(message)
-    update([])
-  }
-
-  /// Optionally, an alternative table view separator inset applied while
-  /// listing search results.
-  var searchSeparatorInset: UIEdgeInsets?
-  
-  func search(_ term: String) {
-    ready()
-
-    var items = [Find]()
-
-    operation = repo.search(term, perFindGroupBlock: { error, finds in
-      guard error == nil else {
-        fatalError(String(describing: error))
-      }
-      DispatchQueue.main.async {
-        items += finds
-      }
-    }) { [weak self] error in
-      guard error == nil else {
-        return DispatchQueue.main.async {
-          // Aborting default error handling if we have gotten items.
-          guard items.isEmpty else {
-            self?.update(items)
-            return
-          }
-          if let message = StringRepository.message(describing: error!) {
-            self?.clear(showing: message)
-          }
-        }
-      }
-
-      DispatchQueue.main.async {
-        guard !items.isEmpty else {
-          let message = StringRepository.noResult(for: term)
-          self?.clear(showing: message)
-          return
-        }
-
-        self?.update(items, separatorInset: self?.searchSeparatorInset)
-      }
-    }
+  func reset(completionBlock: ((Error?) -> Void)? = nil) {
+    dataSource.suggest(
+      term: "",
+      completionBlock: makeUpdatingBlock(completionBlock: completionBlock)
+    )
   }
 
 }
@@ -289,7 +199,7 @@ extension SearchResultsController {
   
   override func tableView(
     _ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    guard let find = dataSource.itemAt(indexPath: indexPath) else {
+    guard let find = dataSource.findAt(indexPath: indexPath) else {
       fatalError("no item at index path: \(indexPath)")
     }
 

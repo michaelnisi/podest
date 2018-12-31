@@ -34,13 +34,11 @@ struct Cells {
 }
 
 /// A section of a table view data model.
-struct Section<Item: Equatable>: Equatable{
-  let id: Int
+struct Section<Item: Equatable>: Equatable {
   let title: String?
   var items: [Item]
   
-  init(id: Int, title: String? = nil, items: [Item] = [Item]()) {
-    self.id = id
+  init(title: String? = nil, items: [Item] = [Item]()) {
     self.title = title
     self.items = items
   }
@@ -48,8 +46,8 @@ struct Section<Item: Equatable>: Equatable{
   /// The number of items in this section.
   var count: Int { return items.count }
   
-  /// Append item to end of section.
-  mutating func append(item: Item) {
+  /// Appends item to end of section.
+  mutating func append(_ item: Item) {
     items.append(item)
   }
 
@@ -60,10 +58,7 @@ struct Section<Item: Equatable>: Equatable{
   var first: Item? {
     return items.first
   }
-  
-  static func ==(lhs: Section, rhs: Section) -> Bool {
-    return lhs.id == rhs.id
-  }
+
 }
 
 protocol SectionedDataSource: class {

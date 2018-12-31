@@ -32,11 +32,6 @@ enum QueuedData: Equatable {
   }
 }
 
-/// Enumerates section identifiers.
-enum QueuedSectionID: Int {
-  case entry, feed, message
-}
-
 /// Provides access to queue and subscription data.
 final class QueueDataSource: NSObject, SectionedDataSource {
   
@@ -47,7 +42,6 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     label: "ink.codes.podest.QueueDataSource-\(UUID().uuidString).sQueue")
   
   private var _sections = [Section<QueuedData>(
-    id: QueuedSectionID.message.rawValue,
     items: [.message(StringRepository.loadingQueue())]
   )]
 
@@ -63,7 +57,11 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
   /// This data source is showing a message.
   var isMessage: Bool {
-    return sections.first?.id == QueuedSectionID.message.rawValue
+    if case .message? = sections.first?.first {
+      return true
+    }
+
+    return false
   }
   
   private var invalidated = false
@@ -95,31 +93,27 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     items: [QueuedData],
     error: Error? = nil
   ) -> [Section<QueuedData>] {
-    var messages = Section<QueuedData>(
-      id: QueuedSectionID.message.rawValue)
+    var messages = Section<QueuedData>()
 
     guard !items.isEmpty else {
       let text = (error != nil ?
         StringRepository.message(describing: error!) : nil)
         ?? StringRepository.emptyQueue()
-      messages.append(item: .message(text))
+      messages.append(.message(text))
       return [messages]
     }
 
-    var entries = Section<QueuedData>(
-      id: QueuedSectionID.entry.rawValue, title: "Episodes")
-
-    var feeds = Section<QueuedData>(
-      id: QueuedSectionID.feed.rawValue, title: "Podcasts")
+    var entries = Section<QueuedData>(title: "Episodes")
+    var feeds = Section<QueuedData>(title: "Podcasts")
 
     for item in items {
       switch item {
       case .entry:
-        entries.append(item: item)
+        entries.append(item)
       case .feed:
-        feeds.append(item: item)
+        feeds.append(item)
       case .message:
-        messages.append(item: item)
+        messages.append(item)
       }
     }
 
@@ -133,14 +127,14 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     }
   }
 
-  /// Drafts sections and updates, diffing `items` and current sections.
+  /// Drafts updates from `items` and `error` with `sections` as current state.
   private static func makeUpdates(
     sections current: [Section<QueuedData>],
     items: [QueuedData],
     error: Error? = nil
   ) -> ([Section<QueuedData>], Updates) {
-    let sections = QueueDataSource.makeSections(items: items, error: error)
-    let updates = QueueDataSource.makeUpdates(old: current, new: sections)
+    let sections = makeSections(items: items, error: error)
+    let updates = makeUpdates(old: current, new: sections)
 
     return (sections, updates)
   }

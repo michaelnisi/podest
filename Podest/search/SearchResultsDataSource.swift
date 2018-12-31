@@ -9,76 +9,233 @@
 import Foundation
 import FeedKit
 
-// MARK: API
+/// Enumerates types of items provided by the search results data source.
+enum SearchResultsData: Equatable {
+  case find(Find)
+  case message(NSAttributedString)
 
-protocol SearchResults: UITableViewDataSource, UITableViewDataSourcePrefetching {
-  func updatesForItems(items: [Find]) -> Updates
-  func itemAt(indexPath: IndexPath) -> Find?
+  static func ==(lhs: SearchResultsData, rhs: SearchResultsData) -> Bool {
+    switch (lhs, rhs) {
+    case (.find(let a), .find(let b)):
+      return a == b
+    case (.message(let a), .message(let b)):
+      return a == b
+    case (.find, _), (.message, _):
+      return false
+    }
+  }
 }
 
-// MARK: - Internals
+/// A table view data source for searching.
+///
+/// This data source executes a single operation at a time. Overlapping
+/// operations cancel the preceding. Completion blocks of cancelled
+/// operations are executed, but receive unchanged sections and empty updates.
+final class SearchResultsDataSource: NSObject, SectionedDataSource {
 
-/// Enumerate search result section identifiers.
-enum SearchSectionID: Int {
-  case search, recent, feed, entry
-}
-
-/// A table view data source providing search result items.
-final class SearchResultsDataSource: NSObject, SearchResults, SectionedDataSource {
-
-  typealias Item = Find
+  typealias Item = SearchResultsData
   
-  var sections = [Section<Find>]()
+  var sections = [Section<SearchResultsData>]()
 
-  func sectionsFor(items: [Find]) -> [Section<Find>] {
-    var results = Section<Find>(
-      id: SearchSectionID.recent.rawValue, title: "Top Hits")
-    var sugs = Section<Find>(
-      id: SearchSectionID.search.rawValue, title: "iTunes Search")
-    var feeds = Section<Find>(
-      id: SearchSectionID.feed.rawValue, title: "Podcasts")
-    var entries = Section<Find>(
-      id: SearchSectionID.entry.rawValue, title: "Episodes")
-    
+  private var requests: [ImageRequest]?
+
+  private let repo: Searching
+
+  /// Creates a new search results data source.
+  ///
+  /// - Parameters:
+  ///   - repo: The API to use for searching.
+  init(repo: Searching) {
+    self.repo = repo
+  }
+
+  /// The current search or suggest operation.
+  weak var operation: Operation? {
+    willSet {
+      operation?.cancel()
+    }
+  }
+  
+}
+
+// MARK: - Diffing Sections
+
+extension SearchResultsDataSource {
+
+  private static func makeSections(
+    term: String,
+    sections current: [Section<SearchResultsData>],
+    items: [Find],
+    error: Error? = nil
+  ) -> [Section<SearchResultsData>] {
+
+    guard error == nil else {
+      if let text = StringRepository.message(describing: error!) {
+        return [Section(items: [.message(text)])]
+      }
+
+      return current
+    }
+
+    guard !items.isEmpty else {
+      if !term.isEmpty {
+        let text = StringRepository.noResult(for: term)
+        return [Section(items: [.message(text)])]
+      }
+
+      return []
+    }
+
+    var results = Section<SearchResultsData>(title: "Top Hits")
+    var sugs = Section<SearchResultsData>(title: "iTunes Search")
+    var feeds = Section<SearchResultsData>(title: "Podcasts")
+    var entries = Section<SearchResultsData>(title: "Episodes")
+
     for item in items {
       switch item {
       case .recentSearch:
-        results.append(item: item)
+        results.append(.find(item))
       case .suggestedTerm:
-        sugs.append(item: item)
+        sugs.append(.find(item))
       case .suggestedFeed, .foundFeed:
-        feeds.append(item: item)
+        feeds.append(.find(item))
       case .suggestedEntry:
-        entries.append(item: item)
+        entries.append(.find(item))
       }
     }
-    
-    return [results, sugs, feeds, entries].filter {
-      !$0.items.isEmpty
-    }
-  }
-  
-  /// Return required table view updates for specified items.
-  ///
-  /// - Parameter items: The found items to use.
-  ///
-  /// - Returns: Required table view updates for the items.
-  func updatesForItems(items: [Find]) -> Updates {
-    let sections = sectionsFor(items: items)
-    let updates = SearchResultsDataSource.makeUpdates(old: self.sections, new: sections)
-    
-    self.sections = sections
-    
-    return updates
+
+    return [results, sugs, feeds, entries].filter { !$0.isEmpty }
   }
 
-  // MARK: UITableViewDataSourcePrefetching
-  
-  fileprivate var requests: [ImageRequest]?
+  /// Drafts updates from `items` and `error` with `sections` as current state.
+  private static func makeUpdates(
+    term: String,
+    sections current: [Section<SearchResultsData>],
+    items: [Find],
+    error: Error? = nil
+  ) -> ([Section<SearchResultsData>], Updates) {
+    let sections = makeSections(
+      term: term,
+      sections: current,
+      items: items,
+      error: error
+    )
+
+    let updates = makeUpdates(old: current, new: sections)
+
+    return (sections, updates)
+  }
+
+}
+
+// MARK: - Suggesting and Searching
+
+extension SearchResultsDataSource {
+
+  func suggest(
+    term: String,
+    completionBlock: (([Section<SearchResultsData>], Updates, Error?) -> Void)?
+  ) {
+    dispatchPrecondition(condition: .onQueue(.main))
+
+    let ignored = CharacterSet(charactersIn: " ")
+    let trimmed = term.trimmingCharacters(in: ignored)
+
+    guard !trimmed.isEmpty else {
+      operation = nil
+      
+      let (sections, updates) = SearchResultsDataSource.makeUpdates(
+        term: trimmed,
+        sections: self.sections,
+        items: []
+      )
+
+      completionBlock?(sections, updates, nil)
+      return
+    }
+
+    // Capturing current sections on the main queue.
+    let current = sections
+
+    var acc = [Find]()
+
+    operation = repo.suggest(trimmed, perFindGroupBlock: { error, finds in
+      guard error == nil else {
+        fatalError(String(describing: error))
+      }
+
+      acc += finds
+    }) { error in
+      dispatchPrecondition(condition: .notOnQueue(.main))
+
+      let (sections, updates) = SearchResultsDataSource.makeUpdates(
+        term: trimmed,
+        sections: current,
+        items: acc,
+        error: error
+      )
+
+      DispatchQueue.main.async {
+        completionBlock?(sections, updates, error)
+      }
+    }
+  }
+
+  func search(
+    term: String,
+    completionBlock: (([Section<SearchResultsData>], Updates, Error?) -> Void)?
+  ) {
+    dispatchPrecondition(condition: .onQueue(.main))
+
+    // Capturing current sections on the main queue.
+    let current = sections
+
+    var acc = [Find]()
+
+    operation = repo.search(term, perFindGroupBlock: { error, finds in
+      guard error == nil else {
+        fatalError(String(describing: error))
+      }
+
+      acc += finds
+    }) { error in
+      dispatchPrecondition(condition: .notOnQueue(.main))
+
+      let (sections, updates) = SearchResultsDataSource.makeUpdates(
+        term: term,
+        sections: current,
+        items: acc,
+        error: error
+      )
+
+      DispatchQueue.main.async {
+        completionBlock?(sections, updates, error)
+      }
+    }
+  }
   
 }
 
-// MARK: - UITableViewDataSource
+// MARK: - Accessing Items
+
+extension SearchResultsDataSource {
+
+  func findAt(indexPath: IndexPath) -> Find? {
+    guard let item = itemAt(indexPath: indexPath) else {
+      return nil
+    }
+
+    switch item {
+    case .find(let find):
+      return find
+    case .message:
+      return nil
+    }
+  }
+
+}
+
+// MARK: - Configuring a Table View
 
 extension SearchResultsDataSource: UITableViewDataSource {
 
@@ -120,43 +277,59 @@ extension SearchResultsDataSource: UITableViewDataSource {
       fatalError("no item at index path: \(indexPath)")
     }
     switch item {
-    case .suggestedTerm(let sug):
+    case .find(let find):
+      switch find {
+      case .suggestedTerm(let sug):
+        let cell = tableView.dequeueReusableCell(
+          withIdentifier: Cells.suggestion.id, for: indexPath)
+
+        cell.textLabel?.text = sug.term
+
+        return cell
+      case .recentSearch(let feed), .suggestedFeed(let feed):
+        let cell = tableView.dequeueReusableCell(
+          withIdentifier: Cells.subtitle.id, for: indexPath
+        ) as! SubtitleTableViewCell
+
+        cell.item = nil
+        cell.textLabel?.text = feed.title
+        cell.detailTextLabel?.text = feed.author
+        cell.imageView?.image = nil
+
+        return cell
+      case .suggestedEntry(let entry):
+        let cell = tableView.dequeueReusableCell(
+          withIdentifier: Cells.subtitle.id, for: indexPath
+        ) as! SubtitleTableViewCell
+
+        cell.item = nil
+        cell.textLabel?.text = entry.title
+        cell.detailTextLabel?.text = entry.feedTitle
+        cell.imageView?.image = nil
+
+        return cell
+      case .foundFeed(let feed):
+        let cell = tableView.dequeueReusableCell(
+          withIdentifier: Cells.subtitle.id, for: indexPath
+        ) as! SubtitleTableViewCell
+
+        cell.item = feed
+        cell.textLabel?.text = feed.title
+        cell.detailTextLabel?.text = StringRepository.feedCellSubtitle(for: feed)
+        cell.imageView?.image = UIImage(named: "Oval")
+
+        return cell
+      }
+    case .message(let text):
       let cell = tableView.dequeueReusableCell(
-        withIdentifier: Cells.suggestion.id, for: indexPath)
-      cell.textLabel?.text = sug.term
+        withIdentifier: Cells.message.id, for: indexPath
+      ) as! MessageTableViewCell
 
-      return cell
-    case .recentSearch(let feed), .suggestedFeed(let feed):
-      let cell = tableView.dequeueReusableCell(
-        withIdentifier: Cells.subtitle.id, for: indexPath
-      ) as! SubtitleTableViewCell
+      cell.titleLabel.attributedText = text
+      cell.selectionStyle = .none
+      cell.targetHeight = tableView.bounds.height * 0.6
 
-      cell.item = nil
-      cell.textLabel?.text = feed.title
-      cell.detailTextLabel?.text = feed.author
-      cell.imageView?.image = nil
-
-      return cell
-    case .suggestedEntry(let entry):
-      let cell = tableView.dequeueReusableCell(
-        withIdentifier: Cells.subtitle.id, for: indexPath
-      ) as! SubtitleTableViewCell
-
-      cell.item = nil
-      cell.textLabel?.text = entry.title
-      cell.detailTextLabel?.text = entry.feedTitle
-      cell.imageView?.image = nil
-
-      return cell
-    case .foundFeed(let feed):
-      let cell = tableView.dequeueReusableCell(
-        withIdentifier: Cells.subtitle.id, for: indexPath
-      ) as! SubtitleTableViewCell
-
-      cell.item = feed
-      cell.textLabel?.text = feed.title
-      cell.detailTextLabel?.text = StringRepository.feedCellSubtitle(for: feed)
-      cell.imageView?.image = UIImage(named: "Oval")
+      tableView.separatorStyle = .none
 
       return cell
     }
@@ -164,7 +337,7 @@ extension SearchResultsDataSource: UITableViewDataSource {
   
 }
 
-// MARK: - UITableViewDataSourcePrefetching
+// MARK: - Managing Data Prefetching
 
 extension SearchResultsDataSource: UITableViewDataSourcePrefetching  {
   
@@ -173,17 +346,27 @@ extension SearchResultsDataSource: UITableViewDataSourcePrefetching  {
       guard let item = itemAt(indexPath: indexPath) else {
         return nil
       }
+      
       switch item {
-      case .foundFeed(let feed):
-        return feed
-      default:
+      case .find(let find):
+        switch find {
+        case .foundFeed(let feed):
+          return feed
+        case .recentSearch, .suggestedEntry, .suggestedFeed:
+          return nil
+        case .suggestedTerm:
+          return nil
+        }
+      case .message:
         return nil
       }
     }
   }
   
-  func tableView(_ tableView: UITableView,
-                 prefetchRowsAt indexPaths: [IndexPath]) {
+  func tableView(
+    _ tableView: UITableView,
+    prefetchRowsAt indexPaths: [IndexPath]
+  ) {
     let items = imaginables(for: indexPaths)
     let size = CGSize(width: 60, height: 60)
 
@@ -192,13 +375,17 @@ extension SearchResultsDataSource: UITableViewDataSourcePrefetching  {
     )
   }
 
-  func tableView(_ tableView: UITableView,
-                 cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
+  func tableView(
+    _ tableView: UITableView,
+    cancelPrefetchingForRowsAt indexPaths: [IndexPath]
+  ) {
     guard let reqs = requests else {
       return
     }
+
     // Ignoring indexPaths, relying on the repo to do the right thing.
     Podest.images.cancel(prefetching: reqs)
+
     requests = nil
   }
   

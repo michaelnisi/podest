@@ -213,7 +213,6 @@ extension QueueViewController {
 
   private func makeSearchProxy() -> (UISearchController, SearchControllerProxy) {
     let searchResultsController = SearchResultsController()
-    searchResultsController.searchSeparatorInset = tableView.separatorInset
     
     let searchController = UISearchController(
       searchResultsController: searchResultsController

@@ -46,11 +46,6 @@ final class ListDataSource: NSObject, SectionedDataSource {
     case entry(Entry)
   }
   
-  /// Identifies sections.
-  enum ListSectionID: Int {
-    case entry
-  }
-  
   typealias Item = ListData
   
   /// An internal serial queue for synchronized access.
@@ -127,13 +122,12 @@ extension ListDataSource {
   }
   
   private func sections(for items: [ListData]) -> [Section<ListData>] {
-    var entries = Section<ListData>(
-      id: ListSectionID.entry.rawValue, title: "Episodes")
+    var entries = Section<ListData>(title: "Episodes")
     
     for item in items {
       switch item {
       case .entry:
-        entries.append(item: item)
+        entries.append(item)
       }
     }
     
@@ -441,34 +435,27 @@ extension ListDataSource: EntryIndexPathMapping {
     guard let item = itemAt(indexPath: indexPath) else {
       return nil
     }
+
     switch item {
     case .entry(let entry):
       return entry
     }
   }
-  
+
+  /// Returns the first index path matching `entry`.
   func indexPath(matching entry: Entry) -> IndexPath? {
-    let entrySections = sections.filter {
-      $0.id == ListSectionID.entry.rawValue
-    }
-    
-    guard let entries = entrySections.first?.items else {
-      return nil
-    }
-    
-    var found: IndexPath?
-    
-    for (i, item) in entries.enumerated() {
-      switch item {
-      case .entry(let rhs):
-        if rhs == entry {
-          found = IndexPath(row: i, section: 0)
-          break
+    for (s, section) in sections.enumerated() {
+      for (r, item) in section.items.enumerated() {
+        switch item {
+        case .entry(let e):
+          if e == entry {
+            return IndexPath(row: r, section: s)
+          }
         }
       }
     }
-    
-    return found
+
+    return nil
   }
 
 }
