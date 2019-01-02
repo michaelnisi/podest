@@ -371,7 +371,12 @@ final private class Config {
 
   fileprivate func makeStore() throws -> Shopping {
     let url = Bundle.main.url(forResource: "products", withExtension: "json")!
-    return StoreFSM(url: url, indicator: Podest.networkActivity)
+
+    // For lagging product fetching, doing without indicating network activity
+    // is the better choice. There’s a reason why Apple isn’t doing it by
+    // default.
+
+    return StoreFSM(url: url) //, indicator: Podest.networkActivity)
   }
 
   fileprivate func makeFileRepo() -> FileRepository {
