@@ -221,7 +221,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
       let error = findError()
 
-      let (sections, updates) = UpdateOperation.makeUpdates(
+      let (sections, updates) = ListDataSourceOperation.makeUpdates(
         sections: current,
         items: items,
         error: error
@@ -252,6 +252,8 @@ final class ListDataSource: NSObject, SectionedDataSource {
     override init(url: String, originalFeed: Feed?, forcing: Bool = false) {
       super.init(url: url, originalFeed: originalFeed, forcing: forcing)
     }
+
+    // This stooge operation has no main function and completes instantly.
 
   }
 
