@@ -15,7 +15,7 @@ private let log = OSLog.disabled
 /// Provides data for a table view displaying a podcast.
 final class ListDataSource: NSObject, SectionedDataSource {
 
-  /// Enumerates types of items that can be listed by this data source.
+  /// Enumerates items provided by this data source.
   enum Item: Hashable {
     case entry(Entry)
     case summary(NSAttributedString)
@@ -74,7 +74,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
       sections current: [Section<Item>],
       items: [Item],
       error: Error?
-      ) -> [Section<Item>] {
+    ) -> [Section<Item>] {
       var messages = Section<Item>()
 
       guard !items.isEmpty else {
@@ -120,7 +120,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
       sections current: [Section<Item>],
       items: [Item],
       error: Error?
-      ) -> ([Section<Item>], Updates) {
+    ) -> ([Section<Item>], Updates) {
       let sections = makeSections(sections: current, items: items, error: error)
       let updates = ListDataSource.makeUpdates(old: current, new: sections)
 

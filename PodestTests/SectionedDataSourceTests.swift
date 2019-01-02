@@ -13,56 +13,46 @@ import UIKit
 
 class SectionedDataSourceTests: XCTestCase {
   
-  enum TestSectionID: Int {
-    case a, b, c
-  }
-  
-  struct TestData: Equatable {
-    let id: TestSectionID
-    let name: String
-  }
-  
   class TestDataSource: SectionedDataSource {
-    typealias Item = TestData
-    var sections = [Section<TestData>]()
-    var itemsByIndexPath = [IndexPath : TestData]()
-    
-    var items = [TestData]() {
-      didSet {
-        itemsByIndexPath = [IndexPath : TestData]()
-      }
+
+    enum SectionID: Int {
+      case a, b, c
     }
+
+    struct Item: Equatable {
+      let id: SectionID
+      let name: String
+    }
+
+    var sections = [Section<Item>]()
     
-    private static func makeSections(items: [TestData]) -> [Section<TestData>] {
-      var a = Section<TestData>(id: TestSectionID.a.rawValue, title: "A")
-      var b = Section<TestData>(id: TestSectionID.b.rawValue, title: "B")
-      var c = Section<TestData>(id: TestSectionID.c.rawValue, title: "C")
+    private static func makeSections(items: [Item]) -> [Section<Item>] {
+      var a = Section<Item>(title: "A")
+      var b = Section<Item>(title: "B")
+      var c = Section<Item>(title: "C")
 
       for item in items {
         switch item.id {
         case .a:
-          a.append(item: item)
+          a.append(item)
         case .b:
-          b.append(item: item)
+          b.append(item)
         case .c:
-          c.append(item: item)
+          c.append(item)
         }
       }
       
-      return [a, b, c].filter {
-        !$0.items.isEmpty
-      }
+      return [a, b, c].filter { !$0.isEmpty }
     }
     
-    func updates(for items: [TestData]) -> Updates {
-      self.items = items
-      
+    static func makeUpdates(
+      sections current: [Section<Item>],
+      items: [Item]
+    ) -> ([Section<Item>], Updates){
       let sections = TestDataSource.makeSections(items: items)
-      let updates = self.add(merging: sections)
+      let updates = TestDataSource.makeUpdates(old: current, new: sections)
       
-      self.sections = sections
-      
-      return updates
+      return (sections, updates)
     }
     
   }
@@ -71,29 +61,37 @@ class SectionedDataSourceTests: XCTestCase {
   
   override func setUp() {
     super.setUp()
+
     ds = TestDataSource()
   }
   
   override func tearDown() {
-    ds = nil
     super.tearDown()
   }
   
   func testUpdates() {
     let items = [
-      TestData(id: TestSectionID.a, name: "abc")
+      TestDataSource.Item(id: .a, name: "abc")
     ]
     
     do {
       let wanted = Updates()
+
       wanted.insertSection(at: 0)
       wanted.insertRow(at: IndexPath(row: 0, section: 0))
-      let found = ds.updates(for: items)
+
+      let (sections, found) = TestDataSource.makeUpdates(
+        sections: ds.sections,
+        items: items
+      )
+
       XCTAssertEqual(found, wanted)
+
+      ds.sections = sections
     }
     
     do {
-      let wanted = [Section<TestData>(id: TestSectionID.a.rawValue, title: "A")]
+      let wanted = [Section<TestDataSource.Item>(title: "A", items: items)]
       XCTAssertEqual(ds.sections, wanted)
     }
   }
