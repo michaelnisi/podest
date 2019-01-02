@@ -240,10 +240,15 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
   }
 
-  /// Sometimes having to fetch feed and/or entries gets complicated. This
-  /// data source uses an operation to do its thing.
+  /// Fetches feed and entries.
   final class UpdateOperation: ListDataSourceOperation {
 
+    /// Creates a new update operation for fetching items.
+    ///
+    /// - Parameters:
+    ///   - url: The URL of the podcast feed.
+    ///   - originalFeed: The original feed object if available.
+    ///   - forcing: Overrides cache settings, forcing reloading to some degree.
     override init(url: String, originalFeed: Feed?, forcing: Bool = false) {
       super.init(url: url, originalFeed: originalFeed, forcing: forcing)
     }
