@@ -10,7 +10,7 @@ import UIKit
 import FeedKit
 import os.log
 
-private let log = OSLog(subsystem: "ink.codes.podest", category: "queue")
+private let log = OSLog.disabled
 
 /// Provides access to queue and subscription data.
 final class QueueDataSource: NSObject, SectionedDataSource {
@@ -240,8 +240,8 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   /// limited to 64 files for downloads and 16 files for deletions.
   ///
   /// - Parameters:
-  ///   - window: Threshold in seconds, below which, after reloading and before
-  /// preloading, updating is skipped.
+  ///   - window: Within this time interval since the last update, updating is
+  /// skipped. However, preloading and removing files might be performed.
   ///   - completionHandler: This block gets submitted to the main queue when
   /// all is done, receiving a Boolean, indicating new data, and an error value
   /// if something went wrong.
@@ -250,16 +250,16 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     considering error: Error? = nil,
     completionHandler: ((Bool, Error?) -> Void)? = nil)
   {
-    os_log("updating queue", log: log, type: .debug)
-
     updateError = error
 
-    let shouldUpdate = self.shouldUpdate()
+    let shouldUpdate = self.shouldUpdate(outside: window)
     let shouldRemove = self.makeShouldRemoveBlock()
 
     func preload(forwarding newData: Bool, updateError: Error?) -> Void {
       shouldRemove(newData) { rm in
         dispatchPrecondition(condition: .onQueue(.main))
+
+        os_log("preloading and removing files: %i", log: log, type: .debug, rm)
 
         DispatchQueue.global().async {
           Podest.files.preloadQueue(removingFiles: rm) { error in
@@ -268,8 +268,10 @@ final class QueueDataSource: NSObject, SectionedDataSource {
                      log: log, type: .debug, er as CVarArg)
             }
 
+            os_log("updating complete: %i",
+                   log: log, type: .debug, shouldUpdate)
+
             DispatchQueue.main.async {
-              os_log("updating complete", log: log, type: .debug)
               completionHandler?(newData, updateError)
             }
           }
@@ -283,6 +285,8 @@ final class QueueDataSource: NSObject, SectionedDataSource {
                log: log, type: .debug)
         return preload(forwarding: false, updateError: nil)
       }
+
+      os_log("updating queue", log: log, type: .debug)
 
       Podest.userLibrary.update { newData, error in
         if let er = error {

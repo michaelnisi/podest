@@ -91,7 +91,7 @@ final class QueueViewController: UITableViewController, Navigator {
     }
   }
 
-  /// Updates the queue, fetching new episodes using the remote service.
+  /// Updates the queue, fetching new episodes, accessing the remote service.
   ///
   /// - Parameters:
   ///   - error: An upstream error to consider while updating.
@@ -168,13 +168,11 @@ final class QueueViewController: UITableViewController, Navigator {
 extension QueueViewController {
 
   @objc func refreshControlValueChanged(_ sender: UIRefreshControl) {
-    guard sender.isRefreshing,
-      refreshControlTimer == nil,
-      dataSource.shouldUpdate() else {
+    guard sender.isRefreshing, refreshControlTimer == nil else {
       return
     }
 
-    dataSource.update()
+    dataSource.update(minding: 60)
   }
 
   func makeRefreshControl() -> UIRefreshControl {
