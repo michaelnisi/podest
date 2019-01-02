@@ -103,7 +103,7 @@ extension ListViewController {
         t?.insertSections(updates.sectionsToInsert, with: .none)
         t?.reloadSections(updates.sectionsToReload, with: .none)
       }) { _ in
-        //
+        // Not conclusive, the updates block may execute repeatedly.
       }
     }
 
