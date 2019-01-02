@@ -427,6 +427,7 @@ extension RootViewController: UserProxy {
       guard let vc = child as? ListViewController else {
         continue
       }
+
       vc.updateIsSubscribed(using: urls)
     }
   }
@@ -438,6 +439,7 @@ extension RootViewController: UserProxy {
       guard let vc = child as? EpisodeViewController else {
         continue
       }
+      
       vc.updateIsEnqueued(using: guids)
     }
   }

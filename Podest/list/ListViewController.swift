@@ -12,35 +12,57 @@ import os.log
 
 private let log = OSLog.disabled
 
-final class ListViewController: UITableViewController, Navigator, EntryRowSelectable {
+final class ListViewController: UITableViewController,
+Navigator, EntryRowSelectable {
   
   /// The URL of the feed to display.
   var url: String?
-  
+
   private var isSubscribed: Bool = false {
     didSet {
-      guard isSubscribed != oldValue else {
-        return
-      }
       configureNavigationItem(url: url!)
     }
   }
 
   /// Updates the `isSubscribed` property using `urls` or the user library.
   func updateIsSubscribed(using urls: Set<FeedURL>? = nil) {
-    guard let url = self.url else {
+    if let subscribed = urls, let url = self.url {
+      isSubscribed = subscribed.contains(url)
       return
     }
 
-    guard let subscribed = urls else {
-      isSubscribed = Podest.userLibrary.has(subscription: url)
-      return
-    }
+    if let feed = self.feed {
+      isSubscribed = Podest.userLibrary.has(subscription: feed.url)
+    } else {
+      // At launch, during state restoration, the user library might not be
+      // completely synchronized yet, so we sync and wait before configuring
+      // the navigation item.
 
-    isSubscribed = subscribed.contains(url)
+      Podest.userLibrary.synchronize { [weak self] urls, _, error in
+        if let er = error {
+          switch er {
+          case QueueingError.outOfSync(let queue, let guids):
+            if queue == 0, guids != 0 {
+              os_log("queue not populated", log: log, type: .debug)
+            } else {
+              os_log("** out of sync: ( queue: %i, guids: %i )",
+                     log: log, type: .debug, queue, guids)
+            }
+          default:
+            fatalError("probably a database error: \(er)")
+          }
+        }
+
+        DispatchQueue.main.async { [weak self] in
+          guard let url = self?.url else {
+            return
+          }
+
+          self?.isSubscribed = urls?.contains(url) ?? false
+        }
+      }
+    }
   }
-  
-  private var feedChanged = false
   
   /// The feed to display. If we start from `url`, `feed` will be updated after
   /// it has been fetched. Setting this to `nil` is a mistake.
@@ -50,13 +72,12 @@ final class ListViewController: UITableViewController, Navigator, EntryRowSelect
         fatalError("ListViewController: feed cannot be nil")
       }
 
-      feedChanged = f != oldValue || f.summary != oldValue?.summary
-
-      guard feedChanged else {
+      guard f != oldValue || f.summary != oldValue?.summary else {
         return
       }
 
       url = feed?.url
+
       updateIsSubscribed()
     }
   }
@@ -84,6 +105,10 @@ extension ListViewController {
     }
 
     let op = ListDataSource.UpdateOperation(url: url, originalFeed: feed)
+
+    op.feedBlock = { [weak self] feed, error in
+      self?.feed = feed
+    }
 
     op.updatesBlock = { [weak self] sections, updates, error in
       guard !updates.isEmpty else {
@@ -139,38 +164,8 @@ extension ListViewController {
     let isDifferent = entry != navigationDelegate?.entry
     
     clearsSelectionOnViewWillAppear = isCollapsed || isDifferent
-    
-    if let feed = self.feed {
-      isSubscribed = Podest.userLibrary.has(subscription: feed.url)
-    } else {
-      // At launch, during state restoration, the user library might not be
-      // completely synchronized yet, so we sync and wait before configuring
-      // the navigation item.
 
-      Podest.userLibrary.synchronize { [weak self] urls, _, error in
-        if let er = error {
-          switch er {
-          case QueueingError.outOfSync(let queue, let guids):
-            if queue == 0, guids != 0 {
-              os_log("queue not populated", log: log, type: .debug)
-            } else {
-              os_log("** out of sync: ( queue: %i, guids: %i )",
-                     log: log, type: .debug, queue, guids)
-            }
-          default:
-            fatalError("probably a database error: \(er)")
-          }
-        }
-
-        DispatchQueue.main.async { [weak self] in
-          guard let url = self?.url else {
-            return
-          }
-
-          self?.isSubscribed = urls?.contains(url) ?? false
-        }
-      }
-    }
+    updateIsSubscribed()
 
     if dataSource.isEmpty {
       update()

@@ -57,6 +57,9 @@ final class ListDataSource: NSObject, SectionedDataSource {
     /// A block submitted to the main queue drafting a new state.
     var updatesBlock: (([Section<Item>], Updates, Error?) -> Void)?
 
+    /// A block submitted to the main queue when the feed has been fetched.
+    var feedBlock: ((Feed?, Error?) -> Void)?
+
     static func makeSections(
       sections current: [Section<Item>],
       items: [Item],
@@ -164,7 +167,16 @@ final class ListDataSource: NSObject, SectionedDataSource {
         return submitSummary(summary)
       }
 
-      submitSummary(findFeed()?.summary, error: findError())
+      let feed = findFeed()
+      let error = findError()
+
+      let cb = feedBlock
+
+      DispatchQueue.main.async {
+        cb?(feed, error)
+      }
+
+      submitSummary(feed?.summary, error: error)
     }
 
   }
@@ -274,6 +286,7 @@ extension ListDataSource {
     let a = FetchFeed(operation: operation)
 
     a.updatesBlock = operation.updatesBlock
+    a.feedBlock = operation.feedBlock
     a.current = sections
 
     if operation.originalFeed?.summary == nil {
