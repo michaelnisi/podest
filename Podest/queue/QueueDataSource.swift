@@ -16,23 +16,10 @@ private let log = OSLog(subsystem: "ink.codes.podest", category: "queue")
 final class QueueDataSource: NSObject, SectionedDataSource {
   
   /// Enumerates queue data source item types.
-  enum Item: Equatable {
+  enum Item: Hashable {
     case entry(Entry)
     case feed(Feed)
     case message(NSAttributedString)
-
-    static func ==(lhs: Item, rhs: Item) -> Bool {
-      switch (lhs, rhs) {
-      case (.entry(let a), .entry(let b)):
-        return a == b
-      case (.feed(let a), .feed(let b)):
-        return a == b
-      case (.message(let a), .message(let b)):
-        return a == b
-      case (.entry, _), (.feed, _), (.message, _):
-        return false
-      }
-    }
   }
   
   /// An internal serial queue for synchronized access.

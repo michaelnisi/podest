@@ -21,19 +21,6 @@ final class ListDataSource: NSObject, SectionedDataSource {
     case summary(NSAttributedString)
     case message(NSAttributedString)
     // TODO: case image(Imaginable)
-
-    static func ==(lhs: Item, rhs: Item) -> Bool {
-      switch (lhs, rhs) {
-      case (.entry(let a), .entry(let b)):
-        return a == b
-      case (.summary(let a), .summary(let b)):
-        return a == b
-      case (.message(let a), .message(let b)):
-        return a == b
-      case (.entry, _), (.summary, _), (.message, _):
-        return false
-      }
-    }
   }
 
   /// An abstract operation that does nothing.

@@ -17,20 +17,9 @@ import FeedKit
 final class SearchResultsDataSource: NSObject, SectionedDataSource {
 
   /// Enumerates types of items provided by the search results data source.
-  enum Item: Equatable {
+  enum Item: Hashable {
     case find(Find)
     case message(NSAttributedString)
-
-    static func ==(lhs: Item, rhs: Item) -> Bool {
-      switch (lhs, rhs) {
-      case (.find(let a), .find(let b)):
-        return a == b
-      case (.message(let a), .message(let b)):
-        return a == b
-      case (.find, _), (.message, _):
-        return false
-      }
-    }
   }
   
   var sections = [Section<Item>]()
