@@ -55,6 +55,8 @@
 		4CE6956F21AFAC010060F5A6 /* PlayerDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE6956E21AFAC010060F5A6 /* PlayerDismissalAnimator.swift */; };
 		4CE6957121AFAD570060F5A6 /* PlayerPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE6957021AFAD570060F5A6 /* PlayerPresentationAnimator.swift */; };
 		4CE8586D21A16B9D00D206FA /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE8586C21A16B9D00D206FA /* Players.swift */; };
+		4CE9A76021DB816600E6E43C /* SummaryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE9A75E21DB816600E6E43C /* SummaryTableViewCell.swift */; };
+		4CE9A76121DB816600E6E43C /* SummaryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CE9A75F21DB816600E6E43C /* SummaryTableViewCell.xib */; };
 		4CEC436521D68BD50097FFA7 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEC436321D68BD50097FFA7 /* MessageTableViewCell.swift */; };
 		4CEC436621D68BD50097FFA7 /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CEC436421D68BD50097FFA7 /* MessageTableViewCell.xib */; };
 		4CF21CF22063B0D100169E43 /* PlayerTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C49DF412058319400DC86E6 /* PlayerTransitionDelegate.swift */; };
@@ -212,6 +214,8 @@
 		4CE6956E21AFAC010060F5A6 /* PlayerDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDismissalAnimator.swift; sourceTree = "<group>"; };
 		4CE6957021AFAD570060F5A6 /* PlayerPresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerPresentationAnimator.swift; sourceTree = "<group>"; };
 		4CE8586C21A16B9D00D206FA /* Players.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Players.swift; sourceTree = "<group>"; };
+		4CE9A75E21DB816600E6E43C /* SummaryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryTableViewCell.swift; sourceTree = "<group>"; };
+		4CE9A75F21DB816600E6E43C /* SummaryTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SummaryTableViewCell.xib; sourceTree = "<group>"; };
 		4CEC436321D68BD50097FFA7 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		4CEC436421D68BD50097FFA7 /* MessageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageTableViewCell.xib; sourceTree = "<group>"; };
 		4CF5674B207F362300C77C1D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -377,11 +381,11 @@
 		4CD697011FEBC60500349580 /* list */ = {
 			isa = PBXGroup;
 			children = (
-				4EFEEBDB1E7465EA00169153 /* ListBackgroundView.xib */,
 				4C8DCE061FFE75F800A6A61B /* List.storyboard */,
-				4EFEEBDD1E75493900169153 /* ListBackgroundView.swift */,
 				4E8CA70A1A126ADB004DE307 /* ListViewController.swift */,
 				4EA2F7651FB2D58000A72195 /* ListDataSource.swift */,
+				4CE9A75E21DB816600E6E43C /* SummaryTableViewCell.swift */,
+				4CE9A75F21DB816600E6E43C /* SummaryTableViewCell.xib */,
 			);
 			path = list;
 			sourceTree = "<group>";
@@ -414,6 +418,8 @@
 				4E7F29141E7AE1E100E12846 /* Episode.storyboard */,
 				4E2EF3151E8D0C39008FE123 /* EpisodeAnimator.swift */,
 				4E684D4B1C5F3201004699A1 /* EpisodeViewController.swift */,
+				4EFEEBDB1E7465EA00169153 /* ListBackgroundView.xib */,
+				4EFEEBDD1E75493900169153 /* ListBackgroundView.swift */,
 			);
 			path = episode;
 			sourceTree = "<group>";
@@ -806,6 +812,7 @@
 			files = (
 				4CCBF20C20805F5C00A7359F /* products.json in Resources */,
 				4E8CA70E1A126ADB004DE307 /* Main.storyboard in Resources */,
+				4CE9A76121DB816600E6E43C /* SummaryTableViewCell.xib in Resources */,
 				4E8CA7131A126ADB004DE307 /* LaunchScreen.xib in Resources */,
 				4C8DCE071FFE75F800A6A61B /* List.storyboard in Resources */,
 				4CCBF21320809E4C00A7359F /* Store.storyboard in Resources */,
@@ -905,6 +912,7 @@
 				4C6FB92A204C41A1005C559E /* FileProxyDelegate.swift in Sources */,
 				4C6FB912204679FE005C559E /* FileRepository.swift in Sources */,
 				4C175AA6208AFA26003071CA /* StoreFSM.swift in Sources */,
+				4CE9A76021DB816600E6E43C /* SummaryTableViewCell.swift in Sources */,
 				4CE8586D21A16B9D00D206FA /* Players.swift in Sources */,
 				4CFEE33821C7B101008B2EC0 /* SearchControllerProxy.swift in Sources */,
 				4C351CD11A7F5B7F00C5C88C /* SearchResultsDataSource.swift in Sources */,

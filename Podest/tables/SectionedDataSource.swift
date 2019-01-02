@@ -31,6 +31,11 @@ struct Cells {
     nib: UINib(nibName: "SubtitleTableViewCell", bundle: .main)
   )
 
+  static let summary = Cell(
+    id: "SummaryTableViewCellID",
+    nib: UINib(nibName: "SummaryTableViewCell", bundle: .main)
+  )
+
 }
 
 /// A section of a table view data model.

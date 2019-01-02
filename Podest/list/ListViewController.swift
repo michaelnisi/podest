@@ -12,67 +12,10 @@ import os.log
 
 private let log = OSLog.disabled
 
-/// The `ListViewController` maintains a feed and its entries in a table view.
-/// Its API takes a feed itself or its URL. Asynchronous fetching of feed and/or
-/// entries is configured by `url` or `feed`, triggered during `viewWillAppear`.
-/// If the feed could not be fetched, an error message is displayed.
-final class ListViewController: UITableViewController, Navigator {
-  
-  @IBOutlet weak var summaryTextView: UITextView?
-  @IBOutlet weak var heroImage: UIImageView?
-  @IBOutlet weak var titleLabel: UILabel?
-  @IBOutlet weak var subtitleLabel: UILabel?
-  
-  /// A place to stash the table view header.
-  private var header: UIView?
-  
-  private var traitsChanged = false
-  
-  /// If the header should be hidden, because height is compact, this is `true`.
-  var isViewCompact: Bool = false {
-    didSet {
-      guard let url = self.url else {
-        fatalError("missing URL")
-      }
-      
-      guard isViewCompact != oldValue else {
-        if navigationItem.rightBarButtonItems == nil {
-          configureNavigationItem(url: url)
-        }
-        return
-      }
-      
-      configureNavigationItem(url: url)
-      
-      if isViewCompact {
-        header = tableView.tableHeaderView
-        tableView.tableHeaderView = nil
-
-        selectCurrentRow(animated: false)
-      } else {
-        tableView.tableHeaderView = header
-        header = nil
-
-        if viewIfLoaded?.window != nil {
-          clearSelection(true)
-        }
-      }
-
-      tableView.layoutTableHeaderView()
-    }
-  }
+final class ListViewController: UITableViewController, Navigator, EntryRowSelectable {
   
   /// The URL of the feed to display.
-  var _url: String?
-  var url: String? {
-    get {
-      return _url
-    }
-    set {
-      _url = newValue
-      // Waiting, without feed we cannot do much.
-    }
-  }
+  var url: String?
   
   private var isSubscribed: Bool = false {
     didSet {
@@ -97,13 +40,6 @@ final class ListViewController: UITableViewController, Navigator {
     isSubscribed = subscribed.contains(url)
   }
   
-  private var isRefreshing: Bool {
-    guard let rc = refreshControl, rc.isRefreshing else {
-      return false
-    }
-    return true
-  }
-  
   private var feedChanged = false
   
   /// The feed to display. If we start from `url`, `feed` will be updated after
@@ -120,159 +56,70 @@ final class ListViewController: UITableViewController, Navigator {
         return
       }
 
-      _url = feed?.url
+      url = feed?.url
       updateIsSubscribed()
     }
   }
-  
-  /// The last time the feed object has been forcefully reloaded.
-  private var forcedFeed = TimeInterval(0)
 
-  // MARK: - Data Source
+  /// Internal to meet EntryRowSelectable, not good.
+  var dataSource = ListDataSource(browser: Podest.browser)
 
-  /// Temporarily cached updates to apply later.
-  private var deferred: Updates? {
-    didSet {
-      guard deferred != nil else {
-        os_log("** deferred reset", log: log, type: .debug)
-        return
-      }
-      os_log("** deferring", log: log, type: .debug)
-    }
-  }
-  
-  private func makeUpdatesCompletionBlock() -> ((Updates) -> Void) {
-    return { [weak self] updates in
-      DispatchQueue.main.async { [weak self] in
-        guard !updates.isEmpty else {
-          os_log("** aborting: empty updates", log: log, type: .debug)
-          self?.deferred = nil
-          return
-        }
-        
-        guard let me = self, !me.isRefreshing else {
-          self?.deferred = updates
-          return
-        }
-
-        guard self?.deferred == nil else {
-          guard let t = me.tableView else {
-            return
-          }
-          
-          os_log("** performing batch updates", log: log, type: .debug)
-          
-          t.performBatchUpdates({
-            t.deleteRows(at: updates.rowsToDelete, with: .automatic)
-            t.insertRows(at: updates.rowsToInsert, with: .automatic)
-            t.reloadRows(at: updates.rowsToReload, with: .automatic)
-            
-            t.deleteSections(updates.sectionsToDelete, with: .automatic)
-            t.insertSections(updates.sectionsToInsert, with: .automatic)
-            t.reloadSections(updates.sectionsToReload, with: .automatic)
-          }) { finished in
-            self?.selectCurrentRow(animated: true)
-            self?.deferred = nil
-          }
-          
-          return
-        }
-        
-        os_log("** reloading data", log: log, type: .debug)
-        
-        self?.tableView.reloadData()
-        self?.selectCurrentRow(animated: false)
-      }
+  private weak var updating: Operation? {
+    willSet {
+      updating?.cancel()
     }
   }
 
-  private func makeFeedCompletionBlock() -> ((Feed) -> Void) {
-    return { [weak self] feed in
-      DispatchQueue.main.async { [weak self] in
-        self?.feed = feed
-      }
-    }
-  }
-  
-  /// Our table view data source, providing feed and entries.
-  lazy var dataSource: ListDataSource = {
-    dispatchPrecondition(condition: .onQueue(.main))
-
-    let ds = ListDataSource(browser: Podest.browser)
-
-    ds.feedCompletionBlock = makeFeedCompletionBlock()
-    ds.updatesCompletionBlock = makeUpdatesCompletionBlock()
-
-    return ds
-  }()
-  
   var navigationDelegate: ViewControllers?
   
 }
 
-// MARK: - UIViewController
+// MARK: - Fetching Feed and Entries
 
 extension ListViewController {
 
-  private var canForceFeed: Bool {
-    let now = Date().timeIntervalSince1970
-
-    guard now - forcedFeed > 3600 else {
-      return false
-    }
-
-    forcedFeed = now
-
-    return true
-  }
-  
-  private func update(forcing: Bool = false) {
+  private func update(forcing: Bool = false, completionBlock: (() -> Void)? = nil) {
     guard let url = self.url else {
       fatalError("cannot refresh without URL")
     }
-    
-    let request = ListDataSource.UpdateRequest(
-      url: url, feed: feed, forcing: forcing)
-    
-    dataSource.update(request) { error, message in
-      if let er = error {
-        os_log("update error: %@",
-               log: log, type: .error, er as CVarArg)
+
+    let op = ListDataSource.UpdateOperation(url: url, originalFeed: feed)
+
+    op.updatesBlock = { [weak self] sections, updates, error in
+      guard !updates.isEmpty else {
+        return
       }
-      
-      DispatchQueue.main.async { [weak self] in
-        guard let msg = message else {
-          self?.hideMessage()
-          return
-        }
-        
-        self?.showMessage(msg)
+
+      self?.tableView.performBatchUpdates({
+        self?.dataSource.sections = sections
+
+        let t = self?.tableView
+
+        t?.deleteRows(at: updates.rowsToDelete, with: .none)
+        t?.insertRows(at: updates.rowsToInsert, with: .none)
+        t?.reloadRows(at: updates.rowsToReload, with: .none)
+
+        t?.deleteSections(updates.sectionsToDelete, with: .none)
+        t?.insertSections(updates.sectionsToInsert, with: .none)
+        t?.reloadSections(updates.sectionsToReload, with: .none)
+      }) { _ in
+        //
       }
     }
-  }
 
-  @objc func refreshControlValueChanged(_ sender:AnyObject) {
-    os_log("** updating - refresh control changed", log: log, type: .debug)
-    update(forcing: true)
-    heroImage?.tag = 0
+    op.completionBlock = completionBlock
+
+    updating = op
+
+    dataSource.update(op)
   }
   
-  private func makeRefreshControl() -> UIRefreshControl {
-    let rc = UIRefreshControl()
-    let action = #selector(refreshControlValueChanged)
+}
 
-    rc.addTarget(self, action: action, for: .valueChanged)
+// MARK: - Managing the View
 
-    return rc
-  }
-  
-  /// Resets the view, removing IB placeholders.
-  private func resetView() {
-    titleLabel?.text = nil
-    subtitleLabel?.text = nil
-    summaryTextView?.attributedText = nil
-  }
-  
+extension ListViewController {
+
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -285,32 +132,6 @@ extension ListViewController {
     
     tableView.dataSource = dataSource
     refreshControl = makeRefreshControl()
-    
-    // We cannot allow selection before resolving the indicator issue.
-    summaryTextView?.isSelectable = false
-    
-    resetView()
-  }
-  
-  private func updateIsCompact() {
-    isViewCompact = {
-      guard let svc = splitViewController else {
-        return false
-      }
-      return
-        !svc.isCollapsed &&
-          svc.traitCollection.horizontalSizeClass == .regular
-    }()
-  }
-  
-  override func traitCollectionDidChange(
-    _ previousTraitCollection: UITraitCollection?) {
-    super.traitCollectionDidChange(previousTraitCollection)
-
-    resignFirstResponder()
-    updateIsCompact()
-
-    traitsChanged = true
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -318,8 +139,6 @@ extension ListViewController {
     let isDifferent = entry != navigationDelegate?.entry
     
     clearsSelectionOnViewWillAppear = isCollapsed || isDifferent
-
-    updateIsCompact()
     
     if let feed = self.feed {
       isSubscribed = Podest.userLibrary.has(subscription: feed.url)
@@ -342,7 +161,7 @@ extension ListViewController {
             fatalError("probably a database error: \(er)")
           }
         }
-        
+
         DispatchQueue.main.async { [weak self] in
           guard let url = self?.url else {
             return
@@ -352,8 +171,10 @@ extension ListViewController {
         }
       }
     }
-    
-    update()
+
+    if dataSource.isEmpty {
+      update()
+    }
 
     super.viewWillAppear(animated)
   }
@@ -371,101 +192,94 @@ extension ListViewController {
 
     tableView.scrollIndicatorInsets = insets
     tableView.contentInset = insets
-
-    if !isViewCompact, let f = feed, let hero = heroImage, hero.tag != f.hashValue {
-      os_log("** loading image", log: log, type: .debug)
-
-      // What kind of hacker is using tags?
-      hero.tag = f.hashValue
-      
-      Podest.images.loadImage(representing: f, into: hero)
-    }
-
-    var tableHeaderViewChanged = traitsChanged
-    
-    if feedChanged, let f = feed {
-      os_log("** updating header", log: log, type: .debug)
-      titleLabel?.text = f.title
-      subtitleLabel?.text = f.author
-      
-      if let s = f.summary {
-        // Turns out, formatting the summary on the main queue is snappiest.
-        summaryTextView?.attributedText = StringRepository.attribute(summary: s)
-        tableHeaderViewChanged = true
-      }
-      
-      feedChanged = false
-    }
-    
-    if tableHeaderViewChanged {
-      os_log("** laying out header", log: log, type: .debug)
-      tableView.layoutTableHeaderView()
-      traitsChanged = false
-    }
   }
-  
+
   override func viewWillDisappear(_ animated: Bool) {
-    dataSource.cancel()
     super.viewWillDisappear(animated)
+    updating?.cancel()
   }
 
-  // MARK: State Preservation and Restoration
-  
+}
+
+// MARK: - Responding to a Change in the Interface Environment
+
+extension ListViewController {
+
+  private var isCompact: Bool {
+    guard let svc = splitViewController else {
+      return false
+    }
+
+    return !svc.isCollapsed &&
+      traitCollection.horizontalSizeClass == .regular
+  }
+
+  override func traitCollectionDidChange(
+    _ previousTraitCollection: UITraitCollection?) {
+    super.traitCollectionDidChange(previousTraitCollection)
+
+    // TODO: isCompact ? dataSource.hideHeader() : dataSource.showHeader()
+
+    resignFirstResponder()
+  }
+
+}
+
+// MARK: - State Preservation and Restoration
+
+extension ListViewController {
+
   override func encodeRestorableState(with coder: NSCoder) {
     coder.encode(url, forKey: "url")
-    
+
     super.encodeRestorableState(with: coder)
   }
-  
+
   override func decodeRestorableState(with coder: NSCoder) {
     super.decodeRestorableState(with: coder)
-    
+
     guard let url = coder.decodeObject(forKey: "url") as? String else {
       return
     }
-    
+
     self.url = url
   }
+
 }
 
-// MARK: - UIResponder
+// MARK: - Managing Refresh Control
 
 extension ListViewController {
-  
-  @discardableResult override func resignFirstResponder() -> Bool {
-    if let header = tableView.tableHeaderView ?? self.header {
-      for view in header.subviews {
-        view.resignFirstResponder()
-      }
+
+  @objc func refreshControlValueChanged(_ sender:AnyObject) {
+    guard sender.isRefreshing else {
+      return
     }
 
-    return super.resignFirstResponder()
+    // TODO: Update
   }
-  
-}
 
-// MARK: - UIScrollViewDelegate
+  private func makeRefreshControl() -> UIRefreshControl {
+    let rc = UIRefreshControl()
+    let action = #selector(refreshControlValueChanged)
 
-extension ListViewController {
+    rc.addTarget(self, action: action, for: .valueChanged)
+
+    return rc
+  }
   
   override func scrollViewDidEndDragging(
     _ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-    DispatchQueue.main.async { [weak self ] in
-      guard let rc = self?.refreshControl, rc.isRefreshing else {
-        return
-      }
-      
-      rc.endRefreshing()
-      
-      // The refresh control hiding animation takes about half a second.
-      DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-        guard let updates = self?.deferred else {
-          return
-        }
-        
-        self?.dataSource.updatesCompletionBlock?(updates)
-      }
+    guard let rc = refreshControl, rc.isRefreshing else {
+      return
     }
+
+    DispatchQueue.main.async {
+      rc.endRefreshing()
+    }
+
+    // TODO: Refresh
+
   }
   
 }
@@ -473,12 +287,29 @@ extension ListViewController {
 // MARK: - UITableViewDelegate
 
 extension ListViewController {
+
+  override func tableView(
+    _ tableView: UITableView,
+    willSelectRowAt indexPath: IndexPath
+  ) -> IndexPath? {
+    guard let item = dataSource.itemAt(indexPath: indexPath) else {
+      return nil
+    }
+
+    switch  item {
+    case .entry:
+      return indexPath
+    case .summary, .message:
+      return nil
+    }
+  }
   
   override func tableView(
     _ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     guard let entry = dataSource.entry(at: indexPath) else {
-      fatalError("cannot select row without entries")
+      return
     }
+
     navigationDelegate?.show(entry: entry)
   }
   
@@ -489,9 +320,8 @@ extension ListViewController {
 extension ListViewController: EntryProvider {
   
   var entry: Entry? {
-    let ip = tableView.indexPathForSelectedRow ?? IndexPath(row: 0, section: 0)
-
-    return dataSource.entry(at: ip)
+    return dataSource.entry(at: tableView.indexPathForSelectedRow ??
+      IndexPath(row: 0, section: 0))
   }
   
 }
@@ -647,7 +477,7 @@ extension ListViewController {
   }
   
   private func makeRightBarButtonItems(url: FeedURL) -> [UIBarButtonItem] {
-    var items = isViewCompact ? [] : [makeActionButton()]
+    var items = isCompact ? [] : [makeActionButton()]
 
     items.append(makeSubscribeButton(url: url))
 
@@ -664,54 +494,3 @@ extension ListViewController {
   }
   
 }
-
-// MARK: - EntryRowSelectable
-
-extension ListViewController: EntryRowSelectable {}
-
-// MARK: - Header Hack
-
-extension UITableView {
-  
-  /// Applies temporary constraints to work around tableHeaderView’s AutoLayout
-  /// [issue](https://github.com/daveanderson/TableViewHeader).
-  /// I cannot believe that all this resetting is necessary.
-  func layoutTableHeaderView() {
-    guard let headerView = self.tableHeaderView else {
-      return
-    }
-    
-    headerView.translatesAutoresizingMaskIntoConstraints = false
-    
-    let headerWidth = headerView.bounds.size.width
-    
-    let temporaryWidthConstraints = NSLayoutConstraint.constraints(
-      withVisualFormat: "[headerView(width)]",
-      options: NSLayoutConstraint.FormatOptions(rawValue: UInt(0)),
-      metrics: ["width": headerWidth],
-      views: ["headerView": headerView]
-    )
-    
-    headerView.addConstraints(temporaryWidthConstraints)
-    
-    headerView.setNeedsLayout()
-    headerView.layoutIfNeeded()
-    
-    let headerSize = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-    let height = headerSize.height
-    var frame = headerView.frame
-    
-    frame.size.height = height
-    headerView.frame = frame
-    
-    self.tableHeaderView = headerView
-    
-    headerView.removeConstraints(temporaryWidthConstraints)
-    headerView.translatesAutoresizingMaskIntoConstraints = true
-  }
-  
-}
-
-
-
-
