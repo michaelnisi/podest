@@ -60,12 +60,18 @@ final class ListDataSource: NSObject, SectionedDataSource {
     /// A block submitted to the main queue when the feed has been fetched.
     var feedBlock: ((Feed?, Error?) -> Void)?
 
+    /// Accumulates previous `sections`, fresh `items`, and possibly an `error`
+    /// into the next sections.
+    ///
+    /// Making the next sections structure is the core of the data source.
     static func makeSections(
       sections current: [Section<Item>],
       items: [Item],
       error: Error?
     ) -> [Section<Item>] {
       var messages = Section<Item>()
+
+      // TODO: Review error messaging
 
       guard !items.isEmpty else {
         let text = (error != nil ?
@@ -119,7 +125,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
   }
 
-  final private class FetchFeed: ListDataSourceOperation {
+  final private class FetchFeed: ListDataSourceOperation, Providing {
 
     /// The current sections.
     var current: [Section<Item>]!
@@ -158,6 +164,8 @@ final class ListDataSource: NSObject, SectionedDataSource {
       }
     }
 
+    var error: Error?
+
     override func main() {
       guard !isCancelled else {
         return
@@ -169,6 +177,9 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
       let feed = findFeed()
       let error = findError()
+
+      // Providing error to dependents, namely to FetchEntries.
+      self.error = error
 
       let cb = feedBlock
 
