@@ -16,7 +16,7 @@ import FeedKit
 /// operations are executed, but receive unchanged sections and empty updates.
 final class SearchResultsDataSource: NSObject, SectionedDataSource {
 
-  /// Enumerates types of items provided by the search results data source.
+  /// Enumerates items presented by this data source.
   enum Item: Hashable {
     case find(Find)
     case message(NSAttributedString)
@@ -38,7 +38,7 @@ final class SearchResultsDataSource: NSObject, SectionedDataSource {
     super.init()
   }
 
-  /// The current search or suggest operation.
+  /// The singly search or suggest operation.
   weak var operation: Operation? {
     willSet {
       operation?.cancel()

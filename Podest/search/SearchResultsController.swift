@@ -78,23 +78,17 @@ final class SearchResultsController: UITableViewController {
       // There must be a smarter place for adjusting insets.
       self?.adjustInsets()
 
-      guard !sections.isEmpty else {
-        self?.dataSource.sections = sections
-        self?.tableView.reloadData()
-        completionBlock?(error)
-        return
-      }
-
       self?.tableView.performBatchUpdates({
-        UIView.setAnimationsEnabled(false)
+        // For smooth dismission, hiding the search bar, we need animations.
+        UIView.setAnimationsEnabled(sections.isEmpty)
 
         self?.dataSource.sections = sections
 
         let t = self?.tableView
 
-        t?.deleteRows(at: updates.rowsToDelete, with: .fade)
-        t?.insertRows(at: updates.rowsToInsert, with: .fade)
-        t?.reloadRows(at: updates.rowsToReload, with: .fade)
+        t?.deleteRows(at: updates.rowsToDelete, with: .none)
+        t?.insertRows(at: updates.rowsToInsert, with: .none)
+        t?.reloadRows(at: updates.rowsToReload, with: .none)
 
         t?.deleteSections(updates.sectionsToDelete, with: .none)
         t?.insertSections(updates.sectionsToInsert, with: .none)
