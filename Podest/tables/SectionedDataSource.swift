@@ -9,35 +9,6 @@
 import Foundation
 import UIKit
 
-struct Cell {
-  let id: String
-  let nib: UINib
-}
-
-struct Cells {
-
-  static let suggestion = Cell(
-    id: "SuggestionCellID",
-    nib: UINib(nibName: "SuggestionCell", bundle: .main)
-  )
-
-  static let message = Cell(
-    id: "MessageTableViewCellID",
-    nib: UINib(nibName: "MessageTableViewCell", bundle: .main)
-  )
-
-  static let subtitle = Cell(
-    id: "SubtitleTableViewCellID",
-    nib: UINib(nibName: "SubtitleTableViewCell", bundle: .main)
-  )
-
-  static let summary = Cell(
-    id: "SummaryTableViewCellID",
-    nib: UINib(nibName: "SummaryTableViewCell", bundle: .main)
-  )
-
-}
-
 /// A section of a table view data model.
 struct Section<Item: Equatable>: Equatable {
   let title: String?

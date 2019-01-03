@@ -113,10 +113,11 @@ private func makeFeedRepo(_ conf: Config) throws -> FeedRepository {
 
 private func createDirectory(_ dir: URL) {
   do {
-    let fm = FileManager.default
-    try fm.createDirectory(at: dir, withIntermediateDirectories: false)
+    try FileManager.default
+      .createDirectory(at: dir, withIntermediateDirectories: false)
   } catch {
     let er = error as NSError
+
     switch (er.domain, er.code) {
     case (NSCocoaErrorDomain, 516): // file exists
       break
@@ -140,11 +141,9 @@ private func removeFile(at url: URL) {
 private func makeCache(_ conf: Config) -> FeedCache {
   let bundle = Bundle(for: FeedCache.self)
   let schema = bundle.path(forResource: "cache", ofType: "sql")!
-
-  let fm = FileManager.default
-
   let name = Bundle.main.bundleIdentifier!
-  let dir = try! fm.url(
+
+  let dir = try! FileManager.default.url(
     for: .cachesDirectory,
     in: .userDomainMask,
     appropriateFor: nil,
@@ -169,11 +168,9 @@ private func makeCache(_ conf: Config) -> FeedCache {
 private func makeUserCache(_ conf: Config) -> UserCache {
   let bundle = Bundle(for: UserCache.self)
   let schema = bundle.path(forResource: "user", ofType: "sql")!
-
-  let fm = FileManager.default
-
   let name = Bundle.main.bundleIdentifier!
-  let dir = try! fm.url(
+
+  let dir = try!  FileManager.default.url(
     for: .applicationSupportDirectory,
     in: .userDomainMask,
     appropriateFor: nil,
@@ -313,6 +310,7 @@ final private class Config {
     os_log("settings: %{public}@", log: log, type: .info, String(describing: settings))
 
     let json = try! Data(contentsOf: url)
+    
     svcs = try! JSONDecoder().decode(Services.self, from: json)
     os_log("services: %@", log: log, type: .info, svcs.services)
 

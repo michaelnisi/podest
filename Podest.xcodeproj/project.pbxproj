@@ -60,6 +60,9 @@
 		4CEC436521D68BD50097FFA7 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEC436321D68BD50097FFA7 /* MessageTableViewCell.swift */; };
 		4CEC436621D68BD50097FFA7 /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CEC436421D68BD50097FFA7 /* MessageTableViewCell.xib */; };
 		4CF21CF22063B0D100169E43 /* PlayerTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C49DF412058319400DC86E6 /* PlayerTransitionDelegate.swift */; };
+		4CF2DE9B21DDD31700A0F6EC /* TextCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF2DE9921DDD31700A0F6EC /* TextCollectionViewCell.swift */; };
+		4CF2DE9C21DDD31700A0F6EC /* TextCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CF2DE9A21DDD31700A0F6EC /* TextCollectionViewCell.xib */; };
+		4CF2DEA221DDD8E300A0F6EC /* ReusableNib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF2DEA121DDD8E300A0F6EC /* ReusableNib.swift */; };
 		4CF5674C207F362300C77C1D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF5674B207F362300C77C1D /* StoreKit.framework */; };
 		4CFEE33821C7B101008B2EC0 /* SearchControllerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFEE33721C7B101008B2EC0 /* SearchControllerProxy.swift */; };
 		4E180F9A1F8394CC00976A3A /* Nuke.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E180F9B1F8394CC00976A3A /* Nuke.framework */; };
@@ -217,6 +220,9 @@
 		4CE9A75F21DB816600E6E43C /* SummaryTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SummaryTableViewCell.xib; sourceTree = "<group>"; };
 		4CEC436321D68BD50097FFA7 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		4CEC436421D68BD50097FFA7 /* MessageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageTableViewCell.xib; sourceTree = "<group>"; };
+		4CF2DE9921DDD31700A0F6EC /* TextCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextCollectionViewCell.swift; sourceTree = "<group>"; };
+		4CF2DE9A21DDD31700A0F6EC /* TextCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextCollectionViewCell.xib; sourceTree = "<group>"; };
+		4CF2DEA121DDD8E300A0F6EC /* ReusableNib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableNib.swift; sourceTree = "<group>"; };
 		4CF5674B207F362300C77C1D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		4CFEE33721C7B101008B2EC0 /* SearchControllerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchControllerProxy.swift; sourceTree = "<group>"; };
 		4E180F9B1F8394CC00976A3A /* Nuke.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Nuke.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -382,6 +388,8 @@
 				4C8DCE061FFE75F800A6A61B /* List.storyboard */,
 				4E8CA70A1A126ADB004DE307 /* ListViewController.swift */,
 				4EA2F7651FB2D58000A72195 /* ListDataSource.swift */,
+				4CF2DE9921DDD31700A0F6EC /* TextCollectionViewCell.swift */,
+				4CF2DE9A21DDD31700A0F6EC /* TextCollectionViewCell.xib */,
 				4CE9A75E21DB816600E6E43C /* SummaryTableViewCell.swift */,
 				4CE9A75F21DB816600E6E43C /* SummaryTableViewCell.xib */,
 			);
@@ -458,6 +466,7 @@
 		4CD697091FEBC8DB00349580 /* tables */ = {
 			isa = PBXGroup;
 			children = (
+				4CF2DEA121DDD8E300A0F6EC /* ReusableNib.swift */,
 				4CD6970A1FEBFEB900349580 /* SectionedDataSource.swift */,
 				4C5F4E7B21CB79A300156D56 /* EntryRowSelectable.swift */,
 				4CD6970C1FEBFF0D00349580 /* Updates.swift */,
@@ -816,6 +825,7 @@
 				4C776B222084722C00A055CD /* MessageCollectionViewCell.xib in Resources */,
 				4C0BE2501A4C2162004E82BF /* config.json in Resources */,
 				4C21F58021D8A56500ED5D26 /* SubtitleTableViewCell.xib in Resources */,
+				4CF2DE9C21DDD31700A0F6EC /* TextCollectionViewCell.xib in Resources */,
 				4E8CA7101A126ADB004DE307 /* Images.xcassets in Resources */,
 				4C3197C92091D794006F9104 /* ProductsHeader.xib in Resources */,
 				4EFEEBDC1E7465EA00169153 /* ListBackgroundView.xib in Resources */,
@@ -905,6 +915,7 @@
 				4EAAA73B1E71A83E0047D043 /* PlayerViewController.swift in Sources */,
 				4C21F57F21D8A56500ED5D26 /* SubtitleTableViewCell.swift in Sources */,
 				4C3197C82091D794006F9104 /* ProductsHeader.swift in Sources */,
+				4CF2DEA221DDD8E300A0F6EC /* ReusableNib.swift in Sources */,
 				4C728DC020623544005B739C /* PlaybackControlDelegate.swift in Sources */,
 				4C6FB92A204C41A1005C559E /* FileProxyDelegate.swift in Sources */,
 				4C6FB912204679FE005C559E /* FileRepository.swift in Sources */,
@@ -918,6 +929,7 @@
 				4CEC436521D68BD50097FFA7 /* MessageTableViewCell.swift in Sources */,
 				4C776B212084722C00A055CD /* MessageCollectionViewCell.swift in Sources */,
 				4C3CDC282085A6C300BADBF8 /* StoreButton.swift in Sources */,
+				4CF2DE9B21DDD31700A0F6EC /* TextCollectionViewCell.swift in Sources */,
 				4EFEEBDE1E75493900169153 /* ListBackgroundView.swift in Sources */,
 				4ED4D4371EA470C90011C28C /* core.swift in Sources */,
 				4C6FB92D204C41A1005C559E /* FileProxy.swift in Sources */,

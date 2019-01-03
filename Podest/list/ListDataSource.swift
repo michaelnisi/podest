@@ -337,9 +337,9 @@ extension ListDataSource: UITableViewDataSource {
   /// Registers nib objects with `tableView` under identifiers.
   static func registerCells(with tableView: UITableView) {
     let cells = [
-      (Cells.summary.nib, Cells.summary.id),
-      (Cells.subtitle.nib, Cells.subtitle.id),
-      (Cells.message.nib, Cells.message.id)
+      (UITableView.Nib.summary.nib, UITableView.Nib.summary.id),
+      (UITableView.Nib.subtitle.nib, UITableView.Nib.subtitle.id),
+      (UITableView.Nib.message.nib, UITableView.Nib.message.id)
     ]
 
     for cell in cells {
@@ -367,7 +367,7 @@ extension ListDataSource: UITableViewDataSource {
     switch item {
     case .entry(let entry):
       let cell = tableView.dequeueReusableCell(
-        withIdentifier: Cells.subtitle.id, for: indexPath
+        withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
       ) as! SubtitleTableViewCell
 
       cell.textLabel?.text = entry.title
@@ -377,7 +377,7 @@ extension ListDataSource: UITableViewDataSource {
       return cell
     case .summary(let text):
       let cell = tableView.dequeueReusableCell(
-        withIdentifier: Cells.summary.id, for: indexPath
+        withIdentifier: UITableView.Nib.summary.id, for: indexPath
       )
 
       cell.textLabel?.attributedText = text
@@ -386,7 +386,7 @@ extension ListDataSource: UITableViewDataSource {
       return cell
     case .message(let text):
       let cell = tableView.dequeueReusableCell(
-        withIdentifier: Cells.message.id, for: indexPath
+        withIdentifier: UITableView.Nib.message.id, for: indexPath
         ) as! MessageTableViewCell
 
       cell.titleLabel.attributedText = text

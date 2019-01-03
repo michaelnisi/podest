@@ -237,9 +237,9 @@ extension SearchResultsDataSource: UITableViewDataSource {
   /// Registers nib objects with `tableView` under identifiers.
   static func registerCells(with tableView: UITableView) {
     let cells = [
-      (Cells.message.nib, Cells.message.id),
-      (Cells.subtitle.nib, Cells.subtitle.id),
-      (Cells.suggestion.nib, Cells.suggestion.id)
+      (UITableView.Nib.message.nib, UITableView.Nib.message.id),
+      (UITableView.Nib.subtitle.nib, UITableView.Nib.subtitle.id),
+      (UITableView.Nib.suggestion.nib, UITableView.Nib.suggestion.id)
     ]
 
     for cell in cells {
@@ -276,14 +276,14 @@ extension SearchResultsDataSource: UITableViewDataSource {
       switch find {
       case .suggestedTerm(let sug):
         let cell = tableView.dequeueReusableCell(
-          withIdentifier: Cells.suggestion.id, for: indexPath)
+          withIdentifier: UITableView.Nib.suggestion.id, for: indexPath)
 
         cell.textLabel?.text = sug.term
 
         return cell
       case .recentSearch(let feed), .suggestedFeed(let feed):
         let cell = tableView.dequeueReusableCell(
-          withIdentifier: Cells.subtitle.id, for: indexPath
+          withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
         ) as! SubtitleTableViewCell
 
         cell.item = nil
@@ -294,7 +294,7 @@ extension SearchResultsDataSource: UITableViewDataSource {
         return cell
       case .suggestedEntry(let entry):
         let cell = tableView.dequeueReusableCell(
-          withIdentifier: Cells.subtitle.id, for: indexPath
+          withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
         ) as! SubtitleTableViewCell
 
         cell.item = nil
@@ -305,7 +305,7 @@ extension SearchResultsDataSource: UITableViewDataSource {
         return cell
       case .foundFeed(let feed):
         let cell = tableView.dequeueReusableCell(
-          withIdentifier: Cells.subtitle.id, for: indexPath
+          withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
         ) as! SubtitleTableViewCell
 
         cell.item = feed
@@ -317,7 +317,7 @@ extension SearchResultsDataSource: UITableViewDataSource {
       }
     case .message(let text):
       let cell = tableView.dequeueReusableCell(
-        withIdentifier: Cells.message.id, for: indexPath
+        withIdentifier: UITableView.Nib.message.id, for: indexPath
       ) as! MessageTableViewCell
 
       cell.titleLabel.attributedText = text

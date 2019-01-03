@@ -350,8 +350,8 @@ extension QueueDataSource: UITableViewDataSource {
   /// Registers nib objects with `tableView` under identifiers.
   static func registerCells(with tableView: UITableView) {
     let cells = [
-      (Cells.message.nib, Cells.message.id),
-      (Cells.subtitle.nib, Cells.subtitle.id)
+      (UITableView.Nib.message.nib, UITableView.Nib.message.id),
+      (UITableView.Nib.subtitle.nib, UITableView.Nib.subtitle.id)
     ]
 
     for cell in cells {
@@ -379,7 +379,7 @@ extension QueueDataSource: UITableViewDataSource {
     switch item {
     case .entry(let entry):
       let cell = tableView.dequeueReusableCell(
-        withIdentifier: Cells.subtitle.id, for: indexPath
+        withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
       ) as! SubtitleTableViewCell
 
       cell.item = entry
@@ -394,7 +394,7 @@ extension QueueDataSource: UITableViewDataSource {
       fatalError("niy")
     case .message(let text):
       let cell = tableView.dequeueReusableCell(
-        withIdentifier: Cells.message.id, for: indexPath
+        withIdentifier: UITableView.Nib.message.id, for: indexPath
       ) as! MessageTableViewCell
 
       cell.titleLabel.attributedText = text
