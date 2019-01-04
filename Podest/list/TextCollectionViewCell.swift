@@ -9,10 +9,16 @@
 import UIKit
 
 class TextCollectionViewCell: UICollectionViewCell {
+  @IBOutlet weak var label: UILabel!
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    // Initialization code
+
+
+    
+  }
+
+
 
 }

@@ -1,6 +1,6 @@
 //
 //  PodKit.h
-//  PodKit - test podest app logic
+//  PodKit - expose selected types for testing
 //
 //  Created by Michael Nisi on 20.07.18.
 //  Copyright © 2018 Michael Nisi. All rights reserved.

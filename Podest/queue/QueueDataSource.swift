@@ -26,9 +26,9 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   private var sQueue = DispatchQueue(
     label: "ink.codes.podest.QueueDataSource-\(UUID().uuidString).sQueue")
   
-  private var _sections = [Section<Item>(
-    items: [.message(StringRepository.loadingQueue())]
-  )]
+  private var _sections = [Section<Item>(id: 0, items: [
+    .message(StringRepository.loadingQueue())
+  ])]
 
   /// Accessing the sections of the table view is synchronized.
   var sections: [Section<Item>] {
@@ -78,7 +78,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     items: [Item],
     error: Error? = nil
   ) -> [Section<Item>] {
-    var messages = Section<Item>()
+    var messages = Section<Item>(id: 0)
 
     guard !items.isEmpty else {
       let text = (error != nil ?
@@ -88,8 +88,8 @@ final class QueueDataSource: NSObject, SectionedDataSource {
       return [messages]
     }
 
-    var entries = Section<Item>(title: "Episodes")
-    var feeds = Section<Item>(title: "Podcasts")
+    var entries = Section<Item>(id: 1, title: "Episodes")
+    var feeds = Section<Item>(id: 2, title: "Podcasts")
 
     for item in items {
       switch item {
@@ -382,6 +382,7 @@ extension QueueDataSource: UITableViewDataSource {
         withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
       ) as! SubtitleTableViewCell
 
+      cell.images = Podest.images
       cell.item = entry
       cell.textLabel?.text = entry.title
       cell.detailTextLabel?.text = StringRepository.episodeCellSubtitle(for: entry)

@@ -10,22 +10,29 @@
     </dependencies>
     <scenes>
         <!--List View Controller-->
-        <scene sceneID="ejK-K2-o6b">
+        <scene sceneID="CiR-ls-Edo">
             <objects>
-                <tableViewController storyboardIdentifier="EpisodesID" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zsh-Y2-ykM" customClass="ListViewController" customModule="Podest" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="h7e-PP-KrV">
+                <placeholder placeholderIdentifier="IBFirstResponder" id="X9a-Wo-g1D" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <collectionViewController storyboardIdentifier="EpisodesID" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ue6-5G-8L1" customClass="ListViewController" customModule="Podest" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="FGj-1u-SbB">
                         <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="FOp-7v-76L">
+                            <size key="itemSize" width="50" height="50"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells/>
                         <connections>
-                            <outlet property="dataSource" destination="zsh-Y2-ykM" id="U8J-EM-2vi"/>
-                            <outlet property="delegate" destination="zsh-Y2-ykM" id="ghC-sj-hJV"/>
+                            <outlet property="dataSource" destination="ue6-5G-8L1" id="PHD-ju-6cp"/>
+                            <outlet property="delegate" destination="ue6-5G-8L1" id="mLP-3r-XqM"/>
                         </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="UNo-zR-n3g" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                    </collectionView>
+                </collectionViewController>
             </objects>
-            <point key="canvasLocation" x="634.39999999999998" y="398.05097451274366"/>
+            <point key="canvasLocation" x="428.57142857142861" y="109.59999999999999"/>
         </scene>
     </scenes>
 </document>

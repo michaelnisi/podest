@@ -53,22 +53,21 @@ extension SearchResultsDataSource {
 
   private static func makeSections(
     term: String,
-    sections current: [Section<Item>],
     items: [Find],
     error: Error? = nil
-  ) -> [Section<Item>] {
+  ) -> [Section<Item>]? {
     guard error == nil else {
       if let text = StringRepository.message(describing: error!) {
-        return [Section(items: [.message(text)])]
+        return [Section(id: 0, items: [.message(text)])]
       }
 
-      return current
+      return nil
     }
 
     guard !items.isEmpty else {
       if !term.isEmpty {
         let text = StringRepository.noResult(for: term)
-        return [Section(items: [.message(text)])]
+        return [Section(id: 0, items: [.message(text)])]
       }
 
       return []
@@ -78,13 +77,13 @@ extension SearchResultsDataSource {
       case .suggestedTerm(let suggestion)? = items.first,
       suggestion.term == term {
       let text = StringRepository.noResult(for: term)
-      return [Section(items: [.message(text)])]
+      return [Section(id: 0, items: [.message(text)])]
     }
 
-    var results = Section<Item>(title: "Top Hits")
-    var sugs = Section<Item>(title: "iTunes Search")
-    var feeds = Section<Item>(title: "Podcasts")
-    var entries = Section<Item>(title: "Episodes")
+    var results = Section<Item>(id: 1, title: "Top Hits")
+    var sugs = Section<Item>(id: 2, title: "iTunes Search")
+    var feeds = Section<Item>(id: 3, title: "Podcasts")
+    var entries = Section<Item>(id: 4, title: "Episodes")
 
     for item in items {
       switch item {
@@ -108,13 +107,10 @@ extension SearchResultsDataSource {
     sections current: [Section<Item>],
     items: [Find],
     error: Error? = nil
-  ) -> ([Section<Item>], Updates) {
-    let sections = makeSections(
-      term: term,
-      sections: current,
-      items: items,
-      error: error
-    )
+  ) -> ([Section<Item>], Updates)? {
+    guard let sections = makeSections(term: term, items: items, error: error) else {
+      return nil
+    }
 
     let updates = makeUpdates(old: current, new: sections)
 
@@ -129,7 +125,7 @@ extension SearchResultsDataSource {
 
   func suggest(
     term: String,
-    completionBlock: (([Section<Item>], Updates, Error?) -> Void)?
+    updatesBlock: (([Section<Item>], Updates, Error?) -> Void)?
   ) {
     dispatchPrecondition(condition: .onQueue(.main))
 
@@ -139,13 +135,15 @@ extension SearchResultsDataSource {
     guard !trimmed.isEmpty else {
       operation = nil
       
-      let (sections, updates) = SearchResultsDataSource.makeUpdates(
+      guard let (sections, updates) = SearchResultsDataSource.makeUpdates(
         term: trimmed,
         sections: self.sections,
         items: []
-      )
+      ) else {
+        return
+      }
 
-      completionBlock?(sections, updates, nil)
+      updatesBlock?(sections, updates, nil)
       return
     }
 
@@ -163,22 +161,27 @@ extension SearchResultsDataSource {
     }) { error in
       dispatchPrecondition(condition: .notOnQueue(.main))
 
-      let (sections, updates) = SearchResultsDataSource.makeUpdates(
+      guard let (sections, updates) = SearchResultsDataSource.makeUpdates(
         term: trimmed,
         sections: current,
         items: acc,
         error: error
-      )
+      ) else {
+        return
+      }
 
-      DispatchQueue.main.async {
-        completionBlock?(sections, updates, error)
+      DispatchQueue.main.async { [weak self] in
+        guard self?.sections == current else {
+          return
+        }
+        updatesBlock?(sections, updates, error)
       }
     }
   }
 
   func search(
     term: String,
-    completionBlock: (([Section<Item>], Updates, Error?) -> Void)?
+    updatesBlock: (([Section<Item>], Updates, Error?) -> Void)?
   ) {
     dispatchPrecondition(condition: .onQueue(.main))
 
@@ -196,15 +199,20 @@ extension SearchResultsDataSource {
     }) { error in
       dispatchPrecondition(condition: .notOnQueue(.main))
 
-      let (sections, updates) = SearchResultsDataSource.makeUpdates(
+      guard let (sections, updates) = SearchResultsDataSource.makeUpdates(
         term: term,
         sections: current,
         items: acc,
         error: error
-      )
+      ) else {
+        return
+      }
 
-      DispatchQueue.main.async {
-        completionBlock?(sections, updates, error)
+      DispatchQueue.main.async { [weak self] in
+        guard self?.sections == current else {
+          return
+        }
+        updatesBlock?(sections, updates, error)
       }
     }
   }
@@ -308,6 +316,7 @@ extension SearchResultsDataSource: UITableViewDataSource {
           withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
         ) as! SubtitleTableViewCell
 
+        cell.images = Podest.images
         cell.item = feed
         cell.textLabel?.text = feed.title
         cell.detailTextLabel?.text = StringRepository.feedCellSubtitle(for: feed)

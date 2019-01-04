@@ -11,13 +11,15 @@ import FeedKit
 
 class SubtitleTableViewCell: UITableViewCell {
 
+  var images: Images?
+
   var item: Imaginable? {
     willSet {
       guard let view = imageView else {
         return
       }
 
-      Podest.images.cancel(displaying: view)
+      images?.cancel(displaying: view)
     }
   }
 
@@ -32,7 +34,7 @@ class SubtitleTableViewCell: UITableViewCell {
 
     // Needing the image size, before loading it.
     
-    Podest.images.loadImage(
+    images?.loadImage(
       representing: item,
       into: view,
       options: FKImageLoadingOptions(

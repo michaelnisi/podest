@@ -1,6 +1,6 @@
 //
 //  PodKitTests.swift
-//  PodKitTests - attempts to test in-app purchasing
+//  PodKitTests
 //
 //  Created by Michael Nisi on 20.07.18.
 //  Copyright © 2018 Michael Nisi. All rights reserved.

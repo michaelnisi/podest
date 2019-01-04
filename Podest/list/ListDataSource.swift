@@ -69,7 +69,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
       items: [Item],
       error: Error?
     ) -> [Section<Item>] {
-      var messages = Section<Item>()
+      var messages = Section<Item>(id: 0)
 
       // TODO: Review error messaging
 
@@ -82,7 +82,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
       }
 
       var summary = Set<Item>()
-      var entries = Section<Item>(title: "Episodes")
+      var entries = Section<Item>(id: 2, title: "Episodes")
 
       // Fishing existing summary out of current sections.
       for section in current {
@@ -107,7 +107,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
         }
       }
 
-      return [Section<Item>(items: Array(summary)), entries].filter {
+      return [Section<Item>(id: 1, items: Array(summary)), entries].filter {
         !$0.isEmpty
       }
     }
@@ -118,7 +118,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
       error: Error?
     ) -> ([Section<Item>], Updates) {
       let sections = makeSections(sections: current, items: items, error: error)
-      let updates = ListDataSource.makeUpdates(old: current, new: sections)
+      let updates = ListDataSource.makeUpdates2(old: current, new: sections)
 
       return (sections, updates)
     }
@@ -330,75 +330,62 @@ extension ListDataSource {
 
 }
 
-// MARK: - Configuring a Table View
+// MARK: - Providing Data and Views
 
-extension ListDataSource: UITableViewDataSource {
+extension ListDataSource: UICollectionViewDataSource {
 
-  /// Registers nib objects with `tableView` under identifiers.
-  static func registerCells(with tableView: UITableView) {
+  /// Registers nib objects with `collectionView` under identifiers.
+  static func registerCells(with collectionView: UICollectionView) {
     let cells = [
-      (UITableView.Nib.summary.nib, UITableView.Nib.summary.id),
-      (UITableView.Nib.subtitle.nib, UITableView.Nib.subtitle.id),
-      (UITableView.Nib.message.nib, UITableView.Nib.message.id)
+      (UICollectionView.Nib.text.nib, UICollectionView.Nib.text.id)
     ]
 
     for cell in cells {
-      tableView.register(cell.0, forCellReuseIdentifier: cell.1)
+      collectionView.register(cell.0, forCellWithReuseIdentifier: cell.1)
     }
   }
 
-  func numberOfSections(in tableView: UITableView) -> Int {
-    return sections.count
-  }
-  
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int
-  ) -> Int {
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return sections[section].count
   }
-  
-  func tableView(
-    _ tableView: UITableView,
-    cellForRowAt indexPath: IndexPath
-  )-> UITableViewCell {
+
+  func numberOfSections(in collectionView: UICollectionView) -> Int {
+    return sections.count
+  }
+
+  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     guard let item = itemAt(indexPath: indexPath) else {
       fatalError("no item at index path: \(indexPath)")
     }
-    
+
     switch item {
     case .entry(let entry):
-      let cell = tableView.dequeueReusableCell(
-        withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
-      ) as! SubtitleTableViewCell
+      let cell = collectionView.dequeueReusableCell(
+        withReuseIdentifier: UICollectionView.Nib.text.id, for: indexPath
+      ) as! TextCollectionViewCell
 
-      cell.textLabel?.text = entry.title
-      cell.detailTextLabel?.text = StringRepository.episodeCellSubtitle(for: entry)
-      cell.imageView?.image = nil
+      cell.label.text = entry.title
 
       return cell
     case .summary(let text):
-      let cell = tableView.dequeueReusableCell(
-        withIdentifier: UITableView.Nib.summary.id, for: indexPath
-      )
+      let cell = collectionView.dequeueReusableCell(
+        withReuseIdentifier: UICollectionView.Nib.text.id, for: indexPath
+      ) as! TextCollectionViewCell
 
-      cell.textLabel?.attributedText = text
-      cell.selectionStyle = .none
+      cell.label.attributedText = text
 
       return cell
     case .message(let text):
-      let cell = tableView.dequeueReusableCell(
-        withIdentifier: UITableView.Nib.message.id, for: indexPath
-        ) as! MessageTableViewCell
+      let cell = collectionView.dequeueReusableCell(
+        withReuseIdentifier: UICollectionView.Nib.text.id, for: indexPath
+      ) as! TextCollectionViewCell
 
-      cell.titleLabel.attributedText = text
-      cell.selectionStyle = .none
-      cell.targetHeight = tableView.bounds.height * 0.6
-
-      tableView.separatorStyle = .none
+      cell.label.attributedText = text
 
       return cell
     }
   }
-  
+
 }
 
 // MARK: - EntryIndexPathMapping

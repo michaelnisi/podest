@@ -66,12 +66,10 @@ final class SearchResultsController: UITableViewController {
   var delegate: SearchResultsControllerDelegate?
 
   /// Returns a shared completion block for updating.
-  private func makeUpdatingBlock(
-    completionBlock: ((Error?) -> Void)?
-  ) -> (([Section<SearchResultsDataSource.Item>], Updates, Error?) -> Void) {
+  private func makeUpdatingBlock()
+    -> (([Section<SearchResultsDataSource.Item>], Updates, Error?) -> Void) {
     return { [weak self] sections, updates, error in
       guard !updates.isEmpty else {
-        completionBlock?(error)
         return
       }
 
@@ -91,33 +89,21 @@ final class SearchResultsController: UITableViewController {
           t?.deleteSections(updates.sectionsToDelete, with: .none)
           t?.insertSections(updates.sectionsToInsert, with: .none)
           t?.reloadSections(updates.sectionsToReload, with: .none)
-        }) { _ in
-          completionBlock?(error)
-        }
+        })
       }
-
     }
   }
 
-  func search(_ term: String, completionBlock: ((Error?) -> Void)? = nil) {
-    dataSource.search(
-      term: term,
-      completionBlock: makeUpdatingBlock(completionBlock: completionBlock)
-    )
+  func search(_ term: String) {
+    dataSource.search(term: term, updatesBlock: makeUpdatingBlock())
   }
 
-  func suggest(_ term: String, completionBlock: ((Error?) -> Void)? = nil) {
-    dataSource.suggest(
-      term: term,
-      completionBlock: makeUpdatingBlock(completionBlock: completionBlock)
-    )
+  func suggest(_ term: String) {
+    dataSource.suggest(term: term, updatesBlock: makeUpdatingBlock())
   }
   
-  func reset(completionBlock: ((Error?) -> Void)? = nil) {
-    dataSource.suggest(
-      term: "",
-      completionBlock: makeUpdatingBlock(completionBlock: completionBlock)
-    )
+  func reset() {
+    dataSource.suggest(term: "", updatesBlock: makeUpdatingBlock())
   }
 
 }

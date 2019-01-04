@@ -12,9 +12,9 @@ import os.log
 
 private let log = OSLog.disabled
 
-final class ListViewController: UITableViewController,
+final class ListViewController: UICollectionViewController,
 Navigator, EntryRowSelectable {
-  
+
   /// The URL of the feed to display.
   var url: String?
 
@@ -92,6 +92,8 @@ Navigator, EntryRowSelectable {
   }
 
   var navigationDelegate: ViewControllers?
+
+  var layout = ColumnFlowLayout()
   
 }
 
@@ -111,24 +113,13 @@ extension ListViewController {
     }
 
     op.updatesBlock = { [weak self] sections, updates, error in
-      guard !updates.isEmpty else {
+      guard !updates.isEmpty, let cv = self?.collectionView else {
         return
       }
 
-      self?.tableView.performBatchUpdates({
-        self?.dataSource.sections = sections
-
-        let t = self?.tableView
-
-        t?.deleteRows(at: updates.rowsToDelete, with: .none)
-        t?.insertRows(at: updates.rowsToInsert, with: .none)
-        t?.reloadRows(at: updates.rowsToReload, with: .none)
-
-        t?.deleteSections(updates.sectionsToDelete, with: .none)
-        t?.insertSections(updates.sectionsToInsert, with: .none)
-        t?.reloadSections(updates.sectionsToReload, with: .none)
-      }) { _ in
-        // Not conclusive, the updates block may execute repeatedly.
+      self?.dataSource.commit(sections: sections, updates: updates, view: cv) {
+        finished in
+        completionBlock?()
       }
     }
 
@@ -148,15 +139,14 @@ extension ListViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    ListDataSource.registerCells(with: tableView)
-
-    tableView.rowHeight = UITableView.automaticDimension
-    tableView.estimatedRowHeight = 104
+    ListDataSource.registerCells(with: collectionView)
 
     navigationItem.largeTitleDisplayMode = .never
     
-    tableView.dataSource = dataSource
-    refreshControl = makeRefreshControl()
+    collectionView.dataSource = dataSource
+    collectionView.refreshControl = makeRefreshControl()
+
+    collectionView.collectionViewLayout = layout
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -179,18 +169,19 @@ extension ListViewController {
       super.viewWillLayoutSubviews()
     }
 
-    guard refreshControl?.isHidden ?? true else {
+    guard collectionView.refreshControl?.isHidden ?? true else {
       return
     }
 
     let insets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
 
-    tableView.scrollIndicatorInsets = insets
-    tableView.contentInset = insets
+    collectionView.scrollIndicatorInsets = insets
+    collectionView.contentInset = insets
   }
 
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
+
     updating?.cancel()
   }
 
@@ -208,6 +199,17 @@ extension ListViewController {
     return !svc.isCollapsed &&
       traitCollection.horizontalSizeClass == .regular
   }
+
+  override func willTransition(
+    to newCollection: UITraitCollection,
+    with coordinator: UIViewControllerTransitionCoordinator) {
+    // During transition we want our layout to prepare with automatic size,
+    // saving us from invalid sizes.
+    layout.itemSize = UICollectionViewFlowLayout.automaticSize
+
+    super.willTransition(to: newCollection, with: coordinator)
+  }
+
 
   override func traitCollectionDidChange(
     _ previousTraitCollection: UITraitCollection?) {
@@ -265,7 +267,7 @@ extension ListViewController {
   
   override func scrollViewDidEndDragging(
     _ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-    guard let rc = refreshControl, rc.isRefreshing else {
+    guard let rc = collectionView.refreshControl, rc.isRefreshing else {
       return
     }
 
@@ -279,28 +281,24 @@ extension ListViewController {
   
 }
 
-// MARK: - UITableViewDelegate
+// MARK: - UICollectionViewDelegate
 
 extension ListViewController {
 
-  override func tableView(
-    _ tableView: UITableView,
-    willSelectRowAt indexPath: IndexPath
-  ) -> IndexPath? {
-    guard let item = dataSource.itemAt(indexPath: indexPath) else {
-      return nil
+  override func collectionView(
+    _ collectionView: UICollectionView,
+    shouldSelectItemAt indexPath: IndexPath
+  ) -> Bool {
+    guard case .entry? = dataSource.itemAt(indexPath: indexPath) else {
+      return false
     }
 
-    switch  item {
-    case .entry:
-      return indexPath
-    case .summary, .message:
-      return nil
-    }
+    return true
   }
+
   
-  override func tableView(
-    _ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+  override func collectionView(
+    _ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     guard let entry = dataSource.entry(at: indexPath) else {
       return
     }
@@ -315,7 +313,7 @@ extension ListViewController {
 extension ListViewController: EntryProvider {
   
   var entry: Entry? {
-    return dataSource.entry(at: tableView.indexPathForSelectedRow ??
+    return dataSource.entry(at: collectionView.indexPathsForSelectedItems?.first ??
       IndexPath(row: 0, section: 0))
   }
   
