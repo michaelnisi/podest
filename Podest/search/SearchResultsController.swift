@@ -78,25 +78,24 @@ final class SearchResultsController: UITableViewController {
       // There must be a smarter place for adjusting insets.
       self?.adjustInsets()
 
-      self?.tableView.performBatchUpdates({
-        // For smooth dismission, hiding the search bar, we need animations.
-        UIView.setAnimationsEnabled(sections.isEmpty)
+      UIView.performWithoutAnimation {
+        self?.tableView.performBatchUpdates({
+          self?.dataSource.sections = sections
 
-        self?.dataSource.sections = sections
+          let t = self?.tableView
 
-        let t = self?.tableView
+          t?.deleteRows(at: updates.rowsToDelete, with: .none)
+          t?.insertRows(at: updates.rowsToInsert, with: .none)
+          t?.reloadRows(at: updates.rowsToReload, with: .none)
 
-        t?.deleteRows(at: updates.rowsToDelete, with: .none)
-        t?.insertRows(at: updates.rowsToInsert, with: .none)
-        t?.reloadRows(at: updates.rowsToReload, with: .none)
-
-        t?.deleteSections(updates.sectionsToDelete, with: .none)
-        t?.insertSections(updates.sectionsToInsert, with: .none)
-        t?.reloadSections(updates.sectionsToReload, with: .none)
-      }) { _ in
-        UIView.setAnimationsEnabled(true)
-        completionBlock?(error)
+          t?.deleteSections(updates.sectionsToDelete, with: .none)
+          t?.insertSections(updates.sectionsToInsert, with: .none)
+          t?.reloadSections(updates.sectionsToReload, with: .none)
+        }) { _ in
+          completionBlock?(error)
+        }
       }
+
     }
   }
 
