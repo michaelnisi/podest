@@ -6,7 +6,6 @@ Podest is a podcast player app for iOS making podcasts simple. I’ve written ab
 
 - [Nuke](https://github.com/kean/Nuke), A powerful image loading and caching system
 - [DeepDiff](https://github.com/onmyway133/DeepDiff), I’ve ripped Khoa’s [diffing function](https://github.com/michaelnisi/podest/blob/master/Podest/collections/diff.swift)
-
 - [fanboy-kit](https://github.com/michaelnisi/fanboy-kit), Search podcasts via proxy
 - [feedkit](https://github.com/michaelnisi/feedkit), Get feeds and entries
 - [fileproxy](https://github.com/michaelnisi/fileproxy), Manage background downloads
