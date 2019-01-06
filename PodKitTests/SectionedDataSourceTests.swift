@@ -24,12 +24,12 @@ class SectionedDataSourceTests: XCTestCase {
       let name: String
     }
 
-    var sections = [Section<Item>]()
+    var sections = [Array<Item>]()
 
-    private static func makeSections(items: [Item]) -> [Section<Item>] {
-      var a = Section<Item>(title: "A")
-      var b = Section<Item>(title: "B")
-      var c = Section<Item>(title: "C")
+    private static func makeSections(items: [Item]) -> [Array<Item>] {
+      var a = [Item]()
+      var b = [Item]()
+      var c = [Item]()
 
       for item in items {
         switch item.id {
@@ -46,9 +46,9 @@ class SectionedDataSourceTests: XCTestCase {
     }
 
     static func makeUpdates(
-      sections current: [Section<Item>],
+      sections current: [Array<Item>],
       items: [Item]
-      ) -> ([Section<Item>], Updates){
+      ) -> ([Array<Item>], Updates){
       let sections = TestDataSource.makeSections(items: items)
       let updates = TestDataSource.makeUpdates(old: current, new: sections)
 
@@ -91,29 +91,25 @@ class SectionedDataSourceTests: XCTestCase {
     }
 
     do {
-      let wanted = [Section<TestDataSource.Item>(title: "A", items: items)]
+      let wanted = [items]
       XCTAssertEqual(ds.sections, wanted)
     }
   }
 
   func testSectionEquality() {
-    let a = Section<TestDataSource.Item>(title: "A")
+    let a = [TestDataSource.Item]()
 
     XCTAssertEqual(a, a)
 
-    let b = Section<TestDataSource.Item>(title: "A")
+    let b = [TestDataSource.Item]()
 
     XCTAssertEqual(a, b)
 
-    let c = Section<TestDataSource.Item>(title: "A", items: [
-      TestDataSource.Item(id: .a, name: "One")
-    ])
+    let c = [TestDataSource.Item(id: .a, name: "One")]
 
     XCTAssertNotEqual(a, c)
 
-    let d = Section<TestDataSource.Item>(title: "A", items: [
-      TestDataSource.Item(id: .a, name: "One")
-    ])
+    let d = [TestDataSource.Item(id: .a, name: "One")]
 
     XCTAssertEqual(c, d)
   }

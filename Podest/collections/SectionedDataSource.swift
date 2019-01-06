@@ -35,6 +35,15 @@ extension SectionedDataSource {
     return changes
   }
 
+  /// Commit changes `batch`, performing batch updates with `view`.
+  ///
+  /// Reloading sections and rows are still to crack, leaving **section titles
+  /// not fully supported** yet.
+  ///
+  /// - Parameters:
+  ///   - batch: Arrays of changes per section.
+  ///   - view: The view performing the batch updates.
+  ///   - completionBlock: A block to execute when all operations are finished.
   func commit(
     _ batch: [[Change<Item>]],
     performingWith view: UICollectionView,
@@ -129,7 +138,9 @@ extension SectionedDataSource {
 
       os_log("inserting rows: %@", log: log, type: .debug, rowsToInsert as CVarArg)
       view.insertItems(at: rowsToInsert.map { $0.0 })
-    })
+    }) { completed in
+      completionBlock?(completed)
+    }
   }
 
 }
@@ -232,7 +243,9 @@ extension SectionedDataSource {
 
       os_log("inserting rows: %@", log: log, type: .debug, rowsToInsert as CVarArg)
       view.insertRows(at: rowsToInsert.map { $0.0 }, with: .fade)
-    })
+    }) { completed in
+      completionBlock?(completed)
+    }
   }
 
   @available(*, deprecated, message: "Replaced by SectionedDataSource commits.")
