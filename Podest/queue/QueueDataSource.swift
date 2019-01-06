@@ -26,12 +26,12 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   private var sQueue = DispatchQueue(
     label: "ink.codes.podest.QueueDataSource-\(UUID().uuidString).sQueue")
   
-  private var _sections = [Section<Item>(items: [
-    .message(StringRepository.loadingQueue())
-  ])]
+  private var _sections: [Array<Item>] = [
+    [.message(StringRepository.loadingQueue())]
+  ]
 
   /// Accessing the sections of the table view is synchronized.
-  var sections: [Section<Item>] {
+  var sections: [Array<Item>] {
     get {
       return sQueue.sync { _sections }
     }
@@ -77,8 +77,8 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   private static func makeSections(
     items: [Item],
     error: Error? = nil
-  ) -> [Section<Item>] {
-    var messages = Section<Item>()
+  ) -> [Array<Item>] {
+    var messages = [Item]()
 
     guard !items.isEmpty else {
       let text = (error != nil ?
@@ -88,8 +88,8 @@ final class QueueDataSource: NSObject, SectionedDataSource {
       return [messages]
     }
 
-    var entries = Section<Item>(title: "Episodes")
-    var feeds = Section<Item>(title: "Podcasts")
+    var entries = [Item]()
+    var feeds = [Item]()
 
     for item in items {
       switch item {
@@ -114,10 +114,10 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
   /// Drafts updates from `items` and `error` with `sections` as current state.
   private static func makeUpdates(
-    sections current: [Section<Item>],
+    sections current: [Array<Item>],
     items: [Item],
     error: Error? = nil
-  ) -> ([Section<Item>], Updates) {
+  ) -> ([Array<Item>], Updates) {
     let sections = makeSections(items: items, error: error)
     let updates = makeUpdates(old: current, new: sections)
 
@@ -134,7 +134,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   ///   - completionBlock: A block that executes on the main queue when
   /// reloading completes, receiving new, not yet committed sections, the diff,
   /// and an error if something went wrong.
-  func reload(completionBlock: (([Section<Item>], Updates, Error?) -> Void)? = nil) {
+  func reload(completionBlock: (([Array<Item>], Updates, Error?) -> Void)? = nil) {
     dispatchPrecondition(condition: .onQueue(.main))
 
     if completionBlock == nil {
@@ -437,7 +437,7 @@ extension QueueDataSource: EntryIndexPathMapping {
   
   func indexPath(matching entry: Entry) -> IndexPath? {
     for (sectionIndex, section) in sections.enumerated() {
-      for (itemIndex, item) in section.items.enumerated() {
+      for (itemIndex, item) in section.enumerated() {
         if case .entry(let itemEntry) = item {
           if itemEntry == entry {
             return IndexPath(item: itemIndex, section: sectionIndex)

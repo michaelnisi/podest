@@ -11,6 +11,7 @@ import UIKit
 
 /// A bucket of `UITableView` updates, applying no logic, except for basic
 /// sanity asserts.
+@available(*, deprecated, message: "Replaced by SectionedDataSource commits.")
 class Updates {
   
   private var indicesToInsert = [Int]()

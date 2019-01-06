@@ -55,7 +55,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
     }
 
     /// A block submitted to the main queue drafting a new state.
-    var updatesBlock: (([Section<Item>], [[Change<Item>]], Error?) -> Void)?
+    var updatesBlock: (([Array<Item>], [[Change<Item>]], Error?) -> Void)?
 
     /// A block submitted to the main queue when the feed has been fetched.
     var feedBlock: ((Feed?, Error?) -> Void)?
@@ -65,11 +65,11 @@ final class ListDataSource: NSObject, SectionedDataSource {
     ///
     /// Making the next sections structure is the core of the data source.
     static func makeSections(
-      sections current: [Section<Item>],
+      sections current: [Array<Item>],
       items: [Item],
       error: Error?
-    ) -> [Section<Item>] {
-      var messages = Section<Item>()
+    ) -> [Array<Item>] {
+      var messages = [Item]()
 
       // TODO: Review error messaging
 
@@ -82,11 +82,11 @@ final class ListDataSource: NSObject, SectionedDataSource {
       }
 
       var summary = Set<Item>()
-      var entries = Section<Item>(title: "Episodes")
+      var entries = [Item]()
 
       // Fishing existing summary out of current sections.
       for section in current {
-        for item in section.items {
+        for item in section {
           switch item {
           case .summary:
             summary.insert(item)
@@ -107,16 +107,16 @@ final class ListDataSource: NSObject, SectionedDataSource {
         }
       }
 
-      return [Section<Item>(items: Array(summary)), entries].filter {
+      return [Array(summary), entries].filter {
         !$0.isEmpty
       }
     }
 
     static func makeUpdates(
-      sections current: [Section<Item>],
+      sections current: [Array<Item>],
       items: [Item],
       error: Error?
-    ) -> ([Section<Item>], [[Change<Item>]]) {
+    ) -> ([Array<Item>], [[Change<Item>]]) {
       let sections = makeSections(sections: current, items: items, error: error)
       let changes = makeChanges(old: current, new: sections)
 
@@ -128,9 +128,9 @@ final class ListDataSource: NSObject, SectionedDataSource {
   final private class FetchFeed: ListDataSourceOperation, Providing {
 
     /// The current sections.
-    var current: [Section<Item>]!
+    var current: [Array<Item>]!
 
-    var submitted: [Section<Item>]?
+    var submitted: [Array<Item>]?
 
     fileprivate func submitSummary(_ string: String?, error: Error? = nil) -> Void {
       guard !isCancelled else {
@@ -202,7 +202,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
       super.init(operation: operation)
     }
 
-    func findCurrent() -> [Section<Item>]? {
+    func findCurrent() -> [Array<Item>]? {
       guard let p = dependencies.first(where: { $0 is FetchFeed })
         as? FetchFeed else {
         return nil
@@ -269,7 +269,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
   private let operationQueue = OperationQueue()
 
-  var sections = [Section<Item>]()
+  var sections = [Array<Item>]()
 
   private let browser: Browsing
 
@@ -412,7 +412,7 @@ extension ListDataSource: EntryIndexPathMapping {
     dispatchPrecondition(condition: .onQueue(.main))
     
     for (s, section) in sections.enumerated() {
-      for (r, item) in section.items.enumerated() {
+      for (r, item) in section.enumerated() {
         switch item {
         case .entry(let e):
           if e == entry {

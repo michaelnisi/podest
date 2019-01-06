@@ -22,7 +22,7 @@ final class SearchResultsDataSource: NSObject, SectionedDataSource {
     case message(NSAttributedString)
   }
   
-  var sections = [Section<Item>]()
+  var sections = [Array<Item>]()
 
   private var requests: [ImageRequest]?
 
@@ -55,10 +55,10 @@ extension SearchResultsDataSource {
     term: String,
     items: [Find],
     error: Error? = nil
-  ) -> [Section<Item>]? {
+  ) -> [Array<Item>]? {
     guard error == nil else {
       if let text = StringRepository.message(describing: error!) {
-        return [Section(items: [.message(text)])]
+        return [[.message(text)]]
       }
 
       return nil
@@ -67,7 +67,7 @@ extension SearchResultsDataSource {
     guard !items.isEmpty else {
       if !term.isEmpty {
         let text = StringRepository.noResult(for: term)
-        return [Section(items: [.message(text)])]
+        return [[.message(text)]]
       }
 
       return []
@@ -77,13 +77,13 @@ extension SearchResultsDataSource {
       case .suggestedTerm(let suggestion)? = items.first,
       suggestion.term == term {
       let text = StringRepository.noResult(for: term)
-      return [Section(items: [.message(text)])]
+      return [[.message(text)]]
     }
 
-    var results = Section<Item>(title: "Top Hits")
-    var sugs = Section<Item>(title: "iTunes Search")
-    var feeds = Section<Item>(title: "Podcasts")
-    var entries = Section<Item>(title: "Episodes")
+    var results = [Item]()
+    var sugs = [Item]()
+    var feeds = [Item]()
+    var entries = [Item]()
 
     for item in items {
       switch item {
@@ -106,7 +106,7 @@ extension SearchResultsDataSource {
   /// Drafts updates from `items` and `error` with `sections` as current state.
   private static func makeUpdates(
     term: String,
-    sections current: [Section<Item>],
+    sections current: [Array<Item>],
     items: [Find],
     error: Error? = nil
   ) -> [[Change<Item>]] {

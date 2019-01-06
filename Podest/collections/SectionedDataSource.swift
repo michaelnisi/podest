@@ -12,157 +12,27 @@ import os.log
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "ds")
 
-/// A section of a table view data model.
-struct Section<Item: Hashable>: Hashable {
-  let title: String?
-  var items: [Item]
-
-  /// Creates a new section, identified by its **unique** `id`.
-  ///
-  /// - Parameters:
-  ///   - title: An optional title of the sections.
-  ///   - items: Optionally, the items of this section.
-  init(title: String? = nil, items: [Item] = [Item]()) {
-    self.title = title
-    self.items = items
-  }
-  
-  /// The number of items in this section.
-  var count: Int {
-    return items.count
-  }
-
-  var isEmpty: Bool {
-    return items.isEmpty
-  }
-
-  var first: Item? {
-    return items.first
-  }
-  
-  /// Appends item to end of section.
-  mutating func append(_ item: Item) {
-    items.append(item)
-  }
-
-}
-
 protocol SectionedDataSource: class {
   associatedtype Item: Hashable
-  var sections: [Section<Item>] { get set }
+  var sections: [Array<Item>] { get set }
 }
+
+// MARK: - Performing Batch Updates
 
 extension SectionedDataSource {
 
-  /// Returns required changes for building the new sections.
+  /// Returns required changes for building the `new` sections.
   static func makeChanges(
-    old: [Section<Item>], new: [Section<Item>]) -> [[Change<Item>]] {
+    old: [Array<Item>], new: [Array<Item>]) -> [[Change<Item>]] {
     var changes = [[Change<Item>]]()
 
     for (i, section) in new.enumerated() {
-      let items = i < old.endIndex ? old[i].items : []
+      let items = i < old.endIndex ? old[i] : []
 
-      changes.append(diff(old: items, new: section.items))
+      changes.append(diff(old: items, new: section))
     }
 
     return changes
-  }
-
-  func commit(
-    _ batch: [[Change<Item>]],
-    performingWith view: UITableView,
-    completionBlock: ((Bool) -> Void)? = nil
-  ) {
-    dispatchPrecondition(condition: .onQueue(.main))
-
-    let count = self.sections.count
-    var sectionsCountDiff = batch.count - count
-
-    var rowsToDelete = [IndexPath]()
-    var rowsToInsert = [(IndexPath, Item)]()
-
-    for (i, changes) in batch.enumerated() {
-      for change in changes {
-        switch change {
-        case .delete(let c):
-          let ip = IndexPath(row: c.index, section: i)
-
-          rowsToDelete.append(ip)
-        case .insert(let c):
-          let ip = IndexPath(row: c.index, section: i)
-
-          rowsToInsert.append((ip, c.item))
-        case .move(let c):
-          let from = IndexPath(row: c.fromIndex, section: i)
-          let to = IndexPath(row: c.toIndex, section: i)
-
-          rowsToDelete.append(from)
-          rowsToInsert.append((to, c.item))
-        case .replace(let c):
-          let ip = IndexPath(row: c.index, section: i)
-
-          rowsToDelete.append(ip)
-          rowsToInsert.append((ip, c.newItem))
-        }
-      }
-    }
-
-    view.performBatchUpdates({
-      // Appending and removing sections.
-
-      var sectionsToDelete = Set<Int>()
-      var sectionsToInsert = Set<Int>()
-
-      while sectionsCountDiff < 0 {
-        sectionsToDelete.insert(sectionsCountDiff + count)
-
-        sectionsCountDiff = sectionsCountDiff + 1
-
-        self.sections.removeLast()
-      }
-
-      while sectionsCountDiff > 0 {
-        sectionsCountDiff = sectionsCountDiff - 1
-
-        sectionsToInsert.insert(sectionsCountDiff + count)
-
-        self.sections.append(Section<Item>())
-      }
-
-      // Deleting in descending order.
-
-      let rowsToDelete = rowsToDelete.sorted(by: >)
-
-      for ip in rowsToDelete {
-        self.sections[ip.section].items.remove(at: ip.row)
-      }
-
-      // Inserting in ascending order.
-
-      let rowsToInsert = rowsToInsert.sorted { $0.0 < $1.0 }
-
-      for row in rowsToInsert {
-        let (ip, item) = row
-        self.sections[ip.section].items.insert(item, at: ip.row)
-      }
-
-      let (sd, si) = (
-        IndexSet(sectionsToDelete.sorted(by: >)),
-        IndexSet(sectionsToInsert.sorted())
-      )
-
-      os_log("deleting sections: %@", log: log, type: .debug, sd as CVarArg)
-      view.deleteSections(sd, with: .fade)
-
-      os_log("deleting rows: %@", log: log, type: .debug, rowsToDelete as CVarArg)
-      view.deleteRows(at: rowsToDelete, with: .fade)
-
-      os_log("inserting sections: %@", log: log, type: .debug, si as CVarArg)
-      view.insertSections(si, with: .fade)
-
-      os_log("inserting rows: %@", log: log, type: .debug, rowsToInsert as CVarArg)
-      view.insertRows(at: rowsToInsert.map { $0.0 }, with: .fade)
-    })
   }
 
   func commit(
@@ -223,7 +93,7 @@ extension SectionedDataSource {
 
         sectionsToInsert.insert(sectionsCountDiff + count)
 
-        self.sections.append(Section<Item>())
+        self.sections.append([])
       }
 
       // Deleting in descending order.
@@ -231,7 +101,7 @@ extension SectionedDataSource {
       let rowsToDelete = rowsToDelete.sorted(by: >)
 
       for ip in rowsToDelete {
-        self.sections[ip.section].items.remove(at: ip.row)
+        self.sections[ip.section].remove(at: ip.row)
       }
 
       // Inserting in ascending order.
@@ -240,7 +110,7 @@ extension SectionedDataSource {
 
       for row in rowsToInsert {
         let (ip, item) = row
-        self.sections[ip.section].items.insert(item, at: ip.row)
+        self.sections[ip.section].insert(item, at: ip.row)
       }
 
       let (sd, si) = (
@@ -262,8 +132,111 @@ extension SectionedDataSource {
     })
   }
 
-  @available(*, deprecated, message: "Replace by new commit functions above.")
-  static func makeUpdates(old: [Section<Item>], new: [Section<Item>]) -> Updates {
+}
+
+// MARK: - Temporary Extension for UITableView
+
+extension SectionedDataSource {
+
+  func commit(
+    _ batch: [[Change<Item>]],
+    performingWith view: UITableView,
+    completionBlock: ((Bool) -> Void)? = nil
+  ) {
+    dispatchPrecondition(condition: .onQueue(.main))
+
+    let count = self.sections.count
+    var sectionsCountDiff = batch.count - count
+
+    var rowsToDelete = [IndexPath]()
+    var rowsToInsert = [(IndexPath, Item)]()
+
+    for (i, changes) in batch.enumerated() {
+      for change in changes {
+        switch change {
+        case .delete(let c):
+          let ip = IndexPath(row: c.index, section: i)
+
+          rowsToDelete.append(ip)
+        case .insert(let c):
+          let ip = IndexPath(row: c.index, section: i)
+
+          rowsToInsert.append((ip, c.item))
+        case .move(let c):
+          let from = IndexPath(row: c.fromIndex, section: i)
+          let to = IndexPath(row: c.toIndex, section: i)
+
+          rowsToDelete.append(from)
+          rowsToInsert.append((to, c.item))
+        case .replace(let c):
+          let ip = IndexPath(row: c.index, section: i)
+
+          rowsToDelete.append(ip)
+          rowsToInsert.append((ip, c.newItem))
+        }
+      }
+    }
+
+    view.performBatchUpdates({
+      // Appending and removing sections.
+
+      var sectionsToDelete = Set<Int>()
+      var sectionsToInsert = Set<Int>()
+
+      while sectionsCountDiff < 0 {
+        sectionsToDelete.insert(sectionsCountDiff + count)
+
+        sectionsCountDiff = sectionsCountDiff + 1
+
+        self.sections.removeLast()
+      }
+
+      while sectionsCountDiff > 0 {
+        sectionsCountDiff = sectionsCountDiff - 1
+
+        sectionsToInsert.insert(sectionsCountDiff + count)
+
+        self.sections.append([])
+      }
+
+      // Deleting in descending order.
+
+      let rowsToDelete = rowsToDelete.sorted(by: >)
+
+      for ip in rowsToDelete {
+        self.sections[ip.section].remove(at: ip.row)
+      }
+
+      // Inserting in ascending order.
+
+      let rowsToInsert = rowsToInsert.sorted { $0.0 < $1.0 }
+
+      for row in rowsToInsert {
+        let (ip, item) = row
+        self.sections[ip.section].insert(item, at: ip.row)
+      }
+
+      let (sd, si) = (
+        IndexSet(sectionsToDelete.sorted(by: >)),
+        IndexSet(sectionsToInsert.sorted())
+      )
+
+      os_log("deleting sections: %@", log: log, type: .debug, sd as CVarArg)
+      view.deleteSections(sd, with: .fade)
+
+      os_log("deleting rows: %@", log: log, type: .debug, rowsToDelete as CVarArg)
+      view.deleteRows(at: rowsToDelete, with: .fade)
+
+      os_log("inserting sections: %@", log: log, type: .debug, si as CVarArg)
+      view.insertSections(si, with: .fade)
+
+      os_log("inserting rows: %@", log: log, type: .debug, rowsToInsert as CVarArg)
+      view.insertRows(at: rowsToInsert.map { $0.0 }, with: .fade)
+    })
+  }
+
+  @available(*, deprecated, message: "Replaced by SectionedDataSource commits.")
+  static func makeUpdates(old: [Array<Item>], new: [Array<Item>]) -> Updates {
     let updates = Updates()
     let numberOfSections = old.count
 
@@ -275,12 +248,12 @@ extension SectionedDataSource {
       } else {
         let prev = old[n]
         rows = prev.count
-        items = prev.items
+        items = prev
         if section != prev || new.count != old.count {
           updates.reloadSection(at: n)
         }
       }
-      for (i, item) in (section.items).enumerated() {
+      for (i, item) in section.enumerated() {
         let indexPath = IndexPath(row: i, section: n)
         if rows <= i {
           updates.insertRow(at: indexPath)
@@ -293,7 +266,7 @@ extension SectionedDataSource {
         }
       }
       var x = rows
-      while x > section.items.count {
+      while x > section.count {
         x -= 1
         let indexPath = IndexPath(row: x, section: n)
         updates.deleteRow(at: indexPath)
@@ -310,6 +283,8 @@ extension SectionedDataSource {
 
 }
 
+// MARK: - Accessing Items
+
 extension SectionedDataSource {
   
   func itemAt(indexPath: IndexPath) -> Item? {
@@ -319,11 +294,11 @@ extension SectionedDataSource {
 
     let section = sections[indexPath.section]
 
-    guard section.items.indices.contains(indexPath.row) else {
+    guard section.indices.contains(indexPath.row) else {
       return nil
     }
 
-    return section.items[indexPath.row]
+    return section[indexPath.row]
   }
   
   var isEmpty: Bool {
