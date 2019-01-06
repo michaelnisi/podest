@@ -55,7 +55,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
     }
 
     /// A block submitted to the main queue drafting a new state.
-    var updatesBlock: (([Section<Item>], Updates, Error?) -> Void)?
+    var updatesBlock: (([Section<Item>], [[Change<Item>]], Error?) -> Void)?
 
     /// A block submitted to the main queue when the feed has been fetched.
     var feedBlock: ((Feed?, Error?) -> Void)?
@@ -69,7 +69,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
       items: [Item],
       error: Error?
     ) -> [Section<Item>] {
-      var messages = Section<Item>(id: 0)
+      var messages = Section<Item>()
 
       // TODO: Review error messaging
 
@@ -82,7 +82,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
       }
 
       var summary = Set<Item>()
-      var entries = Section<Item>(id: 2, title: "Episodes")
+      var entries = Section<Item>(title: "Episodes")
 
       // Fishing existing summary out of current sections.
       for section in current {
@@ -107,7 +107,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
         }
       }
 
-      return [Section<Item>(id: 1, items: Array(summary)), entries].filter {
+      return [Section<Item>(items: Array(summary)), entries].filter {
         !$0.isEmpty
       }
     }
@@ -116,11 +116,11 @@ final class ListDataSource: NSObject, SectionedDataSource {
       sections current: [Section<Item>],
       items: [Item],
       error: Error?
-    ) -> ([Section<Item>], Updates) {
+    ) -> ([Section<Item>], [[Change<Item>]]) {
       let sections = makeSections(sections: current, items: items, error: error)
-      let updates = ListDataSource.makeUpdates2(old: current, new: sections)
+      let changes = makeChanges(old: current, new: sections)
 
-      return (sections, updates)
+      return (sections, changes)
     }
 
   }

@@ -67,30 +67,16 @@ final class SearchResultsController: UITableViewController {
 
   /// Returns a shared completion block for updating.
   private func makeUpdatingBlock()
-    -> (([Section<SearchResultsDataSource.Item>], Updates, Error?) -> Void) {
-    return { [weak self] sections, updates, error in
-      guard !updates.isEmpty else {
-        return
-      }
-
+    -> (([[Change<SearchResultsDataSource.Item>]], Error?) -> Void) {
+    return { [weak self] batch, error in
       // There must be a smarter place for adjusting insets.
       self?.adjustInsets()
 
-      UIView.performWithoutAnimation {
-        self?.tableView.performBatchUpdates({
-          self?.dataSource.sections = sections
-
-          let t = self?.tableView
-
-          t?.deleteRows(at: updates.rowsToDelete, with: .none)
-          t?.insertRows(at: updates.rowsToInsert, with: .none)
-          t?.reloadRows(at: updates.rowsToReload, with: .none)
-
-          t?.deleteSections(updates.sectionsToDelete, with: .none)
-          t?.insertSections(updates.sectionsToInsert, with: .none)
-          t?.reloadSections(updates.sectionsToReload, with: .none)
-        })
+      guard let tv = self?.tableView else {
+        return
       }
+      
+      self?.dataSource.commit(batch, performingWith: tv)
     }
   }
 

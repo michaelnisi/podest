@@ -26,7 +26,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   private var sQueue = DispatchQueue(
     label: "ink.codes.podest.QueueDataSource-\(UUID().uuidString).sQueue")
   
-  private var _sections = [Section<Item>(id: 0, items: [
+  private var _sections = [Section<Item>(items: [
     .message(StringRepository.loadingQueue())
   ])]
 
@@ -78,7 +78,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     items: [Item],
     error: Error? = nil
   ) -> [Section<Item>] {
-    var messages = Section<Item>(id: 0)
+    var messages = Section<Item>()
 
     guard !items.isEmpty else {
       let text = (error != nil ?
@@ -88,8 +88,8 @@ final class QueueDataSource: NSObject, SectionedDataSource {
       return [messages]
     }
 
-    var entries = Section<Item>(id: 1, title: "Episodes")
-    var feeds = Section<Item>(id: 2, title: "Podcasts")
+    var entries = Section<Item>(title: "Episodes")
+    var feeds = Section<Item>(title: "Podcasts")
 
     for item in items {
       switch item {

@@ -112,15 +112,12 @@ extension ListViewController {
       self?.feed = feed
     }
 
-    op.updatesBlock = { [weak self] sections, updates, error in
-      guard !updates.isEmpty, let cv = self?.collectionView else {
+    op.updatesBlock = { [weak self] sections, changes, error in
+      guard let cv = self?.collectionView else {
         return
       }
 
-      self?.dataSource.commit(sections: sections, updates: updates, view: cv) {
-        finished in
-        completionBlock?()
-      }
+      self?.dataSource.commit(changes, performingWith: cv)
     }
 
     op.completionBlock = completionBlock
