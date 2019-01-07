@@ -112,7 +112,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
       }
     }
 
-    static func makeUpdates(
+    fileprivate static func makeUpdates(
       sections current: [Array<Item>],
       items: [Item],
       error: Error?

@@ -75,8 +75,10 @@ final class SearchResultsController: UITableViewController {
       guard let tv = self?.tableView else {
         return
       }
-      
-      self?.dataSource.commit(batch, performingWith: tv)
+
+      UIView.performWithoutAnimation {
+        self?.dataSource.commit(batch, performingWith: .table(tv))
+      }
     }
   }
 

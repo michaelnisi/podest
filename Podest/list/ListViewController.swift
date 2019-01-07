@@ -117,7 +117,7 @@ extension ListViewController {
         return
       }
 
-      self?.dataSource.commit(changes, performingWith: cv)
+      self?.dataSource.commit(changes, performingWith: .collection(cv))
     }
 
     op.completionBlock = completionBlock

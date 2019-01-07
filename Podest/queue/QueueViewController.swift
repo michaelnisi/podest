@@ -56,36 +56,26 @@ final class QueueViewController: UITableViewController, Navigator {
       return
     }
 
-    dataSource.reload { [weak self] sections, updates, error in
+    dataSource.reload { [weak self] changes, error in
       func done() {
         self?.selectCurrentRow(animated: false, scrollPosition: .none)
-        completionBlock?(nil)
+        // TODO: Is this error relevant at call-site?
+        completionBlock?(error)
       }
 
-      guard !updates.isEmpty else {
+      guard let tv = self?.tableView else {
         return done()
       }
 
       guard animated else {
-        self?.dataSource.sections = sections
-        
-        self?.tableView.reloadData()
-        return done()
+        return UIView.performWithoutAnimation {
+          self?.dataSource.commit(changes, performingWith: .table(tv)) { _ in
+            done()
+          }
+        }
       }
 
-      self?.tableView.performBatchUpdates({
-        self?.dataSource.sections = sections
-
-        let t = self?.tableView
-
-        t?.deleteRows(at: updates.rowsToDelete, with: .none)
-        t?.insertRows(at: updates.rowsToInsert, with: .none)
-        t?.reloadRows(at: updates.rowsToReload, with: .none)
-
-        t?.deleteSections(updates.sectionsToDelete, with: .none)
-        t?.insertSections(updates.sectionsToInsert, with: .none)
-        t?.reloadSections(updates.sectionsToReload, with: .none)
-      }) { _ in
+      self?.dataSource.commit(changes, performingWith: .table(tv)) { _ in
         done()
       }
     }
@@ -95,7 +85,7 @@ final class QueueViewController: UITableViewController, Navigator {
   ///
   /// - Parameters:
   ///   - error: An upstream error to consider while updating.
-  ///   - completionHandler: Submitted to the main queue when the table view
+  ///   - completionHandler: Submitted to the main queue when the collection
   /// has been updated.
   ///
   /// The frequency of subsequent updates is limited.
@@ -112,9 +102,11 @@ final class QueueViewController: UITableViewController, Navigator {
 
     let animated = !isInitial
 
+    // Reloading first for attaining a state to update from.
+
     reload(animated) { [weak self] initialReloadError in
       self?.dataSource.update(considering: error) { newData, updateError in
-        self?.reload { error in
+        self?.reload(animated) { error in
           completionHandler?(newData, updateError ?? error)
         }
       }
@@ -244,7 +236,11 @@ extension QueueViewController {
     QueueDataSource.registerCells(with: tableView)
 
     tableView.rowHeight = UITableView.automaticDimension
-    tableView.estimatedRowHeight = 104
+
+    // Larger estimated row height appears to be better for the default
+    // subtitle table view cell, we are using here.
+
+    tableView.estimatedRowHeight = 320
 
     var separatorInset = tableView.separatorInset
     separatorInset.left = UITableView.automaticDimension

@@ -49,7 +49,6 @@
 		4CCBF20C20805F5C00A7359F /* products.json in Resources */ = {isa = PBXBuildFile; fileRef = 4CCBF20B20805F5C00A7359F /* products.json */; };
 		4CCBF21320809E4C00A7359F /* Store.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CCBF21220809E4C00A7359F /* Store.storyboard */; };
 		4CD6970B1FEBFEB900349580 /* SectionedDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6970A1FEBFEB900349580 /* SectionedDataSource.swift */; };
-		4CD6970D1FEBFF0D00349580 /* Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6970C1FEBFF0D00349580 /* Updates.swift */; };
 		4CD7414D1CCD203A00BA33CE /* init.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD7414C1CCD203A00BA33CE /* init.swift */; };
 		4CE20ACC1A31C66C0052C360 /* SearchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE20ACB1A31C66C0052C360 /* SearchResultsController.swift */; };
 		4CE20AD01A31EAAD0052C360 /* SuggestionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CE20ACF1A31EAAD0052C360 /* SuggestionCell.xib */; };
@@ -58,7 +57,6 @@
 		4CE8586D21A16B9D00D206FA /* Players.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE8586C21A16B9D00D206FA /* Players.swift */; };
 		4CE9692721DF29A000AEF409 /* diff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE9692621DF29A000AEF409 /* diff.swift */; };
 		4CE9692921DF630D00AEF409 /* SectionedDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6970A1FEBFEB900349580 /* SectionedDataSource.swift */; };
-		4CE9692A21DF630D00AEF409 /* Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6970C1FEBFF0D00349580 /* Updates.swift */; };
 		4CE9692B21DF630D00AEF409 /* diff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE9692621DF29A000AEF409 /* diff.swift */; };
 		4CE9692C21DF640300AEF409 /* ListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA2F7651FB2D58000A72195 /* ListDataSource.swift */; };
 		4CE9692D21DF640300AEF409 /* TextCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF2DE9921DDD31700A0F6EC /* TextCollectionViewCell.swift */; };
@@ -234,7 +232,6 @@
 		4CCBF20B20805F5C00A7359F /* products.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = products.json; sourceTree = "<group>"; };
 		4CCBF21220809E4C00A7359F /* Store.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Store.storyboard; sourceTree = "<group>"; };
 		4CD6970A1FEBFEB900349580 /* SectionedDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionedDataSource.swift; sourceTree = "<group>"; };
-		4CD6970C1FEBFF0D00349580 /* Updates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updates.swift; sourceTree = "<group>"; };
 		4CD7414C1CCD203A00BA33CE /* init.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = init.swift; sourceTree = "<group>"; };
 		4CE20ACB1A31C66C0052C360 /* SearchResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsController.swift; sourceTree = "<group>"; };
 		4CE20ACF1A31EAAD0052C360 /* SuggestionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SuggestionCell.xib; sourceTree = "<group>"; };
@@ -539,7 +536,6 @@
 			children = (
 				4CF2DEA121DDD8E300A0F6EC /* ReusableNib.swift */,
 				4CD6970A1FEBFEB900349580 /* SectionedDataSource.swift */,
-				4CD6970C1FEBFF0D00349580 /* Updates.swift */,
 				4CE9692621DF29A000AEF409 /* diff.swift */,
 			);
 			path = collections;
@@ -945,7 +941,6 @@
 				4CE9693021DF640300AEF409 /* MessageTableViewCell.swift in Sources */,
 				4CE9693121DF640300AEF409 /* SubtitleTableViewCell.swift in Sources */,
 				4CE9692921DF630D00AEF409 /* SectionedDataSource.swift in Sources */,
-				4CE9692A21DF630D00AEF409 /* Updates.swift in Sources */,
 				4CE9692B21DF630D00AEF409 /* diff.swift in Sources */,
 				4C010A262101D7070006CB53 /* store.swift in Sources */,
 				4C010A272101D7070006CB53 /* StoreFSM.swift in Sources */,
@@ -1013,7 +1008,6 @@
 				4EFEEBDE1E75493900169153 /* ListBackgroundView.swift in Sources */,
 				4ED4D4371EA470C90011C28C /* core.swift in Sources */,
 				4C6FB92D204C41A1005C559E /* FileProxy.swift in Sources */,
-				4CD6970D1FEBFF0D00349580 /* Updates.swift in Sources */,
 				4E8CA7091A126ADB004DE307 /* QueueViewController.swift in Sources */,
 				4C25AED51D578FA90056EE2F /* strings.swift in Sources */,
 				4E7F291B1E7D799200E12846 /* RootViewController.swift in Sources */,

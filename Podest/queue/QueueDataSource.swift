@@ -117,11 +117,11 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     sections current: [Array<Item>],
     items: [Item],
     error: Error? = nil
-  ) -> ([Array<Item>], Updates) {
+  ) -> [[Change<Item>]] {
     let sections = makeSections(items: items, error: error)
-    let updates = makeUpdates(old: current, new: sections)
+    let changes = makeChanges(old: current, new: sections)
 
-    return (sections, updates)
+    return changes
   }
 
   private weak var reloading: Operation?
@@ -132,9 +132,8 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   ///
   /// - Parameters:
   ///   - completionBlock: A block that executes on the main queue when
-  /// reloading completes, receiving new, not yet committed sections, the diff,
-  /// and an error if something went wrong.
-  func reload(completionBlock: (([Array<Item>], Updates, Error?) -> Void)? = nil) {
+  /// reloading completes, receiving the changes and maybe an error.
+  func reload(completionBlock: (([[Change<Item>]], Error?) -> Void)? = nil) {
     dispatchPrecondition(condition: .onQueue(.main))
 
     if completionBlock == nil {
@@ -170,14 +169,14 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
       dispatchPrecondition(condition: .notOnQueue(.main))
 
-      let (sections, updates) = QueueDataSource.makeUpdates(
+      let changes = QueueDataSource.makeUpdates(
         sections: self.sections,
         items: acc,
         error: error ?? self.updateError
       )
 
       DispatchQueue.main.async {
-        completionBlock?(sections, updates, error)
+        completionBlock?(changes, error)
       }
     }
   }
@@ -242,6 +241,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   /// - Parameters:
   ///   - window: Within this time interval since the last update, updating is
   /// skipped. However, preloading and removing files might be performed.
+  ///   - error: An upstream error that should be considered.
   ///   - completionHandler: This block gets submitted to the main queue when
   /// all is done, receiving a Boolean, indicating new data, and an error value
   /// if something went wrong.
