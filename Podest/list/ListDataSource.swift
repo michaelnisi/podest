@@ -411,8 +411,8 @@ extension ListDataSource: UITableViewDataSource {
       cell.images = nil
       cell.item = entry
 
-      cell.textLabel?.text = entry.feedTitle ?? entry.title
-      cell.detailTextLabel?.text = entry.title
+      cell.textLabel?.text = entry.title
+      cell.detailTextLabel?.text = StringRepository.episodeCellSubtitle(for: entry)
 
       return cell
 
