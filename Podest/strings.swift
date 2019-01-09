@@ -48,25 +48,29 @@ class StringRepository {
     }()
 
     let title1: [NSAttributedString.Key: Any] = [
-      .font: UIFont.systemFont(ofSize: 28, weight: .bold),
+      .font: UIFontMetrics.default.scaledFont(for:
+        .systemFont(ofSize: 28, weight: .bold)),
       .foregroundColor: UIColor.darkText,
       .paragraphStyle: p
     ]
 
     let h1: [NSAttributedString.Key: Any] = [
-      .font: UIFont.systemFont(ofSize: 18, weight: .bold),
+      .font: UIFontMetrics.default.scaledFont(for:
+        .systemFont(ofSize: 18, weight: .bold)),
       .foregroundColor: UIColor.darkText,
       .paragraphStyle: EntryAttributes.p
     ]
 
     let body: [NSAttributedString.Key: Any] = [
-      .font: UIFont.systemFont(ofSize: 18, weight: .medium),
+      .font: UIFontMetrics.default.scaledFont(for:
+        .systemFont(ofSize: 18, weight: .medium)),
       .foregroundColor: UIColor(named: "Asphalt")!,
       .paragraphStyle: p
     ]
 
     let caption1: [NSAttributedString.Key: Any] = [
-      .font: UIFont.preferredFont(forTextStyle: .caption1),
+      .font: UIFontMetrics.default.scaledFont(for:
+        .preferredFont(forTextStyle: .caption1)),
       .foregroundColor: UIColor.lightGray
     ]
 

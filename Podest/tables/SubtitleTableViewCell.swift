@@ -9,40 +9,62 @@
 import UIKit
 import FeedKit
 
-class SubtitleTableViewCell: UITableViewCell {
+final class SubtitleTableViewCell: UITableViewCell {
 
-  var images: Images?
-
-  var item: Imaginable? {
-    willSet {
-      guard let view = imageView else {
+  var images: Images? {
+    didSet {
+      guard images == nil else {
+        imageView?.image = SubtitleTableViewCell.fallbackImage
         return
       }
 
-      images?.cancel(displaying: view)
+      imageView?.image = nil
+    }
+  }
+
+  private var isReset = true
+
+  private static let fallbackImage = UIImage(named: "Oval")
+
+  var item: Imaginable? {
+    willSet {
+      guard let view = imageView, let images = self.images else {
+        return
+      }
+
+      images.cancel(displaying: view)
+
+      view.image = SubtitleTableViewCell.fallbackImage
+      isReset = true
     }
   }
 
   var imageQuality: ImageQuality = .medium
 
+  private var imageSizeLoaded: CGSize?
+
   override func layoutSubviews() {
     super.layoutSubviews()
 
-    guard let view = imageView, let item = self.item else {
+    // Tailor-made image loading requires a somewhat stable image size.
+
+    guard let view = imageView, let images = images, let item = self.item,
+      (isReset || view.bounds.size != imageSizeLoaded) else {
       return
     }
-
-    // Needing the image size, before loading it.
     
-    images?.loadImage(
+    images.loadImage(
       representing: item,
       into: view,
       options: FKImageLoadingOptions(
-        fallbackImage: UIImage(named: "Oval"),
+        fallbackImage: SubtitleTableViewCell.fallbackImage,
         quality: imageQuality,
         isDirect: true
       )
     )
+
+    imageSizeLoaded = view.bounds.size
+    isReset = false
   }
 
 }

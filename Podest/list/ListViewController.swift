@@ -12,7 +12,7 @@ import os.log
 
 private let log = OSLog.disabled
 
-final class ListViewController: UICollectionViewController,
+final class ListViewController: UITableViewController,
 Navigator, EntryRowSelectable {
 
   /// The URL of the feed to display.
@@ -35,7 +35,7 @@ Navigator, EntryRowSelectable {
       isSubscribed = Podest.userLibrary.has(subscription: feed.url)
     } else {
       // At launch, during state restoration, the user library might not be
-      // completely synchronized yet, so we sync and wait before configuring
+      // sufficiently synchronized yet, so we sync and wait before configuring
       // the navigation item.
 
       Podest.userLibrary.synchronize { [weak self] urls, _, error in
@@ -92,9 +92,6 @@ Navigator, EntryRowSelectable {
   }
 
   var navigationDelegate: ViewControllers?
-
-  var layout = ColumnFlowLayout()
-  
 }
 
 // MARK: - Fetching Feed and Entries
@@ -113,11 +110,11 @@ extension ListViewController {
     }
 
     op.updatesBlock = { [weak self] sections, changes, error in
-      guard let cv = self?.collectionView else {
+      guard let tv = self?.tableView else {
         return
       }
 
-      self?.dataSource.commit(changes, performingWith: .collection(cv))
+      self?.dataSource.commit(changes, performingWith: .table(tv))
     }
 
     op.completionBlock = completionBlock
@@ -136,14 +133,12 @@ extension ListViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    ListDataSource.registerCells(with: collectionView)
+    ListDataSource.registerCells(with: tableView!)
 
     navigationItem.largeTitleDisplayMode = .never
     
-    collectionView.dataSource = dataSource
-    collectionView.refreshControl = makeRefreshControl()
-
-    collectionView.collectionViewLayout = layout
+    tableView.dataSource = dataSource
+    tableView.refreshControl = makeRefreshControl()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -166,14 +161,14 @@ extension ListViewController {
       super.viewWillLayoutSubviews()
     }
 
-    guard collectionView.refreshControl?.isHidden ?? true else {
+    guard tableView.refreshControl?.isHidden ?? true else {
       return
     }
 
     let insets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
 
-    collectionView.scrollIndicatorInsets = insets
-    collectionView.contentInset = insets
+    tableView.scrollIndicatorInsets = insets
+    tableView.contentInset = insets
   }
 
   override func viewWillDisappear(_ animated: Bool) {
@@ -202,7 +197,7 @@ extension ListViewController {
     with coordinator: UIViewControllerTransitionCoordinator) {
     // During transition we want our layout to prepare with automatic size,
     // saving us from invalid sizes.
-    layout.itemSize = UICollectionViewFlowLayout.automaticSize
+//    layout.itemSize = UICollectionViewFlowLayout.automaticSize
 
     super.willTransition(to: newCollection, with: coordinator)
   }
@@ -264,7 +259,7 @@ extension ListViewController {
   
   override func scrollViewDidEndDragging(
     _ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-    guard let rc = collectionView.refreshControl, rc.isRefreshing else {
+    guard let rc = tableView.refreshControl, rc.isRefreshing else {
       return
     }
 
@@ -278,24 +273,25 @@ extension ListViewController {
   
 }
 
-// MARK: - UICollectionViewDelegate
+// MARK: - UITableViewDelegate
 
 extension ListViewController {
 
-  override func collectionView(
-    _ collectionView: UICollectionView,
-    shouldSelectItemAt indexPath: IndexPath
-  ) -> Bool {
+  override func tableView(
+    _ tableView: UITableView,
+    willSelectRowAt indexPath: IndexPath
+  ) -> IndexPath? {
     guard case .entry? = dataSource.itemAt(indexPath: indexPath) else {
-      return false
+      return nil
     }
 
-    return true
+    return indexPath
   }
 
-  
-  override func collectionView(
-    _ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+  override func tableView(
+    _ tableView: UITableView,
+    didSelectRowAt indexPath: IndexPath
+  ) {
     guard let entry = dataSource.entry(at: indexPath) else {
       return
     }
@@ -310,8 +306,10 @@ extension ListViewController {
 extension ListViewController: EntryProvider {
   
   var entry: Entry? {
-    return dataSource.entry(at: collectionView.indexPathsForSelectedItems?.first ??
-      IndexPath(row: 0, section: 0))
+    return dataSource.entry(at:
+      tableView?.indexPathForSelectedRow ??
+      IndexPath(row: 0, section: 0)
+    )
   }
   
 }

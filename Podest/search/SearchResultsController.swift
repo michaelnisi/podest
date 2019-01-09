@@ -153,6 +153,7 @@ extension SearchResultsController {
     super.traitCollectionDidChange(previousTraitCollection)
 
     clearSelection(true)
+    dataSource.previousTraitCollection = previousTraitCollection
 
     // Waiting for the searchbar to be resized by SearchController.
 

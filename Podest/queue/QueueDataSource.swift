@@ -14,7 +14,7 @@ private let log = OSLog.disabled
 
 /// Provides access to queue and subscription data.
 final class QueueDataSource: NSObject, SectionedDataSource {
-  
+
   /// Enumerates queue data source item types.
   enum Item: Hashable {
     case entry(Entry)
@@ -39,6 +39,9 @@ final class QueueDataSource: NSObject, SectionedDataSource {
       sQueue.sync { _sections = newValue }
     }
   }
+
+  /// The previous trait collection.
+  var previousTraitCollection: UITraitCollection?
 
   /// This data source is showing a message.
   var isMessage: Bool {
@@ -382,13 +385,23 @@ extension QueueDataSource: UITableViewDataSource {
         withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
       ) as! SubtitleTableViewCell
 
+      // Supporting Dynamic Type.
+      if tableView.traitCollection != previousTraitCollection {
+        cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
+        cell.textLabel?.numberOfLines = 0
+
+        cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+        cell.detailTextLabel?.numberOfLines = 0
+        cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
+      }
+
       cell.images = Podest.images
       cell.item = entry
-      cell.textLabel?.text = entry.title
-      cell.detailTextLabel?.text = StringRepository.episodeCellSubtitle(for: entry)
-      cell.imageView?.image = UIImage(named: "Oval")
       cell.imageQuality = .high
-    
+
+      cell.textLabel?.text = entry.feedTitle ?? entry.title
+      cell.detailTextLabel?.text = entry.title
+
       return cell
     case .feed:
       // We might reuse the feed cell from search here.

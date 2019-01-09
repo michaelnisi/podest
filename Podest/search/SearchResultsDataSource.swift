@@ -21,10 +21,6 @@ final class SearchResultsDataSource: NSObject, SectionedDataSource {
     case find(Find)
     case message(NSAttributedString)
   }
-  
-  var sections = [Array<Item>]()
-
-  private var requests: [ImageRequest]?
 
   private let repo: Searching
 
@@ -44,6 +40,15 @@ final class SearchResultsDataSource: NSObject, SectionedDataSource {
       operation?.cancel()
     }
   }
+
+  /// The current sections.
+  var sections = [Array<Item>]()
+
+  /// In-flight image requests.
+  private var requests: [ImageRequest]?
+
+  /// The previous trait collection.
+  var previousTraitCollection: UITraitCollection?
   
 }
 
@@ -310,9 +315,16 @@ extension SearchResultsDataSource: UITableViewDataSource {
         ) as! SubtitleTableViewCell
 
         cell.item = nil
-        cell.textLabel?.text = feed.title
-        cell.detailTextLabel?.text = feed.author
         cell.imageView?.image = nil
+
+        cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+        cell.textLabel?.numberOfLines = 0
+        cell.textLabel?.text = feed.title
+
+        cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .footnote)
+        cell.detailTextLabel?.numberOfLines = 0
+        cell.detailTextLabel?.textColor = .darkText
+        cell.detailTextLabel?.text = feed.author
 
         return cell
       case .suggestedEntry(let entry):
@@ -321,21 +333,35 @@ extension SearchResultsDataSource: UITableViewDataSource {
         ) as! SubtitleTableViewCell
 
         cell.item = nil
-        cell.textLabel?.text = entry.title
-        cell.detailTextLabel?.text = entry.feedTitle
         cell.imageView?.image = nil
+
+        cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+        cell.textLabel?.numberOfLines = 0
+        cell.textLabel?.text = entry.title
+
+        cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .footnote)
+        cell.detailTextLabel?.numberOfLines = 0
+        cell.detailTextLabel?.textColor = .darkText
+        cell.detailTextLabel?.text = entry.feedTitle
 
         return cell
       case .foundFeed(let feed):
         let cell = tableView.dequeueReusableCell(
           withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
-        ) as! SubtitleTableViewCell
+          ) as! SubtitleTableViewCell
+
+        cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
+        cell.textLabel?.numberOfLines = 0
+
+        cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+        cell.detailTextLabel?.numberOfLines = 0
+        cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
 
         cell.images = Podest.images
         cell.item = feed
+
         cell.textLabel?.text = feed.title
         cell.detailTextLabel?.text = StringRepository.feedCellSubtitle(for: feed)
-        cell.imageView?.image = UIImage(named: "Oval")
 
         return cell
       }

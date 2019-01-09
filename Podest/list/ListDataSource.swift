@@ -17,10 +17,12 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
   /// Enumerates items provided by this data source.
   enum Item: Hashable {
+
+    /// Contains the feed and, optionally, its already formatted summary.
+    case feed(Feed, NSAttributedString?)
+
     case entry(Entry)
-    case summary(NSAttributedString)
     case message(NSAttributedString)
-    // TODO: case image(Imaginable)
   }
 
   /// An abstract operation that does nothing.
@@ -81,15 +83,15 @@ final class ListDataSource: NSObject, SectionedDataSource {
         return [messages]
       }
 
-      var summary = Set<Item>()
+      var feeds = Set<Item>()
       var entries = [Item]()
 
-      // Fishing existing summary out of current sections.
+      // Keeping some items.
       for section in current {
         for item in section {
           switch item {
-          case .summary:
-            summary.insert(item)
+          case .feed:
+            feeds.insert(item)
           case .entry, .message:
             continue
           }
@@ -100,16 +102,14 @@ final class ListDataSource: NSObject, SectionedDataSource {
         switch item {
         case .entry:
           entries.append(item)
-        case .summary:
-          summary.insert(item)
+        case .feed:
+          feeds.insert(item)
         case .message:
           messages.append(item)
         }
       }
 
-      return [Array(summary), entries].filter {
-        !$0.isEmpty
-      }
+      return [Array(feeds), entries].filter { !$0.isEmpty }
     }
 
     fileprivate static func makeUpdates(
@@ -132,16 +132,20 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
     var submitted: [Array<Item>]?
 
-    fileprivate func submitSummary(_ string: String?, error: Error? = nil) -> Void {
+    fileprivate func submitFeed(_ feed: Feed?, error: Error? = nil) -> Void {
       guard !isCancelled else {
         return
       }
 
       var items = [Item]()
 
-      if let str = string {
-        let text = StringRepository.attribute(summary: str)
-        items.append(.summary(text))
+      let summary: NSAttributedString? = {
+        guard let s = feed?.summary else { return nil }
+        return StringRepository.attribute(summary: s)
+      }()
+
+      if let f = feed {
+        items.append(.feed(f, summary))
       }
 
       let (sections, updates) = ListDataSourceOperation.makeUpdates(
@@ -171,8 +175,8 @@ final class ListDataSource: NSObject, SectionedDataSource {
         return
       }
 
-      if let summary = originalFeed?.summary {
-        return submitSummary(summary)
+      if originalFeed?.summary != nil {
+        return submitFeed(originalFeed)
       }
 
       let feed = findFeed()
@@ -187,7 +191,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
         cb?(feed, error)
       }
 
-      submitSummary(feed?.summary, error: error)
+      submitFeed(feed, error: error)
     }
 
   }
@@ -267,10 +271,6 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
   }
 
-  private let operationQueue = OperationQueue()
-
-  var sections = [Array<Item>]()
-
   private let browser: Browsing
 
   /// Creates a new list data source.
@@ -282,6 +282,16 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
     super.init()
   }
+
+  private let operationQueue = OperationQueue()
+
+  var sections = [Array<Item>]()
+
+  /// The previous trait collection.
+  ///
+  /// The previous trait collection can sometimes help to reason about efficient
+  /// cell resetting, especially when using default cells, like we do.
+  var previousTraitCollection: UITraitCollection?
 
 }
 
@@ -330,60 +340,103 @@ extension ListDataSource {
 
 }
 
-// MARK: - Providing Data and Views
+// MARK: - UITableViewDataSource
 
-extension ListDataSource: UICollectionViewDataSource {
+extension ListDataSource: UITableViewDataSource {
 
   /// Registers nib objects with `collectionView` under identifiers.
-  static func registerCells(with collectionView: UICollectionView) {
+  static func registerCells(with tableView: UITableView) {
     let cells = [
-      (UICollectionView.Nib.text.nib, UICollectionView.Nib.text.id)
+      (UITableView.Nib.message.nib, UITableView.Nib.message.id),
+      (UITableView.Nib.subtitle.nib, UITableView.Nib.subtitle.id)
     ]
 
     for cell in cells {
-      collectionView.register(cell.0, forCellWithReuseIdentifier: cell.1)
+      tableView.register(cell.0, forCellReuseIdentifier: cell.1)
     }
   }
 
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return sections[section].count
-  }
-
-  func numberOfSections(in collectionView: UICollectionView) -> Int {
+  func numberOfSections(in tableView: UITableView) -> Int {
     return sections.count
   }
 
-  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return sections[section].count
+  }
+
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     guard let item = itemAt(indexPath: indexPath) else {
       fatalError("no item at index path: \(indexPath)")
     }
 
     switch item {
+
+    case .feed(let feed, let summary):
+      let cell = tableView.dequeueReusableCell(
+        withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
+        ) as! SubtitleTableViewCell
+
+      cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
+      cell.textLabel?.numberOfLines = 0
+
+      cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+      cell.detailTextLabel?.numberOfLines = 0
+      cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
+
+      cell.detailTextLabel?.text = nil
+
+      cell.images = Podest.images
+      cell.imageQuality = .high
+      cell.item = feed
+
+      cell.textLabel?.text = feed.title
+      cell.detailTextLabel?.attributedText = summary
+
+      return cell
     case .entry(let entry):
-      let cell = collectionView.dequeueReusableCell(
-        withReuseIdentifier: UICollectionView.Nib.text.id, for: indexPath
-      ) as! TextCollectionViewCell
+      let cell = tableView.dequeueReusableCell(
+        withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
+      ) as! SubtitleTableViewCell
 
-      cell.label.text = entry.title
+
+      cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
+      cell.textLabel?.numberOfLines = 0
+
+      cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+      cell.detailTextLabel?.numberOfLines = 0
+      cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
+
+      cell.detailTextLabel?.attributedText = nil
+
+      cell.images = nil
+      cell.item = entry
+
+      cell.textLabel?.text = entry.feedTitle ?? entry.title
+      cell.detailTextLabel?.text = entry.title
 
       return cell
-    case .summary(let text):
-      let cell = collectionView.dequeueReusableCell(
-        withReuseIdentifier: UICollectionView.Nib.text.id, for: indexPath
-      ) as! TextCollectionViewCell
 
-      cell.label.attributedText = text
-
-      return cell
     case .message(let text):
-      let cell = collectionView.dequeueReusableCell(
-        withReuseIdentifier: UICollectionView.Nib.text.id, for: indexPath
-      ) as! TextCollectionViewCell
+      let cell = tableView.dequeueReusableCell(
+        withIdentifier: UITableView.Nib.message.id, for: indexPath
+      ) as! MessageTableViewCell
 
-      cell.label.attributedText = text
+      cell.titleLabel.attributedText = text
+      cell.selectionStyle = .none
+      cell.targetHeight = tableView.bounds.height * 0.6
+
+      tableView.separatorStyle = .none
 
       return cell
     }
+  }
+
+  var isMessage: Bool {
+    guard  case .message? = sections.first?.first else {
+      return false
+    }
+
+    return true
   }
 
 }
@@ -402,7 +455,7 @@ extension ListDataSource: EntryIndexPathMapping {
     switch item {
     case .entry(let entry):
       return entry
-    case .summary, .message:
+    case .feed, .message:
       return nil
     }
   }
@@ -418,7 +471,7 @@ extension ListDataSource: EntryIndexPathMapping {
           if e == entry {
             return IndexPath(row: r, section: s)
           }
-        case .summary, .message:
+        case .feed, .message:
           return nil
         }
       }

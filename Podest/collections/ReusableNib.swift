@@ -35,21 +35,15 @@ struct UITableViewNib {
     nib: UINib(nibName: "SubtitleTableViewCell", bundle: .main),
     type: SubtitleTableViewCell.self
   )
-
-  static let summary = ReusableNib(
-    id: "SummaryTableViewCellID",
-    nib: UINib(nibName: "SummaryTableViewCell", bundle: .main),
-    type: SummaryTableViewCell.self
-  )
-
+  
 }
 
 struct UICollectionViewNib {
 
-  static let text = ReusableNib(
-    id: "TextCollectionViewCellID",
-    nib: UINib(nibName: "TextCollectionViewCell", bundle: .main),
-    type: TextCollectionViewCell.self
+  static let message = ReusableNib(
+    id: "MessageCellID",
+    nib: UINib(nibName: "MessageCollectionViewCell", bundle: .main),
+    type: MessageCollectionViewCell.self
   )
 
 }

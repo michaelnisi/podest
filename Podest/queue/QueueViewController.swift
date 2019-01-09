@@ -236,11 +236,7 @@ extension QueueViewController {
     QueueDataSource.registerCells(with: tableView)
 
     tableView.rowHeight = UITableView.automaticDimension
-
-    // Larger estimated row height appears to be better for the default
-    // subtitle table view cell, we are using here.
-
-    tableView.estimatedRowHeight = 320
+    tableView.estimatedRowHeight = 104
 
     var separatorInset = tableView.separatorInset
     separatorInset.left = UITableView.automaticDimension
@@ -303,6 +299,9 @@ extension QueueViewController {
     let insets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
     tableView.scrollIndicatorInsets = insets
     tableView.contentInset = insets
+
+
+    dataSource.previousTraitCollection = previousTraitCollection
 
     refreshControl = makeRefreshControl()
 

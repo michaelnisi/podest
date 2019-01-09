@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,24 +19,19 @@
                 <rect key="frame" x="0.0" y="0.0" width="520" height="294"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Cpi-Mk-OMx">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GQY-59-BHX">
                         <rect key="frame" x="20" y="0.0" width="480" height="294"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GQY-59-BHX">
-                                <rect key="frame" x="0.0" y="0.0" width="480" height="294"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
-                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                    </stackView>
+                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                        <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
             </view>
             <constraints>
-                <constraint firstItem="Cpi-Mk-OMx" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="topMargin" id="NYi-CA-z8d"/>
-                <constraint firstAttribute="trailingMargin" secondItem="Cpi-Mk-OMx" secondAttribute="trailing" id="Tr7-58-GAn"/>
-                <constraint firstItem="Cpi-Mk-OMx" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leadingMargin" id="ccF-51-Gad"/>
-                <constraint firstAttribute="bottomMargin" secondItem="Cpi-Mk-OMx" secondAttribute="bottom" id="pu8-pi-zlC"/>
+                <constraint firstItem="GQY-59-BHX" firstAttribute="trailing" secondItem="gTV-IL-0wX" secondAttribute="trailingMargin" id="g2e-XD-mPL"/>
+                <constraint firstItem="GQY-59-BHX" firstAttribute="bottom" secondItem="gTV-IL-0wX" secondAttribute="bottomMargin" id="jng-9t-rlh"/>
+                <constraint firstItem="GQY-59-BHX" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="topMargin" id="mMv-Eg-S9T"/>
+                <constraint firstItem="GQY-59-BHX" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leadingMargin" id="qrg-Ud-yzn"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <size key="customSize" width="520" height="294"/>
