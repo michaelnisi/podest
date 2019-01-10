@@ -402,6 +402,8 @@ extension QueueDataSource: UITableViewDataSource {
       cell.textLabel?.text = entry.feedTitle ?? entry.title
       cell.detailTextLabel?.text = entry.title
 
+      cell.accessoryType = .disclosureIndicator
+
       return cell
     case .feed:
       // We might reuse the feed cell from search here.

@@ -1,5 +1,5 @@
 //
-//  strings.swift - get strings
+//  strings.swift - format strings and attributed strings
 //  Podest
 //
 //  Created by Michael Nisi on 07/08/16.
@@ -12,8 +12,166 @@ import os.log
 
 private let log = OSLog.disabled
 
-/// Cached string formatting.
+// MARK: - Summaries
+
+private protocol Summarizable: Hashable {
+  var summary: String? { get }
+  var title: String { get }
+  var author: String? { get }
+  var guid: String { get }
+}
+
+extension Entry: Summarizable {}
+
+extension Feed: Summarizable {
+  var guid: String {
+    return self.url // Anything unique for NSCache.
+  }
+}
+
+private struct SummaryAttributes {
+
+  static var p: NSParagraphStyle = {
+    var p = NSMutableParagraphStyle()
+
+    p.lineSpacing = 2
+
+    return p
+  }()
+
+  let title1: [NSAttributedString.Key: Any] = [
+    .font: UIFontMetrics.default.scaledFont(for:
+      .systemFont(ofSize: 29, weight: .bold)),
+    .foregroundColor: UIColor.darkText,
+    .paragraphStyle: p
+  ]
+
+  let h1: [NSAttributedString.Key: Any] = [
+    .font: UIFontMetrics.default.scaledFont(for:
+      .systemFont(ofSize: 19, weight: .bold)),
+    .foregroundColor: UIColor.darkText,
+    .paragraphStyle: p
+  ]
+
+  let body: [NSAttributedString.Key: Any] = [
+    .font: UIFontMetrics.default.scaledFont(for:
+      .systemFont(ofSize: 19, weight: .medium)),
+    .foregroundColor: UIColor(named: "Asphalt")!,
+    .paragraphStyle: p
+  ]
+
+}
+
+/// Parses feeds and entries into attributed strings.
+private struct Summary<Item> {
+  let item: Item
+  let items: NSCache<NSString, NSAttributedString>
+  let attributes: SummaryAttributes
+
+  func attribute(summary: String?) -> NSAttributedString {
+    let html = HTMLAttributor()
+
+    os_log("attributing: %@",
+           log: log, type: .debug, String(describing: summary))
+
+    let str = summary ?? """
+    We cannot format the summary of this item at this time.
+    """
+
+    do {
+      let tree = try html.parse(str)
+
+      var styles = HTMLAttributor.defaultStyles
+
+      styles["root"] = attributes.body
+      styles["a"] = attributes.body
+      styles["h1"] = attributes.h1
+
+      return try html.attributedString(tree, styles: styles)
+    } catch {
+      os_log("parsing summary failed: %@", log: log, error as CVarArg)
+      return NSAttributedString(string: str, attributes: attributes.body)
+    }
+  }
+}
+
+extension Summary where Item: Summarizable {
+
+  var attributedString: NSAttributedString {
+    if let cached = items.object(forKey: item.guid as NSString) {
+      return cached
+    }
+
+    let str = NSMutableAttributedString(
+      string: item.title, attributes: attributes.title1)
+
+    str.append(
+      NSAttributedString(string: "\n\n", attributes: attributes.body))
+
+    str.append(
+      attribute(summary: item.summary))
+
+    items.setObject(str, forKey: item.guid as NSString)
+
+    return str
+  }
+
+}
+
+// MARK: - Core
+
+/// All static cached string formatting.
+///
+/// Why wouldn’t this be an instance, referenced from Podest, like
+/// everything else? For localisation it probably would, no?
 class StringRepository {
+
+  private static var summaryAttributes = SummaryAttributes()
+
+  static func purge() {
+    durations.removeAllObjects()
+    summaries.removeAllObjects()
+    episodeCellSubtitles.removeAllObjects()
+  }
+
+}
+
+// MARK: - Entries and Feeds
+
+extension StringRepository {
+
+  /// Cached summaries of feeds and entries.
+  private static var summaries: NSCache<NSString, NSAttributedString> = {
+    let cache = NSCache<NSString, NSAttributedString>()
+
+    cache.countLimit = 512
+
+    return cache
+  }()
+
+  /// Returns an attributed summary with headline.
+  static func makeSummaryWithHeadline(feed: Feed) -> NSAttributedString {
+    return Summary<Feed>(
+      item: feed,
+      items: summaries,
+      attributes: summaryAttributes
+    ).attributedString
+  }
+
+  /// Returns an attributed summary with headline.
+  static func makeSummaryWithHeadline(entry: Entry) -> NSAttributedString {
+    return Summary<Entry>(
+      item: entry,
+      items: summaries,
+      attributes: summaryAttributes
+    ).attributedString
+  }
+
+}
+
+// MARK: - Times and Dates
+
+extension StringRepository {
 
   private static var naturalDateFormatter: DateFormatter = {
     let df = DateFormatter()
@@ -28,124 +186,6 @@ class StringRepository {
 
     return df
   }()
-
-  private static var entries: NSCache<NSString, NSAttributedString> = {
-    let cache = NSCache<NSString, NSAttributedString>()
-
-    cache.countLimit = 256
-
-    return cache
-  }()
-  
-  private struct EntryAttributes {
-
-    static var p: NSParagraphStyle = {
-      var p = NSMutableParagraphStyle()
-
-      p.lineSpacing = 2
-
-      return p
-    }()
-
-    let title1: [NSAttributedString.Key: Any] = [
-      .font: UIFontMetrics.default.scaledFont(for:
-        .systemFont(ofSize: 28, weight: .bold)),
-      .foregroundColor: UIColor.darkText,
-      .paragraphStyle: p
-    ]
-
-    let h1: [NSAttributedString.Key: Any] = [
-      .font: UIFontMetrics.default.scaledFont(for:
-        .systemFont(ofSize: 18, weight: .bold)),
-      .foregroundColor: UIColor.darkText,
-      .paragraphStyle: EntryAttributes.p
-    ]
-
-    let body: [NSAttributedString.Key: Any] = [
-      .font: UIFontMetrics.default.scaledFont(for:
-        .systemFont(ofSize: 18, weight: .medium)),
-      .foregroundColor: UIColor(named: "Asphalt")!,
-      .paragraphStyle: p
-    ]
-
-    let caption1: [NSAttributedString.Key: Any] = [
-      .font: UIFontMetrics.default.scaledFont(for:
-        .preferredFont(forTextStyle: .caption1)),
-      .foregroundColor: UIColor.lightGray
-    ]
-
-  }
-  
-  private static var entryAttributes = EntryAttributes()
-
-  static func purge() {
-    durations.removeAllObjects()
-    entries.removeAllObjects()
-    episodeCellSubtitles.removeAllObjects()
-  }
-
-}
-
-// MARK: - Entries and Feeds
-
-extension StringRepository {
-
-  /// Returns an attributed String produced from an entry’s or feed’s summary.
-  static func attribute(summary: String?) -> NSAttributedString {
-    let html = HTMLAttributor()
-
-    os_log("attributing: %@",
-           log: log, type: .debug, String(describing: summary))
-
-    let str = summary ?? """
-      Unfortunately, I have no summary for this awesome content, at this time.
-    """
-
-    do {
-      let tree = try html.parse(str)
-
-      var styles = HTMLAttributor.defaultStyles
-
-      styles["root"] = entryAttributes.body
-      styles["a"] = entryAttributes.body
-      styles["h1"] = entryAttributes.h1
-
-      return try html.attributedString(tree, styles: styles)
-    } catch {
-      os_log("parsing summary failed: %@", log: log, error as CVarArg)
-      return NSAttributedString(string: str, attributes: entryAttributes.body)
-    }
-  }
-
-
-  /// Synchronously, produces an attributed string for `entry`.
-  static func string(for entry: Entry) -> NSAttributedString {
-    if let cached = entries.object(forKey: entry.guid as NSString) {
-      return cached
-    }
-
-    let attrString = NSMutableAttributedString(
-      string: entry.title, attributes: entryAttributes.title1)
-
-    func newline() {
-      attrString.append(NSAttributedString(
-        string: "\n\n", attributes: entryAttributes.body))
-    }
-
-    newline()
-
-    attrString.append(attribute(summary: entry.summary))
-
-    entries.setObject(attrString, forKey: entry.guid as NSString)
-
-    return attrString
-  }
-
-}
-
-// MARK: - Times and Dates
-
-extension StringRepository {
 
   static func string(from date: Date) -> String {
     return naturalDateFormatter.string(from: date)
@@ -238,8 +278,6 @@ extension StringRepository {
     return subtitle as String
   }
 
-  // MARK: Episode Cell Subtitles
-
   private static var episodeCellSubtitles: NSCache<NSNumber, NSString> = {
     let c = NSCache<NSNumber, NSString>()
 
@@ -247,6 +285,17 @@ extension StringRepository {
 
     return c
   }()
+
+  /// Prepends `string` with the first sentence of `other`.
+  static func prepend(string: String, withFirstSentenceOf other: String?) -> String {
+    let marks = CharacterSet(charactersIn: ".?!")
+
+    guard let first = other?.components(separatedBy: marks).first else {
+      return string
+    }
+
+    return "\(first). \(string)"
+  }
 
   static func episodeCellSubtitle(for entry: Entry) -> String {
     let key = entry.hashValue as NSNumber
@@ -260,9 +309,11 @@ extension StringRepository {
         return updated
       }()
 
-      episodeCellSubtitles.setObject(subtitle as NSString, forKey: key)
+      let r = prepend(string: subtitle, withFirstSentenceOf: entry.subtitle)
 
-      return subtitle
+      episodeCellSubtitles.setObject(r as NSString, forKey: key)
+
+      return r
     }
     
     return subtitle as String
@@ -299,8 +350,11 @@ extension StringRepository {
     return NSMutableAttributedString(string:
       "No Episode Selected", attributes: headline)
   }
-  
-  private static func makeMessage(
+
+  /// Returns a message composed of `title` and `hint`.
+  ///
+  /// Always hint, suggesting a concrete action.
+  static func makeMessage(
     title: String,
     hint: String
   ) -> NSAttributedString {

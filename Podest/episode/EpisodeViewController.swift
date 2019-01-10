@@ -99,7 +99,8 @@ extension EpisodeViewController {
   override func viewDidLoad() {
     resetView()
 
-    feedButton.titleLabel?.numberOfLines = 2
+    feedButton.titleLabel?.numberOfLines = 0
+
     feedButton.addTarget(
       self, action: #selector(selectFeed), for: .touchUpInside)
 
@@ -338,7 +339,8 @@ extension EpisodeViewController {
     }
 
     DispatchQueue.global(qos: .userInteractive).async { [weak self] in
-      let attributedText = StringRepository.string(for: entry)
+      let attributedText = StringRepository.makeSummaryWithHeadline(entry: entry)
+      
       DispatchQueue.main.async {
         self?.content?.attributedText = attributedText
 

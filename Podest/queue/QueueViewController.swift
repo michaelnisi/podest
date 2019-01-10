@@ -322,7 +322,7 @@ extension QueueViewController {
     _ tableView: UITableView,
     willSelectRowAt indexPath: IndexPath
   ) -> IndexPath? {
-    if case .message? = dataSource.itemAt(indexPath: indexPath) {
+    guard case .entry? = dataSource.itemAt(indexPath: indexPath) else {
       return nil
     }
 
