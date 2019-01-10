@@ -35,6 +35,12 @@ struct UITableViewNib {
     nib: UINib(nibName: "SubtitleTableViewCell", bundle: .main),
     type: SubtitleTableViewCell.self
   )
+
+  static let display = ReusableNib(
+    id: "DisplayTableViewCellID",
+    nib: UINib(nibName: "DisplayTableViewCell", bundle: .main),
+    type: DisplayTableViewCell.self
+  )
   
 }
 

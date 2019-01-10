@@ -31,11 +31,18 @@ final class ListDataSource: NSObject, SectionedDataSource {
     let url: String
     let originalFeed: Feed?
     let forcing: Bool
+    let isCompact: Bool
 
-    init(url: String, originalFeed: Feed?, forcing: Bool = false) {
+    init(
+      url: String,
+      originalFeed: Feed?,
+      forcing: Bool = false,
+      isCompact: Bool = false
+    ) {
       self.url = url
       self.originalFeed = originalFeed
       self.forcing = forcing
+      self.isCompact = isCompact
 
       super.init()
     }
@@ -44,6 +51,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
       self.url = operation.url
       self.originalFeed = operation.originalFeed
       self.forcing = operation.forcing
+      self.isCompact = operation.isCompact
 
       super.init()
     }
@@ -69,7 +77,8 @@ final class ListDataSource: NSObject, SectionedDataSource {
     static func makeSections(
       sections current: [Array<Item>],
       items: [Item],
-      error: Error?
+      error: Error?,
+      isCompact: Bool
     ) -> [Array<Item>] {
       var messages = [Item]()
 
@@ -91,6 +100,9 @@ final class ListDataSource: NSObject, SectionedDataSource {
         for item in section {
           switch item {
           case .feed:
+            guard !isCompact else {
+              continue
+            }
             feeds.insert(item)
           case .entry, .message:
             continue
@@ -103,10 +115,23 @@ final class ListDataSource: NSObject, SectionedDataSource {
         case .entry:
           entries.append(item)
         case .feed:
+          guard !isCompact else {
+            let msg = StringRepository.makeMessage(
+              title: "Loading",
+              hint: "Please wait for your episodes to load."
+            )
+
+            messages.append(.message(msg))
+            continue
+          }
           feeds.insert(item)
         case .message:
           messages.append(item)
         }
+      }
+
+      guard messages.isEmpty else {
+        return [[messages.first!]]
       }
 
       return [Array(feeds), entries].filter { !$0.isEmpty }
@@ -115,9 +140,16 @@ final class ListDataSource: NSObject, SectionedDataSource {
     fileprivate static func makeUpdates(
       sections current: [Array<Item>],
       items: [Item],
-      error: Error?
+      error: Error?,
+      isCompact: Bool
     ) -> ([Array<Item>], [[Change<Item>]]) {
-      let sections = makeSections(sections: current, items: items, error: error)
+      let sections = makeSections(
+        sections: current,
+        items: items,
+        error: error,
+        isCompact: isCompact
+      )
+
       let changes = makeChanges(old: current, new: sections)
 
       return (sections, changes)
@@ -139,19 +171,18 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
       var items = [Item]()
 
-      let summary: NSAttributedString? = {
-        guard let s = feed?.summary else { return nil }
-        return StringRepository.attribute(summary: s)
-      }()
-
       if let f = feed {
-        items.append(.feed(f, summary))
+        let s = f.summary != nil ? StringRepository
+          .makeSummaryWithHeadline(feed: f) : nil
+        
+        items.append(.feed(f, s))
       }
 
       let (sections, updates) = ListDataSourceOperation.makeUpdates(
         sections: current,
         items: items,
-        error: error
+        error: error,
+        isCompact: isCompact
       )
 
       guard !isCancelled else {
@@ -238,7 +269,8 @@ final class ListDataSource: NSObject, SectionedDataSource {
       let (sections, updates) = ListDataSourceOperation.makeUpdates(
         sections: current,
         items: items,
-        error: error
+        error: error,
+        isCompact: isCompact
       )
 
       guard !isCancelled else {
@@ -263,8 +295,17 @@ final class ListDataSource: NSObject, SectionedDataSource {
     ///   - url: The URL of the podcast feed.
     ///   - originalFeed: The original feed object if available.
     ///   - forcing: Overrides cache settings, forcing reloading to some degree.
-    override init(url: String, originalFeed: Feed?, forcing: Bool = false) {
-      super.init(url: url, originalFeed: originalFeed, forcing: forcing)
+    override init(
+      url: String,
+      originalFeed: Feed?,
+      forcing: Bool = false,
+      isCompact: Bool = false) {
+      super.init(
+        url: url,
+        originalFeed: originalFeed,
+        forcing: forcing,
+        isCompact: isCompact
+      )
     }
 
     // This stooge operation has no main function and completes instantly.
@@ -292,7 +333,6 @@ final class ListDataSource: NSObject, SectionedDataSource {
   /// The previous trait collection can sometimes help to reason about efficient
   /// cell resetting, especially when using default cells, like we do.
   var previousTraitCollection: UITraitCollection?
-
 }
 
 // MARK: - Fetching Entries
@@ -348,7 +388,8 @@ extension ListDataSource: UITableViewDataSource {
   static func registerCells(with tableView: UITableView) {
     let cells = [
       (UITableView.Nib.message.nib, UITableView.Nib.message.id),
-      (UITableView.Nib.subtitle.nib, UITableView.Nib.subtitle.id)
+      (UITableView.Nib.subtitle.nib, UITableView.Nib.subtitle.id),
+      (UITableView.Nib.display.nib, UITableView.Nib.display.id)
     ]
 
     for cell in cells {
@@ -373,24 +414,25 @@ extension ListDataSource: UITableViewDataSource {
 
     case .feed(let feed, let summary):
       let cell = tableView.dequeueReusableCell(
-        withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
-        ) as! SubtitleTableViewCell
+        withIdentifier: UITableView.Nib.display.id, for: indexPath
+      ) as! DisplayTableViewCell
 
-      cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
-      cell.textLabel?.numberOfLines = 0
+//      cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
+//      cell.textLabel?.numberOfLines = 0
+//
+//      cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+//      cell.detailTextLabel?.numberOfLines = 0
+//      cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
 
-      cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .body)
-      cell.detailTextLabel?.numberOfLines = 0
-      cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
-
-      cell.detailTextLabel?.text = nil
+//      cell.detailTextLabel?.text = nil
 
       cell.images = Podest.images
       cell.imageQuality = .high
       cell.item = feed
 
-      cell.textLabel?.text = feed.title
-      cell.detailTextLabel?.attributedText = summary
+//      cell.textLabel?.text = feed.title
+      cell.textView?.attributedText = summary
+      cell.selectionStyle = .none
 
       return cell
     case .entry(let entry):
@@ -412,7 +454,10 @@ extension ListDataSource: UITableViewDataSource {
       cell.item = entry
 
       cell.textLabel?.text = entry.title
+
       cell.detailTextLabel?.text = StringRepository.episodeCellSubtitle(for: entry)
+
+      cell.accessoryType = .disclosureIndicator
 
       return cell
 

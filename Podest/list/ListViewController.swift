@@ -92,6 +92,7 @@ Navigator, EntryRowSelectable {
   }
 
   var navigationDelegate: ViewControllers?
+
 }
 
 // MARK: - Fetching Feed and Entries
@@ -103,7 +104,7 @@ extension ListViewController {
       fatalError("cannot refresh without URL")
     }
 
-    let op = ListDataSource.UpdateOperation(url: url, originalFeed: feed)
+    let op = ListDataSource.UpdateOperation(url: url, originalFeed: feed, isCompact: isCompact)
 
     op.feedBlock = { [weak self] feed, error in
       self?.feed = feed
@@ -114,7 +115,14 @@ extension ListViewController {
         return
       }
 
-      self?.dataSource.commit(changes, performingWith: .table(tv))
+      self?.dataSource.commit(changes, performingWith: .table(tv)) { _ in
+        guard let entry = self?.navigationDelegate?.entry else {
+          return
+        }
+
+        self?.selectRow(representing: entry, animated: true)
+      }
+
     }
 
     op.completionBlock = completionBlock
@@ -138,7 +146,7 @@ extension ListViewController {
     navigationItem.largeTitleDisplayMode = .never
     
     tableView.dataSource = dataSource
-    tableView.refreshControl = makeRefreshControl()
+   
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -148,10 +156,6 @@ extension ListViewController {
     clearsSelectionOnViewWillAppear = isCollapsed || isDifferent
 
     updateIsSubscribed()
-
-    if dataSource.isEmpty {
-      update()
-    }
 
     super.viewWillAppear(animated)
   }
@@ -184,32 +188,16 @@ extension ListViewController {
 extension ListViewController {
 
   private var isCompact: Bool {
-    guard let svc = splitViewController else {
-      return false
-    }
-
-    return !svc.isCollapsed &&
-      traitCollection.horizontalSizeClass == .regular
+    return !(splitViewController?.isCollapsed ?? false)
   }
-
-  override func willTransition(
-    to newCollection: UITraitCollection,
-    with coordinator: UIViewControllerTransitionCoordinator) {
-    // During transition we want our layout to prepare with automatic size,
-    // saving us from invalid sizes.
-//    layout.itemSize = UICollectionViewFlowLayout.automaticSize
-
-    super.willTransition(to: newCollection, with: coordinator)
-  }
-
 
   override func traitCollectionDidChange(
     _ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
 
-    // TODO: isCompact ? dataSource.hideHeader() : dataSource.showHeader()
-
     resignFirstResponder()
+
+    update()
   }
 
 }
@@ -238,40 +226,55 @@ extension ListViewController {
 
 // MARK: - Managing Refresh Control
 
-extension ListViewController {
-
-  @objc func refreshControlValueChanged(_ sender:AnyObject) {
-    guard sender.isRefreshing else {
-      return
-    }
-
-    // TODO: Update
-  }
-
-  private func makeRefreshControl() -> UIRefreshControl {
-    let rc = UIRefreshControl()
-    let action = #selector(refreshControlValueChanged)
-
-    rc.addTarget(self, action: action, for: .valueChanged)
-
-    return rc
-  }
-  
-  override func scrollViewDidEndDragging(
-    _ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-    guard let rc = tableView.refreshControl, rc.isRefreshing else {
-      return
-    }
-
-    DispatchQueue.main.async {
-      rc.endRefreshing()
-    }
-
-    // TODO: Refresh
-
-  }
-  
-}
+//extension ListViewController {
+//
+//  @objc func refreshControlValueChanged(_ sender:AnyObject) {
+//    guard sender.isRefreshing else {
+//      return
+//    }
+//
+//    // TODO: Update
+//  }
+//
+//  private func makeRefreshControl() -> UIRefreshControl {
+//    let rc = UIRefreshControl()
+//    let action = #selector(refreshControlValueChanged)
+//
+//    rc.addTarget(self, action: action, for: .valueChanged)
+//
+//    return rc
+//  }
+//
+//  override func scrollViewDidEndDragging(
+//    _ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+//    guard let rc = tableView.refreshControl, rc.isRefreshing else {
+//      return
+//    }
+//
+//    DispatchQueue.main.async {
+//      rc.endRefreshing()
+//    }
+//
+//    // TODO: Refresh
+//
+//  }
+//
+//  override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//    let y = scrollView.contentOffset.y
+//
+//    if lastContentOffset < y {
+//      DispatchQueue.main.async {
+//        self.refreshControl?.endRefreshing()
+//      }
+//    }
+//
+//    lastContentOffset = y
+//
+//
+//
+//  }
+//
+//}
 
 // MARK: - UITableViewDelegate
 
