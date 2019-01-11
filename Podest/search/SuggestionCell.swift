@@ -9,6 +9,7 @@
 import UIKit
 
 final class SuggestionCell: UITableViewCell {
+
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     imageView?.image = UIImage(named: "LoupeIcon")
