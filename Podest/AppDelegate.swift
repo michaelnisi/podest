@@ -50,12 +50,13 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate {
 
-  /// Produces a background fetch result and logs its interpretation. While
-  /// `newData` is `true` `.newData` is returned, overriding the error.
+  /// Produces a background fetch result and logs its interpretation.
   ///
   /// - Parameters:
   ///   - newData: `true` if new data has been received.
   ///   - error: The error to take into consideration.
+  ///
+  /// The `newData` flag takes precedence over `error`.
   private static func makeBackgroundFetchResult(
     _ newData: Bool, _ error: Error?) -> UIBackgroundFetchResult {
     guard error == nil else {
