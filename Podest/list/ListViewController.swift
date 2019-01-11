@@ -146,7 +146,11 @@ extension ListViewController {
     navigationItem.largeTitleDisplayMode = .never
     
     tableView.dataSource = dataSource
-   
+
+    // Leaving off the last separator.
+    tableView.tableFooterView = UIView(frame:
+      CGRect(origin: .zero, size: CGSize(width: 0, height: 1))
+    )
   }
   
   override func viewWillAppear(_ animated: Bool) {

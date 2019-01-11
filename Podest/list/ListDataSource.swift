@@ -17,11 +17,9 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
   /// Enumerates items provided by this data source.
   enum Item: Hashable {
-
-    /// Contains the feed and, optionally, its already formatted summary.
     case feed(Feed, NSAttributedString?)
-
-    case entry(Entry)
+    case entry(Entry, String)
+    case author(String)
     case message(NSAttributedString)
   }
 
@@ -92,18 +90,21 @@ final class ListDataSource: NSObject, SectionedDataSource {
         return [messages]
       }
 
-      var feeds = Set<Item>()
+      var header = Set<Item>()
       var entries = [Item]()
+      var footer = Set<Item>()
 
       // Keeping some items.
       for section in current {
         for item in section {
           switch item {
+          case .author:
+            footer.insert(item)
           case .feed:
             guard !isCompact else {
               continue
             }
-            feeds.insert(item)
+            header.insert(item)
           case .entry, .message:
             continue
           }
@@ -112,19 +113,16 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
       for item in items {
         switch item {
+        case .author:
+          footer.insert(item)
         case .entry:
           entries.append(item)
         case .feed:
           guard !isCompact else {
-            let msg = StringRepository.makeMessage(
-              title: "Loading",
-              hint: "Please wait for your episodes to load."
-            )
-
-            messages.append(.message(msg))
+            messages.append(.message(StringRepository.loadingEpisodes))
             continue
           }
-          feeds.insert(item)
+          header.insert(item)
         case .message:
           messages.append(item)
         }
@@ -134,7 +132,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
         return [[messages.first!]]
       }
 
-      return [Array(feeds), entries].filter { !$0.isEmpty }
+      return [Array(header), entries, Array(footer)].filter { !$0.isEmpty }
     }
 
     fileprivate static func makeUpdates(
@@ -176,6 +174,10 @@ final class ListDataSource: NSObject, SectionedDataSource {
           .makeSummaryWithHeadline(feed: f) : nil
         
         items.append(.feed(f, s))
+
+        if let author = f.author {
+          items.append(.author(author))
+        }
       }
 
       let (sections, updates) = ListDataSourceOperation.makeUpdates(
@@ -262,7 +264,9 @@ final class ListDataSource: NSObject, SectionedDataSource {
         return a.compare(b) == .orderedDescending
       }
 
-      let items = sorted.map { Item.entry($0) }
+      let items = sorted.map {
+        Item.entry($0, StringRepository.episodeCellSubtitle(for: $0))
+      }
 
       let error = findError()
 
@@ -308,8 +312,6 @@ final class ListDataSource: NSObject, SectionedDataSource {
       )
     }
 
-    // This stooge operation has no main function and completes instantly.
-
   }
 
   private let browser: Browsing
@@ -326,7 +328,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
   private let operationQueue = OperationQueue()
 
-  var sections = [Array<Item>]()
+  var sections = [[Item.message(StringRepository.loadingPodcast)]]
 
   /// The previous trait collection.
   ///
@@ -435,33 +437,61 @@ extension ListDataSource: UITableViewDataSource {
       cell.selectionStyle = .none
 
       return cell
-    case .entry(let entry):
+    case .entry(let entry, let subtitle):
+      tableView.separatorStyle = .singleLine
+
       let cell = tableView.dequeueReusableCell(
         withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
       ) as! SubtitleTableViewCell
 
-
-      cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
-      cell.textLabel?.numberOfLines = 0
-
-      cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .body)
-      cell.detailTextLabel?.numberOfLines = 0
-      cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
-
-      cell.detailTextLabel?.attributedText = nil
+      cell.accessoryType = .disclosureIndicator
+      cell.selectionStyle = .default
+      cell.backgroundColor = .white
 
       cell.images = nil
       cell.item = entry
 
+      cell.textLabel?.font = .preferredFont(forTextStyle: .headline)
+      cell.textLabel?.numberOfLines = 0
+
       cell.textLabel?.text = entry.title
 
-      cell.detailTextLabel?.text = StringRepository.episodeCellSubtitle(for: entry)
+      cell.detailTextLabel?.font = .preferredFont(forTextStyle: .body)
+      cell.detailTextLabel?.numberOfLines = 0
+      cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
 
-      cell.accessoryType = .disclosureIndicator
+      cell.detailTextLabel?.attributedText = nil
+      cell.detailTextLabel?.text = subtitle
+
+      return cell
+
+    case .author(let author):
+      let cell = tableView.dequeueReusableCell(
+        withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
+      ) as! SubtitleTableViewCell
+
+      cell.accessoryType = .none
+      cell.selectionStyle = .none
+      cell.backgroundColor = UIColor.groupTableViewBackground
+
+      cell.images = nil
+      cell.item = nil
+
+      cell.textLabel?.attributedText = nil
+      cell.textLabel?.text = nil
+
+      cell.detailTextLabel?.font = .preferredFont(forTextStyle: .body)
+      cell.detailTextLabel?.numberOfLines = 0
+      cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
+
+      cell.detailTextLabel?.attributedText = nil
+      cell.detailTextLabel?.text = author
 
       return cell
 
     case .message(let text):
+      tableView.separatorStyle = .none
+
       let cell = tableView.dequeueReusableCell(
         withIdentifier: UITableView.Nib.message.id, for: indexPath
       ) as! MessageTableViewCell
@@ -470,14 +500,12 @@ extension ListDataSource: UITableViewDataSource {
       cell.selectionStyle = .none
       cell.targetHeight = tableView.bounds.height * 0.6
 
-      tableView.separatorStyle = .none
-
       return cell
     }
   }
 
   var isMessage: Bool {
-    guard  case .message? = sections.first?.first else {
+    guard case .message? = sections.first?.first else {
       return false
     }
 
@@ -497,12 +525,11 @@ extension ListDataSource: EntryIndexPathMapping {
       return nil
     }
 
-    switch item {
-    case .entry(let entry):
-      return entry
-    case .feed, .message:
+    guard case .entry(let entry, _) = item else {
       return nil
     }
+
+    return entry
   }
 
   /// Returns the first index path matching `entry`.
@@ -511,14 +538,11 @@ extension ListDataSource: EntryIndexPathMapping {
     
     for (s, section) in sections.enumerated() {
       for (r, item) in section.enumerated() {
-        switch item {
-        case .entry(let e):
-          if e == entry {
-            return IndexPath(row: r, section: s)
-          }
-        case .feed, .message:
-          return nil
+        guard case .entry(let e, _) = item, e == entry else {
+          continue
         }
+
+        return IndexPath(row: r, section: s)
       }
     }
 

@@ -14,6 +14,16 @@ class DisplayTableViewCell: UITableViewCell {
 
   @IBOutlet weak var largeImageView: UIImageView!
   @IBOutlet weak var textView: UITextView!
+
+  override func awakeFromNib() {
+    super.awakeFromNib()
+
+    let x = CGFloat(-5)
+    let prev = textView.textContainerInset
+
+    textView.textContainerInset = UIEdgeInsets(
+      top: prev.top, left: x, bottom: prev.bottom, right: x)
+  }
   
   var images: Images? {
     didSet {
@@ -63,7 +73,8 @@ class DisplayTableViewCell: UITableViewCell {
       options: FKImageLoadingOptions(
         fallbackImage: DisplayTableViewCell.fallbackImage,
         quality: imageQuality,
-        isDirect: true
+        isDirect: true,
+        isClean: true
       )
     )
 

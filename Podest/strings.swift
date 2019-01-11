@@ -278,7 +278,8 @@ extension StringRepository {
     return subtitle as String
   }
 
-  private static var episodeCellSubtitles: NSCache<NSNumber, NSString> = {
+  private
+  static var episodeCellSubtitles: NSCache<NSNumber, NSString> = {
     let c = NSCache<NSNumber, NSString>()
 
     c.countLimit = 1024
@@ -286,15 +287,15 @@ extension StringRepository {
     return c
   }()
 
-  /// Prepends `string` with the first sentence of `other`.
-  static func prepend(string: String, withFirstSentenceOf other: String?) -> String {
-    let marks = CharacterSet(charactersIn: ".?!")
-
-    guard let first = other?.components(separatedBy: marks).first else {
+  private
+  static func prefix(string: String, maxLength: Int) -> String {
+    guard string.count > maxLength else {
       return string
     }
 
-    return "\(first). \(string)"
+    let marks = CharacterSet(charactersIn: ".!?")
+    
+    return string.components(separatedBy: marks).first ?? string
   }
 
   static func episodeCellSubtitle(for entry: Entry) -> String {
@@ -302,18 +303,29 @@ extension StringRepository {
 
     guard let subtitle = episodeCellSubtitles.object(forKey: key) else {
       let updated = string(from: entry.updated)
-      let subtitle: String = {
+
+      let snippet: String = {
+        guard let subtitle = entry.subtitle else {
+          return ""
+        }
+
+        return " – \(prefix(string: subtitle, maxLength: 140))"
+      }()
+
+
+      let times: String = {
         if let duration = string(from: entry.duration) {
           return "\(updated), \(duration)"
         }
+
         return updated
       }()
 
-      let r = prepend(string: subtitle, withFirstSentenceOf: entry.subtitle)
+      let s = "\(times)\(snippet)"
 
-      episodeCellSubtitles.setObject(r as NSString, forKey: key)
+      episodeCellSubtitles.setObject(s as NSString, forKey: key)
 
-      return r
+      return s
     }
     
     return subtitle as String
@@ -354,7 +366,7 @@ extension StringRepository {
   /// Returns a message composed of `title` and `hint`.
   ///
   /// Always hint, suggesting a concrete action.
-  static func makeMessage(
+  private static func makeMessage(
     title: String,
     hint: String
   ) -> NSAttributedString {
@@ -374,24 +386,28 @@ extension StringRepository {
     return a
   }
   
-  static func emptyQueue() -> NSAttributedString {
-    let title = "No Episodes"
-    let hint = """
+  static let emptyQueue: NSAttributedString = makeMessage(
+    title: "No Episodes",
+    hint: """
       Swipe down to refresh or search to explore. \
       Enqueued Episodes will show up here.
-      """
-    
-    return StringRepository.makeMessage(title: title, hint: hint)
-  }
+    """
+  )
 
-  static func loadingQueue() -> NSAttributedString {
-    let title = "Loading"
-    let hint = """
-      Please wait while your Queue is being synchronized.
-      """
+  static let loadingPodcast: NSAttributedString = makeMessage(
+    title: "Loading",
+    hint: "Please wait for your podcast to load."
+  )
 
-    return StringRepository.makeMessage(title: title, hint: hint)
-  }
+  static let loadingEpisodes: NSAttributedString = makeMessage(
+    title: "Loading",
+    hint: "Please wait for your episodes to load."
+  )
+
+  static let loadingQueue: NSAttributedString = makeMessage(
+    title: "Loading",
+    hint: "Please wait while your Queue is being synchronized."
+  )
   
   static func noEpisode(with title: String) -> NSAttributedString {
     let bold: [NSAttributedString.Key : Any] = [
