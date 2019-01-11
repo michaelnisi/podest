@@ -234,13 +234,8 @@ extension EpisodeViewController {
   private func showMessage(_ msg: NSAttributedString) {
     os_log("episode: showing message", log: log, type: .debug)
 
-    let nib = UINib(nibName: "MessageView", bundle: Bundle.main)
-
-    guard let messageView = nib.instantiate(withOwner: nil)
-      .first as? MessageView else {
-        fatalError("Failed to initiate view")
-    }
-
+    let messageView = MessageView.make()
+    
     messageView.frame = view.frame
     view.addSubview(messageView)
 

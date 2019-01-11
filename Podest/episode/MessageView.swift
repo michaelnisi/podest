@@ -10,7 +10,18 @@ import UIKit
 
 /// Intended to show a message in the background of a table view.
 class MessageView: UIView {
-  
+
+  static func make() -> MessageView {
+    let nib = UINib(nibName: "MessageView", bundle: .main)
+
+    guard let messageView = nib.instantiate(withOwner: nil)
+      .first as? MessageView else {
+      fatalError("Failed to initiate view")
+    }
+
+    return messageView
+  }
+
   @IBOutlet var label: UILabel!
   
   var text: String? {
@@ -38,7 +49,6 @@ class MessageView: UIView {
   private func removeAnimators() {
     for animator in animators {
       animator.stopAnimation(true)
-    
     }
 
     animators.removeAll()
