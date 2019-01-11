@@ -107,7 +107,8 @@ final class QueueViewController: UITableViewController, Navigator {
     reload(animated) { [weak self] initialReloadError in
       self?.dataSource.update(considering: error) { newData, updateError in
         self?.reload(animated) { error in
-          completionHandler?(newData, updateError ?? error)
+          assert(error == nil, "error relevance unclear")
+          completionHandler?(newData, updateError)
         }
       }
     }

@@ -27,7 +27,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     label: "ink.codes.podest.QueueDataSource-\(UUID().uuidString).sQueue")
   
   private var _sections: [Array<Item>] = [
-    [.message(StringRepository.loadingQueue())]
+    [.message(StringRepository.loadingQueue)]
   ]
 
   /// Accessing the sections of the table view is synchronized.
@@ -86,7 +86,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     guard !items.isEmpty else {
       let text = (error != nil ?
         StringRepository.message(describing: error!) : nil)
-        ?? StringRepository.emptyQueue()
+        ?? StringRepository.emptyQueue
       messages.append(.message(text))
       return [messages]
     }
