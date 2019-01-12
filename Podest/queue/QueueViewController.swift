@@ -42,6 +42,15 @@ final class QueueViewController: UITableViewController, Navigator {
     )
   }()
 
+  private func updateSelection(_ animated: Bool = true) {
+    guard let svc = splitViewController, svc.isCollapsed else {
+      selectCurrentRow(animated: animated, scrollPosition: .none)
+      return
+    }
+
+    clearSelection(animated)
+  }
+
   /// Reloads the table view.
   ///
   /// - Parameters:
@@ -58,8 +67,7 @@ final class QueueViewController: UITableViewController, Navigator {
 
     dataSource.reload { [weak self] changes, error in
       func done() {
-        self?.selectCurrentRow(animated: false, scrollPosition: .none)
-        // TODO: Is this error relevant at call-site?
+        self?.updateSelection(animated)
         completionBlock?(error)
       }
 
@@ -95,14 +103,14 @@ final class QueueViewController: UITableViewController, Navigator {
   ) {
     let isInitial = dataSource.isEmpty || dataSource.isMessage
 
-    guard isInitial || dataSource.shouldUpdate() else {
+    guard isInitial || dataSource.isReady else {
       completionHandler?(false, nil)
       return
     }
 
     let animated = !isInitial
 
-    // Reloading first for attaining a state to update from.
+    // Reloading first, attaining a state to update from.
 
     reload(animated) { [weak self] initialReloadError in
       self?.dataSource.update(considering: error) { newData, updateError in
@@ -168,13 +176,12 @@ extension QueueViewController {
     dataSource.update(minding: 60)
   }
 
-  func makeRefreshControl() -> UIRefreshControl {
-    let rc = UIRefreshControl()
-    let action = #selector(refreshControlValueChanged)
-
-    rc.addTarget(self, action: action, for: .valueChanged)
-
-    return rc
+  private func installRefreshControl() {
+    refreshControl?.addTarget(
+      self,
+      action: #selector(refreshControlValueChanged),
+      for: .valueChanged
+    )
   }
 
   override func scrollViewDidEndDragging(
@@ -223,6 +230,9 @@ extension QueueViewController {
     super.viewDidLoad()
 
     definesPresentationContext = true
+
+    refreshControl = UIRefreshControl()
+    installRefreshControl()
 
     let (searchController, searchProxy) = makeSearchProxy()
 
@@ -301,16 +311,9 @@ extension QueueViewController {
     tableView.scrollIndicatorInsets = insets
     tableView.contentInset = insets
 
-
     dataSource.previousTraitCollection = previousTraitCollection
 
-    refreshControl = makeRefreshControl()
-
-    if splitViewController!.isCollapsed {
-      clearSelection(true)
-    } else {
-      selectCurrentRow(animated: true, scrollPosition: .none)
-    }
+    updateSelection()
   }
 
 }

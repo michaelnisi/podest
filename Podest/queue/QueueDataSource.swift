@@ -10,7 +10,7 @@ import UIKit
 import FeedKit
 import os.log
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "queue")
 
 /// Provides access to queue and subscription data.
 final class QueueDataSource: NSObject, SectionedDataSource {
@@ -129,13 +129,15 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
   private weak var reloading: Operation?
 
-  /// Reloads the queue locally, fetching missing items remotely if necessary,
-  /// without committing sections. That’s our users’ job, preferably in
-  /// `performBatchUpdates(_:completion:)`.
+  /// Reloads the queue locally, fetching missing items remotely if necessary.
   ///
   /// - Parameters:
   ///   - completionBlock: A block that executes on the main queue when
   /// reloading completes, receiving the changes and maybe an error.
+  ///
+  /// We are not commiting sections here. That’s our users’ job, preferably in
+  /// `performBatchUpdates(_:completion:)` or now with our very own amazing
+  /// `commit(batch:performingWith:)`.
   func reload(completionBlock: (([[Change<Item>]], Error?) -> Void)? = nil) {
     dispatchPrecondition(condition: .onQueue(.main))
 
@@ -183,18 +185,38 @@ final class QueueDataSource: NSObject, SectionedDataSource {
       }
     }
   }
-  
-  func shouldUpdate(outside deadline: TimeInterval = 3600) -> Bool {
+
+  /// Returns `true` if the time interval between the last time this method
+  /// was executed is larger than `deadline`, which defaults to one hour.
+  ///
+  /// - Parameters:
+  ///   - deadline: Stay outside of this time window.
+  ///   - setting: Pass `false` for just asking, not setting a new time.
+  private func shouldUpdate(
+    outside deadline: TimeInterval = 3600,
+    setting: Bool = true
+  ) -> Bool {
     let k = UserDefaults.lastUpdateTimeKey
     let ts = UserDefaults.standard.double(forKey: k)
+
     let now = Date().timeIntervalSince1970
-    let yes = now - ts > deadline
+    let diff = now - ts
+    let yes = diff > deadline
     
     if yes {
-      UserDefaults.standard.set(now, forKey: k)
+      if setting {
+        UserDefaults.standard.set(now, forKey: k)
+      }
+    } else {
+      os_log("should not update: %f < %f", log: log, type: .debug, diff, deadline)
     }
     
     return yes
+  }
+
+  /// Ready to update?
+  var isReady: Bool {
+    return shouldUpdate(setting: false)
   }
 
   private var lastTimeFilesHaveBeenRemoved: TimeInterval = 0
@@ -281,6 +303,8 @@ final class QueueDataSource: NSObject, SectionedDataSource {
         }
       }
     }
+
+    // Normal code path begins here, in next.
 
     func next() {
       guard shouldUpdate else {

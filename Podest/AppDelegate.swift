@@ -70,13 +70,12 @@ extension AppDelegate {
         return .failed
       }
     }
+
     if newData {
-      os_log("fetch completed with new data",
-             log: log, type: .info)
+      os_log("fetch completed with new data", log: log, type: .info)
       return .newData
     } else {
-      os_log("fetch completed with no data",
-             log: log, type: .info)
+      os_log("fetch completed with no data", log: log, type: .info)
       return .noData
     }
   }
@@ -90,11 +89,11 @@ extension AppDelegate {
   /// Pulls iCloud, integrates new data, and reloads the queue locally to update
   /// views for snapshotting.
   ///
-  /// Pulling has presedence over pushing.
-  ///
   /// - Parameters:
   ///   - completionBlock: The completion block executing on the main queue.
   /// when done.
+  ///
+  /// Pulling has presedence over pushing.
   private func pull(completionBlock: ((UIBackgroundFetchResult) -> Void)? = nil) {
     dispatchPrecondition(condition: .onQueue(.main))
 
@@ -136,7 +135,7 @@ extension AppDelegate {
     }
   }
 
-  /// Pushes user data to iCloud. **Must run on the main queue.**
+  /// Pushes user data to iCloud. **Must execute on the main queue.**
   private func push(completionBlock: (() -> Void)? = nil) {
     guard !isPulling, !isPushing else {
       os_log("already syncing", log: log)
@@ -303,12 +302,15 @@ extension AppDelegate {
     root.update { newData, error in
       let result = AppDelegate.makeBackgroundFetchResult(newData, error)
 
+      // Submits completion block to the main queue, after which nothing must
+      // run. Done means done, or 0x8badf00d.
       func done() {
         DispatchQueue.main.async {
           if application.applicationState != .active {
             self.flush()
             self.closeFiles()
           }
+
           completionHandler(result)
         }
       }
@@ -318,9 +320,7 @@ extension AppDelegate {
       }
 
       // In non-active states, being uninstalled, not receiving queue or library
-      // changes, we must push manually. Providing us with a callback, we can
-      // execute after pushing to iCloud, a requirement of background fetching.
-      // Nothing must run after its completion handler.
+      // changes, we must push manually.
 
       switch application.applicationState {
       case .active:
@@ -341,6 +341,7 @@ extension AppDelegate {
     completionHandler: @escaping () -> Void) {
     os_log("handling events for background URL session: %@",
            log: log, type: .info, identifier)
+
     Podest.files.handleEventsForBackgroundURLSession(identifier: identifier) {
       DispatchQueue.main.async {
         completionHandler()
@@ -412,7 +413,7 @@ extension AppDelegate {
 
 extension AppDelegate {
 
-  /// Installs this object into the object tree (of our domain).
+  /// Installs this object into the object tree of our domain.
   private func install(_ application: UIApplication) {
     os_log("installing", log: log, type: .info)
 
@@ -462,6 +463,12 @@ extension AppDelegate {
 
   func applicationDidBecomeActive(_ application: UIApplication) {
     os_log("did become active", log: log, type: .info)
+
+    // During development, we might want to launch into the previous state,
+    // without syncing or updating.
+    guard !Podest.settings.noSync else {
+      return root.reload()
+    }
 
     func updateQueue(considering syncError: Error? = nil) -> Void {
       DispatchQueue.main.async {
