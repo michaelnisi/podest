@@ -309,7 +309,7 @@ extension FileRepository: Downloading {
     let downloading = shouldDownload(url: anywhere)
     
     guard UserDefaults.standard.automaticDownloads, downloading else {
-      os_log("settings or reachability prevented queue preloading",
+      os_log("settings or reachability sealed downloading",
              log: log, type: .info)
       completionHandler?(nil)
       return
