@@ -374,10 +374,13 @@ extension RootViewController: PlaybackDelegate {
           )
         case .surprising(let surprisingError):
           return (
-            "Interesting Problem",
+            "Oh No",
             """
-            Your episode – \(entry.title) – is puzzling like that:
-            \(surprisingError)
+            Your episode – \(entry.title) – cannot be played.
+
+            \(surprisingError.localizedDescription)
+
+            Please consider removing it from your Queue.
             """
           )
         case .session:
