@@ -457,7 +457,7 @@ extension ListDataSource: UITableViewDataSource {
       cell.textLabel?.text = entry.title
 
       cell.detailTextLabel?.font = .preferredFont(forTextStyle: .body)
-      cell.detailTextLabel?.numberOfLines = 0
+      cell.detailTextLabel?.numberOfLines = 3
       cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
 
       cell.detailTextLabel?.attributedText = nil

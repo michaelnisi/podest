@@ -201,7 +201,12 @@ extension ListViewController {
 
     resignFirstResponder()
 
-    update()
+    // Showing or hiding header if available height has changed.
+
+    if traitCollection.verticalSizeClass !=
+      previousTraitCollection?.verticalSizeClass {
+      update()
+    }
   }
 
 }

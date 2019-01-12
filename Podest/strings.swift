@@ -293,9 +293,17 @@ extension StringRepository {
       return string
     }
 
+    // Trying to cut sensibly matching sen
+
     let marks = CharacterSet(charactersIn: ".!?")
-    
-    return string.components(separatedBy: marks).first ?? string
+
+    if let first = string.components(separatedBy: marks).first {
+      return first.count > maxLength ? String(first.prefix(maxLength)) : first
+    }
+
+    // Just cutting it down.
+
+    return String(string.prefix(maxLength))
   }
 
   static func episodeCellSubtitle(for entry: Entry) -> String {
