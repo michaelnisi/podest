@@ -31,37 +31,8 @@ protocol SearchResultsControllerDelegate: Navigator {
 }
 
 final class SearchResultsController: UITableViewController {
-  
+
   private let dataSource = SearchResultsDataSource(repo: Podest.finder)
-
-  func deselect(_ animated: Bool) {
-    guard let indexPath = tableView.indexPathForSelectedRow else {
-      return
-    }
-
-    tableView.deselectRow(at: indexPath, animated: animated)
-  }
-  
-  /// Scrolls the selected row into view.
-  func scrollToSelectedRow(animated: Bool) {
-    guard let indexPath = tableView.indexPathForSelectedRow,
-      !(tableView.indexPathsForVisibleRows?.contains(indexPath))! else {
-      return
-    }
-
-    tableView.scrollToRow(at: indexPath, at: .none, animated: animated)
-  }
-
-  /// Scrolls to the first row.
-  private func scrollToFirstRow(animated: Bool) {
-    let path = IndexPath(row: 0, section: 0)
-
-    guard dataSource.itemAt(indexPath: path) != nil else {
-      return
-    }
-
-    tableView.scrollToRow(at: path, at: .none, animated: animated)
-  }
 
   var delegate: SearchResultsControllerDelegate?
 
@@ -175,6 +146,20 @@ extension SearchResultsController {
     }
 
     delegate?.searchResultsController(self, didSelectFind: find)
+  }
+
+}
+
+// MARK: - Selecting Rows
+
+extension SearchResultsController {
+
+  func deselect(_ animated: Bool) {
+    guard let indexPath = tableView.indexPathForSelectedRow else {
+      return
+    }
+
+    tableView.deselectRow(at: indexPath, animated: animated)
   }
 
 }
