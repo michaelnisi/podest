@@ -74,9 +74,13 @@ private struct Summary<Item> {
     os_log("attributing: %@",
            log: log, type: .debug, String(describing: summary))
 
-    let str = summary ?? """
-    We cannot format the summary of this item at this time.
-    """
+    let str: String = {
+      guard let s = summary, s != "" else {
+        return "Sorry, we have no summary for this item at this time."
+      }
+
+      return s
+    }()
 
     do {
       let tree = try html.parse(str)
@@ -345,12 +349,14 @@ extension StringRepository {
 
 extension StringRepository {
   
-  static func emptyFeed(titled: String?) -> NSAttributedString {
-    let title = titled ?? ""
-    
+  static func emptyFeed(titled: String? = nil) -> NSAttributedString {
     let bold: [NSAttributedString.Key : Any] = [
       .font: UIFont.preferredFont(forTextStyle: .headline)
     ]
+
+    guard let title = titled else {
+      return NSAttributedString(string: "This feed appears to be empty.")
+    }
     
     let a = NSMutableAttributedString(string: "This feed – ")
     let b = NSAttributedString(string: "\(title)", attributes: bold)
