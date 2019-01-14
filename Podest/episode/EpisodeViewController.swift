@@ -190,6 +190,7 @@ extension EpisodeViewController {
     content?.resignFirstResponder()
 
     let insets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
+    
     scrollView.contentInset = insets
     scrollView.scrollIndicatorInsets = insets
   }
@@ -209,18 +210,13 @@ extension EpisodeViewController {
 extension EpisodeViewController {
 
   override func encodeRestorableState(with coder: NSCoder) {
-    super.encodeRestorableState(with: coder)
     locator?.encode(with: coder)
 
-    coder.encode(scrollView.contentOffset, forKey: "contentOffset")
-    coder.encode(scrollView.frame.size, forKey: "frameSize")
+    super.encodeRestorableState(with: coder)
   }
 
   override func decodeRestorableState(with coder: NSCoder) {
     locator = EntryLocator(coder: coder)
-
-    restoredContentOffset = coder.decodeCGPoint(forKey: "contentOffset")
-    restoredFrameSize = coder.decodeCGSize(forKey: "frameSize")
 
     super.decodeRestorableState(with: coder)
   }
