@@ -8,17 +8,10 @@
 
 import UIKit
 
+/// A button with rounded corners.
 @IBDesignable
 class StoreButton: UIButton {
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
-  
   @IBInspectable var cornerRadius: CGFloat {
     get {
       return layer.cornerRadius

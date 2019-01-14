@@ -106,7 +106,12 @@ class ProductCell: UICollectionViewCell {
     super.awakeFromNib()
 
     let ps = UIFont.preferredFont(forTextStyle: .largeTitle).pointSize
-    self.title.font = UIFont.boldSystemFont(ofSize: ps)
+    title.font = UIFont.boldSystemFont(ofSize: ps)
+
+    subtitle.font = UIFontMetrics.default.scaledFont(for:
+      .systemFont(ofSize: 19, weight: .medium)
+    )
+
     layer.cornerRadius = 16
     layer.masksToBounds = true
   }

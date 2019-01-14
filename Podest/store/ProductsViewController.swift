@@ -8,29 +8,6 @@
 
 import UIKit
 
-/// A slightly modified flow layout, always recomputing the size of items and
-/// views in the layout.
-///
-/// For its weak performance characteristics, only advisable for very short
-/// fixed lists, like this list of three products.
-class ProductsLayout: UICollectionViewFlowLayout {
-  
-  override func invalidationContext(
-    forBoundsChange newBounds: CGRect
-  ) -> UICollectionViewLayoutInvalidationContext {
-    let ctx = super.invalidationContext(forBoundsChange: newBounds)
-    guard let f = ctx as? UICollectionViewFlowLayoutInvalidationContext else {
-      return ctx
-    }
-    
-    // Modifying context…
-    f.invalidateFlowLayoutDelegateMetrics = true
-    
-    return ctx
-  }
-  
-}
-
 final class ProductsViewController: UICollectionViewController {
   
   @objc func onDone() {
@@ -42,10 +19,12 @@ final class ProductsViewController: UICollectionViewController {
     
     let ds = ProductsDataSource()
     
-    ds.sectionsChangeHandler = {  [weak self] in
-      DispatchQueue.main.async { [weak self] in
-        self?.collectionView?.reloadData()
+    ds.sectionsChangeHandler = { [weak self] changes in
+      guard let cv = self?.collectionView else {
+        return
       }
+
+      ds.commit(changes, performingWith: .collection(cv))
     }
     
     ds.purchasingHandler = { [weak self] indexPath in
@@ -54,6 +33,7 @@ final class ProductsViewController: UICollectionViewController {
           at: indexPath) as? ProductCell, let data = cell.data else {
           return
         }
+        
         cell.isPurchasing = true
       }
     }
@@ -81,29 +61,9 @@ extension ProductsViewController {
       fatalError("collectionView expected")
     }
 
-    cv.register(
-      UINib(nibName: "MessageCollectionViewCell", bundle: Bundle.main),
-      forCellWithReuseIdentifier: ProductsDataSource.messageCellID
-    )
+    ProductsDataSource.registerCells(with: cv)
 
-    cv.register(
-      UINib(nibName: "ProductCell", bundle: Bundle.main),
-      forCellWithReuseIdentifier: ProductsDataSource.productCellID
-    )
-
-    cv.register(
-      UINib(nibName: "ProductsHeader", bundle: Bundle.main),
-      forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-      withReuseIdentifier: ProductsDataSource.productsHeaderID
-    )
-
-    cv.register(
-      UINib(nibName: "ProductsHeader", bundle: Bundle.main),
-      forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
-      withReuseIdentifier: ProductsDataSource.productsFooterID
-    )
-
-    let layout = ProductsLayout()
+    let layout = StoreLayout()
     
     layout.minimumInteritemSpacing = 20
     layout.minimumLineSpacing = 30
@@ -119,7 +79,22 @@ extension ProductsViewController {
     Podest.store.update()
   }
 
+  override func willTransition(
+    to newCollection: UITraitCollection,
+    with coordinator: UIViewControllerTransitionCoordinator
+  ) {
+    // Preventing layout errors during animation.
+
+    if let l = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+      l.itemSize = UICollectionViewFlowLayout.automaticSize
+    }
+
+    super.willTransition(to: newCollection, with: coordinator)
+  }
+
 }
+
+/*
 
 private extension UICollectionView {
   
@@ -296,3 +271,4 @@ extension ProductsViewController: UICollectionViewDelegateFlowLayout {
   
 }
 
+*/

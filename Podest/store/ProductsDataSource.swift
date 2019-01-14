@@ -12,95 +12,101 @@ import os.log
 
 private let log = OSLog.disabled
 
-/// A visual item shown in the store collection view, including messages.
-enum StoreItem {
-  
-  /// The device is currently offline.
-  case offline
-  
-  /// No products available.
-  case empty
-  
-  /// A product on purchase.
-  case product(SKProduct)
-  
-  /// The purchase was successful.
-  case thanks
-  
-  /// The purchase failed.
-  case failed(String)
-  
-  /// Loading products.
-  case loading
-  
-  /// Restoring previous purchases.
-  case restoring
-  
-}
-
 protocol CellProductsDelegate {
   func cell(_ cell: UICollectionViewCell, payProductMatching productIdentifier: String)
 }
 
-
 /// Provides data for our Store UICollectionView.
-final class ProductsDataSource: NSObject {
+final class ProductsDataSource: NSObject, SectionedDataSource {
+
+  /// Enumerates item types provided by this data source.
+  enum Item: Hashable {
+    case article(String, String, String)
+    case offline
+    case empty
+    case product(SKProduct)
+    case thanks
+    case failed(String)
+    case loading
+    case restoring
+  }
 
   static var messageCellID = "MessageCellID"
   static var productCellID = "ProductCellID"
   static var productsHeaderID = "ProductsHeaderID"
   static var productsFooterID = "ProductsFooterID"
-  
-  /// An internal serial queue for synchronized access.
-  let sQueue = DispatchQueue(
-    label: "ink.codes.podest.ProductsDataSource-\(UUID().uuidString).serial")
+  static var articleCellID = "ArticleCollectionViewCellID"
 
-  var _sections = [[StoreItem.loading]]
-  
-  var sections: [[StoreItem]] {
+  var _sections = [[Item.loading]]
+
+  /// The current sections of this data source.
+  ///
+  /// Access from the main queue only.
+  var sections: [Array<Item>] {
     get {
-      return sQueue.sync {
-        return _sections
-      }
+      dispatchPrecondition(condition: .onQueue(.main))
+      return _sections
     }
+
     set {
-      sQueue.sync {
-        _sections = newValue
-        sectionsChangeHandler?()
-      }
+      dispatchPrecondition(condition: .onQueue(.main))
+      _sections = newValue
     }
   }
-  
+
   /// The central change handler called when the collection changed.
-  var sectionsChangeHandler: (() -> Void)?
+  var sectionsChangeHandler: (([[Change<Item>]]) -> Void)?
   
-  /// Receives the index path of currently purchased item.
+  /// Receives the index path of the product currently being purchased.
   var purchasingHandler: ((IndexPath) -> Void)?
   
   lazy var priceFormatter: NumberFormatter = {
     let fmt = NumberFormatter()
+
     fmt.formatterBehavior = .behavior10_4
     fmt.numberStyle = .currency
+
     return fmt
   }()
-  
-  var shouldShowHeader: Bool {
-    return sections.first?.count == 3 
-  }
-  
-  var shouldShowFooter: Bool {
-    return shouldShowHeader
-  }
-  
+
+  /// Speculates if we are currently displaying a message.
   var isMessage: Bool {
-    return !shouldShowHeader
+    guard sections.count == 1,
+      sections.first?.count == 1,
+      let first = sections.first?.first else {
+      return false
+    }
+
+    switch first {
+    case .article, .product:
+      return false
+    case .offline, .empty, .thanks, .failed, .loading, .restoring:
+      return true
+    }
   }
+
+  /// A distinct worker queue for diffing.
+  private var worker = DispatchQueue.global()
 
 }
 
 // MARK: - UICollectionViewDataSource
 
 extension ProductsDataSource: UICollectionViewDataSource {
+
+  /// Registers nib objects with `collectionView` under identifiers.
+  static func registerCells(with collectionView: UICollectionView) {
+    let pairs = [
+      ("MessageCollectionViewCell", messageCellID),
+      ("ProductCell", productCellID),
+      ("ArticleCollectionViewCell", articleCellID)
+    ]
+
+    for p in pairs {
+      let nib = UINib(nibName: p.0, bundle: .main)
+      collectionView.register(nib, forCellWithReuseIdentifier: p.1)
+    }
+  }
   
   func numberOfSections(in collectionView: UICollectionView) -> Int {
     return sections.count
@@ -113,7 +119,7 @@ extension ProductsDataSource: UICollectionViewDataSource {
     return sections[section].count
   }
   
-  func storeItem(where indexPath: IndexPath) -> StoreItem {
+  func storeItem(where indexPath: IndexPath) -> Item {
     return sections[indexPath.section][indexPath.row]
   }
   
@@ -124,6 +130,23 @@ extension ProductsDataSource: UICollectionViewDataSource {
     let item = storeItem(where: indexPath)
     
     switch item {
+    case .article(let category, let headline, let body):
+      let cell = collectionView.dequeueReusableCell(
+        withReuseIdentifier: ProductsDataSource.articleCellID,
+        for: indexPath) as! ArticleCollectionViewCell
+
+      cell.categoryLabel.font = .preferredFont(forTextStyle: .body)
+      cell.categoryLabel.text = category
+
+      cell.headlineLabel.font = UIFontMetrics.default.scaledFont(for:
+        .systemFont(ofSize: 29, weight: .bold))
+      cell.headlineLabel.text = headline
+
+      cell.bodyLabel.font = UIFontMetrics.default.scaledFont(for:
+        .systemFont(ofSize: 19, weight: .medium))
+      cell.bodyLabel.text = body
+
+      return cell
     case .offline:
       let cell = collectionView.dequeueReusableCell(
         withReuseIdentifier: ProductsDataSource.messageCellID,
@@ -155,7 +178,7 @@ extension ProductsDataSource: UICollectionViewDataSource {
         productDescription: product.localizedDescription,
         price: priceFormatter.string(for: product.price) ?? "Sorry"
       )
-      
+
       cell.delegate = self
 
       return cell
@@ -181,7 +204,7 @@ extension ProductsDataSource: UICollectionViewDataSource {
         withReuseIdentifier: ProductsDataSource.messageCellID,
         for: indexPath) as! MessageCollectionViewCell
       
-      cell.title.text = "Loading..."
+      cell.title.text = "Loading Products…"
       
       return cell
     
@@ -190,69 +213,12 @@ extension ProductsDataSource: UICollectionViewDataSource {
         withReuseIdentifier: ProductsDataSource.messageCellID,
         for: indexPath) as! MessageCollectionViewCell
       
-      cell.title.text = "Restoring..."
+      cell.title.text = "Restoring Purchases…"
       
       return cell
     }
   }
-  
-  func collectionView(
-    _ collectionView: UICollectionView,
-    viewForSupplementaryElementOfKind kind: String,
-    at indexPath: IndexPath
-  ) -> UICollectionReusableView {
-    switch kind {
-    case UICollectionView.elementKindSectionHeader:
-      let view = collectionView.dequeueReusableSupplementaryView(
-        ofKind: kind,
-        withReuseIdentifier: ProductsDataSource.productsHeaderID,
-        for: indexPath
-      ) as! ProductsHeader
-      view.body.text = """
-      Help me deliver podcasts. Here are three ways you can enjoy podcasts \
-      with Podest for one year.
-      """
-      
-      return view
-    case UICollectionView.elementKindSectionFooter:
-      let view = collectionView.dequeueReusableSupplementaryView(
-        ofKind: kind,
-        withReuseIdentifier: ProductsDataSource.productsFooterID,
-        for: indexPath
-      ) as! ProductsHeader
-      let body = UIFont.preferredFont(forTextStyle: .body)
 
-      let a = NSMutableAttributedString(string: """
-      Choose your price for a non-renewing subscription, granting you to use \
-      this app without restrictions for one year.
-
-      Of course, you can always 
-      """, attributes: [.font: body])
-      
-      let b = NSAttributedString(
-        string: "restore",
-        attributes: [.font: body, .link: "restore"]
-      )
-      
-      let c = NSAttributedString(
-        string: " previous purchases.",
-        attributes: [.font: body]
-      )
-
-      // There were many more segments, in case you’re wondering.
-      for t in [b,c] { a.append(t) }
-      
-      view.body.attributedText = a
-      view.body.isUserInteractionEnabled = true
-      view.body.delegate = self
-      
-      return view
-    default:
-      fatalError("no supplementary element of this kind: \(kind)")
-    }
-
-  }
-  
 }
 
 // MARK: - UITextViewDelegate
@@ -269,12 +235,8 @@ extension ProductsDataSource: UITextViewDelegate {
     case "restore":
       Podest.store.restore()
       return false
-    case "https://troubled.pro/privacy.html",
-         "https://github.com/michaelnisi",
-         "mailto:michael.nisi@gmail.com":
-      return true
     default:
-      return false
+      return true
     }
   }
   
@@ -296,7 +258,28 @@ extension ProductsDataSource: CellProductsDelegate {
 // MARK: - ShoppingDelegate
 
 extension ProductsDataSource: StoreDelegate {
-  
+
+  /// Submits `new` sections with the change handler on the main queue.
+  private func submitSections(_ new: [Array<Item>]) {
+    // Capturing old sections on the main queue.
+
+    DispatchQueue.main.async { [weak self] in
+      guard let old = self?.sections else {
+        return
+      }
+
+      // Offloading diffing to a worker queue.
+
+      self?.worker.async {
+        let changes = ProductsDataSource.makeChanges(old: old, new: new)
+
+        DispatchQueue.main.async {
+          self?.sectionsChangeHandler?(changes)
+        }
+      }
+    }
+  }
+
   func store(_ store: Shopping, offers products: [SKProduct], error: ShoppingError?) {
     os_log("store: offers: %{public}@", log: log, type: .debug, products)
 
@@ -304,22 +287,40 @@ extension ProductsDataSource: StoreDelegate {
       let er = error!
       switch er {
       case .offline:
-        sections = [[.offline]]
-        sectionsChangeHandler?()
+        submitSections([[.offline]])
+
       default:
-        sections = [[.empty]]
-        sectionsChangeHandler?()
+        submitSections([[.empty]])
       }
+
       return
     }
     
     guard !products.isEmpty else {
-      sections = [[.empty]]
-      sectionsChangeHandler?()
-      return
+      return submitSections([[.empty]])
     }
-    
-    sections = [products.map { .product($0) }]
+
+    let intro = Item.article(
+      "Support",
+      "Making apps is hard",
+      """
+      Help me deliver podcasts. Here are three ways you can enjoy podcasts \
+      with Podest for one year.
+      """
+    )
+
+    let outro = Item.article(
+      "Thanks",
+      "Making apps is fun",
+      """
+      Choose your price for a non-renewing subscription, granting you to use \
+      this app without restrictions for one year.
+
+      Of course, you can always restore previous purchases.
+      """
+    )
+
+    submitSections([[intro], products.map { .product($0) }, [outro]])
   }
   
   private func indexPath(matching productIdentifier: ProductIdentifier) -> IndexPath?{
@@ -338,19 +339,21 @@ extension ProductsDataSource: StoreDelegate {
   func store(_ store: Shopping, purchasing productIdentifier: String) {
     os_log("store: purchasing: %{public}@",
            log: log, type: .debug, productIdentifier)
-    
-    guard let ip = indexPath(matching: productIdentifier) else {
-      os_log("store: no matching product found in sections: %{public}@",
-             log: log, productIdentifier)
-      return
+
+    DispatchQueue.main.async { [weak self] in
+      guard let ip = self?.indexPath(matching: productIdentifier) else {
+        os_log("store: no matching product found in sections: %{public}@",
+               log: log, productIdentifier)
+        return
+      }
+
+      self?.purchasingHandler?(ip)
     }
-    
-    purchasingHandler?(ip)
   }
   
   func storeRestoring(_ store: Shopping) {
     os_log("store: restoring", log: log, type: .debug)
-    sections = [[.restoring]]
+    submitSections([[.restoring]])
   }
   
   func storeRestored(
@@ -359,20 +362,21 @@ extension ProductsDataSource: StoreDelegate {
   ) {
     os_log("store: restored: %{public}@",
            log: log, type: .debug, productIdentifiers)
+
     guard !productIdentifiers.isEmpty else {
-      sections = [[.failed("Sorry, no previous purchases to restore.")]]
-      return
+      return submitSections([[.failed("Sorry, no previous purchases to restore.")]])
     }
-    sections = [[.thanks]]
+
+    submitSections([[.thanks]])
   }
   
   func store(_ store: Shopping, purchased productIdentifier: String) {
     os_log("store: purchased: %{public}@",
            log: log, type: .debug, productIdentifier)
-    sections = [[.thanks]]
+    submitSections([[.thanks]])
   }
   
-  private static func makeSections(error: ShoppingError) -> [[StoreItem]] {
+  private static func makeSections(error: ShoppingError) -> [[Item]] {
     switch error {
     case .cancelled:
       return [[.failed("Your purchase has been cancelled.")]]
@@ -389,7 +393,7 @@ extension ProductsDataSource: StoreDelegate {
   
   func store(_ store: Shopping, error: ShoppingError) {
     os_log("store: error: %{public}@", log: log, error as CVarArg)
-    sections = ProductsDataSource.makeSections(error: error)
+    submitSections(ProductsDataSource.makeSections(error: error))
   }
   
 }
