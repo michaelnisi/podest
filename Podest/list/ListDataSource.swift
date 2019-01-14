@@ -80,13 +80,18 @@ final class ListDataSource: NSObject, SectionedDataSource {
     ) -> [Array<Item>] {
       var messages = [Item]()
 
-      // TODO: Review error messaging
-
       guard !items.isEmpty else {
-        let text = (error != nil ?
-          StringRepository.message(describing: error!) : nil)
-          ?? StringRepository.emptyFeed(titled: "Podcast")
+        guard let er = error,
+          let text = StringRepository.message(describing: er) else {
+          let t = StringRepository.emptyFeed()
+
+          messages.append(.message(t))
+
+          return [messages]
+        }
+
         messages.append(.message(text))
+
         return [messages]
       }
 
@@ -162,22 +167,24 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
     var submitted: [Array<Item>]?
 
-    fileprivate func submitFeed(_ feed: Feed?, error: Error? = nil) -> Void {
+    fileprivate func submitUpdatesBlockWith(
+      _ feed: Feed, error: Error? = nil) -> Void {
       guard !isCancelled else {
         return
       }
 
       var items = [Item]()
 
-      if let f = feed {
-        let s = f.summary != nil ? StringRepository
-          .makeSummaryWithHeadline(feed: f) : nil
-        
-        items.append(.feed(f, s))
+      let summary = StringRepository.makeSummaryWithHeadline(feed: feed)
 
-        if let author = f.author {
-          items.append(.author(author))
-        }
+      items.append(.feed(feed, summary))
+
+      if let author = feed.author {
+        items.append(.author(author))
+      }
+
+      guard !isCancelled, !items.isEmpty else {
+        return
       }
 
       let (sections, updates) = ListDataSourceOperation.makeUpdates(
@@ -191,14 +198,12 @@ final class ListDataSource: NSObject, SectionedDataSource {
         return
       }
 
-      // Assuming users commit sections.
-      self.submitted = sections
-
-      let cb = updatesBlock
-
-      DispatchQueue.main.async {
-        cb?(sections, updates, error)
+      DispatchQueue.main.async { [weak self] in
+        self?.updatesBlock?(sections, updates, error)
+        // Assuming users commit sections.
+        self?.submitted = sections
       }
+
     }
 
     var error: Error?
@@ -208,11 +213,11 @@ final class ListDataSource: NSObject, SectionedDataSource {
         return
       }
 
-      if originalFeed?.summary != nil {
-        return submitFeed(originalFeed)
+      if let feed = originalFeed {
+        return submitUpdatesBlockWith(feed)
       }
 
-      let feed = findFeed()
+      let foundFeed = findFeed()
       let error = findError()
 
       // Providing error to dependents, namely to FetchEntries.
@@ -221,10 +226,12 @@ final class ListDataSource: NSObject, SectionedDataSource {
       let cb = feedBlock
 
       DispatchQueue.main.async {
-        cb?(feed, error)
+        cb?(foundFeed, error)
       }
 
-      submitFeed(feed, error: error)
+      if let feed = foundFeed {
+        submitUpdatesBlockWith(feed, error: error)
+      }
     }
 
   }
