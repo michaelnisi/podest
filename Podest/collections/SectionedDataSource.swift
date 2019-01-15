@@ -85,7 +85,7 @@ extension SectionedDataSource {
     _ batch: [[Change<Item>]],
     performingWith view: SectionDataSourceView,
     completionBlock: ((Bool) -> Void)? = nil
-    ) {
+  ) {
     dispatchPrecondition(condition: .onQueue(.main))
 
     let count = self.sections.count
