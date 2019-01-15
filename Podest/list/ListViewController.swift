@@ -82,9 +82,12 @@ Navigator, EntryRowSelectable {
     }
   }
 
-  /// Internal to meet EntryRowSelectable, not good.
+  /// Internal to meet EntryRowSelectable.
+  ///
+  /// Exposing the data source is gross.
   var dataSource = ListDataSource(browser: Podest.browser)
 
+  /// The current updating operation.
   private weak var updating: Operation? {
     willSet {
       updating?.cancel()
@@ -99,12 +102,17 @@ Navigator, EntryRowSelectable {
 
 extension ListViewController {
 
+  /// Updates this list.
+  ///
+  /// The crux, feed and entries a separate, and sometimes the feed needs to be
+  /// fetched remotely, for example, if it contains no summary yet.
   private func update(forcing: Bool = false, completionBlock: (() -> Void)? = nil) {
     guard let url = self.url else {
       fatalError("cannot refresh without URL")
     }
 
-    let op = ListDataSource.UpdateOperation(url: url, originalFeed: feed, isCompact: isCompact)
+    let op = ListDataSource.UpdateOperation(
+      url: url, originalFeed: feed, isCompact: isCompact)
 
     op.feedBlock = { [weak self] feed, error in
       self?.feed = feed
@@ -127,6 +135,7 @@ extension ListViewController {
 
     op.completionBlock = completionBlock
 
+    // Allowing us to cancel the operation later if necessary.
     updating = op
 
     dataSource.update(op)

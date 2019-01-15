@@ -165,6 +165,8 @@ final class ListDataSource: NSObject, SectionedDataSource {
     /// The current sections.
     var current: [Array<Item>]!
 
+    /// The submitted items must be set, the dependent fetch entries operation
+    /// relies on this.
     var submitted: [Array<Item>]?
 
     fileprivate func submitUpdatesBlockWith(
@@ -200,10 +202,9 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
       DispatchQueue.main.async { [weak self] in
         self?.updatesBlock?(sections, updates, error)
-        // Assuming users commit sections.
-        self?.submitted = sections
       }
 
+      submitted = sections
     }
 
     var error: Error?
@@ -351,7 +352,13 @@ extension ListDataSource {
   /// Drafts an update of this data source executing `operation`, fetching
   /// the feed, completing its summary, and fetching entries.
   ///
-  /// Use the operation to configure this.
+  /// Use the operation to configure details. We are assuming that users will
+  /// commit changes back into this data source via its
+  /// `commit(batch:performingWith:completionBlock:)`. Only then sequential data
+  /// consistency of collection changes can be ensured. This is the price for
+  /// encapsulating all changes in `performBatchUpdates(_:completion:)`, but
+  /// it’s worth it. Who doesn’t like animations and stability?
+  /// - [WWDC 2018](https://developer.apple.com/videos/play/wwdc2018/225/)
   func update(_ operation: UpdateOperation) {
     let a = FetchFeed(operation: operation)
 
