@@ -387,6 +387,7 @@ final private class Config {
 
     let store = StoreFSM(url: url) //, indicator: Podest.networkActivity)
 
+    #warning("Remove dev code")
     store.removeReceipts()
 
     return store
