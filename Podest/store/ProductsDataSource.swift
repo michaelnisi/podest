@@ -16,7 +16,7 @@ protocol CellProductsDelegate {
   func cell(_ cell: UICollectionViewCell, payProductMatching productIdentifier: String)
 }
 
-/// Provides data for our Store UICollectionView.
+/// Provides a single section presenting in-app purchasing.
 final class ProductsDataSource: NSObject, SectionedDataSource {
 
   /// Enumerates item types provided by this data source.
@@ -37,11 +37,11 @@ final class ProductsDataSource: NSObject, SectionedDataSource {
   static var productsFooterID = "ProductsFooterID"
   static var articleCellID = "ArticleCollectionViewCellID"
 
-  var _sections = [[Item.loading]]
+  private var _sections = [[Item.loading]]
 
   /// The current sections of this data source.
   ///
-  /// Access from the main queue only.
+  /// Sections must be accessed on the main queue.
   var sections: [Array<Item>] {
     get {
       dispatchPrecondition(condition: .onQueue(.main))
@@ -108,10 +108,8 @@ extension ProductsDataSource: UICollectionViewDataSource {
     }
   }
   
-  func numberOfSections(in collectionView: UICollectionView) -> Int {
-    return sections.count
-  }
-  
+  // numberOfSections == 1
+
   func collectionView(
     _ collectionView: UICollectionView,
     numberOfItemsInSection section: Int
@@ -171,6 +169,11 @@ extension ProductsDataSource: UICollectionViewDataSource {
         for: indexPath) as! ProductCell
 
       priceFormatter.locale = product.priceLocale
+
+      // In the mean time, I have grown sceptical about this self-configuring
+      // cells technique. I’d rather encapsulate all configuration in the data
+      // source, in one place. Having to switch into cell implementations,
+      // while working on the data source is distracting.
 
       cell.data = ProductCell.Data(
         productIdentifier: product.productIdentifier,
@@ -259,8 +262,9 @@ extension ProductsDataSource: CellProductsDelegate {
 
 extension ProductsDataSource: StoreDelegate {
 
-  /// Submits `new` sections with the change handler on the main queue.
-  private func submitSections(_ new: [Array<Item>]) {
+  /// Submits `new` items as our new sole section to the change handler on the
+  /// main queue.
+  private func submit(_ items: [Item]) {
     // Capturing old sections on the main queue.
 
     DispatchQueue.main.async { [weak self] in
@@ -271,7 +275,7 @@ extension ProductsDataSource: StoreDelegate {
       // Offloading diffing to a worker queue.
 
       self?.worker.async {
-        let changes = ProductsDataSource.makeChanges(old: old, new: new)
+        let changes = ProductsDataSource.makeChanges(old: old, new: [items])
 
         DispatchQueue.main.async {
           self?.sectionsChangeHandler?(changes)
@@ -287,17 +291,17 @@ extension ProductsDataSource: StoreDelegate {
       let er = error!
       switch er {
       case .offline:
-        submitSections([[.offline]])
+        submit([.offline])
 
       default:
-        submitSections([[.empty]])
+        submit([.empty])
       }
 
       return
     }
     
     guard !products.isEmpty else {
-      return submitSections([[.empty]])
+      return submit([.empty])
     }
 
     let intro = Item.article(
@@ -316,11 +320,13 @@ extension ProductsDataSource: StoreDelegate {
       Choose your price for a non-renewing subscription, granting you to use \
       this app without restrictions for one year.
 
+      Write to me at \(Podest.contact.email)
+
       Of course, you can always restore previous purchases.
       """
     )
 
-    submitSections([[intro], products.map { .product($0) }, [outro]])
+    submit([intro] + products.map { .product($0) } + [outro])
   }
   
   private func indexPath(matching productIdentifier: ProductIdentifier) -> IndexPath?{
@@ -353,7 +359,7 @@ extension ProductsDataSource: StoreDelegate {
   
   func storeRestoring(_ store: Shopping) {
     os_log("store: restoring", log: log, type: .debug)
-    submitSections([[.restoring]])
+    submit([.restoring])
   }
   
   func storeRestored(
@@ -364,36 +370,37 @@ extension ProductsDataSource: StoreDelegate {
            log: log, type: .debug, productIdentifiers)
 
     guard !productIdentifiers.isEmpty else {
-      return submitSections([[.failed("Sorry, no previous purchases to restore.")]])
+      return submit([.failed("Sorry, no previous purchases to restore.")])
     }
 
-    submitSections([[.thanks]])
+    submit([.thanks])
   }
   
   func store(_ store: Shopping, purchased productIdentifier: String) {
     os_log("store: purchased: %{public}@",
            log: log, type: .debug, productIdentifier)
-    submitSections([[.thanks]])
+    submit([.thanks])
   }
-  
-  private static func makeSections(error: ShoppingError) -> [[Item]] {
+
+  /// Produces items from `error`.
+  private static func makeItems(error: ShoppingError) -> [Item] {
     switch error {
     case .cancelled:
-      return [[.failed("Your purchase has been cancelled.")]]
+      return [.failed("Your purchase has been cancelled.")]
     case .failed, .invalidProduct:
-      return [[.failed("Your purchase failed.")]]
+      return [.failed("Your purchase failed.")]
     case .notRestored:
-      return [[.failed("Not restored.")]]
+      return [.failed("Not restored.")]
     case .offline:
-      return [[.offline]]
+      return [.offline]
     case .serviceUnavailable:
-      return [[.failed("The App Store is not available at the moment.")]]
+      return [.failed("The App Store is not available at the moment.")]
     }
   }
   
   func store(_ store: Shopping, error: ShoppingError) {
     os_log("store: error: %{public}@", log: log, error as CVarArg)
-    submitSections(ProductsDataSource.makeSections(error: error))
+    submit(ProductsDataSource.makeItems(error: error))
   }
   
 }

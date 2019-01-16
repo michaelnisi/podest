@@ -17,5 +17,10 @@
       "url": "@@URL@@",
       "secret": "@@SECRET@@"
     }
-  ]
+  ],
+  "contact": {
+    "email": "@@AUTHOR_EMAIL@@",
+    "github": "@@GITHUB_URL@@",
+    "privacy": "@@PRIVACY_URL@@"
+  }
 }

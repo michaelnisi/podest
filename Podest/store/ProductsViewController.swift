@@ -63,12 +63,7 @@ extension ProductsViewController {
 
     ProductsDataSource.registerCells(with: cv)
 
-    let layout = StoreLayout()
-    
-    layout.minimumInteritemSpacing = 20
-    layout.minimumLineSpacing = 30
-
-    cv.collectionViewLayout = layout
+    cv.collectionViewLayout = StoreLayout()
     cv.contentInsetAdjustmentBehavior = .always
     cv.allowsSelection = false
     cv.dataSource = dataSource

@@ -349,15 +349,17 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
 extension ListDataSource {
 
-  /// Drafts an update of this data source executing `operation`, fetching
-  /// the feed, completing its summary, and fetching entries.
+  /// Drafts an update of this data source with `operation`. After
+  /// fetching the feed, completing its summary, and fetching the entries,
+  /// callback blocks are submitted to the main queue, from where changes should
+  /// be committed.
   ///
   /// Use the operation to configure details. We are assuming that users will
   /// commit changes back into this data source via its
   /// `commit(batch:performingWith:completionBlock:)`. Only then sequential data
   /// consistency of collection changes can be ensured. This is the price for
   /// encapsulating all changes in `performBatchUpdates(_:completion:)`, but
-  /// it’s worth it. Who doesn’t like animations and stability?
+  /// who isn’t for smooth animations and resilient data sources?
   /// - [WWDC 2018](https://developer.apple.com/videos/play/wwdc2018/225/)
   func update(_ operation: UpdateOperation) {
     let a = FetchFeed(operation: operation)

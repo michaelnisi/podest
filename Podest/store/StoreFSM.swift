@@ -10,7 +10,7 @@ import UIKit
 import StoreKit
 import os.log
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "store")
 
 /// A locally known product, stored in the local JSON file `products.json`.
 struct LocalProduct: Codable {
@@ -795,7 +795,10 @@ class StoreFSM: NSObject {
     }
   }
 
-  /// Synchronously handles event. **Do not block external users!**
+  /// Synchronously handles event using `sQueue`, our event queue. Obviously,
+  /// a store with one cashier works sequencially.
+  ///
+  /// **Do not block external users!**
   private func event(_ e: StoreEvent) {
     sQueue.sync {
       os_log("handling event: %{public}@", log: log, type: .debug,

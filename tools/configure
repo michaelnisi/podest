@@ -12,18 +12,23 @@ SOURCE_ROOT="${SOURCE_ROOT:-$( cd -P "$( dirname "$SOURCE" )/.." && pwd )}"
 config() {
   local in="$SOURCE_ROOT/config.json.in"
   local out="$SOURCE_ROOT/Podest/config.json"
+
   sed \
     -e "s;@@URL@@;$URL;g" \
     -e "s;@@SECRET@@;$SECRET;g" \
     -e "s;@@MANGER_LOCAL_URL@@;$MANGER_LOCAL_URL;g" \
     -e "s;@@FANBOY_LOCAL_URL@@;$FANBOY_LOCAL_URL;g" \
     -e "s;@@CLOUDKIT_URL@@;$CLOUDKIT_URL;g" \
+    -e "s;@@AUTHOR_EMAIL@@;$AUTHOR_EMAIL;g" \
+    -e "s;@@GITHUB_URL@@;$GITHUB_URL;g" \
+    -e "s;@@PRIVACY_URL@@;$PRIVACY_URL;g" \
     $in > $out
 }
 
 products() {
   local in="$SOURCE_ROOT/products.json.in"
   local out="$SOURCE_ROOT/Podest/products.json"
+
   sed \
     -e "s;@@BRONZE@@;$BRONZE;g" \
     -e "s;@@SILVER@@;$SILVER;g" \

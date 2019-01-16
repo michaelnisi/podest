@@ -208,8 +208,15 @@ private struct Service: Equatable, Decodable {
   }
 }
 
+struct Contact: Decodable {
+  let email: String
+  let github: String
+  let privacy: String
+}
+
 private final class Services: Decodable {
   var services: [Service]
+  var contact: Contact
 
   func service(_ name: String, at version: String) -> Service? {
     return services.filter { svc in
@@ -289,6 +296,10 @@ final private class Config {
 
   fileprivate func service(_ name: String, at version: String) -> Service? {
     return svcs.service(name, at: version)
+  }
+
+  fileprivate var contact: Contact {
+    return svcs.contact
   }
 
   /// Initializes a new setup object with a provided URL of a local JSON
@@ -374,7 +385,11 @@ final private class Config {
     // is the better choice. There’s a reason why Apple isn’t doing it by
     // default.
 
-    return StoreFSM(url: url) //, indicator: Podest.networkActivity)
+    let store = StoreFSM(url: url) //, indicator: Podest.networkActivity)
+
+    store.removeReceipts()
+
+    return store
   }
 
   fileprivate func makeFileRepo() -> FileRepository {
@@ -414,6 +429,10 @@ final class Podest {
   // MARK: Settings
 
   static let settings: Settings = conf.settings
+
+  // MARK: Contact
+
+  static let contact: Contact = conf.contact
 
   // MARK: Indicating Network Activity
 
