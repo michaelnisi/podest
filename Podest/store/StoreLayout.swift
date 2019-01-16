@@ -49,15 +49,24 @@ final class StoreLayout: UICollectionViewLayout {
     case oneThirdTwoThirds
 
     init(collectionView: UICollectionView, numberOfItems: Int) {
-      guard numberOfItems != 1 else {
+      guard numberOfItems > 1 else {
         self = .full
         return
       }
 
-      let traits = collectionView.traitCollection
+      guard
+        collectionView.traitCollection.horizontalSizeClass == .regular,
+        collectionView.traitCollection.verticalSizeClass == .regular else {
 
-      guard traits.horizontalSizeClass == .regular,
-        traits.verticalSizeClass == .regular else {
+        let size = collectionView.bounds.size
+
+        // During development, we want to see mosaic on large phones.
+
+        if size.width > size.height, size.width >= 414 {
+          self = .twoThirdsOneThird
+          return
+        }
+
         self = .fullWidth
         return
       }
@@ -83,16 +92,21 @@ final class StoreLayout: UICollectionViewLayout {
     cachedAttributes.removeAll()
     contentBounds = CGRect(origin: .zero, size: cv.bounds.size)
 
+    var currentIndex = 0
     let count = cv.numberOfItems(inSection: 0)
 
-    var currentIndex = 0
-    var segment = SegmentStyle(collectionView: cv, numberOfItems: count)
     var lastFrame: CGRect = .zero
+    let size = cv.bounds.inset(by: cv.layoutMargins).size
 
-    let cvWidth = cv.bounds.size.width
-
+    var segment = SegmentStyle(collectionView: cv, numberOfItems: count)
+    
     while currentIndex < count {
-      let segmentFrame = CGRect(x: 0, y: lastFrame.maxY + 1.0, width: cvWidth, height: 200.0)
+      let segmentFrame = CGRect(
+        x: cv.layoutMargins.left,
+        y: lastFrame.maxY + 30,
+        width: size.width,
+        height: 200.0
+      )
 
       var segmentRects = [CGRect]()
 
@@ -100,13 +114,18 @@ final class StoreLayout: UICollectionViewLayout {
       case .fullWidth:
         segmentRects = [segmentFrame]
       case .oneThirdTwoThirds:
-        let s = segmentFrame.dividedIntegral(fraction: 1 / 3, from: .minXEdge)
+        let s = segmentFrame.dividedIntegral(fraction: 0.3, from: .minXEdge)
         segmentRects = [s.first, s.second]
       case .twoThirdsOneThird:
-        let s = segmentFrame.dividedIntegral(fraction: 2 / 3, from: .minXEdge)
+        let s = segmentFrame.dividedIntegral(fraction: 0.6, from: .minXEdge)
         segmentRects = [s.first, s.second]
       case .full:
-        segmentRects = [segmentFrame]
+        segmentRects = [CGRect(
+          x: cv.layoutMargins.left,
+          y: cv.layoutMargins.top,
+          width: size.width,
+          height: size.height * 0.6
+        )]
       }
 
       // Creating and caching attributes.
@@ -125,15 +144,21 @@ final class StoreLayout: UICollectionViewLayout {
 
       // Picking the next segment style.
 
-      switch segment {
-      case .fullWidth:
+      switch count - currentIndex {
+      case 1:
+        // We must end with a full segment.
         segment = .fullWidth
-      case .twoThirdsOneThird:
-        segment = .oneThirdTwoThirds
-      case .oneThirdTwoThirds:
-        segment = .twoThirdsOneThird
-      case .full:
-        segment = .fullWidth
+      default:
+        switch segment {
+        case .fullWidth:
+          segment = .fullWidth
+        case .twoThirdsOneThird:
+          segment = .oneThirdTwoThirds
+        case .oneThirdTwoThirds:
+          segment = .twoThirdsOneThird
+        case .full:
+          segment = .fullWidth
+        }
       }
 
     }
