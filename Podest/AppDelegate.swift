@@ -246,11 +246,8 @@ extension AppDelegate {
     _ application: UIApplication,
     supportedInterfaceOrientationsFor window: UIWindow?
   ) -> UIInterfaceOrientationMask {
-
-    let o = window?.rootViewController?.supportedInterfaceOrientations
-
     guard let tc = window?.traitCollection else {
-      return o ?? .portrait
+      return .portrait
     }
 
     let regular = UITraitCollection(traitsFrom: [
@@ -258,19 +255,17 @@ extension AppDelegate {
       UITraitCollection(verticalSizeClass: .regular)
     ])
 
-    if tc.containsTraits(in: regular) {
-      return o ?? .allButUpsideDown
-    } else {
-      guard let w = window else {
-        return o ?? .portrait
+    guard tc.containsTraits(in: regular) else {
+      // A development argument allows landscape mode on larger phones.
+      if Podest.settings.allButUpsideDown, let size = window?.bounds.size {
+        let s = min(size.width, size.height)
+        return s >= 414 ? .allButUpsideDown : .portrait
+      } else {
+        return .portrait
       }
-
-      let s = min(w.bounds.width, w.bounds.height)
-
-      // Allowing Max, XR, and Plus sizes.
-
-      return s >= 414 ? .allButUpsideDown : .portrait
     }
+
+    return .allButUpsideDown
   }
 
 }

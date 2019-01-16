@@ -240,6 +240,9 @@ struct Settings {
   /// simulators, where background downloads may be pointless.
   let noDownloading: Bool
 
+  /// Allows all interface orientations.
+  let allButUpsideDown: Bool
+
 }
 
 /// Extending user defaults with our settings.
@@ -310,12 +313,13 @@ final private class Config {
     let args = ProcessInfo.processInfo.arguments
 
     // Disabling sync also disables preloading media files.
-    let noSync = args.contains("-ink.codes.podest.nosync")
+    let noSync = args.contains("-ink.codes.podest.noSync")
 
     settings = Settings(
       noSync: noSync,
       flush: args.contains("-ink.codes.podest.flush"),
-      noDownloading: args.contains("-ink.codes.podest.nodown") || noSync
+      noDownloading: args.contains("-ink.codes.podest.noDownloading") || noSync,
+      allButUpsideDown: args.contains("-ink.codes.podest.allButUpsideDown")
     )
 
     os_log("settings: %{public}@", log: log, type: .info, String(describing: settings))

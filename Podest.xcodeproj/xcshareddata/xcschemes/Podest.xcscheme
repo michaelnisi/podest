@@ -89,7 +89,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-ink.codes.podest.nosync"
+            argument = "-ink.codes.podest.noSync"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
@@ -97,8 +97,12 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-ink.codes.podest.nodown"
+            argument = "-ink.codes.podest.noDownloading"
             isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-ink.codes.podest.allButUpsideDown"
+            isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
       <EnvironmentVariables>
