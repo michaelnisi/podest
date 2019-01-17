@@ -9,13 +9,12 @@
 import UIKit
 
 class ArticleCollectionViewCell: UICollectionViewCell {
-  @IBOutlet weak var categoryLabel: UILabel!
 
-  @IBOutlet weak var headlineLabel: UILabel!
-  @IBOutlet weak var bodyLabel: UILabel!
+  @IBOutlet weak var textView: UITextView!
+
   override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
+    super.awakeFromNib()
+    // Initialization code
+  }
 
 }

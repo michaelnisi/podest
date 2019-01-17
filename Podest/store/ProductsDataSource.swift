@@ -19,9 +19,17 @@ protocol CellProductsDelegate {
 /// Provides a single section presenting in-app purchasing.
 final class ProductsDataSource: NSObject, SectionedDataSource {
 
+  /// For making an attributed paragraph.
+  struct Info: Summarizable {
+    var summary: String?
+    var title: String
+    var author: String?
+    var guid: String
+  }
+
   /// Enumerates item types provided by this data source.
   enum Item: Hashable {
-    case article(String, String, String)
+    case article(Info)
     case offline
     case empty
     case product(SKProduct)
@@ -128,21 +136,12 @@ extension ProductsDataSource: UICollectionViewDataSource {
     let item = storeItem(where: indexPath)
     
     switch item {
-    case .article(let category, let headline, let body):
+    case .article(let info):
       let cell = collectionView.dequeueReusableCell(
         withReuseIdentifier: ProductsDataSource.articleCellID,
         for: indexPath) as! ArticleCollectionViewCell
 
-      cell.categoryLabel.font = .preferredFont(forTextStyle: .body)
-      cell.categoryLabel.text = category
-
-      cell.headlineLabel.font = UIFontMetrics.default.scaledFont(for:
-        .systemFont(ofSize: 29, weight: .bold))
-      cell.headlineLabel.text = headline
-
-      cell.bodyLabel.font = UIFontMetrics.default.scaledFont(for:
-        .systemFont(ofSize: 19, weight: .medium))
-      cell.bodyLabel.text = body
+      cell.textView.attributedText = StringRepository.makeSummaryWithHeadline(info: info)
 
       return cell
     case .offline:
@@ -175,11 +174,13 @@ extension ProductsDataSource: UICollectionViewDataSource {
       // source, in one place. Having to switch into cell implementations,
       // while working on the data source is distracting.
 
+      let p = priceFormatter.string(for: product.price) ?? "Sorry"
+
       cell.data = ProductCell.Data(
         productIdentifier: product.productIdentifier,
         productName: product.localizedTitle,
-        productDescription: product.localizedDescription,
-        price: priceFormatter.string(for: product.price) ?? "Sorry"
+        productDescription: product.localizedDescription + "\n\(p) per year.",
+        price: p
       )
 
       cell.delegate = self
@@ -304,29 +305,48 @@ extension ProductsDataSource: StoreDelegate {
       return submit([.empty])
     }
 
-    let intro = Item.article(
-      "Support",
-      "Making apps is hard",
-      """
+    let claim = Info(
+      summary: """
       Help me deliver podcasts. Here are three ways you can enjoy podcasts \
-      with Podest for one year.
-      """
+      with Podest for one year, supporting me writing open source software.
+      """,
+      title: "Making apps is hard",
+      author: "Michael Nisi",
+      guid: UUID().uuidString
     )
 
-    let outro = Item.article(
-      "Thanks",
-      "Making apps is fun",
-      """
+    let explain = Info(
+      summary:"""
       Choose your price for a non-renewing subscription, granting you to use \
       this app without restrictions for one year.
-
-      Write to me at \(Podest.contact.email)
-
+      <p>
       Of course, you can always restore previous purchases.
-      """
+      </p>
+      """,
+      title: "Choose your price",
+      author: "Michael Nisi",
+      guid: UUID().uuidString
     )
 
-    submit([intro] + products.map { .product($0) } + [outro])
+    let open = Info(
+      summary:"""
+      Podest is open source software. Find all its source code on
+      <a href="\(Podest.contact.github)">GitHub</a>.
+      <p>
+      Write to <a href="mailto:\(Podest.contact.email)">me</a> if you have any \
+      questions. I write back.
+      </p>
+      """,
+      title: "100% Open Source",
+      author: "Michael Nisi",
+      guid: UUID().uuidString
+    )
+
+    submit(
+      [.article(claim)] +
+      products.map { .product($0) } +
+      [.article(explain), .article(open)]
+    )
   }
   
   private func indexPath(matching productIdentifier: ProductIdentifier) -> IndexPath?{

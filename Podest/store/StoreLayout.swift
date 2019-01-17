@@ -105,7 +105,7 @@ final class StoreLayout: UICollectionViewLayout {
         x: cv.layoutMargins.left,
         y: lastFrame.maxY + 30,
         width: size.width,
-        height: 200.0
+        height: 240
       )
 
       var segmentRects = [CGRect]()
@@ -146,7 +146,7 @@ final class StoreLayout: UICollectionViewLayout {
 
       switch count - currentIndex {
       case 1:
-        // We must end with a full segment.
+        // We must end with a full segment to pass layout assert.
         segment = .fullWidth
       default:
         switch segment {

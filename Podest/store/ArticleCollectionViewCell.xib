@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,52 +19,28 @@
                 <rect key="frame" x="0.0" y="0.0" width="314" height="194"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Category" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YVH-Ez-U79">
-                        <rect key="frame" x="16" y="0.0" width="282" height="14.5"/>
-                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                        <color key="textColor" name="Asphalt"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Headline" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bm0-69-xKp">
-                        <rect key="frame" x="16" y="14.5" width="282" height="20.5"/>
-                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Body" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IRa-Ws-IZV">
-                        <rect key="frame" x="16" y="35" width="282" height="159"/>
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" editable="NO" textAlignment="natural" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="A4o-89-vGM">
+                        <rect key="frame" x="16" y="0.0" width="282" height="194"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                        <color key="textColor" name="Asphalt"/>
-                        <nil key="highlightedColor"/>
-                    </label>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    </textView>
                 </subviews>
             </view>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="IRa-Ws-IZV" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leadingMargin" id="H3R-3H-tZh"/>
-                <constraint firstItem="IRa-Ws-IZV" firstAttribute="top" secondItem="bm0-69-xKp" secondAttribute="bottom" id="Jbh-sQ-2fs"/>
-                <constraint firstAttribute="trailingMargin" secondItem="YVH-Ez-U79" secondAttribute="trailing" id="SRl-6k-TY7"/>
-                <constraint firstItem="bm0-69-xKp" firstAttribute="top" secondItem="YVH-Ez-U79" secondAttribute="bottom" id="c75-fW-vzw"/>
-                <constraint firstItem="bm0-69-xKp" firstAttribute="trailing" secondItem="gTV-IL-0wX" secondAttribute="trailingMargin" id="dBv-3s-hZH"/>
-                <constraint firstItem="YVH-Ez-U79" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leadingMargin" id="guK-qB-exX"/>
-                <constraint firstAttribute="bottomMargin" secondItem="IRa-Ws-IZV" secondAttribute="bottom" id="isa-Kv-yCZ"/>
-                <constraint firstItem="IRa-Ws-IZV" firstAttribute="trailing" secondItem="gTV-IL-0wX" secondAttribute="trailingMargin" id="kz1-eo-hAT"/>
-                <constraint firstItem="YVH-Ez-U79" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="topMargin" id="oT2-Nf-4fe"/>
-                <constraint firstItem="bm0-69-xKp" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leadingMargin" id="s4x-tA-Acm"/>
+                <constraint firstItem="A4o-89-vGM" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leadingMargin" id="8jX-ZK-Xem"/>
+                <constraint firstAttribute="trailingMargin" secondItem="A4o-89-vGM" secondAttribute="trailing" id="l0V-6U-iv2"/>
+                <constraint firstItem="A4o-89-vGM" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="topMargin" id="qhG-Hv-Sdh"/>
+                <constraint firstAttribute="bottomMargin" secondItem="A4o-89-vGM" secondAttribute="bottom" id="tx2-Ei-RLg"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <size key="customSize" width="314" height="194"/>
             <connections>
-                <outlet property="bodyLabel" destination="IRa-Ws-IZV" id="EjW-oD-7ZV"/>
-                <outlet property="categoryLabel" destination="YVH-Ez-U79" id="OxI-bx-kYY"/>
-                <outlet property="headlineLabel" destination="bm0-69-xKp" id="RBQ-gy-r0d"/>
+                <outlet property="textView" destination="A4o-89-vGM" id="Nzh-ab-Kds"/>
             </connections>
             <point key="canvasLocation" x="352" y="219.49025487256372"/>
         </collectionViewCell>
     </objects>
-    <resources>
-        <namedColor name="Asphalt">
-            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-    </resources>
 </document>

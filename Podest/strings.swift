@@ -14,7 +14,7 @@ private let log = OSLog.disabled
 
 // MARK: - Summaries
 
-private protocol Summarizable: Hashable {
+protocol Summarizable: Hashable {
   var summary: String? { get }
   var title: String { get }
   var author: String? { get }
@@ -166,6 +166,15 @@ extension StringRepository {
   static func makeSummaryWithHeadline(entry: Entry) -> NSAttributedString {
     return Summary<Entry>(
       item: entry,
+      items: summaries,
+      attributes: summaryAttributes
+    ).attributedString
+  }
+
+  /// Returns an attributed summary with headline.
+  static func makeSummaryWithHeadline(info: ProductsDataSource.Info) -> NSAttributedString {
+    return Summary<ProductsDataSource.Info>(
+      item: info,
       items: summaries,
       attributes: summaryAttributes
     ).attributedString
