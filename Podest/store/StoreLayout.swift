@@ -11,7 +11,7 @@ import UIKit
 private extension CGRect {
 
   func dividedIntegral(
-    fraction: CGFloat, from fromEdge: CGRectEdge
+    fraction: CGFloat, from fromEdge: CGRectEdge, spacing: CGFloat = 18
   ) -> (first: CGRect, second: CGRect) {
     let dimension: CGFloat
 
@@ -27,11 +27,11 @@ private extension CGRect {
 
     switch fromEdge {
     case .minXEdge, .maxXEdge:
-      slices.remainder.origin.x += 1
-      slices.remainder.size.width -= 1
+      slices.remainder.origin.x += spacing
+      slices.remainder.size.width -= spacing
     case .minYEdge, .maxYEdge:
-      slices.remainder.origin.y += 1
-      slices.remainder.size.height -= 1
+      slices.remainder.origin.y += spacing
+      slices.remainder.size.height -= spacing
     }
 
     return (first: slices.slice, second: slices.remainder)
@@ -105,7 +105,7 @@ final class StoreLayout: UICollectionViewLayout {
         x: cv.layoutMargins.left,
         y: lastFrame.maxY + 30,
         width: size.width,
-        height: 240
+        height: max(min(size.height / 3, 320), 240)
       )
 
       var segmentRects = [CGRect]()

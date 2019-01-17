@@ -98,6 +98,7 @@ class ProductCell: UICollectionViewCell {
   
   override func prepareForReuse() {
     super.prepareForReuse()
+    
     data = nil
     isPurchasing = false
   }
@@ -105,8 +106,9 @@ class ProductCell: UICollectionViewCell {
   override func awakeFromNib() {
     super.awakeFromNib()
 
-    let ps = UIFont.preferredFont(forTextStyle: .largeTitle).pointSize
-    title.font = UIFont.boldSystemFont(ofSize: ps)
+    title.font = UIFontMetrics.default.scaledFont(for:
+      .systemFont(ofSize: 29, weight: .bold)
+    )
 
     subtitle.font = UIFontMetrics.default.scaledFont(for:
       .systemFont(ofSize: 19, weight: .medium)

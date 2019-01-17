@@ -14,7 +14,9 @@ class ArticleCollectionViewCell: UICollectionViewCell {
 
   override func awakeFromNib() {
     super.awakeFromNib()
-    // Initialization code
+    
+    layer.cornerRadius = 16
+    layer.masksToBounds = true
   }
 
 }

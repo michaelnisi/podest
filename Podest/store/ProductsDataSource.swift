@@ -309,7 +309,7 @@ extension ProductsDataSource: StoreDelegate {
     let claim = Info(
       summary: """
       Help me deliver podcasts. Here are three ways you can enjoy podcasts \
-      with Podest for one year, supporting me writing open source software.
+      with Podest for one year and support my work.
       """,
       title: "Making apps is hard",
       author: "Michael Nisi",
@@ -318,7 +318,7 @@ extension ProductsDataSource: StoreDelegate {
 
     let explain = Info(
       summary:"""
-      Choose your own price for a non-renewing subscription, granting you to use \
+      Choose your price for a non-renewing subscription, granting you to use \
       this app without restrictions for one year.
       <p>
       Of course, you can always <a href="restore:">restore</a> previous purchases.
@@ -331,11 +331,11 @@ extension ProductsDataSource: StoreDelegate {
 
     let open = Info(
       summary:"""
-      Podest is open source software. Find all its source code on
+      Find all source code of this app on
       <a href="\(Podest.contact.github)">GitHub</a>.
       <p>
       Write to <a href="mailto:\(Podest.contact.email)">me</a> if you have any \
-      questions. I write back.
+      questions.
       </p>
       """,
       title: "100% Open Source",
