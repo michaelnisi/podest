@@ -12,7 +12,7 @@ import os.log
 
 private let log = OSLog.disabled
 
-protocol CellProductsDelegate {
+protocol CellProductsDelegate: class {
   func cell(_ cell: UICollectionViewCell, payProductMatching productIdentifier: String)
 }
 
@@ -142,6 +142,7 @@ extension ProductsDataSource: UICollectionViewDataSource {
         for: indexPath) as! ArticleCollectionViewCell
 
       cell.textView.attributedText = StringRepository.makeSummaryWithHeadline(info: info)
+      cell.textView.delegate = self
 
       return cell
     case .offline:
@@ -169,7 +170,7 @@ extension ProductsDataSource: UICollectionViewDataSource {
 
       priceFormatter.locale = product.priceLocale
 
-      // In the mean time, I have grown sceptical about this self-configuring
+      // In the meantime, I’ve grown sceptical about this self-configuring
       // cells technique. I’d rather encapsulate all configuration in the data
       // source, in one place. Having to switch into cell implementations,
       // while working on the data source is distracting.
@@ -236,7 +237,7 @@ extension ProductsDataSource: UITextViewDelegate {
     interaction: UITextItemInteraction
   ) -> Bool {
     switch URL.absoluteString {
-    case "restore":
+    case "restore:":
       Podest.store.restore()
       return false
     default:
@@ -317,10 +318,10 @@ extension ProductsDataSource: StoreDelegate {
 
     let explain = Info(
       summary:"""
-      Choose your price for a non-renewing subscription, granting you to use \
+      Choose your own price for a non-renewing subscription, granting you to use \
       this app without restrictions for one year.
       <p>
-      Of course, you can always restore previous purchases.
+      Of course, you can always <a href="restore:">restore</a> previous purchases.
       </p>
       """,
       title: "Choose your price",

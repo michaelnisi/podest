@@ -37,7 +37,7 @@ class ProductCell: UICollectionViewCell {
     delegate?.cell(self, payProductMatching: data!.productIdentifier)
   }
   
-  var delegate: CellProductsDelegate?
+  weak var delegate: CellProductsDelegate?
   
   struct Data: Equatable {
     let productIdentifier: String
