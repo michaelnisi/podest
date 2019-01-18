@@ -149,11 +149,14 @@ extension ListViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    ListDataSource.registerCells(with: tableView!)
+
+    refreshControl = UIRefreshControl()
+    installRefreshControl()
 
     navigationItem.largeTitleDisplayMode = .never
-    
+
+    ListDataSource.registerCells(with: tableView!)
+
     tableView.dataSource = dataSource
 
     // Leaving off the last separator.
@@ -244,55 +247,36 @@ extension ListViewController {
 
 // MARK: - Managing Refresh Control
 
-//extension ListViewController {
-//
-//  @objc func refreshControlValueChanged(_ sender:AnyObject) {
-//    guard sender.isRefreshing else {
-//      return
-//    }
-//
-//    // TODO: Update
-//  }
-//
-//  private func makeRefreshControl() -> UIRefreshControl {
-//    let rc = UIRefreshControl()
-//    let action = #selector(refreshControlValueChanged)
-//
-//    rc.addTarget(self, action: action, for: .valueChanged)
-//
-//    return rc
-//  }
-//
-//  override func scrollViewDidEndDragging(
-//    _ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-//    guard let rc = tableView.refreshControl, rc.isRefreshing else {
-//      return
-//    }
-//
-//    DispatchQueue.main.async {
-//      rc.endRefreshing()
-//    }
-//
-//    // TODO: Refresh
-//
-//  }
-//
-//  override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//    let y = scrollView.contentOffset.y
-//
-//    if lastContentOffset < y {
-//      DispatchQueue.main.async {
-//        self.refreshControl?.endRefreshing()
-//      }
-//    }
-//
-//    lastContentOffset = y
-//
-//
-//
-//  }
-//
-//}
+extension ListViewController {
+
+  @objc func refreshControlValueChanged(_ sender:AnyObject) {
+    guard sender.isRefreshing else {
+      return
+    }
+
+    // TODO: Update
+  }
+
+  private func installRefreshControl() {
+    let s = #selector(refreshControlValueChanged)
+    refreshControl?.addTarget(self, action: s, for: .valueChanged)
+  }
+
+  override func scrollViewDidEndDragging(
+    _ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    guard let rc = refreshControl, rc.isRefreshing else {
+      return
+    }
+
+    DispatchQueue.main.async {
+      rc.endRefreshing()
+    }
+
+    // TODO: Refresh
+
+  }
+
+}
 
 // MARK: - UITableViewDelegate
 

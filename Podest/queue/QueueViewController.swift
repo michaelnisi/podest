@@ -173,6 +173,8 @@ extension QueueViewController {
       return
     }
 
+    refreshControlTimer = nil
+
     dataSource.update(minding: 60)
   }
 
@@ -271,7 +273,7 @@ extension QueueViewController {
     
     if isStoreAccessible {
       let it = UIBarButtonItem(
-        title: "BUY", style: .plain,
+        title: "Free Trial", style: .plain,
         target: self, action: #selector(onShowStore))
       navigationItem.rightBarButtonItem = it
     } else {
@@ -300,8 +302,15 @@ extension QueueViewController {
   }
 
   override func viewDidDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
     updateStoreButton()
+
+    super.viewDidDisappear(animated)
+  }
+
+  override func viewWillDisappear(_ animated: Bool) {
+    refreshControlTimer = nil
+
+    super.viewWillDisappear(animated)
   }
   
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
