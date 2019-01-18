@@ -331,7 +331,8 @@ extension ProductsDataSource: StoreDelegate {
 
     let open = Info(
       summary:"""
-      If you feel so inclined, please create issues on <a href="\(Podest.contact.github)">GitHub</a>.
+      If you feel so inclined, please create issues on \
+      <a href="\(Podest.contact.github)">GitHub</a>.
       <p>
       <a href="mailto:\(Podest.contact.email)">Email me</a> if you have any \
       questions.

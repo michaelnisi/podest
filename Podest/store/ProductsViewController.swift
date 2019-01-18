@@ -42,16 +42,12 @@ final class ProductsViewController: UICollectionViewController {
     
     return ds
   }()
-
-  var orginalLayoutMargins: UIEdgeInsets?
   
 }
 
 // MARK: - UIViewController
 
 extension ProductsViewController {
-
-
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -77,32 +73,6 @@ extension ProductsViewController {
     super.viewDidAppear(animated)
 
     Podest.store.update()
-  }
-
-  override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-    defer {
-      super.traitCollectionDidChange(previousTraitCollection)
-    }
-
-    guard let cv = collectionView else {
-      return
-    }
-
-    if traitCollection.horizontalSizeClass == .regular,
-      traitCollection.verticalSizeClass == .regular {
-      let margin = min(cv.bounds.width / 10, 80)
-
-      orginalLayoutMargins = cv.layoutMargins
-
-      cv.layoutMargins = UIEdgeInsets(
-        top: cv.layoutMargins.top,
-        left: margin,
-        bottom: cv.layoutMargins.bottom,
-        right: margin
-      )
-    } else {
-      cv.layoutMargins = orginalLayoutMargins ?? cv.layoutMargins
-    }
   }
 
 }

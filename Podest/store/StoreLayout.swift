@@ -81,6 +81,24 @@ final class StoreLayout: UICollectionViewLayout {
   /// The attributes cache.
   private var cachedAttributes = [UICollectionViewLayoutAttributes]()
 
+  /// Returns the initial rectangular space for our layout.
+  private
+  static func makeRectangle(collectionView cv: UICollectionView) -> CGRect {
+    guard cv.traitCollection.horizontalSizeClass == .regular,
+      cv.traitCollection.verticalSizeClass == .regular else {
+      return cv.bounds.inset(by: cv.layoutMargins)
+    }
+
+    let margin = min(cv.bounds.width / 9, 120)
+
+    return cv.bounds.inset(by: UIEdgeInsets(
+      top: cv.layoutMargins.top,
+      left: margin,
+      bottom: cv.layoutMargins.bottom,
+      right: margin
+    ))
+  }
+
   override func prepare() {
     super.prepare()
 
@@ -96,16 +114,16 @@ final class StoreLayout: UICollectionViewLayout {
     let count = cv.numberOfItems(inSection: 0)
 
     var lastFrame: CGRect = .zero
-    let size = cv.bounds.inset(by: cv.layoutMargins).size
+    let rect = StoreLayout.makeRectangle(collectionView: cv)
 
     var segment = SegmentStyle(collectionView: cv, numberOfItems: count)
     
     while currentIndex < count {
       let segmentFrame = CGRect(
-        x: cv.layoutMargins.left,
+        x: rect.origin.x,
         y: lastFrame.maxY + 30,
-        width: size.width,
-        height: max(min(size.height / 3, 280), 240)
+        width: rect.width,
+        height: max(min(rect.height / 3, 280), 240)
       )
 
       var segmentRects = [CGRect]()
@@ -121,10 +139,10 @@ final class StoreLayout: UICollectionViewLayout {
         segmentRects = [s.first, s.second]
       case .full:
         segmentRects = [CGRect(
-          x: cv.layoutMargins.left,
-          y: cv.layoutMargins.top,
-          width: size.width,
-          height: size.height * 0.6
+          x: rect.origin.x,
+          y: rect.origin.y,
+          width: rect.width,
+          height: rect.height * 0.6
         )]
       }
 
