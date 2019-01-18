@@ -331,10 +331,9 @@ extension ProductsDataSource: StoreDelegate {
 
     let open = Info(
       summary:"""
-      Find all source code of this app on
-      <a href="\(Podest.contact.github)">GitHub</a>.
+      If you feel so inclined, please create issues on <a href="\(Podest.contact.github)">GitHub</a>.
       <p>
-      Write to <a href="mailto:\(Podest.contact.email)">me</a> if you have any \
+      <a href="mailto:\(Podest.contact.email)">Email me</a> if you have any \
       questions.
       </p>
       """,

@@ -11,7 +11,7 @@ import UIKit
 private extension CGRect {
 
   func dividedIntegral(
-    fraction: CGFloat, from fromEdge: CGRectEdge, spacing: CGFloat = 18
+    fraction: CGFloat, from fromEdge: CGRectEdge, spacing: CGFloat = 20
   ) -> (first: CGRect, second: CGRect) {
     let dimension: CGFloat
 
@@ -105,7 +105,7 @@ final class StoreLayout: UICollectionViewLayout {
         x: cv.layoutMargins.left,
         y: lastFrame.maxY + 30,
         width: size.width,
-        height: max(min(size.height / 3, 320), 240)
+        height: max(min(size.height / 3, 280), 240)
       )
 
       var segmentRects = [CGRect]()
@@ -163,9 +163,9 @@ final class StoreLayout: UICollectionViewLayout {
 
     }
 
-    // Not withholding the last frame.
+    // Not withholding the last frame adding some space.
 
-    contentBounds = contentBounds.union(lastFrame)
+    contentBounds = contentBounds.union(lastFrame.offsetBy(dx: 0, dy: 60))
   }
 
   override var collectionViewContentSize: CGSize {

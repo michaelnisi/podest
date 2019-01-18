@@ -90,7 +90,7 @@ extension ProductsViewController {
 
     if traitCollection.horizontalSizeClass == .regular,
       traitCollection.verticalSizeClass == .regular {
-      let margin = cv.bounds.width / 10
+      let margin = min(cv.bounds.width / 10, 80)
 
       orginalLayoutMargins = cv.layoutMargins
 
