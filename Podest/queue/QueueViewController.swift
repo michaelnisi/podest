@@ -200,6 +200,10 @@ extension QueueViewController {
       [weak self] in
       self?.refreshControlTimer = nil
 
+      guard let rc = self?.refreshControl, !rc.isRefreshing else {
+        return
+      }
+
       self?.reload()
     }
 
@@ -273,11 +277,15 @@ extension QueueViewController {
     
     if isStoreAccessible {
       let it = UIBarButtonItem(
-        title: "Free Trial", style: .plain,
-        target: self, action: #selector(onShowStore))
-      navigationItem.rightBarButtonItem = it
+        title: "Free Trial",
+        style: .plain,
+        target: self,
+        action: #selector(onShowStore)
+      )
+
+      navigationItem.leftBarButtonItem = it
     } else {
-      navigationItem.rightBarButtonItem = nil
+      navigationItem.leftBarButtonItem = nil
     }
 
     isStoreAccessibleChanged = false
