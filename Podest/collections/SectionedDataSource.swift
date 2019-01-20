@@ -129,13 +129,13 @@ extension SectionedDataSource {
       while sectionsCountDiff < 0 {
         sectionsToDelete.insert(sectionsCountDiff + count)
 
-        sectionsCountDiff = sectionsCountDiff + 1
+        sectionsCountDiff += 1
 
         self.sections.removeLast()
       }
 
       while sectionsCountDiff > 0 {
-        sectionsCountDiff = sectionsCountDiff - 1
+        sectionsCountDiff -= 1
 
         sectionsToInsert.insert(sectionsCountDiff + count)
 
