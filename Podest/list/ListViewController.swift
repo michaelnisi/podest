@@ -158,7 +158,6 @@ extension ListViewController {
       }
     }
 
-    // Allowing us to cancel the operation later if necessary.
     updating = dataSource.update(op)
   }
   
@@ -168,13 +167,18 @@ extension ListViewController {
 
 extension ListViewController {
 
+  private var isRegular: Bool {
+    return traitCollection.verticalSizeClass == .regular &&
+      traitCollection.horizontalSizeClass == .regular
+  }
+
   override func viewDidLoad() {
     super.viewDidLoad()
 
     refreshControl = UIRefreshControl()
     installRefreshControl()
 
-    navigationItem.largeTitleDisplayMode = .automatic
+    navigationItem.largeTitleDisplayMode = isRegular ? .automatic : .never
 
     ListDataSource.registerCells(with: tableView!)
 
@@ -233,8 +237,7 @@ extension ListViewController {
     resignFirstResponder()
     adjustInsets()
 
-    if traitCollection.verticalSizeClass == .regular,
-      traitCollection.horizontalSizeClass == .regular {
+    if isRegular {
       title = feed?.title
     } else {
       title = nil
@@ -289,8 +292,7 @@ extension ListViewController {
       }
     }
 
-    // Allowing us to cancel the operation later if necessary.
-    updating = dataSource.update(op)
+    updating = dataSource.update(op, forcing: true)
   }
 
   private func installRefreshControl() {

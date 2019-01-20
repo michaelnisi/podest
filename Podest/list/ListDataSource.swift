@@ -351,6 +351,10 @@ extension ListDataSource {
   /// callback blocks are submitted to the main queue, from where changes should
   /// be committed.
   ///
+  /// - Parameters:
+  ///   - operation: The update operation to execute.
+  ///   - forcing: Overrides cache settings, replacing all entries.
+  ///
   /// Use the operation to configure details. We are assuming that users will
   /// commit changes back into this data source via its
   /// `commit(batch:performingWith:completionBlock:)`. Only then sequential data
@@ -358,7 +362,7 @@ extension ListDataSource {
   /// encapsulating all changes in `performBatchUpdates(_:completion:)`, but
   /// who isn’t for smooth animations and resilient data sources?
   /// - [WWDC 2018](https://developer.apple.com/videos/play/wwdc2018/225/)
-  func update(_ operation: UpdateOperation) -> UpdateOperation {
+  func update(_ operation: UpdateOperation, forcing: Bool = false) -> UpdateOperation {
     os_log("updating: %@", log: log, type: .debug, operation)
     
     let a = FetchFeed(operation: operation)
@@ -387,6 +391,7 @@ extension ListDataSource {
 
     b.addDependency(browser.entries(
       b.locators,
+      force: forcing,
       entriesBlock: nil,
       entriesCompletionBlock: nil
     ))
