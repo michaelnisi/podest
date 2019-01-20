@@ -138,12 +138,7 @@ final class StoreLayout: UICollectionViewLayout {
         let s = segmentFrame.dividedIntegral(fraction: 0.6, from: .minXEdge)
         segmentRects = [s.first, s.second]
       case .full:
-        segmentRects = [CGRect(
-          x: rect.origin.x,
-          y: rect.origin.y,
-          width: rect.width,
-          height: rect.height * 0.6
-        )]
+        segmentRects = [rect]
       }
 
       // Creating and caching attributes.
@@ -181,9 +176,11 @@ final class StoreLayout: UICollectionViewLayout {
 
     }
 
-    // Not withholding the last frame adding some space.
+    // Not withholding the last frame adding some space if we have more than
+    // one item.
 
-    contentBounds = contentBounds.union(lastFrame.offsetBy(dx: 0, dy: 60))
+    contentBounds = contentBounds.union(lastFrame
+      .offsetBy(dx: 0, dy: count > 1 ? 60 : 0))
   }
 
   override var collectionViewContentSize: CGSize {
