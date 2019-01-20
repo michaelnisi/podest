@@ -63,7 +63,7 @@ Navigator, EntryRowSelectable {
       }
     }
   }
-  
+
   /// The feed to display. If we start from `url`, `feed` will be updated after
   /// it has been fetched. Setting this to `nil` is a mistake.
   var feed: Feed? {
@@ -96,17 +96,29 @@ Navigator, EntryRowSelectable {
 
   var navigationDelegate: ViewControllers?
 
+  /// Deferred sequence of changes.
+  private var changeBatches = [[[Change<ListDataSource.Item>]]]()
+
+  /// Delays our commiting of above deferred changes, so refresh control can
+  /// finish its hiding animation.
+  private var refreshControlTimer: DispatchSourceTimer? {
+    willSet {
+      refreshControlTimer?.cancel()
+    }
+  }
+
 }
 
 // MARK: - Fetching Feed and Entries
 
 extension ListViewController {
 
-  /// Updates this list.
-  ///
-  /// The crux, feed and entries a separate, and sometimes the feed needs to be
-  /// fetched remotely, for example, if it contains no summary yet.
-  private func update(forcing: Bool = false, completionBlock: (() -> Void)? = nil) {
+  private typealias Sections = [Array<ListDataSource.Item>]
+  private typealias Changes = [[Change<ListDataSource.Item>]]
+
+  private func makeUpdateOperation(
+    updatesBlock: ((Sections, Changes, Error?) -> Void)? = nil
+  ) -> ListDataSource.UpdateOperation {
     guard let url = self.url else {
       fatalError("cannot refresh without URL")
     }
@@ -115,30 +127,39 @@ extension ListViewController {
       url: url, originalFeed: feed, isCompact: isCompact)
 
     op.feedBlock = { [weak self] feed, error in
-      self?.feed = feed
+      DispatchQueue.main.async {
+        self?.feed = feed
+      }
     }
 
-    op.updatesBlock = { [weak self] sections, changes, error in
-      guard let tv = self?.tableView else {
-        return
-      }
+    op.updatesBlock = updatesBlock
 
-      self?.dataSource.commit(changes, performingWith: .table(tv)) { _ in
-        guard let entry = self?.navigationDelegate?.entry else {
+    return op
+  }
+
+  /// Updates this list.
+  ///
+  /// The crux, feed and entries a separate, and sometimes the feed needs to be
+  /// fetched remotely, for example, if it contains no summary yet.
+  private func update(forcing: Bool = false, completionBlock: (() -> Void)? = nil) {
+    let op = makeUpdateOperation { [weak self] sections, changes, error in
+      DispatchQueue.main.async {
+        guard let tv = self?.tableView else {
           return
         }
 
-        self?.selectRow(representing: entry, animated: true)
-      }
+        self?.dataSource.commit(changes, performingWith: .table(tv)) { _ in
+          if let entry = self?.navigationDelegate?.entry {
+            self?.selectRow(representing: entry, animated: true)
+          }
 
+          completionBlock?()
+        }
+      }
     }
 
-    op.completionBlock = completionBlock
-
     // Allowing us to cancel the operation later if necessary.
-    updating = op
-
-    dataSource.update(op)
+    updating = dataSource.update(op)
   }
   
 }
@@ -153,7 +174,7 @@ extension ListViewController {
     refreshControl = UIRefreshControl()
     installRefreshControl()
 
-    navigationItem.largeTitleDisplayMode = .never
+    navigationItem.largeTitleDisplayMode = .automatic
 
     ListDataSource.registerCells(with: tableView!)
 
@@ -175,16 +196,8 @@ extension ListViewController {
 
     super.viewWillAppear(animated)
   }
-  
-  override func viewWillLayoutSubviews() {
-    defer {
-      super.viewWillLayoutSubviews()
-    }
 
-    guard tableView.refreshControl?.isHidden ?? true else {
-      return
-    }
-
+  private func adjustInsets() {
     let insets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
 
     tableView.scrollIndicatorInsets = insets
@@ -192,9 +205,11 @@ extension ListViewController {
   }
 
   override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-
     updating?.cancel()
+    refreshControlTimer = nil
+    changeBatches.removeAll()
+
+    super.viewWillDisappear(animated)
   }
 
 }
@@ -211,7 +226,19 @@ extension ListViewController {
     _ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
 
+    guard isViewLoaded else {
+      return
+    }
+
     resignFirstResponder()
+    adjustInsets()
+
+    if traitCollection.verticalSizeClass == .regular,
+      traitCollection.horizontalSizeClass == .regular {
+      title = feed?.title
+    } else {
+      title = nil
+    }
 
     // Showing or hiding header if available height has changed.
 
@@ -249,17 +276,30 @@ extension ListViewController {
 
 extension ListViewController {
 
-  @objc func refreshControlValueChanged(_ sender:AnyObject) {
+  @objc func refreshControlValueChanged(_ sender: UIRefreshControl) {
     guard sender.isRefreshing else {
       return
     }
 
-    // TODO: Update
+    changeBatches.removeAll()
+
+    let op = makeUpdateOperation { [weak self] sections, changes, error in
+      DispatchQueue.main.async {
+        self?.changeBatches.append(changes)
+      }
+    }
+
+    // Allowing us to cancel the operation later if necessary.
+    updating = dataSource.update(op)
   }
 
   private func installRefreshControl() {
     let s = #selector(refreshControlValueChanged)
     refreshControl?.addTarget(self, action: s, for: .valueChanged)
+  }
+
+  override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+    refreshControlTimer = nil
   }
 
   override func scrollViewDidEndDragging(
@@ -272,7 +312,33 @@ extension ListViewController {
       rc.endRefreshing()
     }
 
-    // TODO: Refresh
+    refreshControlTimer = setTimeout(delay: .milliseconds(600), queue: .main) {
+      [weak self] in
+      self?.refreshControlTimer = nil
+
+      guard
+        let rc = self?.refreshControl,
+        !rc.isRefreshing,
+        let tv = self?.tableView,
+        let changes = self?.changeBatches,
+        !changes.isEmpty else {
+        return
+      }
+
+      UIView.performWithoutAnimation {
+        for batch in changes {
+          self?.dataSource.commit(batch, performingWith: .table(tv)) { ok in
+            os_log("refreshed: %i", log: log, type: .debug, ok)
+          }
+        }
+
+        if let entry = self?.navigationDelegate?.entry {
+          self?.selectRow(representing: entry, animated: false)
+        }
+
+        self?.changeBatches.removeAll()
+      }
+    }
 
   }
 

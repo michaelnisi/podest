@@ -10,7 +10,7 @@ import UIKit
 import FeedKit
 import os.log
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "list")
 
 /// Provides data for a table view displaying a podcast.
 final class ListDataSource: NSObject, SectionedDataSource {
@@ -200,9 +200,8 @@ final class ListDataSource: NSObject, SectionedDataSource {
         return
       }
 
-      DispatchQueue.main.async { [weak self] in
-        self?.updatesBlock?(sections, updates, error)
-      }
+      os_log("executing updates block", log: log, type: .debug)
+      updatesBlock?(sections, updates, error)
 
       submitted = sections
     }
@@ -210,6 +209,8 @@ final class ListDataSource: NSObject, SectionedDataSource {
     var error: Error?
 
     override func main() {
+      os_log("fetching feed", log: log, type: .debug)
+
       guard !isCancelled else {
         return
       }
@@ -224,11 +225,8 @@ final class ListDataSource: NSObject, SectionedDataSource {
       // Providing error to dependents, namely to FetchEntries.
       self.error = error
 
-      let cb = feedBlock
-
-      DispatchQueue.main.async {
-        cb?(foundFeed, error)
-      }
+      os_log("executing feed block", log: log, type: .debug)
+      feedBlock?(foundFeed, error)
 
       if let feed = foundFeed {
         submitUpdatesBlockWith(feed, error: error)
@@ -257,6 +255,8 @@ final class ListDataSource: NSObject, SectionedDataSource {
     }
 
     override func main() {
+      os_log("fetching entries", log: log, type: .debug)
+
       guard !isCancelled else {
         return
       }
@@ -289,11 +289,8 @@ final class ListDataSource: NSObject, SectionedDataSource {
         return
       }
 
-      let updatesBlock = self.updatesBlock
-
-      DispatchQueue.main.async {
-        updatesBlock?(sections, updates, error)
-      }
+      os_log("executing updates block", log: log, type: .debug)
+      updatesBlock?(sections, updates, error)
     }
 
   }
@@ -345,7 +342,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
   var previousTraitCollection: UITraitCollection?
 }
 
-// MARK: - Fetching Entries
+// MARK: - Fetching Feed and Entries
 
 extension ListDataSource {
 
@@ -361,17 +358,24 @@ extension ListDataSource {
   /// encapsulating all changes in `performBatchUpdates(_:completion:)`, but
   /// who isn’t for smooth animations and resilient data sources?
   /// - [WWDC 2018](https://developer.apple.com/videos/play/wwdc2018/225/)
-  func update(_ operation: UpdateOperation) {
+  func update(_ operation: UpdateOperation) -> UpdateOperation {
+    os_log("updating: %@", log: log, type: .debug, operation)
+    
     let a = FetchFeed(operation: operation)
 
     a.updatesBlock = operation.updatesBlock
     a.feedBlock = operation.feedBlock
     a.current = sections
 
-    if operation.originalFeed?.summary == nil {
+    let noFeed = operation.originalFeed == nil
+    let noSummary = operation.originalFeed?.summary == nil
+
+    // Without feed, of course, we cannot have a summary.
+
+    if noFeed || noSummary {
       a.addDependency(browser.feeds(
         [operation.url],
-        ttl: .none,
+        ttl: noSummary ? .none : .long,
         feedsBlock: nil,
         feedsCompletionBlock: nil
       ))
@@ -394,6 +398,8 @@ extension ListDataSource {
     operationQueue.addOperation(a)
     operationQueue.addOperation(b)
     operationQueue.addOperation(operation)
+
+    return operation
   }
 
 }
