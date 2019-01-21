@@ -6,7 +6,7 @@ stop_after_first_error true
 workspace "@@WORKSPACE@@"
 
 launch_arguments([
-  "-ink.codes.podest.nodown YES"
+  "-ink.codes.podest.noDownloading YES"
 ])
 
 languages([

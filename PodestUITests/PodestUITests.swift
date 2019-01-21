@@ -16,12 +16,25 @@ class PodestUITests: XCTestCase {
     continueAfterFailure = false
 
     app = XCUIApplication()
+
     setupSnapshot(app)
     app.launch()
   }
 
-  func testSearch() {
+  func testSearching() {
+    let detail = app.tables.cells.element(boundBy: 0)
+
+    expectation(
+      for: NSPredicate(format: "exists == 1"),
+      evaluatedWith: detail,
+      handler: nil
+    )
+
+    waitForExpectations(timeout: 5, handler: nil)
+
     if UIDevice.current.userInterfaceIdiom == .pad {
+      detail.tap()
+
       app.statusBars
         .children(matching: .other).element
         .children(matching: .other).element
@@ -34,52 +47,119 @@ class PodestUITests: XCTestCase {
 
     let searchSearchField = app.searchFields["Search"]
 
+    expectation(
+      for: NSPredicate(format: "exists == 1"),
+      evaluatedWith: searchSearchField,
+      handler: nil
+    )
+
+    waitForExpectations(timeout: 5, handler: nil)
+
     searchSearchField.tap()
-    searchSearchField.typeText("Mo")
+    searchSearchField.typeText("Mon")
 
-    snapshot("3")
+    let suggestion = app
+      .tables["Search results"].staticTexts["monocle"]
 
-    app/*@START_MENU_TOKEN@*/.tables["Search results"].staticTexts["monocle"]/*[[".otherElements[\"Double-tap to dismiss\"].tables[\"Search results\"]",".cells.staticTexts[\"monocle\"]",".staticTexts[\"monocle\"]",".tables[\"Search results\"]"],[[[-1,3,1],[-1,0,1]],[[-1,2],[-1,1]]],[0,0]]@END_MENU_TOKEN@*/.tap()
+    expectation(
+      for: NSPredicate(format: "exists == 1"),
+      evaluatedWith: suggestion,
+      handler: nil
+    )
+
+    waitForExpectations(timeout: 5, handler: nil)
 
     snapshot("4")
+    suggestion.tap()
 
-    app/*@START_MENU_TOKEN@*/.tables["Search results"].staticTexts["Monocle 24: The Urbanist"]/*[[".otherElements[\"Double-tap to dismiss\"].tables[\"Search results\"]",".cells.staticTexts[\"Monocle 24: The Urbanist\"]",".staticTexts[\"Monocle 24: The Urbanist\"]",".tables[\"Search results\"]"],[[[-1,3,1],[-1,0,1]],[[-1,2],[-1,1]]],[0,0]]@END_MENU_TOKEN@*/.tap()
+    let find = app
+      .tables["Search results"].staticTexts["Monocle 24: The Urbanist"]
+
+    expectation(
+      for: NSPredicate(format: "exists == 1"),
+      evaluatedWith: find,
+      handler: nil
+    )
+
+    waitForExpectations(timeout: 5, handler: nil)
 
     snapshot("5")
+    find.firstMatch.tap()
+
+    let episode = app.tables.cells.element(boundBy: 0)
+
+    expectation(
+      for: NSPredicate(format: "exists == 1"),
+      evaluatedWith: episode,
+      handler: nil
+    )
+
+    waitForExpectations(timeout: 5, handler: nil)
+
+    episode.tap()
+    snapshot("6")
 
     app.navigationBars["Queue"].buttons["Queue"].tap()
     app.buttons["Cancel"].tap()
   }
 
-  func testBrowseReadPlay() {
-    snapshot("0")
-
-    app.tables/*@START_MENU_TOKEN@*/.staticTexts["Bonus Episode: Chris Anderson on the Ezra Klein Show"]/*[[".cells.staticTexts[\"Bonus Episode: Chris Anderson on the Ezra Klein Show\"]",".staticTexts[\"Bonus Episode: Chris Anderson on the Ezra Klein Show\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-    app/*@START_MENU_TOKEN@*/.textViews.containing(.link, identifier:"TED.com").element/*[[".scrollViews.textViews.containing(.link, identifier:\"TED.com\").element",".textViews.containing(.link, identifier:\"TED.com\").element"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-
-    snapshot("1")
-
+  func testPlaying() {
     let window = app.children(matching: .window).element(boundBy: 0)
 
     window.children(matching: .other).element
       .children(matching: .other)
-      .element(boundBy: 1).staticTexts["21: 'N'em"].tap()
+      .element(boundBy: 1).staticTexts["#130 The Snapchat Thief"].tap()
 
-    let payButton = window.children(matching: .other).element(boundBy: 1)
+    let play = window.children(matching: .other).element(boundBy: 1)
       .children(matching: .other).element
       .children(matching: .other).element
       .children(matching: .other).element
       .children(matching: .other).element(boundBy: 1)
       .children(matching: .other).element
 
+    expectation(
+      for: NSPredicate(format: "exists == 1"),
+      evaluatedWith: play,
+      handler: nil
+    )
 
-    let exists = NSPredicate(format: "exists == 1")
-
-    expectation(for: exists, evaluatedWith: payButton, handler: nil)
     waitForExpectations(timeout: 5, handler: nil)
 
-    payButton.tap()
+    play.tap()
+    snapshot("3")
+  }
 
+  func testBrowsing() {
+    let cell = app.tables.cells.element(boundBy: 0)
+
+    expectation(
+      for: NSPredicate(format: "exists == 1"),
+      evaluatedWith: cell,
+      handler: nil
+    )
+
+    waitForExpectations(timeout: 5, handler: nil)
+
+    if UIDevice.current.userInterfaceIdiom == .phone {
+      snapshot("0")
+    }
+
+    cell.tap()
+
+    let feedButton = app.scrollViews.otherElements.buttons.element(boundBy: 0)
+
+    expectation(
+      for: NSPredicate(format: "exists == 1"),
+      evaluatedWith: feedButton,
+      handler: nil
+    )
+
+    waitForExpectations(timeout: 5, handler: nil)
+    
+    snapshot("1")
+
+    feedButton.tap()
+    sleep(1)
     snapshot("2")
   }
 

@@ -73,7 +73,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-ink.codes.podest.nodown"
+            argument = "-ink.codes.podest.noDownloading"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
