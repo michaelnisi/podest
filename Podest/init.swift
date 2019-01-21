@@ -385,14 +385,10 @@ final private class Config {
   fileprivate func makeStore() throws -> Shopping {
     let url = Bundle.main.url(forResource: "products", withExtension: "json")!
 
-    // For lagging product fetching, doing without indicating network activity
-    // is the better choice. There’s a reason why Apple isn’t doing it by
-    // default.
+    // For lagging product fetching, not indicating network activity is better.
+    // There’s a reason why Apple isn’t doing it by default, I guess.
 
     let store = StoreFSM(url: url) //, indicator: Podest.networkActivity)
-
-    #warning("Remove dev code")
-    store.removeReceipts()
 
     return store
   }
@@ -402,7 +398,8 @@ final private class Config {
   }
 }
 
-/// Hides `Ola` from dependents.
+/// Hides `Ola` from indirect dependents, just wanting to to indicate network
+/// activity.
 private class NetworkIndicator: NetworkActivityIndicating {
 
   func increase() {
