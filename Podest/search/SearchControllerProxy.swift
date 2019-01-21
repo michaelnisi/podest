@@ -13,12 +13,16 @@ import FeedKit
 
 private let log = OSLog.disabled
 
-private enum SearchState: Int {
-  case dismissed, searching, suggesting
+private enum SearchState: Equatable {
+  case dismissed
+  case searching(String)
+  case suggesting(String)
 }
 
-private enum SearchEvent {
-  case suggest, search, dismiss
+private enum SearchEvent: Equatable {
+  case suggest(String)
+  case search(String)
+  case dismiss
 }
 
 /// A finite state machine proxying between search controller and search
@@ -82,7 +86,7 @@ final class SearchControllerProxy: NSObject {
     return searchController.searchBar
   }
 
-  private func event(_ e: SearchEvent, term: String?) {
+  private func event(_ e: SearchEvent) {
     let src = searchResultsController
 
     switch state {
@@ -90,24 +94,24 @@ final class SearchControllerProxy: NSObject {
       switch e {
       case .dismiss:
         break
-      case .search:
-        src.search(term!)
-        state = .searching
-      case .suggest:
-        guard term != nil else {
-          break
-        }
+      case .search(let term):
+        src.search(term)
+        state = .searching(term)
+      case .suggest(let term):
         if term != "" {
-          src.suggest(term!)
+          src.suggest(term)
         }
-        state = .suggesting
+        state = .suggesting(term)
       }
     case .suggesting:
       switch e {
       case .dismiss:
         src.reset()
         state = .dismissed
-      case .search:
+      case .search(let term):
+        src.search(term)
+        state = .searching(term)
+
         if searchBar.text != term {
           searchBar.text = term
         }
@@ -115,44 +119,42 @@ final class SearchControllerProxy: NSObject {
         if searchBar.isFirstResponder {
           searchBar.resignFirstResponder()
         }
-
-        src.search(term!)
-        state = .searching
-      case .suggest:
-        guard term != nil else {
-          break
-        }
+      case .suggest(let term):
         if term != "" {
-          src.suggest(term!)
+          src.suggest(term)
         }
-        src.suggest(term!)
-        state = .suggesting
+
+        state = .suggesting(term)
       }
     case .searching:
       switch e {
       case .dismiss:
         src.reset()
         state = .dismissed
-      case .search:
-        src.search(term!)
-        state = .searching
-      case .suggest:
-        src.suggest(term!)
-        state = .suggesting
+      case .search(let term):
+        src.search(term)
+
+        state = .searching(term)
+      case .suggest(let term):
+        if term != "" {
+          src.suggest(term)
+        }
+
+        state = .suggesting(term)
       }
     }
   }
 
   func suggest(_ term: String) {
-    event(.suggest, term: term)
+    event(.suggest(term))
   }
 
   func search(_ term: String) {
-    event(.search, term: term)
+    event(.search(term))
   }
 
   func dismiss() {
-    event(.dismiss, term: nil)
+    event(.dismiss)
   }
   
 }
@@ -176,11 +178,18 @@ extension SearchControllerProxy: UISearchBarDelegate {
 extension SearchControllerProxy: UISearchResultsUpdating {
 
   func updateSearchResults(for sc: UISearchController) {
-    guard state != .dismissed else {
+    switch state {
+    case .dismissed:
       return
-    }
+    case .searching(let term), .suggesting(let term):
+      let newTerm = sc.searchBar.text ?? ""
 
-    suggest(sc.searchBar.text ?? "")
+      guard term != newTerm else {
+        return
+      }
+
+      suggest(newTerm)
+    }
   }
 
 }
