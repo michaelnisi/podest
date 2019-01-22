@@ -2,7 +2,13 @@
 
 ### Making a Diff
 
-Wishing you a very Happy New Year, it can only get better, this release brings many things. More generous layout, allowing larger images, increased spacing, and improved support for Dynamic Type. List scrolling and animations are smoother now. Background downloading has been further improved to work more reliably.
+Wishing you a very Happy New Year, it can only get better.
+
+This release brings many things. More generous layout, allowing larger images, increased spacing, and improved support for Dynamic Type. List scrolling and animations are smoother now.
+
+Background downloading has been further improved to work more reliably.
+
+I almost forgot, the in-app purchases store got a nicer layout, looking better on iPad. Also, the store button has been relabeled and moved from right to left.
 
 ## 7.9.4 (2018-12-19)
 
