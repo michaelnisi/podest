@@ -1,3 +1,9 @@
+## 7.9.5 (2019-01-22)
+
+### Make a Diff
+
+Wishing you a very Happy New Year, it can only get better, this release brings many things. More generous layout, allowing larger images, increased spacing, and improved support for Dynamic Type. List scrolling and animations are smoother now. Background downloading has been further improved to work more reliably.
+
 ## 7.9.4 (2018-12-19)
 
 ### Files Fly
