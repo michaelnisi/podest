@@ -160,6 +160,11 @@ class PodestUITests: XCTestCase {
 
     feedButton.tap()
     sleep(1)
+
+    if UIDevice.current.userInterfaceIdiom == .phone {
+      app.tables.cells.element(boundBy: 0).swipeUp()
+    }
+
     snapshot("2")
   }
 
