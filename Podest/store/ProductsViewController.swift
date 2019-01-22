@@ -17,7 +17,7 @@ final class ProductsViewController: UICollectionViewController {
   lazy var dataSource: ProductsDataSource = {
     dispatchPrecondition(condition: .onQueue(.main))
     
-    let ds = ProductsDataSource()
+    let ds = ProductsDataSource(store: Podest.store, contact: Podest.contact)
     
     ds.sectionsChangeHandler = { [weak self] changes in
       guard let cv = self?.collectionView else {

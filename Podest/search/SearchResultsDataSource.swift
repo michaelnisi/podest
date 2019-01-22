@@ -314,6 +314,8 @@ extension SearchResultsDataSource: UITableViewDataSource {
           withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
         ) as! SubtitleTableViewCell
 
+        cell.accessoryType = .none
+
         cell.item = nil
         cell.imageView?.image = nil
 
@@ -332,6 +334,8 @@ extension SearchResultsDataSource: UITableViewDataSource {
           withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
         ) as! SubtitleTableViewCell
 
+        cell.accessoryType = .none
+
         cell.item = nil
         cell.imageView?.image = nil
 
@@ -348,7 +352,9 @@ extension SearchResultsDataSource: UITableViewDataSource {
       case .foundFeed(let feed):
         let cell = tableView.dequeueReusableCell(
           withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
-          ) as! SubtitleTableViewCell
+        ) as! SubtitleTableViewCell
+
+        cell.accessoryType = .disclosureIndicator
 
         cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
         cell.textLabel?.numberOfLines = 0

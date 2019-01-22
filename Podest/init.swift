@@ -208,12 +208,6 @@ private struct Service: Equatable, Decodable {
   }
 }
 
-struct Contact: Decodable {
-  let email: String
-  let github: String
-  let privacy: String
-}
-
 private final class Services: Decodable {
   var services: [Service]
   var contact: Contact

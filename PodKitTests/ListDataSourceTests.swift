@@ -20,29 +20,38 @@ class ListDataSourceTests: XCTestCase {
   override func tearDown() {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
   }
+
+  private func loadFeeds() throws -> [Feed] {
+    let bundle = Bundle(for: ListDataSourceTests.self)
+    let url = bundle.url(forResource: "feeds", withExtension: "json")!
+    let json = try Data(contentsOf: url)
+    let decoder = JSONDecoder()
+
+    return try decoder.decode([Feed].self, from: json)
+  }
+
+  lazy var sharedFeeds: [Feed] = try! loadFeeds()
   
   func testSummaryItemEquality() {
+    let feeds = sharedFeeds
+
+    let feed = feeds.first!
+
     let text = NSAttributedString(string: "Hello")
-    let a = ListDataSource.Item.summary(text)
-    let b = ListDataSource.Item.summary(text)
+    
+    let a = ListDataSource.Item.feed(feed, text)
+    let b = ListDataSource.Item.feed(feed, text)
 
     XCTAssertEqual(a, b)
-
-    let c = ListDataSource.Item.message(text)
-
-    XCTAssertNotEqual(a, c)
   }
 
   func testMessageItemEquality() {
     let text = NSAttributedString(string: "Hello")
+
     let a = ListDataSource.Item.message(text)
     let b = ListDataSource.Item.message(text)
 
     XCTAssertEqual(a, b)
-
-    let c = ListDataSource.Item.summary(text)
-
-    XCTAssertNotEqual(a, c)
   }
 
   func testEntryItemEquality() {
@@ -53,12 +62,14 @@ class ListDataSourceTests: XCTestCase {
 
     let entries = try! decoder.decode([Entry].self, from: json)
 
-    let a = ListDataSource.Item.entry(entries[0])
-    let b = ListDataSource.Item.entry(entries[0])
+    let firstLine = "The first line of the summary."
+
+    let a = ListDataSource.Item.entry(entries[0], firstLine)
+    let b = ListDataSource.Item.entry(entries[0], firstLine)
 
     XCTAssertEqual(a, b)
 
-    let c = ListDataSource.Item.entry(entries[1])
+    let c = ListDataSource.Item.entry(entries[1], firstLine)
 
     XCTAssertNotEqual(a, c)
   }

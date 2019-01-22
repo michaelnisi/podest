@@ -320,13 +320,16 @@ final class ListDataSource: NSObject, SectionedDataSource {
   }
 
   private let browser: Browsing
+  private let images: Images
 
   /// Creates a new list data source.
   ///
   /// - Parameters:
   ///   - browser: A browser for fetching feed and entries.
-  init(browser: Browsing) {
+  ///   - images: An image loading API.
+  init(browser: Browsing, images: Images) {
     self.browser = browser
+    self.images = images
 
     super.init()
   }
@@ -455,7 +458,7 @@ extension ListDataSource: UITableViewDataSource {
 
 //      cell.detailTextLabel?.text = nil
 
-      cell.images = Podest.images
+      cell.images = images
       cell.imageQuality = .high
       cell.item = feed
 

@@ -85,7 +85,7 @@ Navigator, EntryRowSelectable {
   /// Internal to meet EntryRowSelectable.
   ///
   /// Exposing the data source is gross.
-  var dataSource = ListDataSource(browser: Podest.browser)
+  var dataSource = ListDataSource(browser: Podest.browser, images: Podest.images)
 
   /// The current updating operation.
   private weak var updating: Operation? {

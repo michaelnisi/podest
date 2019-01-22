@@ -96,6 +96,20 @@ final class ProductsDataSource: NSObject, SectionedDataSource {
   /// A distinct worker queue for diffing.
   private var worker = DispatchQueue.global()
 
+  private let store: Shopping
+
+  private let contact: Contact
+
+  /// Creates a new products data source.
+  ///
+  /// - Parameters:
+  ///   - store: The store API to use.
+  ///   - contact: The sellers contact information.
+  init(store: Shopping, contact: Contact) {
+    self.store = store
+    self.contact = contact
+  }
+
 }
 
 // MARK: - UICollectionViewDataSource
@@ -238,7 +252,7 @@ extension ProductsDataSource: UITextViewDelegate {
   ) -> Bool {
     switch URL.absoluteString {
     case "restore:":
-      Podest.store.restore()
+      store.restore()
       return false
     default:
       return true
@@ -255,7 +269,7 @@ extension ProductsDataSource: CellProductsDelegate {
     _ cell: UICollectionViewCell,
     payProductMatching productIdentifier: String
   ) {
-    Podest.store.payProduct(matching: productIdentifier)
+    store.payProduct(matching: productIdentifier)
   }
 
 }
@@ -332,9 +346,9 @@ extension ProductsDataSource: StoreDelegate {
     let open = Info(
       summary:"""
       If you feel so inclined, please create issues on \
-      <a href="\(Podest.contact.github)">GitHub</a>.
+      <a href="\(contact.github)">GitHub</a>.
       <p>
-      <a href="mailto:\(Podest.contact.email)">Email me</a> if you have any \
+      <a href="mailto:\(contact.email)">Email me</a> if you have any \
       questions.
       </p>
       """,

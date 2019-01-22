@@ -55,6 +55,11 @@
 		4CCBF21320809E4C00A7359F /* Store.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CCBF21220809E4C00A7359F /* Store.storyboard */; };
 		4CD6970B1FEBFEB900349580 /* SectionedDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD6970A1FEBFEB900349580 /* SectionedDataSource.swift */; };
 		4CD7414D1CCD203A00BA33CE /* init.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD7414C1CCD203A00BA33CE /* init.swift */; };
+		4CDB9F2F21F7680F00E0679D /* DisplayTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1B32CA21E7046A00E57931 /* DisplayTableViewCell.swift */; };
+		4CDB9F3021F7684F00E0679D /* ProductsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F57A82081C0690067AB7C /* ProductsDataSource.swift */; };
+		4CDB9F3121F7688C00E0679D /* ArticleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C07C97821EBA69200ED8AB0 /* ArticleCollectionViewCell.swift */; };
+		4CDB9F3221F768AD00E0679D /* ProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C776B2720847D0900A055CD /* ProductCell.swift */; };
+		4CDB9F3421F76E0900E0679D /* feeds.json in Resources */ = {isa = PBXBuildFile; fileRef = 4CDB9F3321F76E0900E0679D /* feeds.json */; };
 		4CE20ACC1A31C66C0052C360 /* SearchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE20ACB1A31C66C0052C360 /* SearchResultsController.swift */; };
 		4CE20AD01A31EAAD0052C360 /* SuggestionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CE20ACF1A31EAAD0052C360 /* SuggestionCell.xib */; };
 		4CE6956F21AFAC010060F5A6 /* PlayerDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE6956E21AFAC010060F5A6 /* PlayerDismissalAnimator.swift */; };
@@ -236,6 +241,7 @@
 		4CCBF21220809E4C00A7359F /* Store.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Store.storyboard; sourceTree = "<group>"; };
 		4CD6970A1FEBFEB900349580 /* SectionedDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionedDataSource.swift; sourceTree = "<group>"; };
 		4CD7414C1CCD203A00BA33CE /* init.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = init.swift; sourceTree = "<group>"; };
+		4CDB9F3321F76E0900E0679D /* feeds.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = feeds.json; sourceTree = "<group>"; };
 		4CE20ACB1A31C66C0052C360 /* SearchResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsController.swift; sourceTree = "<group>"; };
 		4CE20ACF1A31EAAD0052C360 /* SuggestionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SuggestionCell.xib; sourceTree = "<group>"; };
 		4CE6956E21AFAC010060F5A6 /* PlayerDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDismissalAnimator.swift; sourceTree = "<group>"; };
@@ -381,6 +387,7 @@
 				4CE9694721DF668E00AEF409 /* ListDataSourceTests.swift */,
 				4CE9694B21DF70A800AEF409 /* SectionedDataSourceTests.swift */,
 				4CE9694921DF692900AEF409 /* entries.json */,
+				4CDB9F3321F76E0900E0679D /* feeds.json */,
 				4C010A1E2101D6E90006CB53 /* Info.plist */,
 			);
 			path = PodKitTests;
@@ -861,6 +868,7 @@
 			files = (
 				4CE9694A21DF692900AEF409 /* entries.json in Resources */,
 				4C010A282101D84F0006CB53 /* products.json in Resources */,
+				4CDB9F3421F76E0900E0679D /* feeds.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -929,6 +937,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CDB9F3221F768AD00E0679D /* ProductCell.swift in Sources */,
+				4CDB9F3121F7688C00E0679D /* ArticleCollectionViewCell.swift in Sources */,
+				4CDB9F3021F7684F00E0679D /* ProductsDataSource.swift in Sources */,
+				4CDB9F2F21F7680F00E0679D /* DisplayTableViewCell.swift in Sources */,
 				4CE9693621DF651400AEF409 /* HTMLAttributor.swift in Sources */,
 				4CE9693521DF64F100AEF409 /* core.swift in Sources */,
 				4CE9693421DF646D00AEF409 /* strings.swift in Sources */,

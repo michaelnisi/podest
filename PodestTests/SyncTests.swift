@@ -84,7 +84,10 @@ extension SyncTests {
     do {
       let (renewed, obsolete) = UserClient.subtract([a, b, c], from: set)
       XCTAssertEqual(renewed, [])
-      XCTAssertEqual(obsolete, ["abc", "def"])
+
+      // Assuming ordering doesn’t matter.
+
+      XCTAssertEqual(Set(obsolete), Set(["abc", "def"]))
     }
   }
 

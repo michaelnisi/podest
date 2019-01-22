@@ -11,6 +11,13 @@ import StoreKit
 
 // MARK: - Dependencies
 
+/// Trade representative contact information.
+struct Contact: Decodable {
+  let email: String
+  let github: String
+  let privacy: String
+}
+
 /// So we can use a different payment queue while testing.
 protocol Paying {
   func add(_ payment: SKPayment)
