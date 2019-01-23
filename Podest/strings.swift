@@ -291,33 +291,13 @@ extension StringRepository {
     return subtitle as String
   }
 
-  private
-  static var episodeCellSubtitles: NSCache<NSNumber, NSString> = {
+  private static var episodeCellSubtitles: NSCache<NSNumber, NSString> = {
     let c = NSCache<NSNumber, NSString>()
 
     c.countLimit = 1024
 
     return c
   }()
-
-  private
-  static func prefix(string: String, maxLength: Int) -> String {
-    guard string.count > maxLength else {
-      return string
-    }
-
-    // Trying to cut sensibly matching sen
-
-    let marks = CharacterSet(charactersIn: ".!?")
-
-    if let first = string.components(separatedBy: marks).first {
-      return first.count > maxLength ? String(first.prefix(maxLength)) : first
-    }
-
-    // Just cutting it down.
-
-    return String(string.prefix(maxLength))
-  }
 
   static func episodeCellSubtitle(for entry: Entry) -> String {
     let key = entry.hashValue as NSNumber
@@ -326,13 +306,12 @@ extension StringRepository {
       let updated = string(from: entry.updated)
 
       let snippet: String = {
-        guard let subtitle = entry.subtitle else {
+        guard let subtitle = entry.subtitle ?? entry.summary else {
           return ""
         }
 
-        return " – \(prefix(string: subtitle, maxLength: 140))"
+        return " – \(String(subtitle.prefix(140)))"
       }()
-
 
       let times: String = {
         if let duration = string(from: entry.duration) {
@@ -455,8 +434,8 @@ extension StringRepository {
   }
   
   static var serviceUnavailable: NSAttributedString {
-    let title = "Unavailable Service"
-    let hint = "Sorry, try again later."
+    let title = "Service Unavailable"
+    let hint = "Please try again later."
 
     return StringRepository.makeMessage(title: title, hint: hint)
   }
