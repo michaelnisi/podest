@@ -82,9 +82,10 @@ Navigator, EntryRowSelectable {
     }
   }
 
-  /// Internal to meet EntryRowSelectable.
+  /// The table view data source.
   ///
-  /// Exposing the data source is gross.
+  /// Exposing a data source for adopting a protocol, EntryRowSelectable in
+  /// this case, is just gross.
   var dataSource = ListDataSource(browser: Podest.browser, images: Podest.images)
 
   /// The current updating operation.
@@ -94,6 +95,7 @@ Navigator, EntryRowSelectable {
     }
   }
 
+  /// Navigates to items in this list.
   var navigationDelegate: ViewControllers?
 
   /// Deferred sequence of changes.
@@ -137,11 +139,11 @@ extension ListViewController {
     return op
   }
 
-  /// Updates this list.
+  /// Reloads this list, executing `completionBlock` when done.
   ///
-  /// The crux, feed and entries a separate, and sometimes the feed needs to be
-  /// fetched remotely, for example, if it contains no summary yet.
-  private func update(forcing: Bool = false, completionBlock: (() -> Void)? = nil) {
+  /// The crux, feed and entries are separate, sometimes, when the feed object
+  /// isn’t present yet or it contains no summary, it must be fetched remotely.
+  private func update(completionBlock: (() -> Void)? = nil) {
     let op = makeUpdateOperation { [weak self] sections, changes, error in
       DispatchQueue.main.async {
         guard let tv = self?.tableView else {

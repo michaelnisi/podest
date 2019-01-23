@@ -23,6 +23,8 @@ final class ListDataSource: NSObject, SectionedDataSource {
     case message(NSAttributedString)
   }
 
+  // MARK: - Operations
+
   /// An abstract operation that does nothing.
   class ListDataSourceOperation: Operation, Receiving {
 
@@ -62,10 +64,10 @@ final class ListDataSource: NSObject, SectionedDataSource {
       }
     }
 
-    /// A block submitted to the main queue drafting a new state.
+    /// This block receives new sections, changes, and an error.
     var updatesBlock: (([Array<Item>], [[Change<Item>]], Error?) -> Void)?
 
-    /// A block submitted to the main queue when the feed has been fetched.
+    /// This block receives the feed and an error.
     var feedBlock: ((Feed?, Error?) -> Void)?
 
     /// Accumulates previous `sections`, fresh `items`, and possibly an `error`
@@ -215,7 +217,9 @@ final class ListDataSource: NSObject, SectionedDataSource {
         return
       }
 
-      if let feed = originalFeed {
+      // Originally provided with a summary, we can short cut this.
+
+      if let feed = originalFeed, feed.summary != nil {
         return submitUpdatesBlockWith(feed)
       }
 
@@ -319,6 +323,8 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
   }
 
+  // MARK: - Properties
+
   private let browser: Browsing
   private let images: Images
 
@@ -358,13 +364,12 @@ extension ListDataSource {
   ///   - operation: The update operation to execute.
   ///   - forcing: Overrides cache settings, replacing all entries.
   ///
-  /// Use the operation to configure details. We are assuming that users will
-  /// commit changes back into this data source via its
-  /// `commit(batch:performingWith:completionBlock:)`. Only then sequential data
-  /// consistency of collection changes can be ensured. This is the price for
-  /// encapsulating all changes in `performBatchUpdates(_:completion:)`, but
-  /// who isn’t for smooth animations and resilient data sources?
-  /// - [WWDC 2018](https://developer.apple.com/videos/play/wwdc2018/225/)
+  /// For its somewhat complex nature, we are using operation dependencies to
+  /// model this task. Use the operation to configure details.
+  ///
+  /// We are assuming that users will commit changes back into this data source
+  /// via its `commit(batch:performingWith:completionBlock:)`. Only then
+  /// sequential data consistency of collection changes can be ensured.
   func update(_ operation: UpdateOperation, forcing: Bool = false) -> UpdateOperation {
     os_log("updating: %@", log: log, type: .debug, operation)
     
@@ -449,22 +454,13 @@ extension ListDataSource: UITableViewDataSource {
         withIdentifier: UITableView.Nib.display.id, for: indexPath
       ) as! DisplayTableViewCell
 
-//      cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
-//      cell.textLabel?.numberOfLines = 0
-//
-//      cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .body)
-//      cell.detailTextLabel?.numberOfLines = 0
-//      cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
-
-//      cell.detailTextLabel?.text = nil
+      cell.selectionStyle = .none
 
       cell.images = images
       cell.imageQuality = .high
       cell.item = feed
 
-//      cell.textLabel?.text = feed.title
       cell.textView?.attributedText = summary
-      cell.selectionStyle = .none
 
       return cell
     case .entry(let entry, let subtitle):

@@ -60,7 +60,9 @@ class DisplayTableViewCell: UITableViewCell {
   override func layoutSubviews() {
     super.layoutSubviews()
 
-    // Tailor-made image loading requires a somewhat stable image size.
+    // Tailor-made image loading requires a somewhat stable image size. Checking
+    // the image size prevents excessive requests, but might still lead to
+    // multiple requests. I’m seeing two at the moment.
 
     guard let view = largeImageView, let images = images, let item = self.item,
       (isReset || view.bounds.size != imageSizeLoaded) else {
