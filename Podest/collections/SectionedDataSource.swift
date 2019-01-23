@@ -81,6 +81,10 @@ extension SectionedDataSource {
   ///   - batch: Arrays of changes per section.
   ///   - view: The view performing the batch updates.
   ///   - completionBlock: A block to execute when all operations are finished.
+  ///
+  /// - [WWDC 2018](https://developer.apple.com/videos/play/wwdc2018/225/)
+  /// - [DeepDiff](https://github.com/onmyway133/DeepDiff)
+  /// - [Ordered Collection Diffing](https://github.com/apple/swift-evolution/blob/master/proposals/0240-ordered-collection-diffing.md)
   func commit(
     _ batch: [[Change<Item>]],
     performingWith view: SectionDataSourceView,
