@@ -85,8 +85,11 @@ extension SearchResultsController {
     tableView.estimatedRowHeight = 64
 
     var separatorInset = tableView.separatorInset
+
     separatorInset.left = UITableView.automaticDimension
+
     tableView.separatorInset = separatorInset
+    tableView.backgroundColor = .groupTableViewBackground
 
     clearsSelectionOnViewWillAppear = true
   }
@@ -138,6 +141,17 @@ extension SearchResultsController {
 // MARK: - UITableViewDelegate
 
 extension SearchResultsController {
+
+  override func tableView(
+    _ tableView: UITableView,
+    willSelectRowAt indexPath: IndexPath
+  ) -> IndexPath? {
+    if case .message? = dataSource.itemAt(indexPath: indexPath) {
+      return nil
+    }
+
+    return indexPath
+  }
   
   override func tableView(
     _ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
