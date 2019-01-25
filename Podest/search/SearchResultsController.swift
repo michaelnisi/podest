@@ -89,7 +89,6 @@ extension SearchResultsController {
     separatorInset.left = UITableView.automaticDimension
 
     tableView.separatorInset = separatorInset
-    tableView.backgroundColor = .groupTableViewBackground
 
     clearsSelectionOnViewWillAppear = true
   }

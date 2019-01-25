@@ -379,6 +379,7 @@ extension SearchResultsDataSource: UITableViewDataSource {
       cell.titleLabel.attributedText = text
       cell.selectionStyle = .none
       cell.targetHeight = tableView.bounds.height * 0.6
+      cell.backgroundColor = .white
 
       tableView.separatorStyle = .none
 
