@@ -10,7 +10,7 @@ import UIKit
 import FeedKit
 import os.log
 
-private let log = OSLog(subsystem: "ink.codes.podest", category: "list")
+private let log = OSLog.disabled
 
 /// Provides data for a table view displaying a podcast.
 final class ListDataSource: NSObject, SectionedDataSource {
@@ -54,6 +54,13 @@ final class ListDataSource: NSObject, SectionedDataSource {
       self.isCompact = operation.isCompact
 
       super.init()
+    }
+
+    override var description: String {
+      return """
+      ListDataSourceOperation: (\(url), \(originalFeed?.title ?? "none"), \
+      \(forcing), \(isCompact))
+      """
     }
 
     override func cancel() {
