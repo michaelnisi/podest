@@ -299,36 +299,43 @@ extension StringRepository {
     return c
   }()
 
+  /// Returns a condensed subtitle for `entry` combining date, duration, and
+  /// a short summary.
+  ///
+  /// Designed for table view cells, these are simple strings, cached for reuse.
   static func episodeCellSubtitle(for entry: Entry) -> String {
     let key = entry.hashValue as NSNumber
 
-    guard let subtitle = episodeCellSubtitles.object(forKey: key) else {
-      let updated = string(from: entry.updated)
-
-      let snippet: String = {
-        guard let subtitle = entry.subtitle ?? entry.summary else {
-          return ""
-        }
-
-        return " – \(String(subtitle.prefix(140)))"
-      }()
-
-      let times: String = {
-        if let duration = string(from: entry.duration) {
-          return "\(updated), \(duration)"
-        }
-
-        return updated
-      }()
-
-      let s = "\(times)\(snippet)"
-
-      episodeCellSubtitles.setObject(s as NSString, forKey: key)
-
-      return s
+    if let subtitle = episodeCellSubtitles.object(forKey: key) {
+      return subtitle as String
     }
-    
-    return subtitle as String
+
+    let updated = string(from: entry.updated)
+
+    let snippet: String = {
+      guard let subtitle = entry.subtitle ?? entry.summary else {
+        return ""
+      }
+
+      // Keeping it short and simple, sweeping out HTML tags.
+
+      return " – \(String(subtitle.prefix(140)))".replacingOccurrences(
+        of: "<[^>]+>", with: "", options: .regularExpression)
+    }()
+
+    let times: String = {
+      if let duration = string(from: entry.duration) {
+        return "\(updated), \(duration)"
+      }
+
+      return updated
+    }()
+
+    let s = "\(times)\(snippet)"
+
+    episodeCellSubtitles.setObject(s as NSString, forKey: key)
+
+    return s
   }
 
 }
