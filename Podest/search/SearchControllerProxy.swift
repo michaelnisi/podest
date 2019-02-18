@@ -11,7 +11,7 @@ import UIKit
 import os.log
 import FeedKit
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "search")
 
 private enum SearchState: Equatable {
   case dismissed
@@ -93,16 +93,20 @@ final class SearchControllerProxy: NSObject {
     case .dismissed:
       switch e {
       case .dismiss:
-        break
+        return
+
       case .search(let term):
         src.search(term)
 
         state = .searching(term)
 
       case .suggest(let term):
+        src.suggest(term)
+
         state = .suggesting(term)
       }
-    case .suggesting:
+      
+    case .suggesting(let oldTerm):
       switch e {
       case .dismiss:
         src.reset()
@@ -115,18 +119,32 @@ final class SearchControllerProxy: NSObject {
         state = .searching(term)
 
         if searchBar.text != term {
+          os_log("resetting text", log: log, type: .debug)
           searchBar.text = term
         }
 
         if searchBar.isFirstResponder {
+          os_log("resigning first responder", log: log, type: .debug)
           searchBar.resignFirstResponder()
         }
+
       case .suggest(let term):
+        guard oldTerm != term else {
+          os_log("aborting: same term", log: log, type: .debug)
+          return
+        }
+
         src.suggest(term)
 
         state = .suggesting(term)
+
+        if searchBar.text != term {
+          os_log("resetting text", log: log, type: .debug)
+          searchBar.text = term
+        }
       }
-    case .searching:
+
+    case .searching(let oldTerm):
       switch e {
       case .dismiss:
         src.reset()
@@ -134,6 +152,11 @@ final class SearchControllerProxy: NSObject {
         state = .dismissed
 
       case .search(let term):
+        guard oldTerm != term else {
+          os_log("aborting: same term", log: log, type: .debug)
+          return
+        }
+        
         src.search(term)
 
         state = .searching(term)
@@ -225,8 +248,8 @@ extension SearchControllerProxy: SearchResultsControllerDelegate {
     navigationDelegate?.show(entry: entry)
   }
 
-  func searchResultsController(
-    _ searchResultsController: SearchResultsController,
+  func searchResults(
+    _ searchResults: SearchResultsController,
     didSelectFind find: Find
   ) {
     switch find {
@@ -239,6 +262,12 @@ extension SearchControllerProxy: SearchResultsControllerDelegate {
     case .suggestedTerm(let suggestion):
       search(suggestion.term)
     }
+  }
+
+  func searchResultsWillBeginDragging(
+    _ searchResults: SearchResultsController) {
+    os_log("resigning first responder", log: log, type: .debug)
+    searchBar.resignFirstResponder()
   }
 
 }

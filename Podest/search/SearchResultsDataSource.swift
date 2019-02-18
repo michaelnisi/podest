@@ -81,13 +81,6 @@ extension SearchResultsDataSource {
       return []
     }
 
-    if items.count == 1,
-      case .suggestedTerm(let suggestion)? = items.first,
-      suggestion.term == term {
-      let text = StringRepository.noResult(for: term)
-      return [[.message(text)]]
-    }
-
     var results = [Item]()
     var sugs = [Item]()
     var feeds = [Item]()
@@ -116,7 +109,8 @@ extension SearchResultsDataSource {
     items: [Find],
     error: Error? = nil
   ) -> [[Change<Item>]] {
-    guard let sections = makeSections(term: term, items: items, error: error) else {
+    guard let sections = makeSections(
+      term: term, items: items, error: error) else {
       return []
     }
 
@@ -370,8 +364,6 @@ extension SearchResultsDataSource: UITableViewDataSource {
     guard sections.count > 1, let first = sections[section].first else {
       return nil
     }
-
-    // Determing title with first item.
 
     switch first {
     case .find(let find):
