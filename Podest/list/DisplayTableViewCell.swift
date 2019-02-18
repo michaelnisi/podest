@@ -75,7 +75,6 @@ class DisplayTableViewCell: UITableViewCell {
       options: FKImageLoadingOptions(
         fallbackImage: DisplayTableViewCell.fallbackImage,
         quality: imageQuality,
-        isDirect: true,
         isClean: true
       )
     )
