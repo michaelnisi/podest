@@ -38,7 +38,8 @@ final class QueueViewController: UITableViewController, Navigator {
 
     return QueueDataSource(
       userQueue: Podest.userQueue,
-      images: Podest.images
+      images: Podest.images,
+      imageQuality: .medium
     )
   }()
 
