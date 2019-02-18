@@ -96,20 +96,22 @@ final class SearchControllerProxy: NSObject {
         break
       case .search(let term):
         src.search(term)
+
         state = .searching(term)
+
       case .suggest(let term):
-        if term != "" {
-          src.suggest(term)
-        }
         state = .suggesting(term)
       }
     case .suggesting:
       switch e {
       case .dismiss:
         src.reset()
+
         state = .dismissed
+
       case .search(let term):
         src.search(term)
+
         state = .searching(term)
 
         if searchBar.text != term {
@@ -120,9 +122,7 @@ final class SearchControllerProxy: NSObject {
           searchBar.resignFirstResponder()
         }
       case .suggest(let term):
-        if term != "" {
-          src.suggest(term)
-        }
+        src.suggest(term)
 
         state = .suggesting(term)
       }
@@ -130,15 +130,16 @@ final class SearchControllerProxy: NSObject {
       switch e {
       case .dismiss:
         src.reset()
+
         state = .dismissed
+
       case .search(let term):
         src.search(term)
 
         state = .searching(term)
+
       case .suggest(let term):
-        if term != "" {
-          src.suggest(term)
-        }
+        src.suggest(term)
 
         state = .suggesting(term)
       }

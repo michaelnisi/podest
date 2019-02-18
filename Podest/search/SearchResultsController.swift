@@ -24,8 +24,7 @@ protocol SearchResultsControllerDelegate: Navigator {
   /// The main split view controller state.
   ///
   /// In landscape, episodes can be selected, flipping to portrait must clear
-  /// these selections in place, for `viewDidAppear(_:)` not happening in that
-  /// case.
+  /// these selections in place.
   var isCollapsed: Bool { get }
 
 }
@@ -37,6 +36,10 @@ final class SearchResultsController: UITableViewController {
   var delegate: SearchResultsControllerDelegate?
 
   /// Returns a shared completion block for updating.
+  ///
+  /// Although we are updating the table view with `UITableView.reloadData()`
+  /// in this view controller -- the sledgehammer is more efficient here -- we
+  /// keep the diffing code, here and in the data source, for testing.
   private func makeUpdatingBlock()
     -> (([[Change<SearchResultsDataSource.Item>]], Error?) -> Void) {
     return { [weak self] batch, error in
@@ -54,15 +57,23 @@ final class SearchResultsController: UITableViewController {
   }
 
   func search(_ term: String) {
-    dataSource.search(term: term, updatesBlock: makeUpdatingBlock())
+    let t = tableView
+
+    dataSource.search(term: term) {
+      t?.reloadData()
+    }
   }
 
   func suggest(_ term: String) {
-    dataSource.suggest(term: term, updatesBlock: makeUpdatingBlock())
+    let t = tableView
+
+    dataSource.suggest(term: term) {
+      t?.reloadData()
+    }
   }
   
   func reset() {
-    dataSource.suggest(term: "", updatesBlock: makeUpdatingBlock())
+    suggest("")
   }
 
 }

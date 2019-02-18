@@ -56,6 +56,9 @@ final class SearchResultsDataSource: NSObject, SectionedDataSource {
 
 extension SearchResultsDataSource {
 
+  /// Returns new sections representing `term`, `items`, and `error`.
+  ///
+  /// - Returns: The new sections or `nil` if current sections should be kept.
   private static func makeSections(
     term: String,
     items: [Find],
@@ -106,8 +109,6 @@ extension SearchResultsDataSource {
     return [results, sugs, feeds, entries].filter { !$0.isEmpty }
   }
 
-
-
   /// Drafts updates from `items` and `error` with `sections` as current state.
   private static func makeUpdates(
     term: String,
@@ -130,20 +131,116 @@ extension SearchResultsDataSource {
 
 extension SearchResultsDataSource {
 
+  /// Return a trimmed search query `term`.
+  private static func makeTrimmed(term: String) -> String {
+    let ignored = CharacterSet(charactersIn: " ")
+
+    return term.trimmingCharacters(in: ignored)
+  }
+
+  /// Updates the sections with suggestions for `term`.
+  ///
+  /// - Parameters:
+  ///   - term: The search term.
+  ///   - reloadBlock: This block executes on the main queue when it’s time for
+  /// the table view to reload data.
+  func suggest(term: String, reloadBlock: (() -> Void)?) {
+    dispatchPrecondition(condition: .onQueue(.main))
+
+    let trimmed = SearchResultsDataSource.makeTrimmed(term: term)
+
+    guard !trimmed.isEmpty else {
+      operation = nil
+      sections = []
+
+      reloadBlock?()
+      return
+    }
+
+    let checkpoint = sections
+
+    var acc = [Find]()
+
+    operation = repo.suggest(trimmed, perFindGroupBlock: { error, finds in
+      guard error == nil else {
+        fatalError(String(describing: error))
+      }
+
+      acc += finds
+    }) { error in
+      dispatchPrecondition(condition: .notOnQueue(.main))
+
+      let sections = SearchResultsDataSource.makeSections(
+        term: term, items: acc, error: error)
+
+      DispatchQueue.main.async { [weak self] in
+        guard self?.sections == checkpoint, let s = sections else {
+          return
+        }
+
+        self?.sections = s
+
+        reloadBlock?()
+      }
+    }
+  }
+
+  /// Updates the sections with search results for `term`.
+  ///
+  /// - Parameters:
+  ///   - term: The search term.
+  ///   - reloadBlock: This block executes on the main queue when the table
+  /// view should reload data.
+  func search(term: String, reloadBlock: (() -> Void)?) {
+    dispatchPrecondition(condition: .onQueue(.main))
+
+    let checkpoint = sections
+
+    var acc = [Find]()
+
+    operation = repo.search(term, perFindGroupBlock: { error, finds in
+      guard error == nil else {
+        fatalError(String(describing: error))
+      }
+
+      acc += finds
+    }) { error in
+      dispatchPrecondition(condition: .notOnQueue(.main))
+
+      let sections = SearchResultsDataSource.makeSections(
+        term: term, items: acc, error: error)
+
+      DispatchQueue.main.async { [weak self] in
+        guard self?.sections == checkpoint, let s = sections else {
+          return
+        }
+
+        self?.sections = s
+
+        reloadBlock?()
+      }
+    }
+  }
+
+}
+
+// MARK: - Suggesting and Searching (Diffing)
+
+extension SearchResultsDataSource {
+
   func suggest(
     term: String,
     updatesBlock: (([[Change<Item>]], Error?) -> Void)?
   ) {
     dispatchPrecondition(condition: .onQueue(.main))
 
-    let ignored = CharacterSet(charactersIn: " ")
-    let trimmed = term.trimmingCharacters(in: ignored)
+    let trimmed = SearchResultsDataSource.makeTrimmed(term: term)
 
     guard !trimmed.isEmpty else {
       operation = nil
-      
+
       let changes = SearchResultsDataSource.makeUpdates(
-        term: trimmed,sections: self.sections, items: [])
+        term: trimmed, sections: self.sections, items: [])
 
       updatesBlock?(changes, nil)
       return
@@ -171,6 +268,7 @@ extension SearchResultsDataSource {
       }
 
       DispatchQueue.main.async { [weak self] in
+        // Making sure our operation is relevant still.
         guard self?.sections == current else {
           return
         }
@@ -182,7 +280,7 @@ extension SearchResultsDataSource {
 
   func search(
     term: String,
-    updatesBlock: (([[Change<Item>]], Error?) -> Void)?
+    updatesBlock: (([[Change<Item>]], Error?) -> Void)? = nil
   ) {
     dispatchPrecondition(condition: .onQueue(.main))
 
@@ -216,7 +314,7 @@ extension SearchResultsDataSource {
       }
     }
   }
-  
+
 }
 
 // MARK: - Accessing Items
