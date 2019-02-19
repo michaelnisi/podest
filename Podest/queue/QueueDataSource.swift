@@ -548,6 +548,9 @@ extension QueueDataSource: UITableViewDataSourcePrefetching  {
   func tableView(
     _ tableView: UITableView,
     prefetchRowsAt indexPaths: [IndexPath]) {
+    let tmp = tableView.cellForRow(at: IndexPath(row: 0, section: 0))
+    let size = tmp?.imageView?.bounds.size ?? CGSize(width: 82, height: 82)
+
     DispatchQueue.global().async { [weak self] in
       guard
         let images = self?.images,
@@ -556,7 +559,6 @@ extension QueueDataSource: UITableViewDataSourcePrefetching  {
         return
       }
 
-      let size = CGSize(width: 60, height: 60)
       let reqs = images.prefetchImages(for: items, at: size, quality: quality)
 
       self?.requests = reqs
