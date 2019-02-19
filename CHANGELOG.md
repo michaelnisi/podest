@@ -1,3 +1,11 @@
+## 7.9.6 (2019-02-20)
+
+### Finding Nemo
+
+Accompanying the previous release to compensate a regression in search, this patch groups search suggestions correctly again and reduces latency for a smoother search experience.
+
+Smarter placeholding and prefetching makes image loading almost seemless.
+
 ## 7.9.5 (2019-01-22)
 
 ### Making a Diff
