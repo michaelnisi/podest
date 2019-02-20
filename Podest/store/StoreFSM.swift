@@ -10,7 +10,7 @@ import UIKit
 import StoreKit
 import os.log
 
-private let log = OSLog(subsystem: "ink.codes.podest", category: "store")
+private let log = OSLog.disabled
 
 /// A locally known product, stored in the local JSON file `products.json`.
 struct LocalProduct: Codable {

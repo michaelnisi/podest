@@ -12,7 +12,7 @@ import Foundation
 import Ola
 import os.log
 
-private let log = OSLog(subsystem: "ink.codes.podest", category: "sync")
+private let log = OSLog.disabled
 
 /// CloudKit client to synchronize user data: queue and subscriptions.
 public class UserClient {

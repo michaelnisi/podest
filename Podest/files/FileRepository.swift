@@ -11,7 +11,7 @@ import os.log
 import FeedKit
 import Ola
 
-private let log = OSLog(subsystem: "ink.codes.podest", category: "files")
+private let log = OSLog.disabled
 
 final class FileRepository: NSObject {
 

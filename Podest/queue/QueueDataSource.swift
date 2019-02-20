@@ -10,7 +10,7 @@ import UIKit
 import FeedKit
 import os.log
 
-private let log = OSLog(subsystem: "ink.codes.podest", category: "queue")
+private let log = OSLog.disabled
 
 /// Provides access to queue and subscription data.
 final class QueueDataSource: NSObject, SectionedDataSource {
