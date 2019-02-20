@@ -509,8 +509,12 @@ extension SearchResultsDataSource: UITableViewDataSourcePrefetching  {
     _ tableView: UITableView,
     prefetchRowsAt indexPaths: [IndexPath]
   ) {
+    // Assuming the the first row is representative.
+    let ip = IndexPath(row: 0, section: 0)
+    let tmp = !self.isEmpty ? tableView.cellForRow(at: ip) : nil
+    let size = tmp?.imageView?.bounds.size ?? CGSize(width: 82, height: 82)
+
     let items = imaginables(for: indexPaths)
-    let size = CGSize(width: 60, height: 60)
 
     requests = Podest.images.prefetchImages(
       for: items, at: size, quality: .medium
