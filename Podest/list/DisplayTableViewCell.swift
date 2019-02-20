@@ -60,27 +60,29 @@ class DisplayTableViewCell: UITableViewCell {
   override func layoutSubviews() {
     super.layoutSubviews()
 
-    // Tailor-made image loading requires a somewhat stable image size. Checking
-    // the image size prevents excessive requests, but might still lead to
-    // multiple requests. I’m seeing two at the moment.
-
-    guard let view = largeImageView, let images = images, let item = self.item,
+    guard
+      let view = largeImageView,
+      let item = self.item,
       (isReset || view.bounds.size != imageSizeLoaded) else {
-        return
+      return
     }
 
-    images.loadImage(
-      representing: item,
-      into: view,
-      options: FKImageLoadingOptions(
-        fallbackImage: DisplayTableViewCell.fallbackImage,
-        quality: imageQuality,
-        isClean: true
-      )
-    )
+    // Passing animations to prevent redundant loading.
 
-    imageSizeLoaded = view.bounds.size
-    isReset = false
+    DispatchQueue.main.async { [weak self] in
+      self?.images?.loadImage(
+        representing: item,
+        into: view,
+        options: FKImageLoadingOptions(
+          fallbackImage: DisplayTableViewCell.fallbackImage,
+          quality: self?.imageQuality ?? .medium,
+          isClean: true
+        )
+      )
+
+      self?.imageSizeLoaded = view.bounds.size
+      self?.isReset = false
+    }
   }
 
 }

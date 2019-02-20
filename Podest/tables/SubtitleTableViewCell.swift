@@ -46,9 +46,10 @@ final class SubtitleTableViewCell: UITableViewCell {
   override func layoutSubviews() {
     super.layoutSubviews()
 
-    // Tailor-made image loading requires a somewhat stable image size.
-
-    guard let view = imageView, let images = images, let item = self.item,
+    guard
+      let view = imageView,
+      let images = images,
+      let item = self.item,
       (isReset || view.bounds.size != imageSizeLoaded) else {
       return
     }

@@ -198,9 +198,11 @@ extension EpisodeViewController {
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
 
-    // Loading image of suitable size.
+    // Passing animations to prevent redundant loading.
 
-    loadImage()
+    DispatchQueue.main.async { [weak self] in
+      self?.loadImage()
+    }
   }
 
 }
