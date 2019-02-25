@@ -544,45 +544,33 @@ extension QueueDataSource: UITableViewDataSourcePrefetching  {
       }
     }
   }
-  
-  func tableView(
-    _ tableView: UITableView,
-    prefetchRowsAt indexPaths: [IndexPath]) {
-    // Assuming the the first row is representative.
+
+  /// Assuming the the first row is representative.
+  private func estimateCellSize(tableView: UITableView) -> CGSize {
     let ip = IndexPath(row: 0, section: 0)
     let tmp = !self.isEmpty ? tableView.cellForRow(at: ip) : nil
-    let size = tmp?.imageView?.bounds.size ?? CGSize(width: 82, height: 82)
 
-    // Questionable if this extra dispatching, here and in the next method,
-    // saves any time.
-
-    DispatchQueue.global().async { [weak self] in
-      guard
-        let images = self?.images,
-        let quality = self?.imageQuality,
-        let items = self?.imaginables(for: indexPaths) else {
-        return
-      }
-
-      let reqs = images.prefetchImages(for: items, at: size, quality: quality)
-
-      self?.requests = reqs
-    }
+    return tmp?.imageView?.bounds.size ?? CGSize(width: 82, height: 82)
   }
   
   func tableView(
     _ tableView: UITableView,
-    cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
-    DispatchQueue.global().async { [weak self] in
-      guard let reqs = self?.requests else {
-        return
-      }
+    prefetchRowsAt indexPaths: [IndexPath]
+  ) {
+    let items = imaginables(for: indexPaths)
+    let size = estimateCellSize(tableView: tableView)
 
-      // Ignoring indexPaths, relying on the repo to do the right thing.
-      
-      self?.images.cancel(prefetching: reqs)
-      self?.requests = nil
-    }
+    Podest.images.prefetchImages(for: items, at: size, quality: .medium)
+  }
+
+  func tableView(
+    _ tableView: UITableView,
+    cancelPrefetchingForRowsAt indexPaths: [IndexPath]
+  ) {
+    let items = imaginables(for: indexPaths)
+    let size = estimateCellSize(tableView: tableView)
+
+    Podest.images.cancelPrefetching(for: items, at: size, quality: .medium)
   }
   
 }

@@ -504,35 +504,33 @@ extension SearchResultsDataSource: UITableViewDataSourcePrefetching  {
       }
     }
   }
+
+  /// Assuming the the first row is representative.
+  private func estimateCellSize(tableView: UITableView) -> CGSize {
+    let ip = IndexPath(row: 0, section: 0)
+    let tmp = !self.isEmpty ? tableView.cellForRow(at: ip) : nil
+    
+    return tmp?.imageView?.bounds.size ?? CGSize(width: 82, height: 82)
+  }
   
   func tableView(
     _ tableView: UITableView,
     prefetchRowsAt indexPaths: [IndexPath]
   ) {
-    // Assuming the the first row is representative.
-    let ip = IndexPath(row: 0, section: 0)
-    let tmp = !self.isEmpty ? tableView.cellForRow(at: ip) : nil
-    let size = tmp?.imageView?.bounds.size ?? CGSize(width: 82, height: 82)
-
     let items = imaginables(for: indexPaths)
+    let size = estimateCellSize(tableView: tableView)
 
-    requests = Podest.images.prefetchImages(
-      for: items, at: size, quality: .medium
-    )
+    Podest.images.prefetchImages(for: items, at: size, quality: .medium)
   }
 
   func tableView(
     _ tableView: UITableView,
     cancelPrefetchingForRowsAt indexPaths: [IndexPath]
   ) {
-    guard let reqs = requests else {
-      return
-    }
+    let items = imaginables(for: indexPaths)
+    let size = estimateCellSize(tableView: tableView)
 
-    // Ignoring indexPaths, relying on the repo to do the right thing.
-    Podest.images.cancel(prefetching: reqs)
-
-    requests = nil
+    Podest.images.cancelPrefetching(for: items, at: size, quality: .medium)
   }
   
 }
