@@ -39,11 +39,6 @@
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>podest.codes.ink</key>
-			<dict/>
-		</dict>
 	</dict>
 	<key>UIBackgroundModes</key>
 	<array>
