@@ -1,3 +1,3 @@
-Accompanying the previous release to compensate a regression in search, this patch groups search suggestions correctly again and reduces latency for a smoother search experience.
+Accompanying the previous release to compensate a regression in search, this patch restores correct grouping of search suggestions and reduces latency for a smoother search experience.
 
 Smarter placeholding and prefetching makes image loading almost seemless.

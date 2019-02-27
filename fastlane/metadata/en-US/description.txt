@@ -6,7 +6,7 @@ TOP FEATURES
 - Powerful search
 - Accessible from all your iOS devices
 - Energy efficiency
-- Landscape mode
+- Open source
 
 AUDIO AND VIDEO PLAYBACK
 
