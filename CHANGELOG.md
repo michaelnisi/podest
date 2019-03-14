@@ -1,3 +1,11 @@
+## 7.9.7 (2019-03-15)
+
+### Shrugs
+
+Couple of text formatting issues, no superfluous spaces in episode summaries and empty queue messages anymore.
+
+For some users, after the initial iCloud sync, an incorrect message had been displayed, that’s fixed now.
+
 ## 7.9.6 (2019-02-27)
 
 ### Finding Nemo

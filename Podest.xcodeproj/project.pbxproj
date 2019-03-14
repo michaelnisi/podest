@@ -48,6 +48,7 @@
 		4C8DCE071FFE75F800A6A61B /* List.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C8DCE061FFE75F800A6A61B /* List.storyboard */; };
 		4C94A3B51FED66F40014742F /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C94A3B41FED66F40014742F /* Colors.xcassets */; };
 		4C94A3B71FF2591B0014742F /* UserClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C94A3B61FF2591B0014742F /* UserClient.swift */; };
+		4C9AF4CD223AC032000B1C2D /* HTMLAttributor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C9AF4CC223AC032000B1C2D /* HTMLAttributor.framework */; };
 		4CBB836620D667AF008330E2 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4CBB836520D667AF008330E2 /* Settings.bundle */; };
 		4CCBF20A20805C6500A7359F /* store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCBF20920805C6500A7359F /* store.swift */; };
 		4CCBF20C20805F5C00A7359F /* products.json in Resources */ = {isa = PBXBuildFile; fileRef = 4CCBF20B20805F5C00A7359F /* products.json */; };
@@ -235,6 +236,9 @@
 		4C8DCE061FFE75F800A6A61B /* List.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = List.storyboard; sourceTree = "<group>"; };
 		4C94A3B41FED66F40014742F /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		4C94A3B61FF2591B0014742F /* UserClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserClient.swift; sourceTree = "<group>"; };
+		4C9AF4CA223AC032000B1C2D /* FileProxy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FileProxy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C9AF4CC223AC032000B1C2D /* HTMLAttributor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HTMLAttributor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C9AF4CE223AC032000B1C2D /* Playback.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Playback.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CBB836520D667AF008330E2 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		4CCBF20920805C6500A7359F /* store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = store.swift; sourceTree = "<group>"; };
 		4CCBF20B20805F5C00A7359F /* products.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = products.json; sourceTree = "<group>"; };
@@ -319,6 +323,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C9AF4CD223AC032000B1C2D /* HTMLAttributor.framework in Frameworks */,
 				4CE9693821DF660C00AEF409 /* FanboyKit.framework in Frameworks */,
 				4CE9693A21DF660C00AEF409 /* FeedKit.framework in Frameworks */,
 				4CE9693C21DF660C00AEF409 /* MangerKit.framework in Frameworks */,
@@ -544,6 +549,9 @@
 		4E0CF69F1DCB353C005E01F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4C9AF4CA223AC032000B1C2D /* FileProxy.framework */,
+				4C9AF4CC223AC032000B1C2D /* HTMLAttributor.framework */,
+				4C9AF4CE223AC032000B1C2D /* Playback.framework */,
 				4C5C9E542239715B006DF298 /* FileProxy.framework */,
 				4C5C9E4522396FED006DF298 /* fileproxy.framework */,
 				4C2EDA4D2239699100528E99 /* HTMLAttributor.framework */,
@@ -1086,12 +1094,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 3;
+				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PodKit/Info.plist;
@@ -1121,12 +1129,12 @@
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 3;
+				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PodKit/Info.plist;
@@ -1363,7 +1371,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1386,7 +1394,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
