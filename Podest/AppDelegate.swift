@@ -489,7 +489,8 @@ extension AppDelegate {
           os_log("iCloud: %{public}@", log: log, String(describing: er))
         }
 
-        updateQueue(considering: error)
+        // Withholding errors, iCloud is optional.
+        updateQueue()
       }
       return
     }
