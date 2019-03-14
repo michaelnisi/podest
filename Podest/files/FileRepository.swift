@@ -10,6 +10,7 @@ import Foundation
 import os.log
 import FeedKit
 import Ola
+import FileProxy
 
 private let log = OSLog.disabled
 
@@ -400,7 +401,7 @@ extension FileRepository: Downloading {
 // MARK: - FileProxyDelegate
 
 extension FileRepository: FileProxyDelegate {
-  
+
   var allowsCellularAccess: Bool {
     return UserDefaults.standard.mobileDataDownloads
   }

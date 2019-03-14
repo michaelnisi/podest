@@ -9,6 +9,7 @@
 import UIKit
 import FeedKit
 import os.log
+import HTMLAttributor
 
 private let log = OSLog.disabled
 

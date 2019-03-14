@@ -234,7 +234,7 @@ struct Settings {
   /// simulators, where background downloads may be pointless.
   let noDownloading: Bool
 
-  /// Allows all interface orientations.
+  /// Overrides allowed interface orientations, allowing all but upside down.
   let allButUpsideDown: Bool
 
 }
@@ -378,11 +378,7 @@ final private class Config {
 
   fileprivate func makeStore() throws -> Shopping {
     let url = Bundle.main.url(forResource: "products", withExtension: "json")!
-
-    // For lagging product fetching, not indicating network activity is better.
-    // There’s a reason why Apple isn’t doing it by default, I guess.
-
-    let store = StoreFSM(url: url) //, indicator: Podest.networkActivity)
+    let store = StoreFSM(url: url)
 
     return store
   }

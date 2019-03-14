@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import FileProxy
 
 /// `Downloading` provides file facilities. For the most part, this API should
 /// not be used from the main queue, it might trap.
