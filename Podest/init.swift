@@ -225,6 +225,8 @@ struct Settings {
   /// Despite disabling iCloud in Settings.app makes the better, more realistic,
   /// environment, this argument can be used during development. Passing `true`
   /// produces a NOP iCloud client at initialization time.
+  ///
+  /// Disabling sync also disables preloading media files.
   let noSync: Bool
 
   /// Removes local caches for starting over.
@@ -236,6 +238,19 @@ struct Settings {
 
   /// Overrides allowed interface orientations, allowing all but upside down.
   let allButUpsideDown: Bool
+
+  /// Removes IAP receipts.
+  let removeReceipts: Bool
+
+  /// Creates new settings from process info arguments.
+  init (arguments: [String]) {
+    noSync = arguments.contains("-ink.codes.podest.noSync")
+    flush = arguments.contains("-ink.codes.podest.flush")
+    noDownloading = arguments.contains("-ink.codes.podest.noDownloading")
+      || arguments.contains("-ink.codes.podest.noSync")
+    allButUpsideDown = arguments.contains("-ink.codes.podest.allButUpsideDown")
+    removeReceipts = arguments.contains("-ink.codes.podest.removeReceipts")
+  }
 
 }
 
@@ -304,29 +319,21 @@ final private class Config {
   ///
   /// - Parameter url: The URL of the a local configuration file.
   init(url: URL) throws {
-    let args = ProcessInfo.processInfo.arguments
+    settings = Settings(arguments: ProcessInfo.processInfo.arguments)
 
-    // Disabling sync also disables preloading media files.
-    let noSync = args.contains("-ink.codes.podest.noSync")
-
-    settings = Settings(
-      noSync: noSync,
-      flush: args.contains("-ink.codes.podest.flush"),
-      noDownloading: args.contains("-ink.codes.podest.noDownloading") || noSync,
-      allButUpsideDown: args.contains("-ink.codes.podest.allButUpsideDown")
-    )
-
-    os_log("settings: %{public}@", log: log, type: .info, String(describing: settings))
+    os_log("settings: %{public}@",
+           log: log, type: .info, String(describing: settings))
 
     let json = try! Data(contentsOf: url)
-    
     svcs = try! JSONDecoder().decode(Services.self, from: json)
+
     os_log("services: %@", log: log, type: .info, svcs.services)
 
     if settings.flush {
       let keys = [
         UserDefaults.lastUpdateTimeKey
       ]
+
       for key in keys {
         UserDefaults.standard.removeObject(forKey: key)
         os_log("flushing: %{key}@", log: log, key)
@@ -379,6 +386,10 @@ final private class Config {
   fileprivate func makeStore() throws -> Shopping {
     let url = Bundle.main.url(forResource: "products", withExtension: "json")!
     let store = StoreFSM(url: url)
+
+    if settings.removeReceipts {
+      store.removeReceipts()
+    }
 
     return store
   }
