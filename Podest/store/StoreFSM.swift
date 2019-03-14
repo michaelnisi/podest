@@ -10,7 +10,7 @@ import UIKit
 import StoreKit
 import os.log
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "store")
 
 /// A locally known product, stored in the local JSON file `products.json`.
 struct LocalProduct: Codable {
@@ -170,6 +170,10 @@ enum StoreState: Equatable {
   /// ## update
   /// Fetches products from App Store and validates receipts entering one of the
   /// three elemental states, `interested`, `subscribed`, or `offline`.
+  ///
+  /// ## productsReceived([SKProduct], ShoppingError?)
+  /// The product list has been received from the payment queue and the
+  /// products will be forwarded to the shopping delegate for display.
   case interested
   
   /// In `subscribed` state the store currently doesn’t handle any events, the
@@ -488,7 +492,6 @@ class StoreFSM: NSObject {
   private (set) var state: StoreState = .initialized {
     didSet {
       guard state != oldValue else {
-        os_log("** warning: corresponding %{public}@", log: log, state.description)
         return
       }
       
@@ -673,6 +676,9 @@ class StoreFSM: NSObject {
       
       case .receiptsChanged, .update, .online:
         return state
+
+      case .failed(let error):
+        return updatedState(after: error, next: .interested)
         
       default:
         fatalError("unhandled event")
@@ -722,8 +728,21 @@ class StoreFSM: NSObject {
         
       case .update:
         return updateProducts()
-        
-      default:
+
+      case .productsReceived(let products, let error):
+        // It seems like one can receive products from a previous session, but
+        // who knows, the sandbox cannot be trusted. I’m not sure if using these
+        // products is the right thing to do here.
+
+        self.products = products
+
+        delegateQueue.async {
+          self.delegate?.store(self, offers: products, error: error)
+        }
+
+        return updateIsAccessible(matching: validateReceipts())
+
+      case .restored, .activate, .online:
         fatalError("unhandled event")
       }
 
@@ -864,9 +883,12 @@ extension StoreFSM: SKPaymentTransactionObserver {
 
     guard t.error == nil else {
       let er = t.error!
-      os_log("handling transaction error: %@", log: log, type: .error,
-             er as CVarArg)
+
+      os_log("handling transaction error: %@",
+             log: log, type: .error, er as CVarArg)
+
       event(.failed(ShoppingError(underlyingError: er)))
+
       return finish(transaction: t)
     }
 
