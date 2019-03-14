@@ -412,7 +412,7 @@ extension StringRepository {
   static let emptyQueue: NSAttributedString = makeMessage(
     title: "No Episodes",
     hint: """
-      Swipe down to refresh or search to explore. \
+      Swipe down to refresh or search to explore.\
       Enqueued Episodes will show up here.
     """
   )
