@@ -1,10 +1,12 @@
-## 7.9.7 (2019-03-15)
+## 7.9.7 (Upcoming)
 
 ### Shrugs
 
-Couple of text formatting issues, no superfluous spaces in episode summaries and empty queue messages anymore.
+Superfluous spaces in episode summaries have been removed.
 
-For some users, after the initial iCloud sync, an incorrect message had been displayed, that’s fixed now.
+Messaging in the Queue has been adjusted and its background set to white. For some users, after the initial iCloud sync, an incorrect message had been displayed, that’s fixed now.
+
+The in-app store layout has been reorganized and the store now features app rating and review incentives.
 
 ## 7.9.6 (2019-02-27)
 
