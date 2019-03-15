@@ -12,6 +12,20 @@ import Foundation
 import FeedKit
 import AVFoundation
 
+// MARK: - Indicating Network Activity
+
+protocol NetworkActivityIndicating {
+  func increase()
+  func decrease()
+  func reset()
+}
+
+extension NetworkActivityIndicating {
+  func increase() {}
+  func decrease() {}
+  func reset() {}
+}
+
 // MARK: - Audio and Video Playback
 
 /// Playback section of the `ViewControllers` protocol.

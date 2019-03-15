@@ -117,18 +117,6 @@ extension Storing {
   
 }
 
-protocol NetworkActivityIndicating {
-  func increase()
-  func decrease()
-  func reset()
-}
-
-extension NetworkActivityIndicating {
-  func increase() {}
-  func decrease() {}
-  func reset() {}
-}
-
 // MARK: - API
 
 /// Enumerates possible presentation layer error types, grouping StoreKit and
@@ -244,9 +232,6 @@ protocol Shopping: SKPaymentTransactionObserver {
   
   /// Deactivates the store, removing the observer from the payment queue.
   func deactivate()
-  
-  /// Restores previous purchases.
-  func restore()
   
   /// Updates the store state.
   func update()

@@ -22,8 +22,6 @@ private enum StoreEvent {
   case purchased(ProductIdentifier)
   case purchasing(ProductIdentifier)
   case receiptsChanged
-  case restore
-  case restored
   case update
 }
 
@@ -52,10 +50,6 @@ extension StoreEvent: CustomStringConvertible {
       return "StoreEvent: purchasing: \(productIdentifier)"
     case .receiptsChanged:
       return "StoreEvent: receiptsChanged"
-    case .restore:
-      return "StoreEvent: restore"
-    case .restored:
-      return "StoreEvent: restored"
     case .update:
       return "StoreEvent: update"
     }
@@ -72,7 +66,6 @@ extension StoreEvent: CustomStringConvertible {
 /// - fetchingProducts
 /// - offline
 /// - purchasing
-/// - restoring
 ///
 /// The specifics of each state are described inline.
 enum StoreState: Equatable {
@@ -106,9 +99,6 @@ enum StoreState: Equatable {
   ///
   /// ## pay
   /// Adds payment to queue entering `purchasing`.
-  ///
-  /// ## restore
-  /// Requests restoring of completed transactions entering `restoring`.
   ///
   /// ## update
   /// Fetches products from App Store and validates receipts entering one of the
@@ -162,18 +152,6 @@ enum StoreState: Equatable {
   /// ## purchasing | receiptsChanged | update
   /// These events are ignored staying in `purchasing`.
   indirect case purchasing(ProductIdentifier, StoreState)
-
-  /// The user is trying to restore previous purchases.
-  ///
-  /// ## failed
-  /// Processes error ending up `offline` or `interested`
-  ///
-  /// ## restored
-  /// Validates receipts resulting in `interested` or `subscribed`.
-  ///
-  /// ## update | receiptsChanged
-  /// Does nothing awaiting completion of restoring.
-  indirect case restoring(StoreState)
 }
 
 extension StoreState: CustomStringConvertible {
@@ -190,13 +168,11 @@ extension StoreState: CustomStringConvertible {
       return "StoreState: fetchingProducts"
     case .offline:
       return "StoreState: offline"
-    case .restoring(let nextState):
-      return "StoreState: restoring: ( nextState: \(nextState) )"
     case .purchasing(let pid, let nextState):
       return """
       StoreState: purchasing (
-      productIdentifier: \(pid),
-      nextState: \(nextState)
+        productIdentifier: \(pid),
+        nextState: \(nextState)
       )
       """
     }
@@ -208,7 +184,6 @@ extension StoreState: CustomStringConvertible {
 
 private class DefaultPaymentQueue: Paying {}
 private class DefaultKVStore: Storing {}
-private class DefaultNetworkActivityIndicator: NetworkActivityIndicating {}
 
 /// StoreFSM is a store for in-app purchases, offering a single non-renewing
 /// subscription at three flexible prices. After a successful purchase the store
@@ -226,11 +201,8 @@ final class StoreFSM: NSObject {
   /// A queue of payment transactions to be processed by the App Store.
   private let paymentQueue: Paying
   
-  /// A central key-value store for receipts.
+  /// A central key-value store persisting receipts.
   private let store: Storing
-  
-  /// Means to indicate network activity.
-  private let indicator: NetworkActivityIndicating
 
   /// Creates a new store with minimal dependencies. **Protocol dependencies**
   /// for easier testing.
@@ -240,19 +212,16 @@ final class StoreFSM: NSObject {
   ///   - ttl: The maximum age, 10 minutes, of cached products in seconds.
   ///   - paymentQueue: The App Store payment queue.
   ///   - store: The ubiquitous key-value store.
-  ///   - indicator: The network activity indicator.
   init(
     url: URL,
     ttl: TimeInterval = 600,
     paymentQueue: Paying = DefaultPaymentQueue(),
-    store: Storing = DefaultKVStore(),
-    indicator: NetworkActivityIndicating = DefaultNetworkActivityIndicator()
+    store: Storing = DefaultKVStore()
   ) {
     self.url = url
     self.ttl = ttl
     self.paymentQueue = paymentQueue
     self.store = store
-    self.indicator = indicator
   }
   
   /// Flag for asserts, `true` if we are observing the payment queue.
@@ -318,9 +287,7 @@ final class StoreFSM: NSObject {
   private func fetchProducts() {
     os_log("fetching products", log: log, type: .debug)
     request?.cancel()
-    
-    indicator.increase()
-    
+
     let req = SKProductsRequest(productIdentifiers: self.productIdentifiers)
     req.delegate = self
     req.start()
@@ -473,6 +440,7 @@ final class StoreFSM: NSObject {
       guard isAccessible != oldValue else {
         return
       }
+      
       delegateQueue.async {
         self.subscriberDelegate?.store(self, isAccessible: self.isAccessible)
       }
@@ -498,31 +466,21 @@ final class StoreFSM: NSObject {
       delegateQueue.async {
         self.delegate?.store(self, error: .invalidProduct(productIdentifier))
       }
+
       return state
     }
     
     let payment = SKPayment(product: p)
-    indicator.increase()
+
     paymentQueue.add(payment)
     
     return .purchasing(productIdentifier, state)
   }
 
-
-  // TODO: Remove indicator
-  // TODO: non-renewing subscriptions are unrestorable consumables
-
-  private func restoreCompletedTransactions() -> StoreState {
-    delegate?.storeRestoring(self)
-    
-    indicator.increase()
-    paymentQueue.restoreCompletedTransactions()
-    
-    return .restoring(state)
-  }
-  
   private var didChangeExternallyObserver: NSObjectProtocol?
-  
+
+  /// Begin observing kv-store for receipt and account changes. In both cases
+  /// firing a `.receiptsChanged` event.
   private func observeUbiquitousKeyValueStore() {
     precondition(didChangeExternallyObserver == nil)
     
@@ -538,11 +496,12 @@ final class StoreFSM: NSObject {
       
       switch reason {
       case NSUbiquitousKeyValueStoreAccountChange:
-        os_log("push received: account change",
-               log: log, type: .info)
+        os_log("push received: account change", log: log, type: .info)
+
         DispatchQueue.global().async {
           self.event(.receiptsChanged)
         }
+
       case NSUbiquitousKeyValueStoreInitialSyncChange,
            NSUbiquitousKeyValueStoreServerChange:
         guard
@@ -550,14 +509,16 @@ final class StoreFSM: NSObject {
           keys.contains("receipts") else {
           break
         }
+
         os_log("push received: initial sync | server change",
                log: log, type: .info)
         DispatchQueue.global().async {
           self.event(.receiptsChanged)
         }
+
       case NSUbiquitousKeyValueStoreQuotaViolationChange:
         os_log("push received: quota violation", log: log)
-        break
+
       default:
         break
       }
@@ -655,12 +616,14 @@ final class StoreFSM: NSObject {
         delegateQueue.async {
           self.delegate?.store(self, purchased: pid)
         }
+
         return updateIsAccessible(matching: validateReceipts())
 
       case .purchasing(let pid):
         delegateQueue.async {
           self.delegate?.store(self, purchasing: pid)
         }
+
         return .purchasing(pid, state)
 
       case .failed(let error):
@@ -670,11 +633,9 @@ final class StoreFSM: NSObject {
         delegateQueue.async {
           self.delegate?.store(self, purchasing: pid)
         }
+
         return addPayment(matching: pid)
-      
-      case .restore:
-        return restoreCompletedTransactions()
-        
+
       case .update:
         return updateProducts()
 
@@ -691,7 +652,7 @@ final class StoreFSM: NSObject {
 
         return updateIsAccessible(matching: validateReceipts())
 
-      case .restored, .activate, .online:
+      case .activate, .online:
         fatalError("unhandled event")
       }
 
@@ -709,9 +670,11 @@ final class StoreFSM: NSObject {
           os_log("mismatching products: ( %@, %@ )",
                  log: log, current, pid)
         }
+
         delegateQueue.async {
           self.delegate?.store(self, purchased: pid)
         }
+
         return updateIsAccessible(matching: validateReceipts())
         
       case .failed(let error):
@@ -719,44 +682,14 @@ final class StoreFSM: NSObject {
         
       case .purchasing(let pid), .pay(let pid):
         if current != pid {
-          os_log("parallel purchasing: ( %@, %@ )",
-                 log: log, current, pid)
+          os_log("parallel purchasing: ( %@, %@ )", log: log, current, pid)
         }
+
         return state
       
       case .receiptsChanged, .update:
         return state
 
-      default:
-        fatalError("unhandled event")
-      }
-      
-    // MARK: restoring
-      
-    case .restoring(let nextState):
-      switch event {
-      case .failed(let error):
-        return updatedState(after: error, next: nextState)
-      
-      case .restored:
-        let validated = validateReceipts()
-        
-        let pids: [ProductIdentifier] = {
-          if case .subscribed(let pid) = validated {
-            return [pid]
-          }
-          return []
-        }()
-        
-        delegateQueue.async {
-          self.delegate?.storeRestored(self, productIdentifiers: pids)
-        }
-        
-        return updateIsAccessible(matching: validated)
-        
-      case .receiptsChanged, .update:
-        return state
-        
       default:
         fatalError("unhandled event")
       }
@@ -769,8 +702,8 @@ final class StoreFSM: NSObject {
   /// **Do not block external users!**
   private func event(_ e: StoreEvent) {
     sQueue.sync {
-      os_log("handling event: %{public}@", log: log, type: .debug,
-             e.description)
+      os_log("handling event: %{public}@", log: log, type: .debug, e.description)
+
       state = updatedState(after: e)
     }
   }
@@ -788,18 +721,19 @@ extension StoreFSM: SKProductsRequestDelegate {
     os_log("response received: %@", log: log, type: .debug, response)
 
     DispatchQueue.main.async {
-      self.indicator.decrease()
       self.request = nil
     }
 
     DispatchQueue.global().async {
       let error: ShoppingError? = {
         let invalidIDs = response.invalidProductIdentifiers
+
         guard invalidIDs.isEmpty else {
           os_log("invalid product identifiers: %@",
                  log: log, type: .error, invalidIDs)
           return .invalidProduct(invalidIDs.first!)
         }
+
         return nil
       }()
 
@@ -819,10 +753,6 @@ extension StoreFSM: SKPaymentTransactionObserver {
   private func finish(transaction t: SKPaymentTransaction) {
     os_log("finishing: %@", log: log, type: .debug, t)
     paymentQueue.finishTransaction(t)
-    
-    // Very fuzzy, but the most central place I could find. Maybe network
-    // activity should not be indicated while purchasing at all.
-    indicator.decrease()
   }
 
   private func process(transaction t: SKPaymentTransaction) {
@@ -863,17 +793,7 @@ extension StoreFSM: SKPaymentTransactionObserver {
       event(.purchasing(pid))
 
     case .restored:
-      os_log("transactionState: restored", log: log, type: .debug)
-      guard
-        let original = t.original,
-        let receipt = PodestReceipt(transaction: original) else {
-        fatalError("receipt missing")
-      }
-
-      saveReceipt(receipt)
-      event(.purchased(pid))
-      
-      finish(transaction: t)
+      fatalError("unexpected transaction state")
     }
   }
 
@@ -889,32 +809,7 @@ extension StoreFSM: SKPaymentTransactionObserver {
       }
     }
   }
-  
-  func paymentQueueRestoreCompletedTransactionsFinished(
-    _ queue: SKPaymentQueue) {
-    os_log("payment queue has finished sending restored transactions",
-           log: log, type: .debug)
-    
-    indicator.decrease()
-    
-    DispatchQueue.global().async {
-      self.event(.restored)
-    }
-  }
 
-  func paymentQueue(
-    _ queue: SKPaymentQueue,
-    restoreCompletedTransactionsFailedWithError error: Error
-  ) {
-    os_log("error occurred while restoring transactions: %{public}@",
-           log: log, type: .error, error as CVarArg)
-    
-    indicator.decrease()
-    
-    DispatchQueue.global().async {
-      self.event(.failed(ShoppingError(underlyingError: error, restoring: true)))
-    }
-  }
 }
 
 // MARK: - Shopping
@@ -930,13 +825,6 @@ extension StoreFSM: Shopping {
   func update() {
     DispatchQueue.global().async {
       self.event(.update)
-    }
-  }
-  
-  func restore() {
-    os_log("restoring previous transactions", log: log, type: .debug)
-    DispatchQueue.global().async {
-      self.event(.restore)
     }
   }
   
