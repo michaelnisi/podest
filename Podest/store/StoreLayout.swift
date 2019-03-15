@@ -17,13 +17,13 @@ private extension CGRect {
 
     switch fromEdge {
     case .minXEdge, .maxXEdge:
-      dimension = self.size.width
+      dimension = size.width
     case .minYEdge, .maxYEdge:
-      dimension = self.size.height
+      dimension = size.height
     }
 
     let distance = (dimension * fraction).rounded(.up)
-    var slices = self.divided(atDistance: distance, from: fromEdge)
+    var slices = divided(atDistance: distance, from: fromEdge)
 
     switch fromEdge {
     case .minXEdge, .maxXEdge:
@@ -39,7 +39,7 @@ private extension CGRect {
 
 }
 
-/// Single section layout for the in-app store.
+/// Single section layout for the IAP store.
 final class StoreLayout: UICollectionViewLayout {
 
   private enum SegmentStyle {
@@ -84,7 +84,8 @@ final class StoreLayout: UICollectionViewLayout {
   /// Returns the initial rectangular space for our layout.
   private
   static func makeRectangle(collectionView cv: UICollectionView) -> CGRect {
-    guard cv.traitCollection.horizontalSizeClass == .regular,
+    guard
+      cv.traitCollection.horizontalSizeClass == .regular,
       cv.traitCollection.verticalSizeClass == .regular else {
       return cv.bounds.inset(by: cv.layoutMargins)
     }
@@ -106,9 +107,8 @@ final class StoreLayout: UICollectionViewLayout {
 
     precondition(cv.numberOfSections == 1)
 
-    // Reset cached information.
     cachedAttributes.removeAll()
-    contentBounds = CGRect(origin: .zero, size: cv.bounds.size)
+    contentBounds = CGRect(origin: .zero, size: .zero)
 
     var currentIndex = 0
     let count = cv.numberOfItems(inSection: 0)
@@ -138,7 +138,12 @@ final class StoreLayout: UICollectionViewLayout {
         let s = segmentFrame.dividedIntegral(fraction: 0.6, from: .minXEdge)
         segmentRects = [s.first, s.second]
       case .full:
-        segmentRects = [rect]
+        segmentRects = [CGRect(
+          x: rect.origin.x,
+          y: lastFrame.maxY + 30,
+          width: rect.width,
+          height: rect.height
+        )]
       }
 
       // Creating and caching attributes.
