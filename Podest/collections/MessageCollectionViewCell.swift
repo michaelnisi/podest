@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// Renders a single centered large label for short messages, one two ten words.
 class MessageCollectionViewCell: UICollectionViewCell {
   
   @IBOutlet weak var title: UILabel!

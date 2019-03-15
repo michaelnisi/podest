@@ -27,6 +27,7 @@
                     </label>
                 </subviews>
             </view>
+            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
             <constraints>
                 <constraint firstItem="GQY-59-BHX" firstAttribute="trailing" secondItem="gTV-IL-0wX" secondAttribute="trailingMargin" id="g2e-XD-mPL"/>
                 <constraint firstItem="GQY-59-BHX" firstAttribute="bottom" secondItem="gTV-IL-0wX" secondAttribute="bottomMargin" id="jng-9t-rlh"/>
