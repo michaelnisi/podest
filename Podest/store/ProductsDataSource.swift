@@ -13,7 +13,8 @@ import os.log
 private let log = OSLog.disabled
 
 protocol CellProductsDelegate: class {
-  func cell(_ cell: UICollectionViewCell, payProductMatching productIdentifier: String)
+  func cell(_ cell: UICollectionViewCell,
+            payProductMatching productIdentifier: String)
 }
 
 /// Provides a single section presenting in-app purchasing.
@@ -155,8 +156,8 @@ extension ProductsDataSource: UICollectionViewDataSource {
         withReuseIdentifier: ProductsDataSource.articleCellID,
         for: indexPath) as! ArticleCollectionViewCell
 
-      cell.textView.attributedText = StringRepository.makeSummaryWithHeadline(info: info)
-      cell.textView.delegate = self
+      cell.textView.attributedText = StringRepository
+        .makeSummaryWithHeadline(info: info)
 
       return cell
     case .offline:
@@ -176,7 +177,8 @@ extension ProductsDataSource: UICollectionViewDataSource {
       
       return cell
     case .product(let product):
-      os_log("** product: %{public}@", log: log, type: .debug, product.productIdentifier)
+      os_log("** product: %{public}@",
+             log: log, type: .debug, product.productIdentifier)
       
       let cell = collectionView.dequeueReusableCell(
         withReuseIdentifier: ProductsDataSource.productCellID,
@@ -223,7 +225,7 @@ extension ProductsDataSource: UICollectionViewDataSource {
         withReuseIdentifier: ProductsDataSource.messageCellID,
         for: indexPath) as! MessageCollectionViewCell
       
-      cell.title.text = "Loading Products…"
+      cell.title.text = "Loading"
       
       return cell
     
@@ -232,33 +234,12 @@ extension ProductsDataSource: UICollectionViewDataSource {
         withReuseIdentifier: ProductsDataSource.messageCellID,
         for: indexPath) as! MessageCollectionViewCell
       
-      cell.title.text = "Restoring Purchases…"
+      cell.title.text = "Restoring"
       
       return cell
     }
   }
 
-}
-
-// MARK: - UITextViewDelegate
-
-extension ProductsDataSource: UITextViewDelegate {
-  
-  func textView(
-    _ textView: UITextView,
-    shouldInteractWith URL: URL,
-    in characterRange: NSRange,
-    interaction: UITextItemInteraction
-  ) -> Bool {
-    switch URL.absoluteString {
-    case "restore:":
-      store.restore()
-      return false
-    default:
-      return true
-    }
-  }
-  
 }
 
 // MARK: - CellProductsDelegate
@@ -288,7 +269,8 @@ extension ProductsDataSource: StoreDelegate {
         return
       }
 
-      // Offloading diffing to a worker queue.
+      // Offloading diffing to a worker queue. How many engineers does it take
+      // to change a light bulb?
 
       self?.worker.async {
         let changes = ProductsDataSource.makeChanges(old: old, new: [items])
@@ -322,8 +304,11 @@ extension ProductsDataSource: StoreDelegate {
 
     let claim = Info(
       summary: """
-      Help me deliver podcasts. Here are three ways you can enjoy podcasts \
-      with Podest for one year and support my work.
+      Chip in, help me make this app better. Please rate it or write a \
+      <a href="\(contact.review)">review</a> on the App Store. That helps a lot.
+      <p>
+      Enjoy your podcasts. 🎧✨
+      </p>
       """,
       title: "Making apps is hard",
       author: "Michael Nisi",
@@ -335,7 +320,7 @@ extension ProductsDataSource: StoreDelegate {
       Choose your price for a non-renewing subscription, granting you to use \
       this app without restrictions for one year.
       <p>
-      Of course, you can always <a href="restore:">restore</a> previous purchases.
+      Thanks for using Podest.
       </p>
       """,
       title: "Choose your price",
@@ -345,7 +330,7 @@ extension ProductsDataSource: StoreDelegate {
 
     let open = Info(
       summary:"""
-      If you feel so inclined, please create issues on \
+      If you feel so inclined, please file issues on \
       <a href="\(contact.github)">GitHub</a>.
       <p>
       <a href="mailto:\(contact.email)">Email me</a> if you have any \
@@ -358,9 +343,9 @@ extension ProductsDataSource: StoreDelegate {
     )
 
     submit(
-      [.article(claim)] +
+      [.article(explain)] +
       products.map { .product($0) } +
-      [.article(explain), .article(open)]
+      [.article(claim), .article(open)]
     )
   }
   

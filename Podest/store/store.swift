@@ -11,14 +11,51 @@ import StoreKit
 
 // MARK: - Dependencies
 
+/// Plain Strings to identify products for flexibility.
+typealias ProductIdentifier = String
+
+/// A locally known product, stored in the local JSON file `products.json`.
+struct LocalProduct: Codable {
+  let productIdentifier: ProductIdentifier
+}
+
+/// A receipt for a product purchase stored in iCloud.
+struct PodestReceipt: Codable {
+  let productIdentifier: String
+  let transactionIdentifier: String
+  let transactionDate: Date
+
+  init?(transaction: SKPaymentTransaction) {
+    guard
+      let transactionIdentifier = transaction.transactionIdentifier,
+      let transactionDate = transaction.transactionDate else {
+        return nil
+    }
+    self.productIdentifier = transaction.payment.productIdentifier
+    self.transactionIdentifier = transactionIdentifier
+    self.transactionDate = transactionDate
+  }
+
+  init(
+    productIdentifier: String,
+    transactionIdentifier: String,
+    transactionDate: Date
+    ) {
+    self.productIdentifier = productIdentifier
+    self.transactionIdentifier = transactionIdentifier
+    self.transactionDate = transactionDate
+  }
+}
+
 /// Trade representative contact information.
 struct Contact: Decodable {
   let email: String
   let github: String
   let privacy: String
+  let review: String
 }
 
-/// So we can use a different payment queue while testing.
+/// The payment queue proxy allows swapping out the queue for testing.
 protocol Paying {
   func add(_ payment: SKPayment)
   func restoreCompletedTransactions()

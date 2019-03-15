@@ -12,64 +12,7 @@ import os.log
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "store")
 
-/// A locally known product, stored in the local JSON file `products.json`.
-struct LocalProduct: Codable {
-  let productIdentifier: String
-}
-
-/// A receipt for a product purchase stored in iCloud.
-struct PodestReceipt: Codable {
-  let productIdentifier: String
-  let transactionIdentifier: String
-  let transactionDate: Date
-
-  init?(transaction: SKPaymentTransaction) {
-    guard
-      let transactionIdentifier = transaction.transactionIdentifier,
-      let transactionDate = transaction.transactionDate else {
-      return nil
-    }
-    self.productIdentifier = transaction.payment.productIdentifier
-    self.transactionIdentifier = transactionIdentifier
-    self.transactionDate = transactionDate
-  }
-  
-  init(
-    productIdentifier: String,
-    transactionIdentifier: String,
-    transactionDate: Date
-  ) {
-    self.productIdentifier = productIdentifier
-    self.transactionIdentifier = transactionIdentifier
-    self.transactionDate = transactionDate
-  }
-}
-
-/// Plain Strings to identify products for flexibility.
-typealias ProductIdentifier = String
-
-/// Enumerates known product identifiers.
-private enum KnownProductIdentifier {
-  case help(ProductIdentifier)
-  case love(ProductIdentifier)
-  case sponsor(ProductIdentifier)
-
-  init?(string: String) {
-    switch string {
-    case "ink.codes.podest.help":
-      self = .help(string)
-    case "ink.codes.podest.love":
-      self = .love(string)
-    case "ink.codes:podest.sponsor":
-      self = .sponsor(string)
-    default:
-      return nil
-    }
-  }
-}
-
-/// Possible events handled by this store. For easier usage delegate changes
-/// are events too.
+/// Enumerates events handled by this store.
 private enum StoreEvent {
   case activate
   case failed(ShoppingError)
@@ -121,7 +64,7 @@ extension StoreEvent: CustomStringConvertible {
 }
 
 /// Enumerates possible states of the finite state machine (FSM), implementing
-/// our in-app store, with following states.
+/// our IAP store, with seven states.
 ///
 /// - initialized
 /// - interested
@@ -133,7 +76,7 @@ extension StoreEvent: CustomStringConvertible {
 ///
 /// The specifics of each state are described inline.
 enum StoreState: Equatable {
-  
+
   /// The store starts passively in `initialized` awaiting activation.
   ///
   /// ## activate
@@ -142,10 +85,10 @@ enum StoreState: Equatable {
   /// key value store for changed receipts. Fetches available products from the
   /// App Store and validates receipts, ideally resulting in one of the two
   /// user states, `interested` or `subscribed`. Of course, we might as well
-  /// end up being `offline`, not only if the App Store is not reachable, but
-  /// also if the subscriber delegate has not been set yet.
+  /// end up `offline` if the App Store is not reachable or the subscriber
+  /// delegate has not been set yet.
   case initialized
-  
+
   /// No valid receipts have been found. Meaning, no subscription has been
   /// purchased yet, subscriptions are expired, or receipts have been deleted.
   ///
@@ -175,12 +118,12 @@ enum StoreState: Equatable {
   /// The product list has been received from the payment queue and the
   /// products will be forwarded to the shopping delegate for display.
   case interested
-  
+
   /// In `subscribed` state the store currently doesn’t handle any events, the
   /// user is a customer, has purchased a subscription. Ignores all events and
   /// stays `subscribed`.
   case subscribed(ProductIdentifier)
-  
+
   /// Fetching products from the App Store.
   ///
   /// ## productsReceived([SKProduct], ShoppingError?)
@@ -199,7 +142,7 @@ enum StoreState: Equatable {
   /// Keep waiting in  to receive the products with `productsReceived`, which
   /// is probably the next event.
   case fetchingProducts
-  
+
   /// Cannot reach the App Store.
   ///
   /// ## online | receiptsChanged | update
@@ -207,7 +150,7 @@ enum StoreState: Equatable {
   /// to `interested` or `subscribed`. A `receiptsChanged` is unlikely here,
   /// but produces the same result.
   case offline
-  
+
   /// The user is purchasing a subscription.
   ///
   /// ## purchased
@@ -219,7 +162,7 @@ enum StoreState: Equatable {
   /// ## purchasing | receiptsChanged | update
   /// These events are ignored staying in `purchasing`.
   indirect case purchasing(ProductIdentifier, StoreState)
-  
+
   /// The user is trying to restore previous purchases.
   ///
   /// ## failed
@@ -252,8 +195,8 @@ extension StoreState: CustomStringConvertible {
     case .purchasing(let pid, let nextState):
       return """
       StoreState: purchasing (
-        productIdentifier: \(pid),
-        nextState: \(nextState)
+      productIdentifier: \(pid),
+      nextState: \(nextState)
       )
       """
     }
@@ -269,9 +212,9 @@ private class DefaultNetworkActivityIndicator: NetworkActivityIndicating {}
 
 /// StoreFSM is a store for in-app purchases, offering a single non-renewing
 /// subscription at three flexible prices. After a successful purchase the store
-/// is not available any longer. The store returns after one year, when this
-/// subscription expires.
-class StoreFSM: NSObject {
+/// disappears. It returns when the subscription expires or its receipts has
+/// been deleted from the `Storing` key-value database.
+final class StoreFSM: NSObject {
 
   /// The file URL of where to find the product identifiers.
   private let url: URL
@@ -430,9 +373,11 @@ class StoreFSM: NSObject {
     let encoder = JSONEncoder()
     encoder.outputFormatting = .prettyPrinted
     let data = try! encoder.encode(acc)
+
     store.set(data, forKey: "receipts")
 
     let str = String(data: data, encoding: .utf8)!
+
     os_log("saved: %@", log: log, type: .debug, str)
   }
 
@@ -457,8 +402,8 @@ class StoreFSM: NSObject {
   ) -> ProductIdentifier? {
     for r in receipts {
       let id = r.productIdentifier
-
       let duration = SubscriptionDuration.production.rawValue
+
       guard productIdentifiers.contains(id),
         r.transactionDate.timeIntervalSinceNow > duration else {
         continue
@@ -562,7 +507,11 @@ class StoreFSM: NSObject {
     
     return .purchasing(productIdentifier, state)
   }
-  
+
+
+  // TODO: Remove indicator
+  // TODO: non-renewing subscriptions are unrestorable consumables
+
   private func restoreCompletedTransactions() -> StoreState {
     delegate?.storeRestoring(self)
     
@@ -1001,6 +950,7 @@ extension StoreFSM: Shopping {
     os_log("removing observer from the payment queue", log: log, type: .debug)
     paymentQueue.remove(self)
     stopObservingUbiquitousKeyValueStore()
+
     isObserving = false
   }
 
@@ -1014,11 +964,12 @@ extension StoreFSM: Shopping {
   var canMakePayments: Bool {
     return SKPaymentQueue.canMakePayments()
   }
-  
+
   var maxSubscriptionCount: Int {
     if case .interested = state {
       return 5
     }
+
     return .max
   }
 
