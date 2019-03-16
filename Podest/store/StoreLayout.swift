@@ -90,7 +90,7 @@ final class StoreLayout: UICollectionViewLayout {
       return cv.bounds.inset(by: cv.layoutMargins)
     }
 
-    let margin = min(cv.bounds.width / 9, 120)
+    let margin = cv.bounds.width * 0.066
 
     return cv.bounds.inset(by: UIEdgeInsets(
       top: cv.layoutMargins.top,
@@ -128,14 +128,16 @@ final class StoreLayout: UICollectionViewLayout {
 
       var segmentRects = [CGRect]()
 
+      // Not quite sure why visual adjusting is required here.
+
       switch segment {
       case .fullWidth:
         segmentRects = [segmentFrame]
       case .oneThirdTwoThirds:
-        let s = segmentFrame.dividedIntegral(fraction: 0.3, from: .minXEdge)
+        let s = segmentFrame.dividedIntegral(fraction: 0.4, from: .minXEdge)
         segmentRects = [s.first, s.second]
       case .twoThirdsOneThird:
-        let s = segmentFrame.dividedIntegral(fraction: 0.6, from: .minXEdge)
+        let s = segmentFrame.dividedIntegral(fraction: 0.58, from: .minXEdge)
         segmentRects = [s.first, s.second]
       case .full:
         segmentRects = [CGRect(
