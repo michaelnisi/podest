@@ -223,20 +223,24 @@ protocol Shopping: SKPaymentTransactionObserver {
   
   /// Synchronizes pending transactions with the Apple App Store, observing the
   /// payment queue for transaction updates.
-  ///
-  /// StoreKit documenation suggests to do this during application
-  /// initialization, providing no clues for when to remove the observer. So I
-  /// guess, we just keep it around and never `deactivate()`, hoping this does
-  /// not lead to problems while we are in the background.
   func activate()
   
-  /// Deactivates the store, removing the observer from the payment queue.
-  func deactivate()
+  /// Pauses observing of the payment queue.
+  func uninstall()
+
+  /// Resumes observing of the payment queue.
+  func install()
   
   /// Updates the store state.
   func update()
   
   /// Notifies the store that the App Store is reachable.
   func online()
+
+  /// Requests user to rate the app, if appropriate.
+  func requestReview()
+
+  /// Cancels previous review request.
+  func cancelReview()
   
 }

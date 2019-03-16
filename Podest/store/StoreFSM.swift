@@ -236,7 +236,7 @@ final class StoreFSM: NSObject {
   
   weak var subscriberDelegate: StoreAccessDelegate?
   
-  // MARK: Reachability
+  // MARK: - Reachability
 
   /// Returns `true` if the App Store at `host` is reachable or else installs
   /// a callback and returns `falls`. This method uses `Ola` for reachability
@@ -307,7 +307,7 @@ final class StoreFSM: NSObject {
     }
   }
 
-  // MARK: Saving and Loading Receipts
+  // MARK: - Saving and Loading Receipts
   
   public func removeReceipts() {
     os_log("removing receipts", log: log)
@@ -396,7 +396,7 @@ final class StoreFSM: NSObject {
     return .subscribed(id)
   }
 
-  // MARK: Handling Events and Managing State
+  // MARK: - Handling Events and Managing State
 
   /// An internal serial queue for synchronized access.
   private let sQueue = DispatchQueue(label: "ink.codes.podest.store.serial")
@@ -434,7 +434,8 @@ final class StoreFSM: NSObject {
 
     return nextState
   }
-  
+
+  /// Is `true` for interested users.
   private var isAccessible: Bool = false {
     didSet {
       guard isAccessible != oldValue else {
@@ -555,16 +556,7 @@ final class StoreFSM: NSObject {
     case .initialized:
       switch event {
       case .activate:
-        os_log("adding observers to payment queue and kv-store",
-               log: log, type: .debug)
-        
-        precondition(!isObserving, "already observing")
-        
-        paymentQueue.add(self)
-        observeUbiquitousKeyValueStore()
-        
-        isObserving = true
-        
+        install()
         return updateProducts()
 
       default:
@@ -708,6 +700,22 @@ final class StoreFSM: NSObject {
     }
   }
 
+  // MARK: - Ratings and Reviews
+
+  private var rateIncentiveTimeout: DispatchSourceTimer?
+
+  private var rateIncentiveThreshold = 10
+
+  lazy private var version: String? = {
+    let infoDictionaryKey = kCFBundleVersionKey as String
+    guard let v = Bundle.main.object(
+      forInfoDictionaryKey: infoDictionaryKey) as? String else {
+        return nil
+    }
+
+    return v
+  }()
+
 }
 
 // MARK: - SKProductsRequestDelegate
@@ -834,12 +842,22 @@ extension StoreFSM: Shopping {
     }
   }
   
-  func deactivate() {
-    os_log("removing observer from the payment queue", log: log, type: .debug)
+  func uninstall() {
+    precondition(isObserving == true)
+    os_log("uninstalling", log: log, type: .debug)
     paymentQueue.remove(self)
     stopObservingUbiquitousKeyValueStore()
 
     isObserving = false
+  }
+
+  func install() {
+    precondition(isObserving == false)
+    os_log("instaling",log: log, type: .debug)
+    paymentQueue.add(self)
+    observeUbiquitousKeyValueStore()
+
+    isObserving = true
   }
 
   func payProduct(matching productIdentifier: String) {
@@ -859,6 +877,56 @@ extension StoreFSM: Shopping {
     }
 
     return .max
+  }
+
+  func requestReview() {
+    rateIncentiveTimeout?.cancel()
+
+    guard isAccessible else {
+      os_log("not bothering customers", log: log, type: .debug)
+      return
+    }
+
+    guard let v = version else {
+      assert(false, "version expected")
+      return
+    }
+
+    guard rateIncentiveThreshold >= 0 else {
+      os_log("closed down for version: %@", log: log, type: .debug, v)
+      return
+    }
+
+    rateIncentiveThreshold -= 1
+
+    guard rateIncentiveThreshold == 0 else {
+      os_log("not requesting review: missed threshold: %i",
+             log: log, type: .debug, rateIncentiveThreshold)
+      return
+    }
+
+    rateIncentiveThreshold = 10
+
+    guard UserDefaults.standard.lastVersionPromptedForReview != v else {
+      os_log("already reviewed: %@", log: log, type: .debug, v)
+
+      // Thwarting further attempts for the same version.
+      rateIncentiveThreshold = -1
+
+      return
+    }
+
+    os_log("requesting review: %@", log: log, type: .debug, v)
+
+    rateIncentiveTimeout = setTimeout(delay: .seconds(2), queue: .main) {
+      UserDefaults.standard.set(v, forKey: UserDefaults.lastVersionPromptedForReviewKey)
+      SKStoreReviewController.requestReview()
+    }
+  }
+
+  func cancelReview() {
+    os_log("cancelling review", log: log, type: .debug)
+    rateIncentiveTimeout?.cancel()
   }
 
 }
