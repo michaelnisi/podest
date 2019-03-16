@@ -194,17 +194,9 @@ extension AppDelegate {
     os_log("finished launch process with options: %{public}@",
            log: log, type: .info, String(describing: launchOptions))
 
-    let defaults: [String : Any] = [
-      UserDefaults.mobileDataDownloadsKey: false,
-      UserDefaults.mobileDataStreamingKey: false,
-      UserDefaults.automaticDownloadsKey: !Podest.settings.noDownloading,
-      UserDefaults.lastUpdateTimeKey: 0
-    ]
-
-    os_log("registering defaults: %{public}@",
-           log: log, type: .info, defaults)
-
-    UserDefaults.standard.register(defaults: defaults)
+    UserDefaults.registerDefaults()
+    os_log("user defaults: %@", log: log, type: .debug,
+           UserDefaults.standard.dictionaryRepresentation())
 
     os_log("checking application state", log: log, type: .debug)
 

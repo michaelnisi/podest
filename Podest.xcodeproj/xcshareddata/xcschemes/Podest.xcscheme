@@ -94,7 +94,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-ink.codes.podest.removeReceipts"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-ink.codes.podest.flush"

@@ -49,6 +49,7 @@
 		4C94A3B51FED66F40014742F /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C94A3B41FED66F40014742F /* Colors.xcassets */; };
 		4C94A3B71FF2591B0014742F /* UserClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C94A3B61FF2591B0014742F /* UserClient.swift */; };
 		4C9AF4CD223AC032000B1C2D /* HTMLAttributor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C9AF4CC223AC032000B1C2D /* HTMLAttributor.framework */; };
+		4C9EBDFB223D58A8009F2B6F /* settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9EBDFA223D58A8009F2B6F /* settings.swift */; };
 		4CBB836620D667AF008330E2 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4CBB836520D667AF008330E2 /* Settings.bundle */; };
 		4CCBF20A20805C6500A7359F /* store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCBF20920805C6500A7359F /* store.swift */; };
 		4CCBF20C20805F5C00A7359F /* products.json in Resources */ = {isa = PBXBuildFile; fileRef = 4CCBF20B20805F5C00A7359F /* products.json */; };
@@ -239,6 +240,7 @@
 		4C9AF4CA223AC032000B1C2D /* FileProxy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FileProxy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C9AF4CC223AC032000B1C2D /* HTMLAttributor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HTMLAttributor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C9AF4CE223AC032000B1C2D /* Playback.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Playback.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C9EBDFA223D58A8009F2B6F /* settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = settings.swift; sourceTree = "<group>"; };
 		4CBB836520D667AF008330E2 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		4CCBF20920805C6500A7359F /* store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = store.swift; sourceTree = "<group>"; };
 		4CCBF20B20805F5C00A7359F /* products.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = products.json; sourceTree = "<group>"; };
@@ -421,6 +423,15 @@
 				4C6FB911204679FE005C559E /* FileRepository.swift */,
 			);
 			path = files;
+			sourceTree = "<group>";
+		};
+		4C9EBDFC223D58FE009F2B6F /* init */ = {
+			isa = PBXGroup;
+			children = (
+				4CD7414C1CCD203A00BA33CE /* init.swift */,
+				4C9EBDFA223D58A8009F2B6F /* settings.swift */,
+			);
+			path = init;
 			sourceTree = "<group>";
 		};
 		4CCBF20F20808C4500A7359F /* store */ = {
@@ -624,9 +635,9 @@
 			isa = PBXGroup;
 			children = (
 				4E7E284C1EE1182E00058AB3 /* Podest.entitlements */,
-				4CD7414C1CCD203A00BA33CE /* init.swift */,
 				4ED4D4361EA470C90011C28C /* core.swift */,
 				4E8CA7061A126ADB004DE307 /* AppDelegate.swift */,
+				4C9EBDFC223D58FE009F2B6F /* init */,
 				4CE8586B21A14EB300D206FA /* root */,
 				4CD697041FEBC68600349580 /* queue */,
 				4CD697061FEBC72B00349580 /* search */,
@@ -994,6 +1005,7 @@
 				4CF21CF22063B0D100169E43 /* PlayerTransitionDelegate.swift in Sources */,
 				4C776B2920847D0900A055CD /* ProductCell.swift in Sources */,
 				4E7D10B31F6644DA0048CB43 /* QueueDataSource.swift in Sources */,
+				4C9EBDFB223D58A8009F2B6F /* settings.swift in Sources */,
 				4CE6957121AFAD570060F5A6 /* PlayerPresentationAnimator.swift in Sources */,
 				4E2EF3161E8D0C39008FE123 /* EpisodeAnimator.swift in Sources */,
 				4ED4D4171E9D239A0011C28C /* SuggestionCell.swift in Sources */,
@@ -1094,12 +1106,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PodKit/Info.plist;
@@ -1129,12 +1141,12 @@
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PodKit/Info.plist;
@@ -1371,7 +1383,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1394,7 +1406,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
