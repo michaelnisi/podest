@@ -36,8 +36,10 @@ final class SearchResultsController: UITableViewController {
 
   var delegate: SearchResultsControllerDelegate?
 
+  /// Returns a new closure over self refreshing the table view.
   private func makeReloadBlock() -> () -> Void {
     return { [weak self] in
+      self?.adjustInsets()
       self?.tableView.reloadData()
 
       let zero = IndexPath(row: 0, section: 0)
