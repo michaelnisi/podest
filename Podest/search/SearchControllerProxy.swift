@@ -223,6 +223,7 @@ extension SearchControllerProxy: UISearchResultsUpdating {
 extension SearchControllerProxy: UISearchControllerDelegate {
 
   func willPresentSearchController(_ searchController: UISearchController) {
+    Podest.store.cancelReview()
     suggest("")
   }
 

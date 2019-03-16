@@ -187,6 +187,12 @@ extension QueueViewController {
     )
   }
 
+}
+
+// MARK: - UIScrollViewDelegate
+
+extension QueueViewController {
+
   override func scrollViewDidEndDragging(
     _ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     guard let rc = refreshControl, rc.isRefreshing else {
@@ -208,6 +214,10 @@ extension QueueViewController {
       self?.reload()
     }
 
+  }
+
+  override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+    Podest.store.cancelReview()
   }
 
 }
@@ -265,9 +275,8 @@ extension QueueViewController {
 
     clearsSelectionOnViewWillAppear = true
 
-    // Setting the delegate first to make sure the store is in `interested` or
-    // `subscribed` state to handle incoming transaction updates correctly.
     Podest.store.subscriberDelegate = self
+
     Podest.store.activate()
   }
 
@@ -305,8 +314,12 @@ extension QueueViewController {
   }
 
   override func viewDidAppear(_ animated: Bool) {
-    searchProxy.deselect(animated)
+    if searchProxy.isSearchDismissed {
+      Podest.store.requestReview()
+    }
 
+    searchProxy.deselect(animated)
+    
     super.viewDidAppear(animated)
   }
 
@@ -318,6 +331,7 @@ extension QueueViewController {
 
   override func viewWillDisappear(_ animated: Bool) {
     refreshControlTimer = nil
+    Podest.store.cancelReview()
 
     super.viewWillDisappear(animated)
   }
