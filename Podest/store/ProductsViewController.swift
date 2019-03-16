@@ -13,36 +13,45 @@ final class ProductsViewController: UICollectionViewController {
   @objc func onDone() {
     dismiss(animated: true)
   }
-  
-  lazy var dataSource: ProductsDataSource = {
-    dispatchPrecondition(condition: .onQueue(.main))
-    
-    let ds = ProductsDataSource(store: Podest.store, contact: Podest.contact)
-    
-    ds.sectionsChangeHandler = { [weak self] changes in
+
+  private var dataSource: ProductsDataSource!
+
+  // Returns a newly created and installed data source.
+  private func install() -> ProductsDataSource {
+    dataSource = ProductsDataSource(store: Podest.store, contact: Podest.contact)
+
+    dataSource.sectionsChangeHandler = { [weak self] changes in
       guard let cv = self?.collectionView else {
         return
       }
 
-      ds.commit(changes, performingWith: .collection(cv))
+      self?.dataSource.commit(changes, performingWith: .collection(cv))
     }
-    
-    ds.purchasingHandler = { [weak self] indexPath in
+
+    dataSource.purchasingHandler = { [weak self] indexPath in
       DispatchQueue.main.async {
-        guard let cell = self?.collectionView?.cellForItem(
-          at: indexPath) as? ProductCell, let data = cell.data else {
+        guard let cv = self?.collectionView,
+          let cell = cv.cellForItem(at: indexPath) as? ProductCell else {
           return
         }
-        
+
         cell.isPurchasing = true
+
+        cv.scrollToItem(at: indexPath, at: .centeredVertically, animated: true)
       }
     }
-    
-    Podest.store.delegate = ds
-    
-    return ds
-  }()
-  
+
+    Podest.store.delegate = dataSource
+
+    return dataSource
+  }
+
+  private func invalidate() {
+    dataSource.sectionsChangeHandler = nil
+    dataSource.purchasingHandler = nil
+    dataSource = nil
+  }
+
 }
 
 // MARK: - UIViewController
@@ -66,13 +75,17 @@ extension ProductsViewController {
     cv.collectionViewLayout = StoreLayout()
     cv.contentInsetAdjustmentBehavior = .always
     cv.allowsSelection = false
-    cv.dataSource = dataSource
+    cv.dataSource = install()
   }
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-
     Podest.store.update()
+  }
+
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    invalidate()
   }
 
 }
