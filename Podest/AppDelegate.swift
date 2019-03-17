@@ -202,10 +202,6 @@ extension AppDelegate {
       UserDefaults.lastVersionPromptedForReviewKey: "0"
     ])
 
-    // TODO: Remove
-    UserDefaults.standard.set(
-      nil, forKey: UserDefaults.lastVersionPromptedForReviewKey)
-
     os_log("checking application state", log: log, type: .debug)
 
     switch application.applicationState {
