@@ -223,13 +223,9 @@ protocol Shopping: SKPaymentTransactionObserver {
   
   /// Synchronizes pending transactions with the Apple App Store, observing the
   /// payment queue for transaction updates.
-  func activate()
-  
-  /// Pauses observing of the payment queue.
-  func uninstall()
-
-  /// Resumes observing of the payment queue.
-  func install()
+  ///
+  /// There’s no use case for `pause`.
+  func resume()
   
   /// Updates the store state.
   func update()

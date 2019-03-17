@@ -14,7 +14,8 @@ private let log = OSLog(subsystem: "ink.codes.podest", category: "store")
 
 /// Enumerates events handled by this store.
 private enum StoreEvent {
-  case activate
+  case resume
+  case pause
   case failed(ShoppingError)
   case online
   case pay(ProductIdentifier)
@@ -29,8 +30,10 @@ extension StoreEvent: CustomStringConvertible {
   
   var description: String {
     switch self {
-    case .activate:
-      return "StoreEvent: activate"
+    case .resume:
+      return "StoreEvent: resume"
+    case .pause:
+      return "StoreEvent: pause"
     case .failed(let error):
       return "StoreEvent: failed: \(error)"
     case .online:
@@ -72,7 +75,7 @@ enum StoreState: Equatable {
 
   /// The store starts passively in `initialized` awaiting activation.
   ///
-  /// ## activate
+  /// ## resume
   ///
   /// Begins observing payment queue for changed transactions and ubiquitous
   /// key value store for changed receipts. Fetches available products from the
@@ -189,6 +192,8 @@ private class DefaultKVStore: Storing {}
 /// subscription at three flexible prices. After a successful purchase the store
 /// disappears. It returns when the subscription expires or its receipts has
 /// been deleted from the `Storing` key-value database.
+///
+/// The exposed `Shopping` API expects calls from the main queue.
 final class StoreFSM: NSObject {
 
   /// The file URL of where to find the product identifiers.
@@ -225,7 +230,9 @@ final class StoreFSM: NSObject {
   }
   
   /// Flag for asserts, `true` if we are observing the payment queue.
-  private var isObserving = false
+  private var isObserving: Bool {
+    return didChangeExternallyObserver != nil
+  }
   
   private var count = 0
   
@@ -403,10 +410,6 @@ final class StoreFSM: NSObject {
 
   private (set) var state: StoreState = .initialized {
     didSet {
-      guard state != oldValue else {
-        return
-      }
-      
       os_log("new state: %{public}@, old state: %{public}@",
              log: log, type: .debug,
              state.description, oldValue.description
@@ -530,7 +533,36 @@ final class StoreFSM: NSObject {
     guard let observer = didChangeExternallyObserver else {
       return
     }
+
     NotificationCenter.default.removeObserver(observer)
+
+    didChangeExternallyObserver = nil
+  }
+
+  private func addObservers() -> StoreState {
+    precondition(!isObserving)
+    paymentQueue.add(self)
+    observeUbiquitousKeyValueStore()
+
+    return updateProducts()
+  }
+
+  private func removeObservers() -> StoreState {
+    precondition(isObserving)
+    paymentQueue.remove(self)
+    stopObservingUbiquitousKeyValueStore()
+
+    return .initialized
+  }
+
+  private func receiveProducts(_ products: [SKProduct], error: ShoppingError?) -> StoreState {
+    self.products = products
+
+    delegateQueue.async {
+      self.delegate?.store(self, offers: products, error: error)
+    }
+
+    return updateIsAccessible(matching: validateReceipts())
   }
   
   /// Returns the new store state after processing `event` relatively to the
@@ -538,10 +570,8 @@ final class StoreFSM: NSObject {
   /// states this finite state machine can be in. Its other states are
   /// transitional.
   ///
-  /// This strict FSM traps on unexpected events. Assuming synchronized access
-  /// allows transitional states to focus on specific events, for we will be in
-  /// the next state before a new event arrives. Some redundant events are
-  /// explicitly ignored.
+  /// This strict FSM **traps** on unexpected events. All switch statements must
+  /// be **exhaustive**.
   ///
   /// - Parameter event: The event to handle.
   ///
@@ -555,11 +585,20 @@ final class StoreFSM: NSObject {
 
     case .initialized:
       switch event {
-      case .activate:
-        install()
-        return updateProducts()
+      case .resume:
+        return addObservers()
 
-      default:
+      case .pause:
+        return state
+
+      case .failed,
+           .online,
+           .pay,
+           .productsReceived,
+           .purchased,
+           .purchasing,
+           .receiptsChanged,
+           .update:
         fatalError("unhandled event")
       }
 
@@ -568,21 +607,21 @@ final class StoreFSM: NSObject {
     case .fetchingProducts:
       switch event {
       case .productsReceived(let products, let error):
-        self.products = products
-
-        delegateQueue.async {
-          self.delegate?.store(self, offers: products, error: error)
-        }
-        
-        return updateIsAccessible(matching: validateReceipts())
+        return receiveProducts(products, error: error)
       
       case .receiptsChanged, .update, .online:
         return state
 
       case .failed(let error):
         return updatedState(after: error, next: .interested)
-        
-      default:
+
+      case .resume:
+        return state
+
+      case .pause:
+        return removeObservers()
+
+      case .pay, .purchased, .purchasing:
         fatalError("unhandled event")
       }
 
@@ -592,8 +631,11 @@ final class StoreFSM: NSObject {
       switch event {
       case .online, .receiptsChanged, .update:
         return updateProducts()
-        
-      default:
+
+      case .pause:
+        return removeObservers()
+
+      case .resume, .failed, .pay, .productsReceived, .purchased, .purchasing:
         fatalError("unhandled event")
       }
       
@@ -632,19 +674,15 @@ final class StoreFSM: NSObject {
         return updateProducts()
 
       case .productsReceived(let products, let error):
-        // It seems like one can receive products from a previous session, but
-        // who knows, the sandbox cannot be trusted. I’m not sure if using these
-        // products is the right thing to do here.
+        return receiveProducts(products, error: error)
 
-        self.products = products
+      case .resume:
+        return state
 
-        delegateQueue.async {
-          self.delegate?.store(self, offers: products, error: error)
-        }
+      case .pause:
+        return removeObservers()
 
-        return updateIsAccessible(matching: validateReceipts())
-
-      case .activate, .online:
+      case .online:
         fatalError("unhandled event")
       }
 
@@ -679,10 +717,19 @@ final class StoreFSM: NSObject {
 
         return state
       
-      case .receiptsChanged, .update:
-        return state
+      case .receiptsChanged:
+        return updateIsAccessible(matching: validateReceipts())
 
-      default:
+      case .update:
+        return updateProducts()
+
+      case .pause:
+        return removeObservers()
+
+      case .productsReceived(let products, let error):
+        return receiveProducts(products, error: error)
+
+      case .resume, .online:
         fatalError("unhandled event")
       }
     }
@@ -690,8 +737,6 @@ final class StoreFSM: NSObject {
 
   /// Synchronously handles event using `sQueue`, our event queue. Obviously,
   /// a store with one cashier works sequencially.
-  ///
-  /// **Do not block external users!**
   private func event(_ e: StoreEvent) {
     sQueue.sync {
       os_log("handling event: %{public}@", log: log, type: .debug, e.description)
@@ -836,32 +881,19 @@ extension StoreFSM: Shopping {
     }
   }
   
-  func activate() {
+  func resume() {
     DispatchQueue.global().async {
-      self.event(.activate)
+      self.event(.resume)
     }
   }
   
-  func uninstall() {
-    precondition(isObserving == true)
-    os_log("uninstalling", log: log, type: .debug)
-    paymentQueue.remove(self)
-    stopObservingUbiquitousKeyValueStore()
-
-    isObserving = false
-  }
-
-  func install() {
-    precondition(isObserving == false)
-    os_log("instaling",log: log, type: .debug)
-    paymentQueue.add(self)
-    observeUbiquitousKeyValueStore()
-
-    isObserving = true
+  func pause() {
+    DispatchQueue.global().async {
+      self.event(.pause)
+    }
   }
 
   func payProduct(matching productIdentifier: String) {
-    os_log("paying product: %@", log: log, type: .debug, productIdentifier)
     DispatchQueue.global().async {
       self.event(.pay(productIdentifier))
     }
@@ -880,12 +912,8 @@ extension StoreFSM: Shopping {
   }
 
   func requestReview() {
+    dispatchPrecondition(condition: .onQueue(.main))
     rateIncentiveTimeout?.cancel()
-
-    guard isAccessible else {
-      os_log("not bothering customers", log: log, type: .debug)
-      return
-    }
 
     guard let v = version else {
       assert(false, "version expected")
@@ -908,9 +936,9 @@ extension StoreFSM: Shopping {
     rateIncentiveThreshold = 10
 
     guard UserDefaults.standard.lastVersionPromptedForReview != v else {
-      os_log("already reviewed: %@", log: log, type: .debug, v)
+      os_log("already reviewed build: %@", log: log, type: .debug, v)
 
-      // Thwarting further attempts for the same version.
+      // Thwarting further attempts for this same version.
       rateIncentiveThreshold = -1
 
       return
@@ -926,6 +954,7 @@ extension StoreFSM: Shopping {
 
   func cancelReview() {
     os_log("cancelling review", log: log, type: .debug)
+    dispatchPrecondition(condition: .onQueue(.main))
     rateIncentiveTimeout?.cancel()
   }
 

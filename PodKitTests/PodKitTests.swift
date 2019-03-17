@@ -48,7 +48,7 @@ class PodKitTests: XCTestCase {
   
   func testActivateWithoutSubscriptionDelegate() {
     let exp = expectation(description: "waiting")
-    store.activate()
+    store.resume()
     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
       XCTAssertEqual(self.store.state, .offline)
       exp.fulfill()
@@ -94,7 +94,7 @@ class PodKitTests: XCTestCase {
     let delegate = StoreController()
     store.delegate = delegate
     
-    store.activate()
+    store.resume()
     
     DispatchQueue.main.asyncAfter(deadline: .now() + 1 / 10) {
       XCTAssertEqual(self.store.state, .fetchingProducts)

@@ -277,7 +277,7 @@ extension QueueViewController {
 
     Podest.store.subscriberDelegate = self
 
-    Podest.store.activate()
+    Podest.store.resume()
   }
 
   private func updateStoreButton() {

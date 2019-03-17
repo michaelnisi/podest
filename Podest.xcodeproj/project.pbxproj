@@ -50,6 +50,8 @@
 		4C94A3B71FF2591B0014742F /* UserClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C94A3B61FF2591B0014742F /* UserClient.swift */; };
 		4C9AF4CD223AC032000B1C2D /* HTMLAttributor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C9AF4CC223AC032000B1C2D /* HTMLAttributor.framework */; };
 		4C9EBDFB223D58A8009F2B6F /* settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9EBDFA223D58A8009F2B6F /* settings.swift */; };
+		4CB64B6E223E28FC006DB19B /* settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9EBDFA223D58A8009F2B6F /* settings.swift */; };
+		4CB64B6F223E295A006DB19B /* time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED2D6BE1F98E7FF000DA71B /* time.swift */; };
 		4CBB836620D667AF008330E2 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4CBB836520D667AF008330E2 /* Settings.bundle */; };
 		4CCBF20A20805C6500A7359F /* store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCBF20920805C6500A7359F /* store.swift */; };
 		4CCBF20C20805F5C00A7359F /* products.json in Resources */ = {isa = PBXBuildFile; fileRef = 4CCBF20B20805F5C00A7359F /* products.json */; };
@@ -961,12 +963,14 @@
 				4CE9693421DF646D00AEF409 /* strings.swift in Sources */,
 				4CE9693221DF642000AEF409 /* SuggestionCell.swift in Sources */,
 				4C07C97721EB13BB00ED8AB0 /* MessageCollectionViewCell.swift in Sources */,
+				4CB64B6F223E295A006DB19B /* time.swift in Sources */,
 				4CE9692C21DF640300AEF409 /* ListDataSource.swift in Sources */,
 				4CE9692F21DF640300AEF409 /* ReusableNib.swift in Sources */,
 				4CE9693021DF640300AEF409 /* MessageTableViewCell.swift in Sources */,
 				4CE9693121DF640300AEF409 /* SubtitleTableViewCell.swift in Sources */,
 				4CE9692921DF630D00AEF409 /* SectionedDataSource.swift in Sources */,
 				4CE9692B21DF630D00AEF409 /* diff.swift in Sources */,
+				4CB64B6E223E28FC006DB19B /* settings.swift in Sources */,
 				4C010A262101D7070006CB53 /* store.swift in Sources */,
 				4C010A272101D7070006CB53 /* StoreFSM.swift in Sources */,
 			);

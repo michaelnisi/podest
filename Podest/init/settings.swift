@@ -41,22 +41,6 @@ extension UserDefaults {
     return string(forKey: UserDefaults.lastVersionPromptedForReviewKey)
   }
 
-  // Registers our defaults.
-  static func registerDefaults() {
-    let defaults: [String : Any] = [
-      mobileDataDownloadsKey: false,
-      mobileDataStreamingKey: false,
-      automaticDownloadsKey: !Podest.settings.noDownloading,
-      lastUpdateTimeKey: 0,
-      lastVersionPromptedForReviewKey: "0"
-    ]
-
-    UserDefaults.standard.register(defaults: defaults)
-
-    // TODO: Remove
-//    UserDefaults.standard.set(nil, forKey: lastVersionPromptedForReviewKey)
-  }
-
 }
 
 /// Additional **development** settings may override user defaults.
