@@ -205,7 +205,7 @@ protocol StoreDelegate: class {
 }
 
 /// A set of methods to offer in-app purchases.
-protocol Shopping: SKPaymentTransactionObserver {
+protocol Shopping: SKPaymentTransactionObserver, Rating {
   
   /// The maximum number of allowed podcast subscriptions is only limited when
   /// we are sure about the status.
@@ -232,11 +232,16 @@ protocol Shopping: SKPaymentTransactionObserver {
   
   /// Notifies the store that the App Store is reachable.
   func online()
+  
+}
 
-  /// Requests user to rate the app, if appropriate.
+/// Ask users for rating and reviews.
+protocol Rating {
+
+  /// Requests user to rate the app if appropriate.
   func requestReview()
 
   /// Cancels previous review request.
   func cancelReview()
-  
+
 }

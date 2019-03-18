@@ -751,11 +751,12 @@ final class StoreFSM: NSObject {
 
   private var rateIncentiveThreshold = 10
 
+  // The build version number of the main bundle.
   lazy private var version: String? = {
     let infoDictionaryKey = kCFBundleVersionKey as String
     guard let v = Bundle.main.object(
       forInfoDictionaryKey: infoDictionaryKey) as? String else {
-        return nil
+      return nil
     }
 
     return v
@@ -910,6 +911,12 @@ extension StoreFSM: Shopping {
 
     return .max
   }
+
+}
+
+// MARK: - Rating
+
+extension StoreFSM: Rating {
 
   func requestReview() {
     dispatchPrecondition(condition: .onQueue(.main))
