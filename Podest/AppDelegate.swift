@@ -187,13 +187,8 @@ extension AppDelegate {
     return true
   }
 
-  func application(
-    _ application: UIApplication,
-    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?
-  ) -> Bool {
-    os_log("finished launch process with options: %{public}@",
-           log: log, type: .info, String(describing: launchOptions))
-
+  /// Registers standard user defaults.
+  private static func registerDefaults() {
     UserDefaults.standard.register(defaults: [
       UserDefaults.mobileDataDownloadsKey: false,
       UserDefaults.mobileDataStreamingKey: false,
@@ -201,6 +196,16 @@ extension AppDelegate {
       UserDefaults.lastUpdateTimeKey: 0,
       UserDefaults.lastVersionPromptedForReviewKey: "0"
     ])
+  }
+
+  func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?
+  ) -> Bool {
+    os_log("finished launch process with options: %{public}@",
+           log: log, type: .info, String(describing: launchOptions))
+
+    AppDelegate.registerDefaults()
 
     os_log("checking application state", log: log, type: .debug)
 
@@ -445,9 +450,10 @@ extension AppDelegate {
 
   func applicationWillResignActive(_ application: UIApplication) {
     os_log("will resign active", log: log, type: .info)
-
+    
     uninstall()
     Podest.networkActivity.reset()
+    Podest.store.cancelReview(resetting: true)
     flush()
     closeFiles()
   }

@@ -61,7 +61,7 @@ extension StoreEvent: CustomStringConvertible {
 }
 
 /// Enumerates possible states of the finite state machine (FSM), implementing
-/// our IAP store, with seven states.
+/// our IAP store, with six states.
 ///
 /// - initialized
 /// - interested
@@ -736,7 +736,7 @@ final class StoreFSM: NSObject {
   }
 
   /// Synchronously handles event using `sQueue`, our event queue. Obviously,
-  /// a store with one cashier works sequencially.
+  /// a store with one cashier works sequentially.
   private func event(_ e: StoreEvent) {
     sQueue.sync {
       os_log("handling event: %{public}@", log: log, type: .debug, e.description)
@@ -747,9 +747,17 @@ final class StoreFSM: NSObject {
 
   // MARK: - Ratings and Reviews
 
+  /// The timeout that trigger rating requests.
   private var rateIncentiveTimeout: DispatchSourceTimer?
 
-  private var rateIncentiveThreshold = 10
+  /// A counting threshold that must be crossed before a timeout is started
+  /// that eventually might trigger an actual rating request.
+  private var rateIncentiveThreshold = 10 {
+    didSet {
+      os_log("rate incentive threshold: %{public}i",
+             log: log, type: .debug, rateIncentiveThreshold)
+    }
+  }
 
   // The build version number of the main bundle.
   lazy private var version: String? = {
@@ -928,41 +936,42 @@ extension StoreFSM: Rating {
     }
 
     guard rateIncentiveThreshold >= 0 else {
-      os_log("closed down for version: %@", log: log, type: .debug, v)
       return
     }
 
     rateIncentiveThreshold -= 1
 
     guard rateIncentiveThreshold == 0 else {
-      os_log("not requesting review: missed threshold: %i",
-             log: log, type: .debug, rateIncentiveThreshold)
       return
     }
 
     rateIncentiveThreshold = 10
 
     guard UserDefaults.standard.lastVersionPromptedForReview != v else {
-      os_log("already reviewed build: %@", log: log, type: .debug, v)
-
-      // Thwarting further attempts for this same version.
+      // Thwarting further attempts for same version.
       rateIncentiveThreshold = -1
 
       return
     }
 
-    os_log("requesting review: %@", log: log, type: .debug, v)
-
     rateIncentiveTimeout = setTimeout(delay: .seconds(2), queue: .main) {
-      UserDefaults.standard.set(v, forKey: UserDefaults.lastVersionPromptedForReviewKey)
+      UserDefaults.standard.set(
+        v, forKey: UserDefaults.lastVersionPromptedForReviewKey)
       SKStoreReviewController.requestReview()
     }
   }
 
-  func cancelReview() {
-    os_log("cancelling review", log: log, type: .debug)
+  func cancelReview(resetting: Bool) {
     dispatchPrecondition(condition: .onQueue(.main))
     rateIncentiveTimeout?.cancel()
+
+    if resetting {
+      rateIncentiveThreshold = 10
+    }
+  }
+
+  func cancelReview() {
+    cancelReview(resetting: false)
   }
 
 }

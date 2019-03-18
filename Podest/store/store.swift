@@ -173,6 +173,8 @@ enum ShoppingError: Error {
 
 /// Get notified when accessiblity to the store changes.
 protocol StoreAccessDelegate: class {
+
+  /// Pinged if the store should be shown or hidden.
   func store(_ store: Shopping, isAccessible: Bool)
   
   /// The delegate is responsible for checking if the App Store is reachable.
@@ -181,25 +183,26 @@ protocol StoreAccessDelegate: class {
   /// reachability, so it can notify the store via `Shopping.online()` once the
   /// App Store can be reached again.
   func reach() -> Bool
+
 }
 
-/// Receive updates about products, purchasing, and restoring.
+/// Receives shopping events.
 protocol StoreDelegate: class {
-  
+
+  /// After fetching available IAPs, this callback receives products or error.
   func store(
     _ store: Shopping,
     offers products: [SKProduct],
     error: ShoppingError?
   )
-  
+
+  /// The identifier of the product currently being purchased.
   func store(_ store: Shopping, purchasing productIdentifier: String)
-  
+
+  /// The identifier of a successfully purchased product.
   func store(_ store: Shopping, purchased productIdentifier: String)
-  
-  func storeRestoring(_ store: Shopping)
-  
-  func storeRestored(_ store: Shopping, productIdentifiers: [String])
-  
+
+  /// Display an error message after this callback.
   func store(_ store: Shopping, error: ShoppingError)
   
 }
@@ -213,12 +216,15 @@ protocol Shopping: SKPaymentTransactionObserver, Rating {
 
   /// Clients use this delegate to receive callbacks from the store.
   var delegate: StoreDelegate? { get set }
-  
+
+  /// The store isn’t always accessible. The subscriber delegate get notified
+  /// about that.
   var subscriberDelegate: StoreAccessDelegate? { get set }
   
   /// Requests App Store for payment of the product matching `productIdentifier`.
   func payProduct(matching productIdentifier: String)
 
+  /// Is `true` if users can make payments.
   var canMakePayments: Bool { get }
   
   /// Synchronizes pending transactions with the Apple App Store, observing the
@@ -240,6 +246,14 @@ protocol Rating {
 
   /// Requests user to rate the app if appropriate.
   func requestReview()
+
+  /// Cancels previous review request, `resetting` the cycle to defer the next
+  /// review request.
+  ///
+  /// For example, just after becoming active again is probably not a good time
+  /// to ask for a rating. Prevent this by `resetting` before entering the
+  /// background.
+  func cancelReview(resetting: Bool)
 
   /// Cancels previous review request.
   func cancelReview()
