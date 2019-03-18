@@ -37,7 +37,6 @@ final class ProductsDataSource: NSObject, SectionedDataSource {
     case thanks
     case failed(String)
     case loading
-    case restoring
   }
 
   static var messageCellID = "MessageCellID"
@@ -89,7 +88,7 @@ final class ProductsDataSource: NSObject, SectionedDataSource {
     switch first {
     case .article, .product:
       return false
-    case .offline, .empty, .thanks, .failed, .loading, .restoring:
+    case .offline, .empty, .thanks, .failed, .loading:
       return true
     }
   }
@@ -208,7 +207,7 @@ extension ProductsDataSource: UICollectionViewDataSource {
         withReuseIdentifier: ProductsDataSource.messageCellID,
         for: indexPath) as! MessageCollectionViewCell
       
-      cell.title.text = "Thank you!"
+      cell.title.text = "Thank you for your purchase."
       
       return cell
     case .failed(let desc):
@@ -226,15 +225,6 @@ extension ProductsDataSource: UICollectionViewDataSource {
         for: indexPath) as! MessageCollectionViewCell
       
       cell.title.text = "Loading"
-      
-      return cell
-    
-    case .restoring:
-      let cell = collectionView.dequeueReusableCell(
-        withReuseIdentifier: ProductsDataSource.messageCellID,
-        for: indexPath) as! MessageCollectionViewCell
-      
-      cell.title.text = "Restoring"
       
       return cell
     }
@@ -375,25 +365,6 @@ extension ProductsDataSource: StoreDelegate {
 
       self?.purchasingHandler?(ip)
     }
-  }
-  
-  func storeRestoring(_ store: Shopping) {
-    os_log("store: restoring", log: log, type: .debug)
-    submit([.restoring])
-  }
-  
-  func storeRestored(
-    _ store: Shopping,
-    productIdentifiers: [String]
-  ) {
-    os_log("store: restored: %{public}@",
-           log: log, type: .debug, productIdentifiers)
-
-    guard !productIdentifiers.isEmpty else {
-      return submit([.failed("Sorry, no previous purchases to restore.")])
-    }
-
-    submit([.thanks])
   }
   
   func store(_ store: Shopping, purchased productIdentifier: String) {
