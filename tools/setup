@@ -9,7 +9,7 @@ fi
 
 DIR="$( cd -P "$( dirname "$SOURCE" )/../.." && pwd )"
 
-DEPS=(ola patron manger-kit fanboy-kit feedkit hattr nuke playback skull)
+DEPS=(ola patron manger-kit fanboy-kit feedkit fileproxy hattr nuke playback skull)
 
 clone() {
   local host=https://github.com/michaelnisi
