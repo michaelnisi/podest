@@ -56,10 +56,10 @@ class PodestUITests: XCTestCase {
     waitForExpectations(timeout: 5, handler: nil)
 
     searchSearchField.tap()
-    searchSearchField.typeText("Mon")
+    searchSearchField.typeText("new")
 
     let suggestion = app
-      .tables["Search results"].staticTexts["monocle"]
+      .tables["Search results"].staticTexts["new america"]
 
     expectation(
       for: NSPredicate(format: "exists == 1"),
@@ -73,7 +73,7 @@ class PodestUITests: XCTestCase {
     suggestion.tap()
 
     let find = app
-      .tables["Search results"].staticTexts["Monocle 24: The Urbanist"]
+      .tables["Search results"].staticTexts["Adventures in New America"]
 
     expectation(
       for: NSPredicate(format: "exists == 1"),
@@ -130,11 +130,9 @@ class PodestUITests: XCTestCase {
   }
 
   func testBrowsing() {
-    let cell = app.tables.cells.element(boundBy: 0)
-
     expectation(
       for: NSPredicate(format: "exists == 1"),
-      evaluatedWith: cell,
+      evaluatedWith: app.tables.cells.element(boundBy: 1),
       handler: nil
     )
 
@@ -144,6 +142,7 @@ class PodestUITests: XCTestCase {
       snapshot("0")
     }
 
+    let cell = app.tables.cells.element(boundBy: 0)
     cell.tap()
 
     let feedButton = app.scrollViews.otherElements.buttons.element(boundBy: 0)
@@ -161,7 +160,8 @@ class PodestUITests: XCTestCase {
     feedButton.tap()
     sleep(1)
 
-    if UIDevice.current.userInterfaceIdiom == .phone {
+    if UIDevice.current.userInterfaceIdiom == .phone,
+      app.windows.firstMatch.frame.height < 736 {
       app.tables.cells.element(boundBy: 0).swipeUp()
     }
 
