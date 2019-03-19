@@ -183,6 +183,24 @@ extension StoreState: CustomStringConvertible {
 
 }
 
+/// Enumerates possible bundle environments.
+private enum Environment {
+  case store, sandbox
+}
+
+/// The bundle version.
+///
+/// Unused yet, should replace the version string.
+private struct Version {
+
+  /// Continuous Apple style build version number.
+  let build: String
+
+  /// The app enviroment.
+  let env: Environment
+
+}
+
 // Some default implementations to isolate store.swift and StoreFSM.swift.
 
 private class DefaultPaymentQueue: Paying {}
