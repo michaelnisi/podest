@@ -11,6 +11,7 @@ import UIKit
 final class ProductsViewController: UICollectionViewController {
   
   @objc func onDone() {
+    invalidate()
     dismiss(animated: true)
   }
 
@@ -46,6 +47,7 @@ final class ProductsViewController: UICollectionViewController {
     return dataSource
   }
 
+  /// Lets go of the data source.
   private func invalidate() {
     dataSource.sectionsChangeHandler = nil
     dataSource.purchasingHandler = nil
@@ -81,11 +83,6 @@ extension ProductsViewController {
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     Podest.store.update()
-  }
-
-  override func viewDidDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
-    invalidate()
   }
 
 }
