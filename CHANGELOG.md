@@ -1,4 +1,4 @@
-## 7.9.7 (Upcoming)
+## 7.9.7 (2019-03-20)
 
 ### Shrug Fixings
 
