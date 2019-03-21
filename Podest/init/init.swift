@@ -139,6 +139,8 @@ private func removeFile(at url: URL) {
 }
 
 private func makeCache(_ conf: Config) -> FeedCache {
+  dispatchPrecondition(condition: .onQueue(.main))
+
   let bundle = Bundle(for: FeedCache.self)
   let schema = bundle.path(forResource: "cache", ofType: "sql")!
   let name = Bundle.main.bundleIdentifier!
@@ -166,6 +168,8 @@ private func makeCache(_ conf: Config) -> FeedCache {
 }
 
 private func makeUserCache(_ conf: Config) -> UserCache {
+  dispatchPrecondition(condition: .onQueue(.main))
+  
   let bundle = Bundle(for: UserCache.self)
   let schema = bundle.path(forResource: "user", ofType: "sql")!
   let name = Bundle.main.bundleIdentifier!
@@ -309,11 +313,13 @@ final private class Config {
   }
 
   fileprivate func makeStore() throws -> Shopping {
+    dispatchPrecondition(condition: .onQueue(.main))
+
     let url = Bundle.main.url(forResource: "products", withExtension: "json")!
     let store = StoreFSM(url: url)
 
     if settings.removeReceipts {
-      store.removeReceipts()
+      precondition(store.removeReceipts())
     }
 
     return store
@@ -324,8 +330,7 @@ final private class Config {
   }
 }
 
-/// Hides `Ola` from indirect dependents, just wanting to to indicate network
-/// activity.
+/// Hides `Ola` from indirect dependents.
 private class NetworkIndicator: NetworkActivityIndicating {
 
   func increase() {
