@@ -86,7 +86,11 @@ Navigator, EntryRowSelectable {
   ///
   /// Exposing a data source for adopting a protocol, EntryRowSelectable in
   /// this case, is just gross.
-  var dataSource = ListDataSource(browser: Podest.browser, images: Podest.images)
+  var dataSource = ListDataSource(
+    browser: Podest.browser,
+    images: Podest.images,
+    store: Podest.store
+  )
 
   /// The current updating operation.
   private weak var updating: Operation? {

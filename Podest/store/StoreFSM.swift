@@ -12,7 +12,7 @@ import os.log
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "store")
 
-/// Enumerates events handled by this store.
+/// Enumerates known events within this state machine.
 private enum StoreEvent {
   case resume
   case pause
@@ -60,151 +60,7 @@ extension StoreEvent: CustomStringConvertible {
   
 }
 
-/// Enumerates possible states of the finite state machine (FSM), implementing
-/// our IAP store, with six states.
-///
-/// - initialized
-/// - interested
-/// - subscribed
-/// - fetchingProducts
-/// - offline
-/// - purchasing
-///
-/// The specifics of each state are described inline.
-enum StoreState: Equatable {
-
-  /// The store starts passively in `initialized` awaiting activation.
-  ///
-  /// ## resume
-  ///
-  /// Begins observing payment queue for changed transactions and ubiquitous
-  /// key value store for changed receipts. Fetches available products from the
-  /// App Store and validates receipts, ideally resulting in one of the two
-  /// user states, `interested` or `subscribed`. Of course, we might as well
-  /// end up `offline` if the App Store is not reachable or the subscriber
-  /// delegate has not been set yet.
-  case initialized
-
-  /// No valid receipts have been found. Meaning, no subscription has been
-  /// purchased yet, subscriptions are expired, or receipts have been deleted.
-  ///
-  /// ## receiptsChanged
-  /// Validates receipts, resulting in `interested` or `subscribed`.
-  ///
-  /// ## purchased
-  /// Validates receipts, very likely transferring to `subscribed`.
-  ///
-  /// ## purchasing
-  /// Moving to `purchasing`.
-  ///
-  /// ## failed
-  /// Processes error ending up `offline` or `interested`.
-  ///
-  /// ## pay
-  /// Adds payment to queue entering `purchasing`.
-  ///
-  /// ## update
-  /// Fetches products from App Store and validates receipts entering one of the
-  /// three elemental states, `interested`, `subscribed`, or `offline`.
-  ///
-  /// ## productsReceived([SKProduct], ShoppingError?)
-  /// The product list has been received from the payment queue and the
-  /// products will be forwarded to the shopping delegate for display.
-  case interested
-
-  /// In `subscribed` state the store currently doesn’t handle any events, the
-  /// user is a customer, has purchased a subscription. Ignores all events and
-  /// stays `subscribed`.
-  case subscribed(ProductIdentifier)
-
-  /// Fetching products from the App Store.
-  ///
-  /// ## productsReceived([SKProduct], ShoppingError?)
-  /// The product list has been received from the payment queue and the
-  /// products will be forwarded to the shopping delegate for display.
-  ///
-  /// ## receiptsChanged
-  /// We might receive receipts from `NSUbiquitousKeyValueStore` in the mean
-  /// time. In that case we keep waiting for the products. After they have been
-  /// received, receipts always get validated, error or not.
-  ///
-  /// ## update
-  /// The `update` event is ignored, we keep `fetchingProducts`.
-  ///
-  /// ## online
-  /// Keep waiting in  to receive the products with `productsReceived`, which
-  /// is probably the next event.
-  case fetchingProducts
-
-  /// Cannot reach the App Store.
-  ///
-  /// ## online | receiptsChanged | update
-  /// Releases probe and updates products, after validating receipts transfers
-  /// to `interested` or `subscribed`. A `receiptsChanged` is unlikely here,
-  /// but produces the same result.
-  case offline
-
-  /// The user is purchasing a subscription.
-  ///
-  /// ## purchased
-  /// Validates receipts resulting in `interested` or `subscribed`.
-  ///
-  /// ## failed
-  /// Processes error ending up `offline`, `interested`, `subscribed`.
-  ///
-  /// ## purchasing | receiptsChanged | update
-  /// These events are ignored staying in `purchasing`.
-  indirect case purchasing(ProductIdentifier, StoreState)
-}
-
-extension StoreState: CustomStringConvertible {
-
-  var description: String {
-    switch self {
-    case .initialized:
-      return "StoreState: initialized"
-    case .interested:
-      return "StoreState: interested"
-    case .subscribed(let pid):
-      return "StoreState: subscribed: ( productIdentifier: \(pid) )"
-    case .fetchingProducts:
-      return "StoreState: fetchingProducts"
-    case .offline:
-      return "StoreState: offline"
-    case .purchasing(let pid, let nextState):
-      return """
-      StoreState: purchasing (
-        productIdentifier: \(pid),
-        nextState: \(nextState)
-      )
-      """
-    }
-  }
-
-}
-
-/// Enumerates possible bundle environments.
-private enum Environment {
-  case store, sandbox
-}
-
-/// The bundle version.
-///
-/// Unused yet, should replace the version string.
-private struct Version {
-
-  /// Continuous Apple style build version number.
-  let build: String
-
-  /// The app enviroment.
-  let env: Environment
-
-}
-
-// Some default implementations to isolate store.swift and StoreFSM.swift.
-
 private class DefaultPaymentQueue: Paying {}
-private class DefaultKVStore: Storing {}
 
 /// StoreFSM is a store for in-app purchases, offering a single non-renewing
 /// subscription at three flexible prices. After a successful purchase the store
@@ -224,8 +80,11 @@ final class StoreFSM: NSObject {
   /// A queue of payment transactions to be processed by the App Store.
   private let paymentQueue: Paying
   
-  /// A central key-value store persisting receipts.
-  private let store: Storing
+  /// The (default) iCloud key-value store object.
+  private let db: NSUbiquitousKeyValueStore
+
+  /// The version of the app.
+  private let version: BuildVersion
 
   /// Creates a new store with minimal dependencies. **Protocol dependencies**
   /// for easier testing.
@@ -234,26 +93,27 @@ final class StoreFSM: NSObject {
   ///   - url: The file URL of a JSON file containing product identifiers.
   ///   - ttl: The maximum age, 10 minutes, of cached products in seconds.
   ///   - paymentQueue: The App Store payment queue.
-  ///   - store: The ubiquitous key-value store.
+  ///   - db: The (default) iCloud key-value store object.
+  ///   - version: The version of this app.
   init(
     url: URL,
     ttl: TimeInterval = 600,
     paymentQueue: Paying = DefaultPaymentQueue(),
-    store: Storing = DefaultKVStore()
+    db: NSUbiquitousKeyValueStore = .default,
+    version: BuildVersion = BuildVersion()
   ) {
     self.url = url
     self.ttl = ttl
     self.paymentQueue = paymentQueue
-    self.store = store
+    self.db = db
+    self.version = version
   }
-  
+
   /// Flag for asserts, `true` if we are observing the payment queue.
   private var isObserving: Bool {
     return didChangeExternallyObserver != nil
   }
-  
-  private var count = 0
-  
+
   /// The currently available products.
   private (set) var products: [SKProduct]?
 
@@ -333,28 +193,49 @@ final class StoreFSM: NSObject {
   }
 
   // MARK: - Saving and Loading Receipts
+
+  /// Returns different key for store and sandbox `environment`.
+  private static func receiptsKey(suiting environment: BuildVersion.Environment) -> String {
+    return environment == .sandbox ? "receiptsSandbox" : "receipts"
+  }
   
-  public func removeReceipts() {
-    os_log("removing receipts", log: log)
-    store.removeObject(forKey: "receipts")
+  public func removeReceipts(forcing: Bool = false) -> Bool {
+    switch (version.env, forcing) {
+    case (.sandbox, _), (.store, true), (.simulator, _):
+      os_log("removing receipts", log: log)
+      db.removeObject(forKey: StoreFSM.receiptsKey(suiting: version.env))
+      return true
+    case (.store, _):
+      os_log("not removing production receipts", log: log)
+      return false
+    }
   }
 
   private func loadReceipts() -> [PodestReceipt] {
-    os_log("loading receipts", log: log, type: .debug)
-    
     dispatchPrecondition(condition: .notOnQueue(.main))
 
-    guard let json = store.data(forKey: "receipts") else {
-      os_log("no receipts: creating container", log: log, type: .debug)
+    let r = StoreFSM.receiptsKey(suiting: version.env)
+
+    os_log("loading receipts: ( %@, %f )", log: log, type: .debug, r)
+
+    guard let json = db.data(forKey: r) else {
+      os_log("no receipts: creating container: %@", log: log, type: .debug, r)
       return []
     }
     
     do {
       return try JSONDecoder().decode([PodestReceipt].self, from: json)
     } catch {
-      removeReceipts()
+      precondition(removeReceipts(forcing: true))
       return []
     }
+  }
+
+  private static func updateSettings(_ productIdentifier: String) {
+    UserDefaults.standard.set(
+      (productIdentifier.split(separator: ".").last ?? "unknown").capitalized,
+      forKey: "ink.codes.podest.status"
+    )
   }
 
   private func saveReceipt(_ receipt: PodestReceipt) {
@@ -365,23 +246,21 @@ final class StoreFSM: NSObject {
     let encoder = JSONEncoder()
     encoder.outputFormatting = .prettyPrinted
     let data = try! encoder.encode(acc)
+    let r = StoreFSM.receiptsKey(suiting: version.env)
 
-    store.set(data, forKey: "receipts")
+    db.set(data, forKey: r)
+    StoreFSM.updateSettings(receipt.productIdentifier)
 
     let str = String(data: data, encoding: .utf8)!
 
-    os_log("saved: %@", log: log, type: .debug, str)
+    os_log("saved: ( %@, %@ )", log: log, type: .debug, r, str)
   }
 
   /// Our non-renewing in-app purchase subscription duration.
   private enum SubscriptionDuration: Double {
     typealias RawValue = Double
-
-    /// The development subscription duration is one hour in seconds.
     case development = -3600 // -86400 or one day maybe
-
-    /// The production subscription duration is one year in seconds.
-    case production = -31536e3
+    case production = -3.154e7
   }
   
   /// Returns the product identifier of the first valid subscription found in
@@ -412,12 +291,12 @@ final class StoreFSM: NSObject {
     
     os_log("validating receipts: %@", log: log, type: .debug,
            String(describing: receipts))
-    
+
     guard let id = StoreFSM.validProductIdentifier(
       receipts, matching: productIdentifiers) else {
       return .interested
     }
-    
+
     return .subscribed(id)
   }
 
@@ -505,10 +384,12 @@ final class StoreFSM: NSObject {
   /// firing a `.receiptsChanged` event.
   private func observeUbiquitousKeyValueStore() {
     precondition(didChangeExternallyObserver == nil)
+
+    let r = StoreFSM.receiptsKey(suiting: version.env)
     
     didChangeExternallyObserver = NotificationCenter.default.addObserver(
       forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
-      object: store.sender,
+      object: db,
       queue: .main
     ) { notification in
       guard let info = notification.userInfo,
@@ -528,7 +409,7 @@ final class StoreFSM: NSObject {
            NSUbiquitousKeyValueStoreServerChange:
         guard
           let keys = info[NSUbiquitousKeyValueStoreChangedKeysKey] as? [String],
-          keys.contains("receipts") else {
+          keys.contains(r) else {
           break
         }
 
@@ -679,7 +560,7 @@ final class StoreFSM: NSObject {
         return .purchasing(pid, state)
 
       case .failed(let error):
-        return updatedState(after: error, next: .interested)
+        return updatedState(after: error, next: state)
 
       case .pay(let pid):
         delegateQueue.async {
@@ -765,7 +646,7 @@ final class StoreFSM: NSObject {
 
   // MARK: - Ratings and Reviews
 
-  /// The timeout that trigger rating requests.
+  /// The timeout triggering rating requests.
   private var rateIncentiveTimeout: DispatchSourceTimer?
 
   /// A counting threshold that must be crossed before a timeout is started
@@ -776,18 +657,6 @@ final class StoreFSM: NSObject {
              log: log, type: .debug, rateIncentiveThreshold)
     }
   }
-
-  // The build version number of the main bundle.
-  lazy private var version: String? = {
-    let infoDictionaryKey = kCFBundleVersionKey as String
-    guard let v = Bundle.main.object(
-      forInfoDictionaryKey: infoDictionaryKey) as? String else {
-      return nil
-    }
-
-    return v
-  }()
-
 }
 
 // MARK: - SKProductsRequestDelegate
@@ -909,6 +778,7 @@ extension StoreFSM: Shopping {
   }
   
   func resume() {
+    os_log("resuming: %@", log: log, type: .debug, String(describing: version))
     DispatchQueue.global().async {
       self.event(.resume)
     }
@@ -948,11 +818,6 @@ extension StoreFSM: Rating {
     dispatchPrecondition(condition: .onQueue(.main))
     rateIncentiveTimeout?.cancel()
 
-    guard let v = version else {
-      assert(false, "version expected")
-      return
-    }
-
     guard rateIncentiveThreshold >= 0 else {
       return
     }
@@ -964,8 +829,9 @@ extension StoreFSM: Rating {
     }
 
     rateIncentiveThreshold = 10
+    let build = version.build
 
-    guard UserDefaults.standard.lastVersionPromptedForReview != v else {
+    guard UserDefaults.standard.lastVersionPromptedForReview != version.build else {
       // Thwarting further attempts for same version.
       rateIncentiveThreshold = -1
 
@@ -974,7 +840,7 @@ extension StoreFSM: Rating {
 
     rateIncentiveTimeout = setTimeout(delay: .seconds(2), queue: .main) {
       UserDefaults.standard.set(
-        v, forKey: UserDefaults.lastVersionPromptedForReviewKey)
+        build, forKey: UserDefaults.lastVersionPromptedForReviewKey)
       SKStoreReviewController.requestReview()
     }
   }
@@ -990,6 +856,69 @@ extension StoreFSM: Rating {
 
   func cancelReview() {
     cancelReview(resetting: false)
+  }
+
+}
+
+// MARK: - Expiring
+
+extension StoreFSM {
+
+  static var unsealedKey = "ink.codes.podest.store.unsealed"
+
+  /// Returns time of first use in seconds, updating `db` for `state`,
+  /// initiially setting or resetting to rule out expiration for subscribers.
+  ///
+  /// Returns `Double.infinity` while unsure about user status.
+  static func unsealTime(
+    state: StoreState, db: NSUbiquitousKeyValueStore) -> TimeInterval {
+
+    switch state {
+    case .initialized, .offline, .fetchingProducts, .purchasing:
+      return .infinity
+
+    case .subscribed:
+      db.set(0, forKey: unsealedKey)
+
+      return .infinity
+
+    case .interested:
+      let found = db.double(forKey: unsealedKey)
+
+      guard found != 0 else {
+        let ts = Date().timeIntervalSince1970
+
+        db.set(ts, forKey: unsealedKey)
+
+        return ts
+      }
+
+      return found
+    }
+  }
+
+  func isExpired() -> Bool {
+    return sQueue.sync {
+      let now = Date().timeIntervalSince1970
+      let ts = StoreFSM.unsealTime(state: state, db: self.db)
+
+      os_log("** unsealed: %f", log: log, type: .debug, ts)
+
+      let yes = now - ts > 2.628e6
+
+      // Preventing overlapping alerts.
+      if yes {
+        rateIncentiveTimeout?.cancel()
+        rateIncentiveThreshold = -1
+      }
+
+      delegateQueue.async {
+        self.subscriberDelegate?.store(self, isExpired: yes)
+      }
+
+      return yes
+    }
+
   }
 
 }

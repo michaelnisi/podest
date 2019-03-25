@@ -44,6 +44,16 @@
 			<key>Type</key>
 			<string>PSTitleValueSpecifier</string>
 		</dict>
+		<dict>
+			<key>DefaultValue</key>
+			<string>Free Trial</string>
+			<key>Key</key>
+			<string>ink.codes.podest.status</string>
+			<key>Title</key>
+			<string>Status</string>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Root</string>

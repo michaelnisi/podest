@@ -10,7 +10,10 @@ import UIKit
 import StoreKit
 import os.log
 
-private let log = OSLog.disabled
+// TODO: Display something meaningful for .subscribed
+// The store might become visible by accident.
+
+private let log = OSLog(subsystem: "ink.codes.podest", category: "store")
 
 protocol CellProductsDelegate: class {
   func cell(_ cell: UICollectionViewCell,
@@ -380,8 +383,6 @@ extension ProductsDataSource: StoreDelegate {
       return [.failed("Your purchase has been cancelled.")]
     case .failed, .invalidProduct:
       return [.failed("Your purchase failed.")]
-    case .notRestored:
-      return [.failed("Not restored.")]
     case .offline:
       return [.offline]
     case .serviceUnavailable:

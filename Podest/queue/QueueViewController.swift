@@ -319,6 +319,10 @@ extension QueueViewController {
     }
 
     searchProxy.deselect(animated)
+
+    if Podest.store.isExpired() {
+      os_log("free trial expired", log: log)
+    }
     
     super.viewDidAppear(animated)
   }
@@ -471,6 +475,31 @@ extension QueueViewController: StoreAccessDelegate {
   func store(_ store: Shopping, isAccessible: Bool) {
     DispatchQueue.main.async { [weak self] in
       self?.isStoreAccessible = isAccessible
+    }
+  }
+
+  func store(_ store: Shopping, isExpired: Bool) {
+    guard isExpired else {
+      return
+    }
+
+    DispatchQueue.main.async { [weak self] in
+      let alert = UIAlertController(
+        title: "Free Trial Expired",
+        message: "Let’s get it.",
+        preferredStyle: .alert
+      )
+
+      let ok = UIAlertAction(title: "In-App Purchases", style: .default) { _ in
+        alert.dismiss(animated: true)
+        self?.navigationDelegate?.showStore()
+      }
+
+      alert.addAction(ok)
+      self?.present(alert, animated: true, completion: nil)
+      self?.navigationDelegate?.pause()
+      UIApplication.shared.setMinimumBackgroundFetchInterval(
+        UIApplication.backgroundFetchIntervalNever)
     }
   }
 

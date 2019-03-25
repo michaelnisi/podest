@@ -88,56 +88,22 @@ extension Paying {
   
 }
 
-protocol Storing {
-  func set(_ aData: Data?, forKey aKey: String)
-  func removeObject(forKey aKey: String)
-  func data(forKey aKey: String) -> Data?
-  
-  /// The notification sender.
-  var sender: Any { get }
-}
-
-extension Storing {
-  
-  func removeObject(forKey aKey: String) {
-    NSUbiquitousKeyValueStore.default.removeObject(forKey: aKey)
-  }
-  
-  func set(_ aData: Data?, forKey aKey: String) {
-    NSUbiquitousKeyValueStore.default.set(aData, forKey: aKey)
-  }
-  
-  func data(forKey aKey: String) -> Data? {
-    return NSUbiquitousKeyValueStore.default.data(forKey: aKey)
-  }
-  
-  var sender: Any {
-    return NSUbiquitousKeyValueStore.default
-  }
-  
-}
-
 // MARK: - API
 
 /// Enumerates possible presentation layer error types, grouping StoreKit and
 /// other errors into five simplified buckets.
 enum ShoppingError: Error {
-   case invalidProduct(String?)
-   case offline
-   case serviceUnavailable
-   case cancelled
-   case failed
-   case notRestored
-  
+  case invalidProduct(String?)
+  case offline
+  case serviceUnavailable
+  case cancelled
+  case failed
+
   init(underlyingError: Error, productIdentifier: String? = nil, restoring: Bool = false) {
     switch underlyingError {
     case let skError as SKError:
       switch skError.code {
       case .clientInvalid, .unknown, .paymentInvalid, .paymentNotAllowed:
-        guard !restoring else {
-          self = .notRestored
-          return
-        }
         self = .failed
         
       case .cloudServicePermissionDenied, .cloudServiceRevoked:
@@ -184,6 +150,9 @@ protocol StoreAccessDelegate: class {
   /// App Store can be reached again.
   func reach() -> Bool
 
+  /// Receives expiration updates.
+  func store(_ store: Shopping, isExpired: Bool)
+
 }
 
 /// Receives shopping events.
@@ -207,8 +176,37 @@ protocol StoreDelegate: class {
   
 }
 
+/// Ask users for rating and reviews.
+protocol Rating {
+
+  /// Requests user to rate the app if appropriate.
+  func requestReview()
+
+  /// Cancels previous review request, `resetting` the cycle to defer the next.
+  ///
+  /// For example, just after becoming active again is probably not a good time
+  /// to ask for a rating. Prevent this by `resetting` before going into the
+  /// background.
+  func cancelReview(resetting: Bool)
+
+  /// Cancels previous review request.
+  func cancelReview()
+
+}
+
+/// Checking user status.
+protocol Expiring {
+
+  /// Returns `true` if the trial period has been exceeded, `false` is returned
+  /// within the trial period or if a valid subscription receipt is present.
+  ///
+  /// Might modify internal state.
+  func isExpired() -> Bool
+
+}
+
 /// A set of methods to offer in-app purchases.
-protocol Shopping: SKPaymentTransactionObserver, Rating {
+protocol Shopping: SKPaymentTransactionObserver, Rating, Expiring {
   
   /// The maximum number of allowed podcast subscriptions is only limited when
   /// we are sure about the status.
@@ -241,21 +239,3 @@ protocol Shopping: SKPaymentTransactionObserver, Rating {
   
 }
 
-/// Ask users for rating and reviews.
-protocol Rating {
-
-  /// Requests user to rate the app if appropriate.
-  func requestReview()
-
-  /// Cancels previous review request, `resetting` the cycle to defer the next
-  /// review request.
-  ///
-  /// For example, just after becoming active again is probably not a good time
-  /// to ask for a rating. Prevent this by `resetting` before entering the
-  /// background.
-  func cancelReview(resetting: Bool)
-
-  /// Cancels previous review request.
-  func cancelReview()
-
-}

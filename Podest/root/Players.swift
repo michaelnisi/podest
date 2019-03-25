@@ -177,6 +177,10 @@ extension RootViewController {
   }
 
   func pause() {
+    guard Podest.playback.currentEntry != nil else {
+      return
+    }
+    
     Podest.playback.pause()
   }
 

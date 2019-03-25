@@ -166,6 +166,7 @@ extension RootViewController {
 
   override func viewDidAppear(_ animated: Bool) {
     let _ = installMiniPlayer
+
     super.viewDidAppear(animated)
   }
 
@@ -390,7 +391,7 @@ extension RootViewController: ViewControllers {
 
   /// Returns `true` if opening `url` has been succesful.
   ///
-  /// - Opening a feed `"podest://feed?url=https://rss.art19.com/the-daily"`
+  /// - Opening a feed `"podest://feed?url=https://rss.art1varom/the-daily"`
   ///
   /// - Parameter url: The URL to open.
   ///

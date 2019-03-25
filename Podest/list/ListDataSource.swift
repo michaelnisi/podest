@@ -334,15 +334,18 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
   private let browser: Browsing
   private let images: Images
+  private let store: Expiring
 
   /// Creates a new list data source.
   ///
   /// - Parameters:
   ///   - browser: A browser for fetching feed and entries.
   ///   - images: An image loading API.
-  init(browser: Browsing, images: Images) {
+  ///   - store: For checking user status before updating a feed.
+  init(browser: Browsing, images: Images, store: Expiring) {
     self.browser = browser
     self.images = images
+    self.store = store
 
     super.init()
   }
@@ -367,17 +370,25 @@ extension ListDataSource {
   /// callback blocks are submitted to the main queue, from where changes should
   /// be committed.
   ///
-  /// - Parameters:
-  ///   - operation: The update operation to execute.
-  ///   - forcing: Overrides cache settings, replacing all entries.
-  ///
   /// For its somewhat complex nature, we are using operation dependencies to
   /// model this task. Use the operation to configure details.
   ///
   /// We are assuming that users will commit changes back into this data source
   /// via its `commit(batch:performingWith:completionBlock:)`. Only then
   /// sequential data consistency of collection changes can be ensured.
+  ///
+  /// The app must not be expired for this operation.
+  ///
+  /// - Parameters:
+  ///   - operation: The update operation to execute.
+  ///   - forcing: Overrides cache settings, replacing all entries.
   func update(_ operation: UpdateOperation, forcing: Bool = false) -> UpdateOperation {
+    guard !store.isExpired() else {
+      os_log("free trial expired", log: log)
+      operation.cancel()
+      return operation
+    }
+
     os_log("updating: %@", log: log, type: .debug, operation)
     
     let a = FetchFeed(operation: operation)

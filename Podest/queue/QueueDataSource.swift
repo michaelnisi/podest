@@ -267,6 +267,8 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   /// directory, we are removing stale files at appropriate times. Batches are
   /// limited to 64 files for downloads and 16 files for deletions.
   ///
+  /// The app must not be expired for this operation.
+  ///
   /// - Parameters:
   ///   - window: Within this time interval since the last update, updating is
   /// skipped. However, preloading and removing files might be performed.
@@ -279,6 +281,13 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     considering error: Error? = nil,
     completionHandler: ((Bool, Error?) -> Void)? = nil)
   {
+    guard !Podest.store.isExpired() else {
+      os_log("free trial expired", log: log)
+      return DispatchQueue.main.async {
+        completionHandler?(false, error)
+      }
+    }
+
     updateError = error
 
     let shouldUpdate = self.shouldUpdate(outside: window)
@@ -333,9 +342,9 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     }
     
     // For simulators, not receiving remote notifications, we are pulling
-    // iCloud manually, making working on iCloud sync less erratic.
+    // iCloud manually, for less erratic conditions while working on sync.
     
-    #if arch(i386) || arch(x86_64)
+    #if targetEnvironment(simulator)
     guard window <= 60 else {
       return next()
     }

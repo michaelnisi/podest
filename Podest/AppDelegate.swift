@@ -178,7 +178,9 @@ extension AppDelegate {
 
     window?.tintColor = UIColor(named: "Purple")
 
-    application.setMinimumBackgroundFetchInterval(3600)
+    if !Podest.store.isExpired() {
+      application.setMinimumBackgroundFetchInterval(3600)
+    }
 
     if !Podest.settings.noSync {
       application.registerForRemoteNotifications()

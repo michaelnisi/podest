@@ -1,5 +1,5 @@
 //
-//  PodKitTests.swift
+//  StoreTests.swift
 //  PodKitTests
 //
 //  Created by Michael Nisi on 20.07.18.
@@ -29,7 +29,7 @@ private extension Paying {
 
 private class TestPaymentQueue: Paying {}
 
-class PodKitTests: XCTestCase {
+class StoreTests: XCTestCase {
   
   var store: StoreFSM!
   
@@ -38,8 +38,14 @@ class PodKitTests: XCTestCase {
 
     let bundle = Bundle.init(identifier: "ink.codes.PodKitTests")!
     let url = bundle.url(forResource: "products", withExtension: "json")!
+    let v = BuildVersion(bundle: bundle)
 
-    store = StoreFSM(url: url, paymentQueue: TestPaymentQueue())
+    XCTAssertEqual(v.env, .simulator)
+
+    let q = TestPaymentQueue()
+    let db = NSUbiquitousKeyValueStore()
+
+    store = StoreFSM(url: url, paymentQueue: q, db: db, version: v)
   }
   
   override func tearDown() {
@@ -48,11 +54,11 @@ class PodKitTests: XCTestCase {
   
   func testActivateWithoutSubscriptionDelegate() {
     let exp = expectation(description: "waiting")
+
     store.resume()
     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
       XCTAssertEqual(self.store.state, .offline)
       exp.fulfill()
-      
     }
     waitForExpectations(timeout: 5) { er in }
   }
@@ -71,6 +77,14 @@ class PodKitTests: XCTestCase {
       func store(_ store: Shopping, isAccessible: Bool) {
         DispatchQueue.main.async {
           self.isAccessible = isAccessible
+        }
+      }
+
+      var isExpired = false
+
+      func store(_ store: Shopping, isExpired: Bool) {
+        DispatchQueue.main.async {
+          self.isExpired = isExpired
         }
       }
     }
@@ -122,4 +136,39 @@ class PodKitTests: XCTestCase {
     waitForExpectations(timeout: 5) { er in }
   }
   
+}
+
+// MARK: - Expiring
+
+extension StoreTests {
+
+  func testUnsealTime() {
+    let db = NSUbiquitousKeyValueStore()
+    let ts = Date().timeIntervalSince1970
+
+    db.set(ts, forKey: StoreFSM.unsealedKey)
+
+    let states: [StoreState] = [
+      .initialized,
+      .offline,
+      .interested,
+      .fetchingProducts,
+      .purchasing("abc", .interested),
+      .subscribed("abc")
+    ]
+
+    for state in states {
+      let found = StoreFSM.unsealTime(state: state, db: db)
+
+      switch state {
+      case .fetchingProducts, .initialized, .offline, .purchasing:
+        XCTAssertEqual(found, .infinity)
+      case .subscribed(_):
+        XCTAssertEqual(found, .infinity)
+      case .interested:
+        XCTAssertEqual(found, ts)
+      }
+    }
+  }
+
 }
