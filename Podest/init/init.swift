@@ -318,6 +318,10 @@ final private class Config {
     let url = Bundle.main.url(forResource: "products", withExtension: "json")!
     let store = StoreFSM(url: url)
 
+    store.formatDate = { date in
+      return StringRepository.string(from: date)
+    }
+
     if settings.removeReceipts {
       precondition(store.removeReceipts())
     }

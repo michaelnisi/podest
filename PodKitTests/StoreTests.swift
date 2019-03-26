@@ -142,6 +142,41 @@ class StoreTests: XCTestCase {
 
 extension StoreTests {
 
+  func testExpiration() {
+    do {
+      let expirations: [StoreFSM.Period] = [.trial, .subscription]
+
+      for x in expirations {
+        XCTAssertFalse(x.isExpired(date: Date.distantFuture))
+        XCTAssertTrue(x.isExpired(date: Date.distantPast))
+        XCTAssertFalse(x.isExpired(date: Date()))
+      }
+    }
+
+    do {
+      let always = StoreFSM.Period.always
+      let dates = [Date(), Date.distantPast]
+
+      for date in dates {
+        XCTAssertTrue(always.isExpired(date: date))
+      }
+
+      XCTAssertFalse(always.isExpired(date: Date.distantFuture))
+    }
+
+    do {
+      XCTAssertFalse(StoreFSM.Period.trial.isExpired(
+        date: Date(timeIntervalSinceNow: -StoreFSM.Period.trial.rawValue + 1)))
+      XCTAssertTrue(StoreFSM.Period.trial.isExpired(
+        date: Date(timeIntervalSinceNow: -StoreFSM.Period.trial.rawValue)))
+
+      XCTAssertFalse(StoreFSM.Period.subscription.isExpired(
+        date: Date(timeIntervalSinceNow: -StoreFSM.Period.subscription.rawValue + 1)))
+      XCTAssertTrue(StoreFSM.Period.subscription.isExpired(
+        date: Date(timeIntervalSinceNow: -StoreFSM.Period.subscription.rawValue)))
+    }
+  }
+
   func testUnsealTime() {
     let db = NSUbiquitousKeyValueStore()
     let ts = Date().timeIntervalSince1970

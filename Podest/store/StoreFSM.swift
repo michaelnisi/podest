@@ -109,6 +109,9 @@ final class StoreFSM: NSObject {
     self.version = version
   }
 
+  /// Returns a formatted String from a Date.
+  public var formatDate: ((Date) -> String)?
+
   /// Flag for asserts, `true` if we are observing the payment queue.
   private var isObserving: Bool {
     return didChangeExternallyObserver != nil
@@ -231,11 +234,18 @@ final class StoreFSM: NSObject {
     }
   }
 
-  private static func updateSettings(_ productIdentifier: String) {
-    UserDefaults.standard.set(
-      (productIdentifier.split(separator: ".").last ?? "unknown").capitalized,
-      forKey: "ink.codes.podest.status"
-    )
+  private func updateSettings(status: String, expiration: Date) {
+    let date = formatDate?(expiration) ?? expiration.description
+
+    UserDefaults.standard.set(status, forKey: UserDefaults.statusKey)
+    UserDefaults.standard.set(date, forKey: UserDefaults.expirationKey)
+  }
+
+  private static func makeExpiration(date: Date) -> Date {
+    let l = Period.trial.rawValue
+    let t = date.timeIntervalSince1970
+
+    return Date(timeIntervalSince1970: t + l)
   }
 
   private func saveReceipt(_ receipt: PodestReceipt) {
@@ -249,18 +259,29 @@ final class StoreFSM: NSObject {
     let r = StoreFSM.receiptsKey(suiting: version.env)
 
     db.set(data, forKey: r)
-    StoreFSM.updateSettings(receipt.productIdentifier)
+
+    let id = receipt.productIdentifier
+    let name = (id.split(separator: ".").last ?? "unknown").capitalized
+    let x = StoreFSM.makeExpiration(date: receipt.transactionDate)
+
+    updateSettings(status: name, expiration: x)
 
     let str = String(data: data, encoding: .utf8)!
 
     os_log("saved: ( %@, %@ )", log: log, type: .debug, r, str)
   }
 
-  /// Our non-renewing in-app purchase subscription duration.
-  private enum SubscriptionDuration: Double {
-    typealias RawValue = Double
-    case development = -3600 // -86400 or one day maybe
-    case production = -3.154e7
+  /// Enumerates offered time periods.
+  enum Period: TimeInterval {
+    typealias RawValue = TimeInterval
+    case subscription = 3.154e7
+    case trial = 2.628e6
+    case always = 0
+
+    /// Returns `true` if `date` exceeds this period into the future.
+    func isExpired(date: Date) -> Bool {
+      return date.timeIntervalSinceNow <= -rawValue
+    }
   }
   
   /// Returns the product identifier of the first valid subscription found in
@@ -273,10 +294,9 @@ final class StoreFSM: NSObject {
   ) -> ProductIdentifier? {
     for r in receipts {
       let id = r.productIdentifier
-      let duration = SubscriptionDuration.production.rawValue
 
       guard productIdentifiers.contains(id),
-        r.transactionDate.timeIntervalSinceNow > duration else {
+        !Period.subscription.isExpired(date: r.transactionDate) else {
         continue
       }
       
@@ -294,6 +314,14 @@ final class StoreFSM: NSObject {
 
     guard let id = StoreFSM.validProductIdentifier(
       receipts, matching: productIdentifiers) else {
+
+      if db.double(forKey: StoreFSM.unsealedKey) ==  0 {
+        updateSettings(
+          status: "Free Trial",
+          expiration: Date(timeIntervalSinceNow: Period.trial.rawValue)
+        )
+      }
+
       return .interested
     }
 
@@ -899,12 +927,12 @@ extension StoreFSM {
 
   func isExpired() -> Bool {
     return sQueue.sync {
-      let now = Date().timeIntervalSince1970
+      let expiration = Period.trial
       let ts = StoreFSM.unsealTime(state: state, db: self.db)
 
       os_log("** unsealed: %f", log: log, type: .debug, ts)
 
-      let yes = now - ts > 2.628e6
+      let yes = expiration.isExpired(date: Date(timeIntervalSince1970: ts))
 
       // Preventing overlapping alerts.
       if yes {

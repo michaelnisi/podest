@@ -36,7 +36,7 @@
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
-			<string>7.9.7 (6)</string>
+			<string>8.0.0 (7)</string>
 			<key>Key</key>
 			<string>enabled_preference</string>
 			<key>Title</key>
@@ -50,7 +50,17 @@
 			<key>Key</key>
 			<string>ink.codes.podest.status</string>
 			<key>Title</key>
-			<string>Status</string>
+			<string>Subscription</string>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+		</dict>
+		<dict>
+			<key>DefaultValue</key>
+			<string>in four weeks</string>
+			<key>Key</key>
+			<string>ink.codes.podest.expiration</string>
+			<key>Title</key>
+			<string>Expiration</string>
 			<key>Type</key>
 			<string>PSTitleValueSpecifier</string>
 		</dict>

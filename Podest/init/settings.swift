@@ -43,6 +43,11 @@ extension UserDefaults {
 
 }
 
+extension UserDefaults {
+  static var statusKey = "ink.codes.podest.status"
+  static var expirationKey = "ink.codes.podest.expiration"
+}
+
 /// Additional **development** settings may override user defaults.
 struct Settings {
 

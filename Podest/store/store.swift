@@ -45,6 +45,7 @@ struct PodestReceipt: Codable {
     self.transactionIdentifier = transactionIdentifier
     self.transactionDate = transactionDate
   }
+
 }
 
 /// Trade representative contact information.
