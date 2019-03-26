@@ -927,12 +927,11 @@ extension StoreFSM {
 
   func isExpired() -> Bool {
     return sQueue.sync {
-      let expiration = Period.trial
       let ts = StoreFSM.unsealTime(state: state, db: self.db)
 
       os_log("** unsealed: %f", log: log, type: .debug, ts)
 
-      let yes = expiration.isExpired(date: Date(timeIntervalSince1970: ts))
+      let yes = Period.trial.isExpired(date: Date(timeIntervalSince1970: ts))
 
       // Preventing overlapping alerts.
       if yes {
