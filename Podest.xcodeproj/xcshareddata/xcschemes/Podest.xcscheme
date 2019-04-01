@@ -116,6 +116,11 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "CFNETWORK_DIAGNOSTICS"
+            value = "3"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "CG_CONTEXT_SHOW_BACKTRACE"
             value = ""
             isEnabled = "NO">
