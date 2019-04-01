@@ -183,18 +183,6 @@ extension EpisodeViewController {
     content?.isSelectable = false
   }
 
-  override func traitCollectionDidChange(
-    _ previousTraitCollection: UITraitCollection?) {
-    super.traitCollectionDidChange(previousTraitCollection)
-
-    content?.resignFirstResponder()
-
-    let insets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
-    
-    scrollView.contentInset = insets
-    scrollView.scrollIndicatorInsets = insets
-  }
-
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
 
@@ -205,6 +193,25 @@ extension EpisodeViewController {
     }
   }
 
+}
+
+// MARK: - Responding to a Change in the Interface Environment
+
+extension EpisodeViewController {
+
+  override func viewLayoutMarginsDidChange() {
+    super.viewLayoutMarginsDidChange()
+
+    additionalSafeAreaInsets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
+  }
+
+  override func traitCollectionDidChange(
+    _ previousTraitCollection: UITraitCollection?) {
+    super.traitCollectionDidChange(previousTraitCollection)
+
+    content?.resignFirstResponder()
+  }
+  
 }
 
 // MARK: - State Preservation and Restoration

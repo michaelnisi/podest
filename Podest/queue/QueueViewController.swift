@@ -222,18 +222,18 @@ extension QueueViewController {
 
 }
 
-// MARK: - UIViewController
+// MARK: - UISearchController
 
 extension QueueViewController {
 
-  private func makeSearchProxy() -> (UISearchController, SearchControllerProxy) {
+  /// Returns a new search controller and its managing proxy for accessing it.
+  private static
+  func makeSearchProxy() -> (UISearchController, SearchControllerProxy) {
     let searchResultsController = SearchResultsController()
-    
+
     let searchController = UISearchController(
       searchResultsController: searchResultsController
     )
-
-    searchController.hidesNavigationBarDuringPresentation = true
 
     let fsm = SearchControllerProxy(
       searchController: searchController,
@@ -243,6 +243,12 @@ extension QueueViewController {
     return (searchController, fsm)
   }
 
+}
+
+// MARK: - UIViewController
+
+extension QueueViewController {
+
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -251,9 +257,13 @@ extension QueueViewController {
     refreshControl = UIRefreshControl()
     installRefreshControl()
 
-    let (searchController, searchProxy) = makeSearchProxy()
+    let (searchController, searchProxy) = QueueViewController.makeSearchProxy()
 
     searchProxy.install()
+
+    // TODO: File Radar
+    // [Unknown process name] CGAffineTransformInvert: singular matrix when
+    // returning from state restored successor. Not animating the title.
 
     navigationItem.searchController = searchController
     navigationItem.title = "Queue"
@@ -339,13 +349,21 @@ extension QueueViewController {
 
     super.viewWillDisappear(animated)
   }
-  
+
+}
+
+// MARK: - Responding to a Change in the Interface Environment
+
+extension QueueViewController {
+
+  override func viewLayoutMarginsDidChange() {
+    super.viewLayoutMarginsDidChange()
+
+    additionalSafeAreaInsets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
+  }
+
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
-
-    let insets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
-    tableView.scrollIndicatorInsets = insets
-    tableView.contentInset = insets
 
     dataSource.previousTraitCollection = previousTraitCollection
 

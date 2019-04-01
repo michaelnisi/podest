@@ -207,13 +207,6 @@ extension ListViewController {
     super.viewWillAppear(animated)
   }
 
-  private func adjustInsets() {
-    let insets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
-
-    tableView.scrollIndicatorInsets = insets
-    tableView.contentInset = insets
-  }
-
   override func viewWillDisappear(_ animated: Bool) {
     updating?.cancel()
     refreshControlTimer = nil
@@ -232,6 +225,12 @@ extension ListViewController {
     return !(splitViewController?.isCollapsed ?? false)
   }
 
+  override func viewLayoutMarginsDidChange() {
+    super.viewLayoutMarginsDidChange()
+
+    additionalSafeAreaInsets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
+  }
+
   override func traitCollectionDidChange(
     _ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
@@ -241,7 +240,6 @@ extension ListViewController {
     }
 
     resignFirstResponder()
-    adjustInsets()
 
     if isRegular {
       title = feed?.title
