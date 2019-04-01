@@ -25,8 +25,8 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
   // MARK: - Operations
 
-  /// An abstract operation that does nothing.
-  class ListDataSourceOperation: Operation, Receiving {
+  /// The list data source coordinates its tasks with operations.
+  class ListOperation: Operation, Receiving {
 
     let url: String
     let originalFeed: Feed?
@@ -47,7 +47,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
       super.init()
     }
 
-    init(operation: ListDataSourceOperation) {
+    init(operation: ListOperation) {
       self.url = operation.url
       self.originalFeed = operation.originalFeed
       self.forcing = operation.forcing
@@ -80,7 +80,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
     /// Accumulates previous `sections`, fresh `items`, and possibly an `error`
     /// into the next sections.
     ///
-    /// Making the next sections structure is the core of the data source.
+    /// Making the next sections structure is at the core of the data source.
     static func makeSections(
       sections current: [Array<Item>],
       items: [Item],
@@ -169,7 +169,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
   }
 
-  final private class FetchFeed: ListDataSourceOperation, Providing {
+  final private class FetchFeed: ListOperation, Providing {
 
     /// The current sections.
     var current: [Array<Item>]!
@@ -198,7 +198,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
         return
       }
 
-      let (sections, updates) = ListDataSourceOperation.makeUpdates(
+      let (sections, updates) = ListOperation.makeUpdates(
         sections: current,
         items: items,
         error: error,
@@ -246,11 +246,11 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
   }
 
-  final private class FetchEntries: ListDataSourceOperation {
+  final private class FetchEntries: ListOperation {
 
     var locators: [EntryLocator]
 
-    override init(operation: ListDataSourceOperation) {
+    override init(operation: ListOperation) {
       self.locators = [EntryLocator(url: operation.url)]
 
       super.init(operation: operation)
@@ -289,7 +289,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
       let error = findError()
 
-      let (sections, updates) = ListDataSourceOperation.makeUpdates(
+      let (sections, updates) = ListOperation.makeUpdates(
         sections: current,
         items: items,
         error: error,
@@ -307,7 +307,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
   }
 
   /// Fetches feed and entries.
-  final class UpdateOperation: ListDataSourceOperation {
+  final class UpdateOperation: ListOperation {
 
     /// Creates a new update operation for fetching items.
     ///
@@ -326,6 +326,9 @@ final class ListDataSource: NSObject, SectionedDataSource {
         forcing: forcing,
         isCompact: isCompact
       )
+
+      os_log("initializing: ( %@, %@, %i, %i )", log: log, type: .debug,
+             url, String(describing: originalFeed), forcing, isCompact)
     }
 
   }
@@ -365,10 +368,9 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
 extension ListDataSource {
 
-  /// Drafts an update of this data source with `operation`. After
-  /// fetching the feed, completing its summary, and fetching the entries,
-  /// callback blocks are submitted to the main queue, from where changes should
-  /// be committed.
+  /// Drafts an update of this data source using `operation`. After fetching the
+  /// feed, completing its summary, and fetching the entries, callback blocks
+  /// are submitted to the main queue, from where changes should be committed.
   ///
   /// For its somewhat complex nature, we are using operation dependencies to
   /// model this task. Use the operation to configure details.
@@ -377,7 +379,7 @@ extension ListDataSource {
   /// via its `commit(batch:performingWith:completionBlock:)`. Only then
   /// sequential data consistency of collection changes can be ensured.
   ///
-  /// The app must not be expired for this operation.
+  /// Cancels `operation` if user status doesn’t allow updating.
   ///
   /// - Parameters:
   ///   - operation: The update operation to execute.
@@ -516,7 +518,7 @@ extension ListDataSource: UITableViewDataSource {
 
       cell.accessoryType = .none
       cell.selectionStyle = .none
-      cell.backgroundColor = UIColor.groupTableViewBackground
+      cell.backgroundColor = .white
 
       cell.images = nil
       cell.item = nil
