@@ -41,6 +41,7 @@ extension RootViewController {
 
   var miniPlayerEdgeInsets: UIEdgeInsets {
     guard
+      !isMiniPlayerHidden,
       miniLayout.identifier == "Mini-Player-Layout-Top",
       miniLayout.constant != 0 else {
       return .zero
@@ -109,7 +110,7 @@ extension RootViewController {
 
     minivc.view.isHidden = false
 
-    guard animated else {
+    guard animated, !isPresentingVideo else {
       os_log("** applying constant: %f",
              log: log, type: .debug, miniPlayerConstant)
 
@@ -259,6 +260,10 @@ extension RootViewController {
 
 extension RootViewController {
 
+  var isPresentingVideo: Bool {
+    return presentedViewController is AVPlayerViewController
+  }
+
   func showVideo(player: AVPlayer) {
     DispatchQueue.main.async {
       let vc = AVPlayerViewController()
@@ -277,7 +282,7 @@ extension RootViewController {
 
   func hideVideoPlayer() {
     DispatchQueue.main.async {
-      guard self.presentedViewController is AVPlayerViewController else {
+      guard self.isPresentingVideo else {
         return
       }
 
@@ -288,8 +293,7 @@ extension RootViewController {
   }
 
   var isPlayerPresented: Bool {
-    return presentedViewController is AVPlayerViewController ||
-      presentedViewController is PlayerViewController
+    return isPresentingVideo || presentedViewController is PlayerViewController
   }
 
 }
