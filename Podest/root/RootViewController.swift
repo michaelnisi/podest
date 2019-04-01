@@ -134,6 +134,14 @@ final class RootViewController: UIViewController {
 
 extension RootViewController {
 
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+
+    for vc in [pnc.topViewController, snc.topViewController] {
+      vc?.viewLayoutMarginsDidChange()
+    }
+  }
+
   override func viewDidLoad() {
     super.viewDidLoad()
 
