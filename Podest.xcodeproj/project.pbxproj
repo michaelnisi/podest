@@ -20,6 +20,7 @@
 		4C07C97A21EBA69200ED8AB0 /* ArticleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C07C97821EBA69200ED8AB0 /* ArticleCollectionViewCell.swift */; };
 		4C07C97B21EBA69200ED8AB0 /* ArticleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C07C97921EBA69200ED8AB0 /* ArticleCollectionViewCell.xib */; };
 		4C0BE2501A4C2162004E82BF /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 4C0BE24F1A4C2162004E82BF /* config.json */; };
+		4C103063226B6A00007512F6 /* Recommending.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C103062226B6A00007512F6 /* Recommending.swift */; };
 		4C175AA6208AFA26003071CA /* StoreFSM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C175AA5208AFA26003071CA /* StoreFSM.swift */; };
 		4C1B32CC21E7046A00E57931 /* DisplayTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1B32CA21E7046A00E57931 /* DisplayTableViewCell.swift */; };
 		4C1B32CD21E7046A00E57931 /* DisplayTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C1B32CB21E7046A00E57931 /* DisplayTableViewCell.xib */; };
@@ -202,6 +203,7 @@
 		4C07C97821EBA69200ED8AB0 /* ArticleCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCollectionViewCell.swift; sourceTree = "<group>"; };
 		4C07C97921EBA69200ED8AB0 /* ArticleCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArticleCollectionViewCell.xib; sourceTree = "<group>"; };
 		4C0BE24F1A4C2162004E82BF /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
+		4C103062226B6A00007512F6 /* Recommending.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recommending.swift; sourceTree = "<group>"; };
 		4C175AA5208AFA26003071CA /* StoreFSM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreFSM.swift; sourceTree = "<group>"; };
 		4C1B32CA21E7046A00E57931 /* DisplayTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayTableViewCell.swift; sourceTree = "<group>"; };
 		4C1B32CB21E7046A00E57931 /* DisplayTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DisplayTableViewCell.xib; sourceTree = "<group>"; };
@@ -409,6 +411,14 @@
 				4C010A1E2101D6E90006CB53 /* Info.plist */,
 			);
 			path = PodKitTests;
+			sourceTree = "<group>";
+		};
+		4C103064226B6A82007512F6 /* fav */ = {
+			isa = PBXGroup;
+			children = (
+				4C103062226B6A00007512F6 /* Recommending.swift */,
+			);
+			path = fav;
 			sourceTree = "<group>";
 		};
 		4C6AE30821CFFB7900476E7E /* PodestUITests */ = {
@@ -645,6 +655,7 @@
 				4E8CA7061A126ADB004DE307 /* AppDelegate.swift */,
 				4C9EBDFC223D58FE009F2B6F /* init */,
 				4CE8586B21A14EB300D206FA /* root */,
+				4C103064226B6A82007512F6 /* fav */,
 				4CD697041FEBC68600349580 /* queue */,
 				4CD697061FEBC72B00349580 /* search */,
 				4CD697051FEBC6DB00349580 /* episode */,
@@ -806,7 +817,7 @@
 			attributes = {
 				LastSwiftMigration = 0720;
 				LastSwiftUpdateCheck = 1010;
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Michael Nisi";
 				TargetAttributes = {
 					4C010A0E2101D6E90006CB53 = {
@@ -823,13 +834,14 @@
 					};
 					4C6AE30621CFFB7900476E7E = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 4E8CA7001A126ADB004DE307;
 					};
 					4E8CA7001A126ADB004DE307 = {
 						CreatedOnToolsVersion = 6.1;
 						DevelopmentTeam = X23V32HT8X;
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -848,7 +860,7 @@
 					};
 					4E8CA7171A126ADC004DE307 = {
 						CreatedOnToolsVersion = 6.1;
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1020;
 						TestTargetID = 4E8CA7001A126ADB004DE307;
 					};
 				};
@@ -858,6 +870,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -1014,6 +1027,7 @@
 				4CF21CF22063B0D100169E43 /* PlayerTransitionDelegate.swift in Sources */,
 				4C776B2920847D0900A055CD /* ProductCell.swift in Sources */,
 				4E7D10B31F6644DA0048CB43 /* QueueDataSource.swift in Sources */,
+				4C103063226B6A00007512F6 /* Recommending.swift in Sources */,
 				4C9EBDFB223D58A8009F2B6F /* settings.swift in Sources */,
 				4C02C29A2247544C00C7D647 /* StoreState.swift in Sources */,
 				4CE6957121AFAD570060F5A6 /* PlayerPresentationAnimator.swift in Sources */,
@@ -1116,12 +1130,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 7;
+				DYLIB_CURRENT_VERSION = 8;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PodKit/Info.plist;
@@ -1151,12 +1165,12 @@
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 7;
+				DYLIB_CURRENT_VERSION = 8;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PodKit/Info.plist;
@@ -1245,7 +1259,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.PodestUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Podest;
 			};
@@ -1272,7 +1286,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.PodestUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Podest;
 			};
@@ -1282,6 +1296,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1339,6 +1354,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1393,7 +1409,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1403,7 +1419,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1416,7 +1432,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1426,7 +1442,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1444,7 +1460,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "ink.codes.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Podest.app/Podest";
 			};
 			name = Debug;
@@ -1458,7 +1474,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "ink.codes.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Podest.app/Podest";
 			};
 			name = Release;
