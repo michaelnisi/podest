@@ -11,7 +11,7 @@ import UIKit
 import os.log
 import AVKit
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "root")
 
 /// The root container view controller of this app, composing a split view
 /// controller, with two navigation controllers, and a player view controller.
@@ -216,7 +216,7 @@ extension RootViewController {
 // MARK: - ViewControllers
 
 extension RootViewController: ViewControllers {
-
+  
   var isCollapsed: Bool {
     return splitViewController?.isCollapsed ?? true
   }
@@ -301,7 +301,7 @@ extension RootViewController: ViewControllers {
       }
       let vcs = pnc.viewControllers.reversed()
       guard
-        let i = vcs.index(where: { $0 is EpisodeViewController }),
+        let i = vcs.firstIndex(where: { $0 is EpisodeViewController }),
         let vc = vcs[i] as? EpisodeViewController else {
         return nil
       }
