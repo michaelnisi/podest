@@ -771,6 +771,9 @@ extension StoreFSM: SKPaymentTransactionObserver {
 
     case .restored:
       fatalError("unexpected transaction state")
+      
+    @unknown default:
+      fatalError("unknown case in switch: \(t.transactionState)")
     }
   }
 

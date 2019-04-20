@@ -104,10 +104,16 @@ enum ShoppingError: Error {
     switch underlyingError {
     case let skError as SKError:
       switch skError.code {
-      case .clientInvalid, .unknown, .paymentInvalid, .paymentNotAllowed:
+      case .clientInvalid,
+           .unknown,
+           .paymentInvalid,
+           .paymentNotAllowed,
+           .privacyAcknowledgementRequired,
+           .unauthorizedRequestData:
         self = .failed
         
-      case .cloudServicePermissionDenied, .cloudServiceRevoked:
+      case .cloudServicePermissionDenied,
+           .cloudServiceRevoked:
         self = .serviceUnavailable
         
       case .cloudServiceNetworkConnectionFailed:
@@ -116,8 +122,15 @@ enum ShoppingError: Error {
       case .paymentCancelled:
         self = .cancelled
         
-      case .storeProductNotAvailable:
+      case .storeProductNotAvailable,
+           .invalidOfferIdentifier,
+           .invalidOfferPrice,
+           .missingOfferParams,
+           .invalidSignature:
         self = .invalidProduct(productIdentifier)
+        
+      @unknown default:
+        fatalError("unknown case in switch: \(skError.code)")
       }
       
     default:
