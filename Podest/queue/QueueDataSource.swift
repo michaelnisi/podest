@@ -29,6 +29,14 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   private var _sections: [Array<Item>] = [
     [.message(StringRepository.loadingQueue)]
   ]
+  
+  var isEmpty: Bool {
+    guard let first = sections.first?.first, case .message = first else {
+      return sections.isEmpty
+    }
+    
+    return true
+  }
 
   /// Accessing the sections of the table view is synchronized.
   var sections: [Array<Item>] {

@@ -69,6 +69,7 @@ final class QueueViewController: UITableViewController, Navigator {
     dataSource.reload { [weak self] changes, error in
       func done() {
         self?.updateSelection(animated)
+        self?.navigationItem.hidesSearchBarWhenScrolling = !(self?.dataSource.isEmpty ?? true)
         completionBlock?(error)
       }
 
@@ -266,8 +267,8 @@ extension QueueViewController {
     // returning from state restored successor. Not animating the title.
 
     navigationItem.searchController = searchController
-    navigationItem.title = "Queue"
-    navigationItem.largeTitleDisplayMode = .automatic
+    navigationItem.title = "Podest"
+    navigationItem.largeTitleDisplayMode = .never
 
     self.searchProxy = searchProxy
 
