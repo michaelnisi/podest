@@ -208,8 +208,12 @@ Navigator, PlaybackControlDelegate {
     switch sender.state {
     case .ended:
       navigationDelegate?.hideNowPlaying(animated: true, completion: nil)
+      
     case .began, .changed, .cancelled, .failed, .possible:
       break
+      
+    @unknown default:
+      fatalError("unknown case in switch: \(sender.state)")
     }
   }
 

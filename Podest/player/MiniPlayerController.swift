@@ -312,6 +312,9 @@ extension MiniPlayerController {
 
     case .possible, .changed:
       break
+      
+    @unknown default:
+      fatalError("unknown case in switch: \(sender.state)")
     }
   }
 
@@ -331,8 +334,12 @@ extension MiniPlayerController {
     switch sender.state {
     case .ended:
       navigationDelegate?.showNowPlaying(entry: entry)
+      
     case .began, .changed, .cancelled, .failed, .possible:
       break
+      
+    @unknown default:
+      fatalError("unknown case in switch: \(sender.state)")
     }
   }
 
