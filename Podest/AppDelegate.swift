@@ -215,9 +215,13 @@ extension AppDelegate {
     case .active, .inactive:
       os_log("moving to foreground", log: log, type: .debug)
       return true
+      
     case .background:
       os_log("moving to background", log: log, type: .debug)
       return true
+
+    @unknown default:
+      fatalError("unknown case in switch: \(application.applicationState)")
     }
   }
 
@@ -323,10 +327,14 @@ extension AppDelegate {
       switch application.applicationState {
       case .active:
         return done()
+        
       case .background, .inactive:
         self.push() {
           done()
         }
+        
+      @unknown default:
+         fatalError("unknown case in switch: \(application.applicationState)")
       }
     }
   }
@@ -356,9 +364,9 @@ extension AppDelegate {
     os_log("received notification: %{public}@",
            log: log, type: .info, String(describing: userInfo))
 
-    let notification = CKNotification(fromRemoteNotificationDictionary: userInfo)
-
-    guard let subscriptionID = notification.subscriptionID else {
+    guard let notification = CKNotification(
+      fromRemoteNotificationDictionary: userInfo),
+      let subscriptionID = notification.subscriptionID else {
       os_log("unhandled remote notification", log: log, type: .error)
       return
     }
@@ -539,8 +547,6 @@ extension AppDelegate: LibraryDelegate {
 extension AppDelegate: QueueDelegate {
 
   func queue(_ queue: Queueing, changed guids: Set<EntryGUID>) {
-    // TODO: Wait! What?
-
     DispatchQueue.main.async { [weak self] in
       self?.root.updateIsEnqueued(using: guids)
       self?.root.reload()
