@@ -561,20 +561,21 @@ public class UserClient {
       case .available:
         os_log("account status: %@", log: log, type: .debug, "available")
         cb(nil)
+        
       case .couldNotDetermine:
         os_log("account status: %@", log: log, type: .debug, "could not determine")
         cb(SyncError.notAvailable)
-        break
+
       case .noAccount:
-        // THAT guy would ask the user to log in. Silently handling sync, once
-        // hey are logged is more elegant, but requires a deeper solution.
         os_log("account status: %@", log: log, type: .debug, "no account")
         cb(SyncError.notAvailable)
-        break
+      
       case .restricted:
         os_log("account status: %@", log: log, type: .debug, "restricted")
         cb(SyncError.notAvailable)
-        break
+
+      @unknown default:
+        fatalError("unknown case in switch: \(accountStatus)")
       }
     }
   }
@@ -1258,11 +1259,11 @@ extension UserClient: UserSyncing {
 
 fileprivate extension UserDefaults {
 
-  fileprivate func setUUID(_ uuid: UUID, using key: String) {
+  func setUUID(_ uuid: UUID, using key: String) {
     self.set(uuid.uuidString, forKey: key)
   }
 
-  fileprivate func uuid(matching key: String) -> UUID? {
+  func uuid(matching key: String) -> UUID? {
     guard let str = UserDefaults.standard.string(forKey: key) else {
       os_log("** UUID not found: %@", log: log, key)
       return nil
@@ -1276,14 +1277,14 @@ fileprivate extension UserDefaults {
     return uuid
   }
 
-  fileprivate func setServerChangeToken(
+  func setServerChangeToken(
     _ token: CKServerChangeToken, using key: String) {
     let coder = NSKeyedArchiver(requiringSecureCoding: true)
     token.encode(with: coder)
     self.set(coder.encodedData, forKey: key)
   }
 
-  fileprivate func serverChangeToken(
+  func serverChangeToken(
     matching key: String) -> CKServerChangeToken? {
     guard let data = UserDefaults.standard.object(forKey: key) as? Data else {
       os_log("** server change token not found: %@", log: log, key)
