@@ -290,22 +290,25 @@ extension EpisodeViewController {
     isEnqueued = guids.contains(e.guid)
   }
 
-  /// Loads hero in suitable size. If the image size hasn’t changed since the
-  /// last time the image has been loaded, this is a NOP.
+  /// Loads hero in suitable size. NOP if the image size hasn’t changed since the
+  /// last time the image has been loaded.
   ///
   /// Here’s the thing about these images, once we have an entry, we can assume
   /// that we already have the image URLs, because an entry cannot exist without
   /// its parent feed, which provides the image URLs. Orphans are undefined and
-  /// thus considered a programming error. To load the correct image though, we
-  /// have to know its size, depending on the layout.
+  /// thus considered programming errors. To load the correct image though, we
+  /// have to know its size, depending on the layout. For example, larger size
+  /// image on iPad.
   private func loadImage() {
-    guard imageLoaded != avatar.image?.size, let entry = self.entry else {
+    guard let entry = self.entry,
+      let size = avatar.image?.size,
+      (size.width > imageLoaded.width || size.height > imageLoaded.height) else {
       return
     }
 
     Podest.images.loadImage(representing: entry, into: avatar)
 
-    imageLoaded = avatar.image?.size ?? .zero
+    imageLoaded = size
   }
 
   private func resetView() {
