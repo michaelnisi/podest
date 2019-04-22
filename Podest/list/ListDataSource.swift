@@ -9,6 +9,7 @@
 import UIKit
 import FeedKit
 import os.log
+import BatchUpdates
 
 private let log = OSLog.disabled
 
@@ -21,316 +22,6 @@ final class ListDataSource: NSObject, SectionedDataSource {
     case entry(Entry, String)
     case author(String)
     case message(NSAttributedString)
-  }
-
-  // MARK: - Operations
-
-  /// The list data source coordinates its tasks with operations.
-  class ListOperation: Operation, Receiving {
-
-    let url: String
-    let originalFeed: Feed?
-    let forcing: Bool
-    let isCompact: Bool
-
-    init(
-      url: String,
-      originalFeed: Feed?,
-      forcing: Bool = false,
-      isCompact: Bool = false
-    ) {
-      self.url = url
-      self.originalFeed = originalFeed
-      self.forcing = forcing
-      self.isCompact = isCompact
-
-      super.init()
-    }
-
-    init(operation: ListOperation) {
-      self.url = operation.url
-      self.originalFeed = operation.originalFeed
-      self.forcing = operation.forcing
-      self.isCompact = operation.isCompact
-
-      super.init()
-    }
-
-    override var description: String {
-      return """
-      ListDataSourceOperation: (\(url), \(originalFeed?.title ?? "none"), \
-      \(forcing), \(isCompact))
-      """
-    }
-
-    override func cancel() {
-      super.cancel()
-      
-      for dep in dependencies {
-        dep.cancel()
-      }
-    }
-
-    /// This block receives new sections, changes, and an error.
-    var updatesBlock: (([Array<Item>], [[Change<Item>]], Error?) -> Void)?
-
-    /// This block receives the feed and an error.
-    var feedBlock: ((Feed?, Error?) -> Void)?
-
-    /// Accumulates previous `sections`, fresh `items`, and possibly an `error`
-    /// into the next sections.
-    ///
-    /// Making the next sections structure is at the core of the data source.
-    static func makeSections(
-      sections current: [Array<Item>],
-      items: [Item],
-      error: Error?,
-      isCompact: Bool
-    ) -> [Array<Item>] {
-      var messages = [Item]()
-
-      guard !items.isEmpty else {
-        guard let er = error,
-          let text = StringRepository.message(describing: er) else {
-          let t = StringRepository.emptyFeed()
-
-          messages.append(.message(t))
-
-          return [messages]
-        }
-
-        messages.append(.message(text))
-
-        return [messages]
-      }
-
-      var header = Set<Item>()
-      var entries = [Item]()
-      var footer = Set<Item>()
-
-      // Keeping some items.
-      for section in current {
-        for item in section {
-          switch item {
-          case .author:
-            footer.insert(item)
-          case .feed:
-            guard !isCompact else {
-              continue
-            }
-            header.insert(item)
-          case .entry, .message:
-            continue
-          }
-        }
-      }
-
-      for item in items {
-        switch item {
-        case .author:
-          footer.insert(item)
-        case .entry:
-          entries.append(item)
-        case .feed:
-          guard !isCompact else {
-            messages.append(.message(StringRepository.loadingEpisodes))
-            continue
-          }
-          header.insert(item)
-        case .message:
-          messages.append(item)
-        }
-      }
-
-      guard messages.isEmpty else {
-        return [[messages.first!]]
-      }
-
-      return [Array(header), entries, Array(footer)].filter { !$0.isEmpty }
-    }
-
-    fileprivate static func makeUpdates(
-      sections current: [Array<Item>],
-      items: [Item],
-      error: Error?,
-      isCompact: Bool
-    ) -> ([Array<Item>], [[Change<Item>]]) {
-      let sections = makeSections(
-        sections: current,
-        items: items,
-        error: error,
-        isCompact: isCompact
-      )
-
-      let changes = makeChanges(old: current, new: sections)
-
-      return (sections, changes)
-    }
-
-  }
-
-  final private class FetchFeed: ListOperation, Providing {
-
-    /// The current sections.
-    var current: [Array<Item>]!
-
-    /// The submitted items must be set, the dependent fetch entries operation
-    /// relies on this.
-    var submitted: [Array<Item>]?
-
-    fileprivate func submitUpdatesBlockWith(
-      _ feed: Feed, error: Error? = nil) -> Void {
-      guard !isCancelled else {
-        return
-      }
-
-      var items = [Item]()
-
-      let summary = StringRepository.makeSummaryWithHeadline(feed: feed)
-
-      items.append(.feed(feed, summary))
-
-      if let author = feed.author {
-        items.append(.author(author))
-      }
-
-      guard !isCancelled, !items.isEmpty else {
-        return
-      }
-
-      let (sections, updates) = ListOperation.makeUpdates(
-        sections: current,
-        items: items,
-        error: error,
-        isCompact: isCompact
-      )
-
-      guard !isCancelled else {
-        return
-      }
-
-      os_log("executing updates block", log: log, type: .debug)
-      updatesBlock?(sections, updates, error)
-
-      submitted = sections
-    }
-
-    var error: Error?
-
-    override func main() {
-      os_log("fetching feed", log: log, type: .debug)
-
-      guard !isCancelled else {
-        return
-      }
-
-      // Originally provided with a summary, we can short cut this.
-
-      if let feed = originalFeed, feed.summary != nil {
-        return submitUpdatesBlockWith(feed)
-      }
-
-      let foundFeed = findFeed()
-      let error = findError()
-
-      // Providing error to dependents, namely to FetchEntries.
-      self.error = error
-
-      os_log("executing feed block", log: log, type: .debug)
-      feedBlock?(foundFeed, error)
-
-      if let feed = foundFeed {
-        submitUpdatesBlockWith(feed, error: error)
-      }
-    }
-
-  }
-
-  final private class FetchEntries: ListOperation {
-
-    var locators: [EntryLocator]
-
-    override init(operation: ListOperation) {
-      self.locators = [EntryLocator(url: operation.url)]
-
-      super.init(operation: operation)
-    }
-
-    func findCurrent() -> [Array<Item>]? {
-      guard let p = dependencies.first(where: { $0 is FetchFeed })
-        as? FetchFeed else {
-        return nil
-      }
-
-      return p.submitted
-    }
-
-    override func main() {
-      os_log("fetching entries", log: log, type: .debug)
-
-      guard !isCancelled else {
-        return
-      }
-
-      guard let current = findCurrent() else {
-        return
-      }
-
-      let sorted = findEntries().sorted() {
-        let a = $0.updated
-        let b = $1.updated
-
-        return a.compare(b) == .orderedDescending
-      }
-
-      let items = sorted.map {
-        Item.entry($0, StringRepository.episodeCellSubtitle(for: $0))
-      }
-
-      let error = findError()
-
-      let (sections, updates) = ListOperation.makeUpdates(
-        sections: current,
-        items: items,
-        error: error,
-        isCompact: isCompact
-      )
-
-      guard !isCancelled else {
-        return
-      }
-
-      os_log("executing updates block", log: log, type: .debug)
-      updatesBlock?(sections, updates, error)
-    }
-
-  }
-
-  /// Fetches feed and entries.
-  final class UpdateOperation: ListOperation {
-
-    /// Creates a new update operation for fetching items.
-    ///
-    /// - Parameters:
-    ///   - url: The URL of the podcast feed.
-    ///   - originalFeed: The original feed object if available.
-    ///   - forcing: Overrides cache settings, forcing reloading to some degree.
-    override init(
-      url: String,
-      originalFeed: Feed?,
-      forcing: Bool = false,
-      isCompact: Bool = false) {
-      super.init(
-        url: url,
-        originalFeed: originalFeed,
-        forcing: forcing,
-        isCompact: isCompact
-      )
-
-      os_log("initializing: ( %@, %@, %i, %i )", log: log, type: .debug,
-             url, String(describing: originalFeed), forcing, isCompact)
-    }
-
   }
 
   // MARK: - Properties
@@ -368,9 +59,10 @@ final class ListDataSource: NSObject, SectionedDataSource {
 
 extension ListDataSource {
 
-  /// Drafts an update of this data source using `operation`. After fetching the
-  /// feed, completing its summary, and fetching the entries, callback blocks
-  /// are submitted to the main queue, from where changes should be committed.
+  /// Drafts an update of this data source adding `operation` to its queue.
+  /// After fetching the feed, completing its summary, and fetching the entries,
+  /// callback blocks are submitted to the main queue, from where changes should
+  /// be committed.
   ///
   /// For its somewhat complex nature, we are using operation dependencies to
   /// model this task. Use the operation to configure details.
@@ -384,7 +76,9 @@ extension ListDataSource {
   /// - Parameters:
   ///   - operation: The update operation to execute.
   ///   - forcing: Overrides cache settings, replacing all entries.
-  func update(_ operation: UpdateOperation, forcing: Bool = false) -> UpdateOperation {
+  ///
+  /// - Returns: The installed operation that has been added to operation queue.
+  func add(_ operation: ListOperation, forcing: Bool = false) -> ListOperation {
     guard !store.isExpired() else {
       os_log("free trial expired", log: log)
       operation.cancel()
@@ -393,7 +87,7 @@ extension ListDataSource {
 
     os_log("updating: %@", log: log, type: .debug, operation)
     
-    let a = FetchFeed(operation: operation)
+    let a = FetchFeedOperation(operation: operation)
 
     a.updatesBlock = operation.updatesBlock
     a.feedBlock = operation.feedBlock
@@ -413,7 +107,7 @@ extension ListDataSource {
       ))
     }
 
-    let b = FetchEntries(operation: operation)
+    let b = FetchEntriesOperation(operation: operation)
 
     b.updatesBlock = operation.updatesBlock
 
@@ -440,13 +134,15 @@ extension ListDataSource {
 // MARK: - UITableViewDataSource
 
 extension ListDataSource: UITableViewDataSource {
-
+  
   /// Registers nib objects with `collectionView` under identifiers.
   static func registerCells(with tableView: UITableView) {
+    typealias Nib = UITableView.Nib
+    
     let cells = [
-      (UITableView.Nib.message.nib, UITableView.Nib.message.id),
-      (UITableView.Nib.subtitle.nib, UITableView.Nib.subtitle.id),
-      (UITableView.Nib.display.nib, UITableView.Nib.display.id)
+      (Nib.message.nib, Nib.message.id),
+      (Nib.subtitle.nib, Nib.subtitle.id),
+      (Nib.display.nib, Nib.display.id)
     ]
 
     for cell in cells {

@@ -9,11 +9,13 @@
 import UIKit
 import FeedKit
 import os.log
+import BatchUpdates
 
 private let log = OSLog.disabled
 
 final class ListViewController: UITableViewController,
-Navigator, EntryRowSelectable {
+Navigator,
+EntryRowSelectable {
 
   /// The URL of the feed to display.
   var url: String?
@@ -112,6 +114,10 @@ Navigator, EntryRowSelectable {
       refreshControlTimer?.cancel()
     }
   }
+  
+  /// This flag is `true` after the collection has been updated it has finished
+  /// its animations.
+  private var isReady = false
 
 }
 
@@ -124,12 +130,12 @@ extension ListViewController {
 
   private func makeUpdateOperation(
     updatesBlock: ((Sections, Changes, Error?) -> Void)? = nil
-  ) -> ListDataSource.UpdateOperation {
+  ) -> ListOperation {
     guard let url = self.url else {
       fatalError("cannot refresh without URL")
     }
 
-    let op = ListDataSource.UpdateOperation(
+    let op = ListOperation(
       url: url, originalFeed: feed, isCompact: isCompact)
 
     op.feedBlock = { [weak self] feed, error in
@@ -145,26 +151,31 @@ extension ListViewController {
 
   /// Reloads this list, executing `completionBlock` when done.
   ///
-  /// The crux, feed and entries are separate, sometimes, when the feed object
-  /// isn’t present yet or it contains no summary, it must be fetched remotely.
+  /// The crux: feed and entries are separate, the feed object might not be
+  /// available yet or it might contain no summary—it must be fetched remotely.
   private func update(completionBlock: (() -> Void)? = nil) {
     let op = makeUpdateOperation { [weak self] sections, changes, error in
       DispatchQueue.main.async {
         guard let tv = self?.tableView else {
           return
         }
-
+        
+        self?.isReady = false
+        
         self?.dataSource.commit(changes, performingWith: .table(tv)) { _ in
           if let entry = self?.navigationDelegate?.entry {
             self?.selectRow(representing: entry, animated: true)
           }
-
+          
+          self?.additionalSafeAreaInsets = self?.navigationDelegate?.miniPlayerEdgeInsets ?? .zero
+          self?.isReady = true
+          
           completionBlock?()
         }
       }
     }
 
-    updating = dataSource.update(op)
+    updating = dataSource.add(op)
   }
   
 }
@@ -184,7 +195,7 @@ extension ListViewController {
     refreshControl = UIRefreshControl()
     installRefreshControl()
 
-    navigationItem.largeTitleDisplayMode = isRegular ? .automatic : .never
+    navigationItem.largeTitleDisplayMode = .never
 
     ListDataSource.registerCells(with: tableView!)
 
@@ -227,6 +238,11 @@ extension ListViewController {
 
   override func viewLayoutMarginsDidChange() {
     super.viewLayoutMarginsDidChange()
+    
+    // Preventing interference with collection animations.
+    guard isReady else {
+      return
+    }
 
     additionalSafeAreaInsets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
   }
@@ -296,7 +312,7 @@ extension ListViewController {
       }
     }
 
-    updating = dataSource.update(op, forcing: true)
+    updating = dataSource.add(op, forcing: true)
   }
 
   private func installRefreshControl() {
