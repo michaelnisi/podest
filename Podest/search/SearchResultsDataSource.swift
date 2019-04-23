@@ -8,6 +8,7 @@
 
 import Foundation
 import FeedKit
+import BatchUpdates
 
 /// A table view data source for searching.
 ///

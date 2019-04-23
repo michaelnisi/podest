@@ -9,6 +9,7 @@
 import UIKit
 import FeedKit
 import os.log
+import BatchUpdates
 
 private let log = OSLog.disabled
 

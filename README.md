@@ -4,17 +4,16 @@ Podest is a podcast player app for iOS making podcasts simple. I’ve written ab
 
 ## Dependencies
 
-- [Nuke](https://github.com/kean/Nuke), A powerful image loading and caching system
-- [DeepDiff](https://github.com/onmyway133/DeepDiff), I’ve ripped Khoa’s [diffing function](https://github.com/michaelnisi/podest/blob/master/Podest/collections/diff.swift)
-- [fanboy-kit](https://github.com/michaelnisi/fanboy-kit), Search podcasts via proxy
-- [feedkit](https://github.com/michaelnisi/feedkit), Get feeds and entries
-- [fileproxy](https://github.com/michaelnisi/fileproxy), Manage background downloads
-- [hattr](https://github.com/michaelnisi/hattr), Convert HTML to attributed strings
-- [manger-kit](https://github.com/michaelnisi/manger-kit), Request podcasts via proxy
-- [ola](https://github.com/michaelnisi/ola), Check reachability
-- [patron](https://github.com/michaelnisi/patron), JSON HTTP client
-- [playback](https://github.com/michaelnisi/playback), Play audio and video
-- [skull](https://github.com/michaelnisi/skull), Swift SQLite
+- [michaelnisi/batchupdates](https://github.com/michaelnisi/batchupdates), Batch update table and collection views
+- [michaelnisi/fanboy-kit](https://github.com/michaelnisi/fanboy-kit), Search podcasts via proxy
+- [michaelnisi/feedkit](https://github.com/michaelnisi/feedkit), Get feeds and entries
+- [michaelnisi/fileproxy](https://github.com/michaelnisi/fileproxy), Manage background downloads
+- [michaelnisi/hattr](https://github.com/michaelnisi/hattr), Convert HTML to attributed strings
+- [michaelnisi/manger-kit](https://github.com/michaelnisi/manger-kit), Request podcasts via proxy
+- [michaelnisi/ola](https://github.com/michaelnisi/ola), Check reachability
+- [michaelnisi/patron](https://github.com/michaelnisi/patron), JSON HTTP client
+- [michaelnisi/playback](https://github.com/michaelnisi/playback), Play audio and video
+- [michaelnisi/skull](https://github.com/michaelnisi/skull), Swift SQLite
 
 ## Services
 

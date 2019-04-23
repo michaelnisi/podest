@@ -11,12 +11,22 @@ import UIKit
 import os.log
 import Ola
 
-private let log = OSLog.disabled
-
 /// The `QueueViewController` is the initial/main view controller of this app,
 /// it renders the user’s queued episodes and, in its navigation item, provides
 /// the global search.
 final class QueueViewController: UITableViewController, Navigator {
+  
+  let log = OSLog.disabled
+  
+  /// A state machine handling events from the search controller.
+  private var searchProxy: SearchControllerProxy!
+  
+  /// Saving the refresh control hiding animation.
+  private var refreshControlTimer: DispatchSourceTimer? {
+    willSet {
+      refreshControlTimer?.cancel()
+    }
+  }
 
   // MARK: - Navigator
 
@@ -43,85 +53,13 @@ final class QueueViewController: UITableViewController, Navigator {
     )
   }()
 
-  private func updateSelection(_ animated: Bool = true) {
+  func updateSelection(_ animated: Bool = true) {
     guard let svc = splitViewController, svc.isCollapsed else {
       selectCurrentRow(animated: animated, scrollPosition: .none)
       return
     }
 
     clearSelection(animated)
-  }
-
-  /// Reloads the table view.
-  ///
-  /// - Parameters:
-  ///   - animated: A flag to disable animations.
-  ///   - completionBlock: Submitted to the main queue when the table view has
-  /// has been reloaded.
-  ///
-  /// NOP if the table view is in editing mode.
-  func reload(_ animated: Bool = true, completionBlock: ((Error?) -> Void)? = nil) {
-    guard !tableView.isEditing else {
-      completionBlock?(nil)
-      return
-    }
-
-    dataSource.reload { [weak self] changes, error in
-      func done() {
-        self?.updateSelection(animated)
-        self?.navigationItem.hidesSearchBarWhenScrolling = !(self?.dataSource.isEmpty ?? true)
-        completionBlock?(error)
-      }
-
-      guard let tv = self?.tableView else {
-        return done()
-      }
-
-      guard animated else {
-        return UIView.performWithoutAnimation {
-          self?.dataSource.commit(changes, performingWith: .table(tv)) { _ in
-            done()
-          }
-        }
-      }
-
-      self?.dataSource.commit(changes, performingWith: .table(tv)) { _ in
-        done()
-      }
-    }
-  }
-
-  /// Updates the queue, fetching new episodes, accessing the remote service.
-  ///
-  /// - Parameters:
-  ///   - error: An upstream error to consider while updating.
-  ///   - completionHandler: Submitted to the main queue when the collection
-  /// has been updated.
-  ///
-  /// The frequency of subsequent updates is limited.
-  func update(
-    considering error: Error? = nil,
-    completionHandler: ((Bool, Error?) -> Void)? = nil
-  ) {
-    let isInitial = dataSource.isEmpty || dataSource.isMessage
-
-    guard isInitial || dataSource.isReady else {
-      completionHandler?(false, nil)
-      return
-    }
-
-    let animated = !isInitial
-
-    // Reloading first, attaining a state to update from.
-
-    reload(animated) { [weak self] initialReloadError in
-      self?.dataSource.update(considering: error) { newData, updateError in
-        self?.reload(animated) { error in
-          assert(error == nil, "error relevance unclear")
-          completionHandler?(newData, updateError)
-        }
-      }
-    }
   }
 
   // MARK: - Store Reachability
@@ -134,11 +72,11 @@ final class QueueViewController: UITableViewController, Navigator {
 
   // MARK: - Keeping Store Access
 
+  private var isStoreAccessibleChanged: Bool = false
+  
   @objc func onShowStore() {
     navigationDelegate?.showStore()
   }
-
-  var isStoreAccessibleChanged: Bool = false
 
   var isStoreAccessible: Bool = false {
     didSet {
@@ -151,16 +89,6 @@ final class QueueViewController: UITableViewController, Navigator {
       }
       
       updateStoreButton()
-    }
-  }
-
-  /// A state machine handling events from the search controller.
-  private var searchProxy: SearchControllerProxy!
-
-  /// Saving the refresh control hiding animation.
-  private var refreshControlTimer: DispatchSourceTimer? {
-    willSet {
-      refreshControlTimer?.cancel()
     }
   }
 
@@ -373,65 +301,6 @@ extension QueueViewController {
 
 }
 
-// MARK: - UITableViewDelegate
-
-extension QueueViewController {
-
-  override func tableView(
-    _ tableView: UITableView,
-    willSelectRowAt indexPath: IndexPath
-  ) -> IndexPath? {
-    guard case .entry? = dataSource.itemAt(indexPath: indexPath) else {
-      return nil
-    }
-
-    return indexPath
-  }
-
-  override func tableView(
-    _ tableView: UITableView,
-    didSelectRowAt indexPath: IndexPath
-  ) {
-    guard let entry = dataSource.entry(at: indexPath) else {
-      return
-    }
-
-    navigationDelegate?.show(entry: entry)
-  }
-
-  // MARK: Handling Swipe Actions
-
-  private func makeDequeueAction(
-    forRowAt indexPath: IndexPath) -> UIContextualAction {
-    let h = dataSource.makeDequeueHandler(forRowAt: indexPath, of: tableView)
-    let a = UIContextualAction(style: .destructive, title: nil, handler: h)
-    let img = UIImage(named: "Trash")
-
-    a.image = img
-
-    return a
-  }
-
-  override func tableView(
-    _ tableView: UITableView,
-    trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
-  ) -> UISwipeActionsConfiguration? {
-    let actions = [makeDequeueAction(forRowAt: indexPath)]
-    let conf = UISwipeActionsConfiguration(actions: actions)
-
-    conf.performsFirstActionWithFullSwipe = true
-
-    return conf
-  }
-
-  override func tableView(
-    _ tableView: UITableView,
-    didEndEditingRowAt indexPath: IndexPath?) {
-    reload()
-  }
-
-}
-
 // MARK: - EntryRowSelectable
 
 extension QueueViewController: EntryRowSelectable {}
@@ -453,73 +322,4 @@ extension QueueViewController: EntryProvider {
 
 }
 
-// MARK: - StoreAccessDelegate
 
-extension QueueViewController: StoreAccessDelegate {
-  
-  func reach() -> Bool {
-    let host = "https://itunes.apple.com"
-    // "https://sandbox.itunes.apple.com"
-    let log = OSLog.disabled
-    
-    guard let probe = self.probe ?? Ola(host: host, log: log) else {
-      os_log("creating reachability probe failed", log: log, type: .error)
-      return true
-    }
-    
-    switch probe.reach() {
-    case .cellular, .reachable:
-      return true
-    case .unknown:
-      let ok = probe.activate { [weak self] status in
-        switch status {
-        case .cellular, .reachable:
-          self?.probe = nil
-          Podest.store.online()
-        case .unknown:
-          break
-        }
-      }
-      
-      if ok {
-        self.probe = probe
-      } else {
-        os_log("installing reachability callback failed", log: log, type: .error)
-      }
-      
-      return false
-    }
-  }
-  
-  func store(_ store: Shopping, isAccessible: Bool) {
-    DispatchQueue.main.async { [weak self] in
-      self?.isStoreAccessible = isAccessible
-    }
-  }
-
-  func store(_ store: Shopping, isExpired: Bool) {
-    guard isExpired else {
-      return
-    }
-
-    DispatchQueue.main.async { [weak self] in
-      let alert = UIAlertController(
-        title: "Free Trial Expired",
-        message: "Let’s get it.",
-        preferredStyle: .alert
-      )
-
-      let ok = UIAlertAction(title: "In-App Purchases", style: .default) { _ in
-        alert.dismiss(animated: true)
-        self?.navigationDelegate?.showStore()
-      }
-
-      alert.addAction(ok)
-      self?.present(alert, animated: true, completion: nil)
-      self?.navigationDelegate?.pause()
-      UIApplication.shared.setMinimumBackgroundFetchInterval(
-        UIApplication.backgroundFetchIntervalNever)
-    }
-  }
-
-}

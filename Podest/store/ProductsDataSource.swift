@@ -9,6 +9,7 @@
 import UIKit
 import StoreKit
 import os.log
+import BatchUpdates
 
 // TODO: Display something meaningful for .subscribed
 // The store might become visible by accident.

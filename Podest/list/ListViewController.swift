@@ -11,7 +11,7 @@ import FeedKit
 import os.log
 import BatchUpdates
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "list")
 
 final class ListViewController: UITableViewController,
 Navigator,
