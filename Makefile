@@ -1,5 +1,7 @@
-w:= $(shell echo $(workspace))
-scheme:= Podest
+# Makefile - A minimal makefile for Podest
+
+w := $(shell echo $(workspace))
+scheme := Podest
 
 docs:
 ifdef w
