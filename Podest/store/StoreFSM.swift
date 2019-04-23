@@ -219,7 +219,7 @@ final class StoreFSM: NSObject {
 
     let r = StoreFSM.receiptsKey(suiting: version.env)
 
-    os_log("loading receipts: ( %@, %f )", log: log, type: .debug, r)
+    os_log("loading receipts: %@", log: log, type: .debug, r)
 
     guard let json = db.data(forKey: r) else {
       os_log("no receipts: creating container: %@", log: log, type: .debug, r)
