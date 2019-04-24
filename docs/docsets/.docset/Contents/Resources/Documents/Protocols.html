@@ -267,6 +267,9 @@
                 <a href="Protocols/Expiring.html">Expiring</a>
               </li>
               <li class="nav-group-task">
+                <a href="Protocols/HeroProviding.html">HeroProviding</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Protocols/Navigator.html">Navigator</a>
               </li>
               <li class="nav-group-task">
@@ -283,6 +286,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/Rating.html">Rating</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols.html#/s:6Podest7RoutingP">Routing</a>
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/SearchResultsControllerDelegate.html">SearchResultsControllerDelegate</a>
@@ -367,20 +373,13 @@
           </section>
           <section class="section task-group-section">
             <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Indicating%20Network%20Activity"></a>
-                <a name="//apple_ref/swift/Section/Indicating Network Activity" class="dashAnchor"></a>
-                <a href="#/Indicating%20Network%20Activity">
-                  <h3 class="section-name">Indicating Network Activity</h3>
-                </a>
-              </div>
               <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:6Podest25NetworkActivityIndicatingP"></a>
-                    <a name="//apple_ref/swift/Protocol/NetworkActivityIndicating" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Podest25NetworkActivityIndicatingP">NetworkActivityIndicating</a>
+                    <a name="/s:6Podest7RoutingP"></a>
+                    <a name="//apple_ref/swift/Protocol/Routing" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Podest7RoutingP">Routing</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -388,15 +387,47 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Combines two APIs into a navigational root, this <code><a href="Classes/AppDelegate.html">AppDelegate</a></code> requires, for
+routing app events into the system.</p>
 
-                        <a href="Protocols/NetworkActivityIndicating.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">NetworkActivityIndicating</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">Routing</span> <span class="p">:</span> <span class="kt"><a href="Protocols/UserProxy.html">UserProxy</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/ViewControllers.html">ViewControllers</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Podest21ActionSheetPresentingP"></a>
+                    <a name="//apple_ref/swift/Protocol/ActionSheetPresenting" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Podest21ActionSheetPresentingP">ActionSheetPresenting</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Useful default action sheet things for view controllers.</p>
+
+                        <a href="Protocols/ActionSheetPresenting.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">ActionSheetPresenting</span></code></pre>
 
                         </div>
                       </div>
@@ -513,45 +544,6 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/Presenting%20Action%20Sheets"></a>
-                <a name="//apple_ref/swift/Section/Presenting Action Sheets" class="dashAnchor"></a>
-                <a href="#/Presenting%20Action%20Sheets">
-                  <h3 class="section-name">Presenting Action Sheets</h3>
-                </a>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:6Podest21ActionSheetPresentingP"></a>
-                    <a name="//apple_ref/swift/Protocol/ActionSheetPresenting" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Podest21ActionSheetPresentingP">ActionSheetPresenting</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Useful default action sheet things.</p>
-
-                        <a href="Protocols/ActionSheetPresenting.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">ActionSheetPresenting</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
                 <a name="/Navigating"></a>
                 <a name="//apple_ref/swift/Section/Navigating" class="dashAnchor"></a>
                 <a href="#/Navigating">
@@ -602,7 +594,7 @@ to be accessed from the outside should be exposed here.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Defines <code><a href="Protocols/ViewControllers.html">ViewControllers</a></code> users, enabling them to navigate.</p>
+                        <p>Adopt <code>Navigator</code> to receive access to the navigation delegate.</p>
 
                         <a href="Protocols/Navigator.html" class="slightly-smaller">See more</a>
                       </div>
@@ -692,6 +684,45 @@ not be used from the main queue, it might trap.</p>
               </ul>
             </div>
             <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Indicating%20Network%20Activity"></a>
+                <a name="//apple_ref/swift/Section/Indicating Network Activity" class="dashAnchor"></a>
+                <a href="#/Indicating%20Network%20Activity">
+                  <h3 class="section-name">Indicating Network Activity</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Podest25NetworkActivityIndicatingP"></a>
+                    <a name="//apple_ref/swift/Protocol/NetworkActivityIndicating" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Podest25NetworkActivityIndicatingP">NetworkActivityIndicating</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                        <a href="Protocols/NetworkActivityIndicating.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">NetworkActivityIndicating</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
               <ul>
                 <li class="item">
                   <div>
@@ -716,6 +747,45 @@ mini-player, player, now playing, etc.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">PlaybackControlDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/HeroProviding"></a>
+                <a name="//apple_ref/swift/Section/HeroProviding" class="dashAnchor"></a>
+                <a href="#/HeroProviding">
+                  <h3 class="section-name">HeroProviding</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Podest13HeroProvidingP"></a>
+                    <a name="//apple_ref/swift/Protocol/HeroProviding" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Podest13HeroProvidingP">HeroProviding</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Provides a hero image for the player transition.</p>
+
+                        <a href="Protocols/HeroProviding.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">protocol</span> <span class="kt">HeroProviding</span></code></pre>
 
                         </div>
                       </div>
@@ -979,13 +1049,6 @@ mini-player, player, now playing, etc.</p>
               </ul>
             </div>
             <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Summaries"></a>
-                <a name="//apple_ref/swift/Section/Summaries" class="dashAnchor"></a>
-                <a href="#/Summaries">
-                  <h3 class="section-name">Summaries</h3>
-                </a>
-              </div>
               <ul>
                 <li class="item">
                   <div>
@@ -1000,7 +1063,7 @@ mini-player, player, now playing, etc.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Normalizes summarizable items.</p>
 
                         <a href="Protocols/Summarizable.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1084,7 +1147,7 @@ mini-player, player, now playing, etc.</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="https://troubled.pro" target="_blank" rel="external">Michael Nisi</a>. All rights reserved. (Last updated: 2019-04-23)</p>
+          <p>&copy; 2019 <a class="link" href="https://troubled.pro" target="_blank" rel="external">Michael Nisi</a>. All rights reserved. (Last updated: 2019-04-24)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
