@@ -13,6 +13,13 @@ import os.log
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "app")
 
+/// Combines two APIs into a navigational root, this `AppDelegate` requires, for
+/// routing app events into the system.
+///
+/// Keeping it flexible by not using a concrete type in an attempt to inspire
+/// experimentation with alternative user interfaces.
+protocol Routing: UserProxy, ViewControllers {}
+
 /// Receiving application events, AppDelegate is responsible for global things,
 /// namely triggering of background fetching, iCloud synchronization, and file
 /// downloading, providing a clear view over these central route entry points,
@@ -26,10 +33,16 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
   private var shouldRestoreState = true
   private var shouldSaveState = true
 
-  /// The **root** view controller of this app.
-  private var root: RootViewController {
+  /// An object that adopts `Routing` for funnelling down app events.
+  ///
+  /// In the current design, the root view controller.
+  private var root: Routing {
     dispatchPrecondition(condition: .onQueue(.main))
-    return window?.rootViewController as! RootViewController
+    guard let vc = window?.rootViewController as? Routing else {
+      fatalError("unexpected root view controller")
+    }
+    
+    return vc
   }
 
   /// `true` while pulling iCloud.
@@ -301,7 +314,7 @@ extension AppDelegate {
 
     dispatchPrecondition(condition: .onQueue(.main))
 
-    root.update { newData, error in
+    root.update(considering: nil) { newData, error in
       let result = AppDelegate.makeBackgroundFetchResult(newData, error)
 
       // Submits completion block to the main queue, after which nothing must
@@ -474,7 +487,7 @@ extension AppDelegate {
     // During development, we might want to launch into the previous state,
     // without syncing or updating.
     guard !Podest.settings.noSync else {
-      return root.reload()
+      return root.reload(completionBlock: nil)
     }
 
     func updateQueue(considering syncError: Error? = nil) -> Void {
@@ -549,7 +562,7 @@ extension AppDelegate: QueueDelegate {
   func queue(_ queue: Queueing, changed guids: Set<EntryGUID>) {
     DispatchQueue.main.async { [weak self] in
       self?.root.updateIsEnqueued(using: guids)
-      self?.root.reload()
+      self?.root.reload(completionBlock: nil)
 
       self?.push()
     }

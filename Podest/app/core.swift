@@ -2,7 +2,7 @@
 //  core.swift
 //  Podest
 //
-//  Global application protocols and extensions
+//  The core API of the Podest podcast app may be read as UI requirements.
 //
 //  Created by Michael on 4/17/17.
 //  Copyright © 2017 Michael Nisi. All rights reserved.
@@ -10,21 +10,7 @@
 
 import Foundation
 import FeedKit
-import AVFoundation
-
-// MARK: - Indicating Network Activity
-
-protocol NetworkActivityIndicating {
-  func increase()
-  func decrease()
-  func reset()
-}
-
-extension NetworkActivityIndicating {
-  func increase() {}
-  func decrease() {}
-  func reset() {}
-}
+import AVFoundation.AVPlayer
 
 // MARK: - Audio and Video Playback
 
@@ -72,7 +58,6 @@ protocol Players {
 
   /// Hides video player.
   func hideVideoPlayer()
-  
 }
 
 // MARK: - Accessing Entries
@@ -82,7 +67,6 @@ protocol EntryProvider {
   
   /// Provides an entry that makes sense in this context.
   var entry: Entry? { get }
-  
 }
 
 /// Maps entries to index paths.
@@ -90,44 +74,6 @@ protocol EntryIndexPathMapping {
   
   /// Returns the first index path matching `entry`.
   func indexPath(matching entry: Entry) -> IndexPath?
-  
-}
-
-// MARK: - Presenting Action Sheets
-
-/// Useful default action sheet things.
-protocol ActionSheetPresenting {}
-
-extension ActionSheetPresenting where Self: UIViewController {
-  
-  static func makeCancelAction(
-    handler: ((UIAlertAction) -> Void)? = nil
-    ) -> UIAlertAction {
-    let t = NSLocalizedString("Cancel", comment: "Cancel by default")
-    
-    return UIAlertAction(title: t, style: .cancel, handler: handler)
-  }
-  
-  static func makeOpenLinkAction(string: String?) -> UIAlertAction? {
-    guard let link = string, let linkURL = URL(string: link) else {
-      return nil
-    }
-    
-    let t =  NSLocalizedString("Open Link", comment: "Open browser link")
-    
-    return UIAlertAction(title: t, style: .default) { action in
-      UIApplication.shared.open(linkURL)
-    }
-  }
-  
-  static func makeCopyFeedURLAction(string: String) -> UIAlertAction {
-    let t = NSLocalizedString("Copy Feed URL", comment: "Copy non-browser link")
-    
-    return UIAlertAction(title: t, style: .default) { action in
-      UIPasteboard.general.string = string
-    }
-  }
-  
 }
 
 // MARK: - Navigating
@@ -139,16 +85,21 @@ protocol ViewControllers: Players {
   
   // MARK: Browsing
   
+  /// The currently shown feed.
   var feed: Feed? { get }
   
+  /// The currently shown entry.
   var entry: Entry? { get }
   
+  /// Shows this entry.
   func show(entry: Entry)
   
+  /// Shows this feed listing its entries.
   func show(feed: Feed)
   
   // MARK: Shopping
   
+  /// Shows the in-app store.
   func showStore()
   
   // MARK: Errors
@@ -158,8 +109,10 @@ protocol ViewControllers: Players {
   
   // MARK: External, lower level API
   
+  /// Tries to route and open any `url`.
   func open(url: URL) -> Bool
   
+  /// Show the feed matching the feed `url`.
   func openFeed(url: String)
   
   // MARK: UI
@@ -167,14 +120,13 @@ protocol ViewControllers: Players {
   /// An additional property to check wether the main split view controller, to
   /// which some participants might not have access, is collapsed or not.
   var isCollapsed: Bool { get }
-
 }
 
-/// Defines `ViewControllers` users, enabling them to navigate.
+/// Adopt `Navigator` to receive access to the navigation delegate.
 protocol Navigator {
 
+  /// Use this API for navigation.
   var navigationDelegate: ViewControllers? { get set }
-  
 }
 
 // MARK: - Accessing User Library and Queue
@@ -213,5 +165,5 @@ protocol UserProxy {
   ///
   /// Use `update(completionHandler:)` to update, which includes reloading.
   func reload(completionBlock: ((Error?) -> Void)?)
-
 }
+

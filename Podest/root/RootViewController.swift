@@ -20,7 +20,7 @@ private let log = OSLog(subsystem: "ink.codes.podest", category: "root")
 ///
 /// This class should be simple and stable glue code. More complex and dynamic
 /// things should be extracted, aiming for below 600 LOC.
-final class RootViewController: UIViewController {
+final class RootViewController: UIViewController, Routing {
 
   @IBOutlet var miniPlayerTop: NSLayoutConstraint!
   @IBOutlet var miniPlayerBottom: NSLayoutConstraint!
@@ -708,6 +708,19 @@ extension RootViewController: UISplitViewControllerDelegate {
     sender: Any?
   ) -> Bool {
     fatalError("unexpected delegation")
+  }
+}
+
+// MARK: - HeroProviding
+
+extension RootViewController: HeroProviding {
+
+  var hero: UIView? {
+    guard !isMiniPlayerHidden else {
+      return nil
+    }
+    
+    return minivc.hero
   }
 }
 

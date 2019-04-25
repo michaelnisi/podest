@@ -13,23 +13,6 @@ import HTMLAttributor
 
 private let log = OSLog.disabled
 
-// MARK: - Summaries
-
-protocol Summarizable: Hashable {
-  var summary: String? { get }
-  var title: String { get }
-  var author: String? { get }
-  var guid: String { get }
-}
-
-extension Entry: Summarizable {}
-
-extension Feed: Summarizable {
-  var guid: String {
-    return self.url // Anything unique for NSCache.
-  }
-}
-
 private struct SummaryAttributes {
 
   static var p: NSParagraphStyle = {

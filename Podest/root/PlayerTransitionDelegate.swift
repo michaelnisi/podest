@@ -9,6 +9,13 @@
 import UIKit
 import os.log
 
+// MARK: - HeroProviding
+
+/// Provides a hero image for the player transition.
+protocol HeroProviding {
+  var hero: UIView? { get }
+}
+
 // MARK: - PlayerPresentationController
 
 /// Manages the presentation of the player view controller.
@@ -33,27 +40,12 @@ class PlayerAnimator: NSObject {
     self.log = log
   }
 
-  /// Returns the hero it finds in `viewController`.
-  static func findHero(viewController: UIViewController) -> UIView? {
-    switch viewController {
-    case let vc as PlayerViewController:
-      return vc.heroImage
-    case let vc as RootViewController:
-      guard !vc.isMiniPlayerHidden else {
-        return nil
-      }
-      return vc.minivc.hero
-    default:
-      return nil
-    }
-  }
-
   /// Adds a snaphot of the hero in the from view controller to the container.
   static func addHero(
     using transitionContext: UIViewControllerContextTransitioning) -> UIView? {
     guard
-      let vc = transitionContext.viewController(forKey: .from),
-      let source = findHero(viewController: vc) else {
+      let vc = transitionContext.viewController(forKey: .from) as? HeroProviding,
+      let source = vc.hero else {
       return nil
     }
 

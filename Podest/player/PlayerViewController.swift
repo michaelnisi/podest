@@ -254,4 +254,14 @@ Navigator, PlaybackControlDelegate {
 
 }
 
+// MARK: - HeroProviding
+
+extension PlayerViewController: HeroProviding {
+  
+  var hero: UIView? {
+    return heroImage
+  }
+  
+}
+
 

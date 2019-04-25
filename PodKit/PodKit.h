@@ -1,6 +1,7 @@
 //
 //  PodKit.h
-//  PodKit - expose selected types for testing
+//  PodKit is meta target for quicker unit testing. Testing a type requires
+//  manually adding it to the PodKit target.
 //
 //  Created by Michael Nisi on 20.07.18.
 //  Copyright © 2018 Michael Nisi. All rights reserved.

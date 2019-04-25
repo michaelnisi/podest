@@ -20,6 +20,20 @@ import Playback
 
 private let log = OSLog.disabled
 
+// MARK: - Indicating Network Activity
+
+protocol NetworkActivityIndicating {
+  func increase()
+  func decrease()
+  func reset()
+}
+
+extension NetworkActivityIndicating {
+  func increase() {}
+  func decrease() {}
+  func reset() {}
+}
+
 // MARK: - Search Repository
 
 /// Returns additional HTTP headers for `service`.
