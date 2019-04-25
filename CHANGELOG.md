@@ -2,9 +2,11 @@
 
 ### Egghead
 
-This, first simplified major numbered, version provides more information about Podest in the Settings app, namely version, subcsription, and expiration. On iPad, episode images are displayed in the correct size. Large titles are refrained.
+This version, the first with a simplified major version number, provides more information about Podest in the Settings app, namely version, subcsription, and expiration. On iPad, episode images are displayed in the correct size. Large titles are refrained.
 
 From now on versions will be counted in whole numbers, eight, nine, 10, etc., with a relative build number, for example, 8 (2) for version eight, build two.
+
+App size is down to five Megabytes with Swift reaching ABI stability. Thank you, Apple.
 
 ## 7.9.7 (2019-03-20)
 
