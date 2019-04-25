@@ -11,9 +11,6 @@ import StoreKit
 import os.log
 import BatchUpdates
 
-// TODO: Display something meaningful for .subscribed
-// The store might become visible by accident.
-
 private let log = OSLog(subsystem: "ink.codes.podest", category: "store")
 
 protocol CellProductsDelegate: class {

@@ -190,12 +190,8 @@ extension QueueViewController {
 
     searchProxy.install()
 
-    // TODO: File Radar
-    // [Unknown process name] CGAffineTransformInvert: singular matrix when
-    // returning from state restored successor. Not animating the title.
-
     navigationItem.searchController = searchController
-    navigationItem.title = "Podest"
+    navigationItem.title = "Queue"
     navigationItem.largeTitleDisplayMode = .never
 
     self.searchProxy = searchProxy

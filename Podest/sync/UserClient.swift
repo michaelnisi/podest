@@ -148,8 +148,6 @@ public class UserClient {
     let prev = try cache.previous()
     let current = try cache.locallyQueued()
 
-    // TODO: Review dequeuing of previous items
-
     // Assuming the full history here would be overkill, so we have limited
     // the log of previously queued items to the latest per feed, which has
     // changed our assumptions.
@@ -866,7 +864,6 @@ extension UserClient {
     if m.count > 400 {
       os_log("ink.codes.podest.sync: too many requests: %i", type: .error, m.count)
 //      cb(SyncError.tooManyRequests(m.count))
-      // TODO: Handle too many requests
     }
 
     let clientChangeToken = UUID()

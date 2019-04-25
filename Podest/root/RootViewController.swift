@@ -643,15 +643,12 @@ extension RootViewController: UISplitViewControllerDelegate {
     os_log("splitViewController: collapseSecondary: onto: %{public}@",
            log: log, type: .debug, primaryViewController)
 
-    // TODO: Handle nc.topViewController == nil
-
     guard
       let nc = secondaryViewController as? UINavigationController,
       nc == snc else {
       os_log("not collapsible: unexpected secondary: %{public}@",
              log: log, type: .error, secondaryViewController)
       fatalError()
-
     }
 
     nc.setViewControllers([], animated: false)
