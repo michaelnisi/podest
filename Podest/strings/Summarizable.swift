@@ -9,8 +9,8 @@
 import Foundation
 import FeedKit
 
-/// Adopt `Summarizable` to normalize an item into a summarizable format for
-/// display, for example, as an attributed string.
+/// Types that conform to the `Summarizable` protocol are typically entities
+/// that can be displayed as a single text paragraph.
 protocol Summarizable: Hashable {
   var summary: String? { get }
   var title: String { get }
