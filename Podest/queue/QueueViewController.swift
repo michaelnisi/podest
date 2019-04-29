@@ -104,7 +104,7 @@ extension QueueViewController {
     }
 
     refreshControlTimer = nil
-
+    
     dataSource.update(minding: 60)
   }
 

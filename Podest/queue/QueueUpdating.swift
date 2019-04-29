@@ -28,7 +28,6 @@ extension QueueViewController {
     dataSource.reload { [weak self] changes, error in
       func done() {
         self?.updateSelection(animated)
-        self?.navigationItem.hidesSearchBarWhenScrolling = !(self?.dataSource.isEmpty ?? true)
         completionBlock?(error)
       }
       
@@ -76,8 +75,7 @@ extension QueueViewController {
     reload(animated) { [weak self] initialReloadError in
       self?.dataSource.update(considering: error) { newData, updateError in
         self?.reload(animated) { error in
-          assert(error == nil, "error relevance unclear")
-          completionHandler?(newData, updateError)
+          completionHandler?(newData, updateError ?? error)
         }
       }
     }
