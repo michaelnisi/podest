@@ -2,7 +2,7 @@
 
 ### Egghead
 
-This version, the first using a new simplified version number, provides more information about Podest in the Settings app, namely version, subscription, and expiration date for free trials. On iPad, episode images are displayed in the correct size. Large titles are refrained.
+This version, the first using a new simplified version number, provides more information about Podest in the Settings app, namely version, subscription, and expiration date for free trials. On iPad, episode images are displayed in the correct size. Large titles are refrained. And its springtime round these parts, time to change up colors.
 
 From now on versions will be counted in whole numbers, eight, nine, 10, etc., with a relative build number, for example, 8 (2) for version eight, build two. Patches are going to be counted after a dot, like 8.1 for example. The previous Semantic Versioning didn’t prove itself practical for this app. The new version numbers may be decribed as semver without the major: MINOR.PATCH instead of MAJOR.MINOR.PATCH.
 
