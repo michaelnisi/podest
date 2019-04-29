@@ -11,7 +11,7 @@ import Foundation
 /// Extending user defaults with our settings.
 ///
 /// For preventing key collisions, all user defaults keys should be listed here,
-/// which they aren’t at the moment. I’m looking at you, sync.
+/// which they aren’t at the moment, I’m looking at you, sync.
 extension UserDefaults {
 
   static var automaticDownloadsKey = "automaticDownloads"
