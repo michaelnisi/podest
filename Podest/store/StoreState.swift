@@ -58,7 +58,7 @@ enum StoreState: Equatable {
   /// ## productsReceived([SKProduct], ShoppingError?)
   /// The product list has been received from the payment queue and the
   /// products will be forwarded to the shopping delegate for display.
-  case interested
+  case interested(Bool)
 
   /// In `subscribed` state the store currently doesn’t handle any events, the
   /// user is a customer, has purchased a subscription. Ignores all events and
@@ -90,7 +90,7 @@ enum StoreState: Equatable {
   /// Releases probe and updates products, after validating receipts transfers
   /// to `interested` or `subscribed`. A `receiptsChanged` is unlikely here,
   /// but produces the same result.
-  case offline
+  case offline(Bool)
 
   /// The user is purchasing a subscription.
   ///
@@ -112,21 +112,16 @@ extension StoreState: CustomStringConvertible {
     switch self {
     case .initialized:
       return "StoreState: initialized"
-    case .interested:
-      return "StoreState: interested"
+    case .interested(let free):
+      return "StoreState: ( interested, \(free) )"
     case .subscribed(let pid):
-      return "StoreState: subscribed: ( productIdentifier: \(pid) )"
+      return "StoreState: ( subscribed, \(pid) )"
     case .fetchingProducts:
       return "StoreState: fetchingProducts"
-    case .offline:
-      return "StoreState: offline"
+    case .offline(let free):
+      return "StoreState: ( offline, \(free) )"
     case .purchasing(let pid, let nextState):
-      return """
-      StoreState: purchasing (
-        productIdentifier: \(pid),
-        nextState: \(nextState)
-      )
-      """
+      return "StoreState: ( purchasing, \(pid), \(nextState) )"
     }
   }
 
@@ -134,6 +129,21 @@ extension StoreState: CustomStringConvertible {
 
 /// Version and environment of a bundle.
 struct BuildVersion {
+  
+  /// Enumerates three possible bundle environments.
+  enum Environment {
+    case store, sandbox, simulator
+    
+    /// Creates a new informal environment using `bundle`.
+    init(bundle: Bundle) {
+      #if targetEnvironment(simulator)
+      self = .simulator
+      #else
+      let c = bundle.appStoreReceiptURL?.lastPathComponent
+      self = c == "sandboxReceipt" ? .sandbox : .store
+      #endif
+    }
+  }
 
   /// The bundle version.
   let build: String
@@ -166,34 +176,4 @@ extension BuildVersion: CustomStringConvertible {
   var description: String {
     return "BuildVersion: ( \(env), \(build) )"
   }
-}
-
-extension BuildVersion {
-
-  /// Enumerates three possible bundle environments.
-  enum Environment: CustomStringConvertible {
-    case store, sandbox, simulator
-
-    /// Creates a new informal environment using `bundle`.
-    init(bundle: Bundle) {
-      #if targetEnvironment(simulator)
-      self = .simulator
-      #else
-      let c = bundle.appStoreReceiptURL?.lastPathComponent
-      self = c == "sandboxReceipt" ? .sandbox : .store
-      #endif
-    }
-
-    var description: String {
-      switch self {
-      case .store:
-        return "store"
-      case .sandbox:
-        return "sandbox"
-      case .simulator:
-        return "simulator"
-      }
-    }
-  }
-
 }

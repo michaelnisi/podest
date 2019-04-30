@@ -86,6 +86,13 @@ final class StoreFSM: NSObject {
   /// The version of the app.
   private let version: BuildVersion
 
+  static var unsealedKey = "ink.codes.podest.store.unsealed"
+  
+  private static func unseal(_ db: NSUbiquitousKeyValueStore) {
+    os_log("unsealing", log: log, type: .debug)
+    db.set(Date().timeIntervalSince1970, forKey: StoreFSM.unsealedKey)
+  }
+  
   /// Creates a new store with minimal dependencies. **Protocol dependencies**
   /// for easier testing.
   ///
@@ -107,9 +114,14 @@ final class StoreFSM: NSObject {
     self.paymentQueue = paymentQueue
     self.db = db
     self.version = version
+    self.state = .initialized
+    
+    if db.double(forKey: StoreFSM.unsealedKey) == 0 {
+      StoreFSM.unseal(db)
+    }
   }
 
-  /// Returns a formatted String from a Date.
+  /// A date formatting block.
   public var formatDate: ((Date) -> String)?
 
   /// Flag for asserts, `true` if we are observing the payment queue.
@@ -184,15 +196,21 @@ final class StoreFSM: NSObject {
   }
 
   private func updateProducts() -> StoreState {
-    if isReachable() {
-      fetchProducts()
-      return .fetchingProducts
-    } else {
+    guard isReachable() else {
       delegateQueue.async {
         self.delegate?.store(self, offers: [], error: .offline)
       }
-      return .offline
+      
+      if case .subscribed = validateReceipts() {
+        return .offline(true)
+      } else {
+        return .offline(validateTrial())
+      }
     }
+    
+    fetchProducts()
+    
+    return .fetchingProducts
   }
 
   // MARK: - Saving and Loading Receipts
@@ -207,9 +225,13 @@ final class StoreFSM: NSObject {
     case (.sandbox, _), (.store, true), (.simulator, _):
       os_log("removing receipts", log: log)
       db.removeObject(forKey: StoreFSM.receiptsKey(suiting: version.env))
+      StoreFSM.unseal(db)
+      
       return true
+      
     case (.store, _):
-      os_log("not removing production receipts", log: log)
+      os_log("not removing production receipts without force", log: log)
+      
       return false
     }
   }
@@ -236,16 +258,14 @@ final class StoreFSM: NSObject {
 
   private func updateSettings(status: String, expiration: Date) {
     let date = formatDate?(expiration) ?? expiration.description
-
+    
+    os_log("updating settings: ( %@, %@ )", log: log, type: .debug, status, date)
     UserDefaults.standard.set(status, forKey: UserDefaults.statusKey)
     UserDefaults.standard.set(date, forKey: UserDefaults.expirationKey)
   }
 
-  private static func makeExpiration(date: Date) -> Date {
-    let l = Period.trial.rawValue
-    let t = date.timeIntervalSince1970
-
-    return Date(timeIntervalSince1970: t + l)
+  static func makeExpiration(date: Date, period: Period) -> Date {
+    return Date(timeIntervalSince1970: date.timeIntervalSince1970 + period.rawValue)
   }
 
   private func saveReceipt(_ receipt: PodestReceipt) {
@@ -262,8 +282,7 @@ final class StoreFSM: NSObject {
 
     let id = receipt.productIdentifier
     let name = (id.split(separator: ".").last ?? "unknown").capitalized
-    let x = StoreFSM.makeExpiration(date: receipt.transactionDate)
-
+    let x = StoreFSM.makeExpiration(date: receipt.transactionDate, period: Period.subscription)
     updateSettings(status: name, expiration: x)
 
     let str = String(data: data, encoding: .utf8)!
@@ -271,11 +290,11 @@ final class StoreFSM: NSObject {
     os_log("saved: ( %@, %@ )", log: log, type: .debug, r, str)
   }
 
-  /// Enumerates offered time periods.
+  /// Enumerates offered time periods in seconds.
   enum Period: TimeInterval {
     typealias RawValue = TimeInterval
     case subscription = 3.154e7
-    case trial = 2.628e6
+    case trial = 2.419e6
     case always = 0
 
     /// Returns `true` if `date` exceeds this period into the future.
@@ -305,6 +324,20 @@ final class StoreFSM: NSObject {
     
     return nil
   }
+  
+  private func validateTrial(updatingSettings: Bool = false) -> Bool {
+    os_log("validating trial", log: log, type: .debug)
+    
+    let ts = db.double(forKey: StoreFSM.unsealedKey)
+    
+    if updatingSettings {
+      let unsealed = Date(timeIntervalSince1970: ts)
+      let expiration = StoreFSM.makeExpiration(date: unsealed, period: Period.trial)
+      updateSettings(status: "Free Trial", expiration: expiration)
+    }
+    
+    return !Period.trial.isExpired(date: Date(timeIntervalSince1970: ts))
+  }
 
   private func validateReceipts() -> StoreState {
     let receipts = loadReceipts()
@@ -314,15 +347,7 @@ final class StoreFSM: NSObject {
 
     guard let id = StoreFSM.validProductIdentifier(
       receipts, matching: productIdentifiers) else {
-
-      if db.double(forKey: StoreFSM.unsealedKey) ==  0 {
-        updateSettings(
-          status: "Free Trial",
-          expiration: Date(timeIntervalSinceNow: Period.trial.rawValue)
-        )
-      }
-
-      return .interested
+      return .interested(validateTrial(updatingSettings: true))
     }
 
     return .subscribed(id)
@@ -333,7 +358,7 @@ final class StoreFSM: NSObject {
   /// An internal serial queue for synchronized access.
   private let sQueue = DispatchQueue(label: "ink.codes.podest.store.serial")
 
-  private (set) var state: StoreState = .initialized {
+  private (set) var state: StoreState {
     didSet {
       os_log("new state: %{public}@, old state: %{public}@",
              log: log, type: .debug,
@@ -357,13 +382,17 @@ final class StoreFSM: NSObject {
     }
     
     if case .offline = er {
-      return .offline
+      if case .subscribed  = validateReceipts() {
+        return .offline(true)
+      } else {
+        return .offline(validateTrial())
+      }
     }
 
     return nextState
   }
 
-  /// Is `true` for interested users.
+  /// Is `true` for interested users with the intention of hiding the store for customers.
   private var isAccessible: Bool = false {
     didSet {
       guard isAccessible != oldValue else {
@@ -478,7 +507,7 @@ final class StoreFSM: NSObject {
     precondition(isObserving)
     paymentQueue.remove(self)
     stopObservingUbiquitousKeyValueStore()
-
+    
     return .initialized
   }
 
@@ -540,7 +569,7 @@ final class StoreFSM: NSObject {
         return state
 
       case .failed(let error):
-        return updatedState(after: error, next: .interested)
+        return updatedState(after: error, next: .interested(validateTrial()))
 
       case .resume:
         return state
@@ -831,13 +860,6 @@ extension StoreFSM: Shopping {
     return SKPaymentQueue.canMakePayments()
   }
 
-  var maxSubscriptionCount: Int {
-    if case .interested = state {
-      return 5
-    }
-
-    return .max
-  }
 
 }
 
@@ -893,62 +915,29 @@ extension StoreFSM: Rating {
 
 // MARK: - Expiring
 
-extension StoreFSM {
-
-  static var unsealedKey = "ink.codes.podest.store.unsealed"
-
-  /// Returns time of first use in seconds, updating `db` for `state`,
-  /// initiially setting or resetting to rule out expiration for subscribers.
-  ///
-  /// Returns `Double.infinity` while unsure about user status.
-  static func unsealTime(
-    state: StoreState, db: NSUbiquitousKeyValueStore) -> TimeInterval {
-
-    switch state {
-    case .initialized, .offline, .fetchingProducts, .purchasing:
-      return .infinity
-
-    case .subscribed:
-      db.set(0, forKey: unsealedKey)
-
-      return .infinity
-
-    case .interested:
-      let found = db.double(forKey: unsealedKey)
-
-      guard found != 0 else {
-        let ts = Date().timeIntervalSince1970
-
-        db.set(ts, forKey: unsealedKey)
-
-        return ts
-      }
-
-      return found
-    }
-  }
-
+extension StoreFSM: Expiring {
+  
   func isExpired() -> Bool {
     return sQueue.sync {
-      let ts = StoreFSM.unsealTime(state: state, db: self.db)
-
-      os_log("** unsealed: %f", log: log, type: .debug, ts)
-
-      let yes = Period.trial.isExpired(date: Date(timeIntervalSince1970: ts))
-
-      // Preventing overlapping alerts.
-      if yes {
-        rateIncentiveTimeout?.cancel()
-        rateIncentiveThreshold = -1
+      switch state {
+      case .offline(let free), .interested(let free):
+        let expired = !free
+        
+        if expired {
+          // Preventing overlapping alerts.
+          rateIncentiveTimeout?.cancel()
+          rateIncentiveThreshold = -1
+        }
+        
+        delegateQueue.async {
+          self.subscriberDelegate?.store(self, isExpired: expired)
+        }
+        
+        return expired
+      case .fetchingProducts, .initialized, .purchasing, .subscribed:
+        return false
       }
-
-      delegateQueue.async {
-        self.subscriberDelegate?.store(self, isExpired: yes)
-      }
-
-      return yes
     }
-
   }
 
 }

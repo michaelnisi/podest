@@ -57,7 +57,7 @@ class StoreTests: XCTestCase {
 
     store.resume()
     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-      XCTAssertEqual(self.store.state, .offline)
+      XCTAssertEqual(self.store.state, .offline(true))
       exp.fulfill()
     }
     waitForExpectations(timeout: 5) { er in }
@@ -125,10 +125,9 @@ class StoreTests: XCTestCase {
       self.store.productsRequest(req, didReceive: res)
       
       DispatchQueue.main.asyncAfter(deadline: .now() + 1 / 10) {
-        XCTAssertEqual(self.store.state, .interested)
+        XCTAssertEqual(self.store.state, .interested(true))
         XCTAssertEqual(delegate.products, [])
         XCTAssertTrue(subscriberDelegate.isAccessible)
-        XCTAssertEqual(self.store.maxSubscriptionCount, 5)
         exp.fulfill()
       }
     }
@@ -141,6 +140,18 @@ class StoreTests: XCTestCase {
 // MARK: - Expiring
 
 extension StoreTests {
+  
+  func testMakeExpiration() {
+    let zero = Date(timeIntervalSince1970: 0)
+    
+    for (date, period, wanted) in [
+      (zero, StoreFSM.Period.always, zero),
+      (zero, StoreFSM.Period.subscription, zero.addingTimeInterval(3.154e7)),
+      (zero, StoreFSM.Period.trial, zero.addingTimeInterval(2.419e6))
+    ] {
+      XCTAssertEqual(StoreFSM.makeExpiration(date: date, period: period), wanted)
+    }
+  }
 
   func testExpiration() {
     do {
@@ -176,34 +187,4 @@ extension StoreTests {
         date: Date(timeIntervalSinceNow: -StoreFSM.Period.subscription.rawValue)))
     }
   }
-
-  func testUnsealTime() {
-    let db = NSUbiquitousKeyValueStore()
-    let ts = Date().timeIntervalSince1970
-
-    db.set(ts, forKey: StoreFSM.unsealedKey)
-
-    let states: [StoreState] = [
-      .initialized,
-      .offline,
-      .interested,
-      .fetchingProducts,
-      .purchasing("abc", .interested),
-      .subscribed("abc")
-    ]
-
-    for state in states {
-      let found = StoreFSM.unsealTime(state: state, db: db)
-
-      switch state {
-      case .fetchingProducts, .initialized, .offline, .purchasing:
-        XCTAssertEqual(found, .infinity)
-      case .subscribed(_):
-        XCTAssertEqual(found, .infinity)
-      case .interested:
-        XCTAssertEqual(found, ts)
-      }
-    }
-  }
-
 }

@@ -221,10 +221,6 @@ protocol Expiring {
 
 /// A set of methods to offer in-app purchases.
 protocol Shopping: SKPaymentTransactionObserver, Rating, Expiring {
-  
-  /// The maximum number of allowed podcast subscriptions is only limited when
-  /// we are sure about the status.
-  var maxSubscriptionCount: Int { get }
 
   /// Clients use this delegate to receive callbacks from the store.
   var delegate: StoreDelegate? { get set }
