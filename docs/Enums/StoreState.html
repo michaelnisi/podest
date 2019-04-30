@@ -14,7 +14,7 @@
     <a title="StoreState Enumeration Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (41% documented)</p>
+        <p><a href="../index.html"> Docs</a> (42% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -411,8 +411,8 @@ our IAP store, with seven states.</p>
 <p>Begins observing payment queue for changed transactions and ubiquitous
 key value store for changed receipts. Fetches available products from the
 App Store and validates receipts, ideally resulting in one of the two
-user states, <code><a href="../Enums/StoreState.html#/s:6Podest10StoreStateO10interestedyA2CmF">interested</a></code> or <code>subscribed</code>. Of course, we might as well
-end up <code><a href="../Enums/StoreState.html#/s:6Podest10StoreStateO7offlineyA2CmF">offline</a></code> if the App Store is not reachable or the subscriber
+user states, <code>interested</code> or <code>subscribed</code>. Of course, we might as well
+end up <code>offline</code> if the App Store is not reachable or the subscriber
 delegate has not been set yet.</p>
 
                       </div>
@@ -430,9 +430,9 @@ delegate has not been set yet.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:6Podest10StoreStateO10interestedyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/interested" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Podest10StoreStateO10interestedyA2CmF">interested</a>
+                    <a name="/s:6Podest10StoreStateO10interestedyACSbcACmF"></a>
+                    <a name="//apple_ref/swift/Element/interested(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Podest10StoreStateO10interestedyACSbcACmF">interested(_:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -453,14 +453,14 @@ purchased yet, subscriptions are expired, or receipts have been deleted.</p>
 <p>Moving to <code>purchasing</code>.</p>
 <h2 id='failed' class='heading'>failed</h2>
 
-<p>Processes error ending up <code><a href="../Enums/StoreState.html#/s:6Podest10StoreStateO7offlineyA2CmF">offline</a></code> or <code>interested</code>.</p>
+<p>Processes error ending up <code>offline</code> or <code>interested</code>.</p>
 <h2 id='pay' class='heading'>pay</h2>
 
 <p>Adds payment to queue entering <code>purchasing</code>.</p>
 <h2 id='update' class='heading'>update</h2>
 
 <p>Fetches products from App Store and validates receipts entering one of the
-three elemental states, <code>interested</code>, <code>subscribed</code>, or <code><a href="../Enums/StoreState.html#/s:6Podest10StoreStateO7offlineyA2CmF">offline</a></code>.</p>
+three elemental states, <code>interested</code>, <code>subscribed</code>, or <code>offline</code>.</p>
 <h2 id='productsreceived-skproduct-shoppingerror' class='heading'>productsReceived([SKProduct], ShoppingError?)</h2>
 
 <p>The product list has been received from the payment queue and the
@@ -471,7 +471,7 @@ products will be forwarded to the shopping delegate for display.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">interested</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">interested</span><span class="p">(</span><span class="kt">Bool</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -553,9 +553,9 @@ is probably the next event.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:6Podest10StoreStateO7offlineyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/offline" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Podest10StoreStateO7offlineyA2CmF">offline</a>
+                    <a name="/s:6Podest10StoreStateO7offlineyACSbcACmF"></a>
+                    <a name="//apple_ref/swift/Element/offline(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Podest10StoreStateO7offlineyACSbcACmF">offline(_:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -567,7 +567,7 @@ is probably the next event.</p>
 <h2 id='online-receiptschanged-update' class='heading'>online | receiptsChanged | update</h2>
 
 <p>Releases probe and updates products, after validating receipts transfers
-to <code><a href="../Enums/StoreState.html#/s:6Podest10StoreStateO10interestedyA2CmF">interested</a></code> or <code>subscribed</code>. A <code>receiptsChanged</code> is unlikely here,
+to <code>interested</code> or <code>subscribed</code>. A <code>receiptsChanged</code> is unlikely here,
 but produces the same result.</p>
 
                       </div>
@@ -575,7 +575,7 @@ but produces the same result.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">offline</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">offline</span><span class="p">(</span><span class="kt">Bool</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -598,10 +598,10 @@ but produces the same result.</p>
                         <p>The user is purchasing a subscription.</p>
 <h2 id='purchased' class='heading'>purchased</h2>
 
-<p>Validates receipts resulting in <code><a href="../Enums/StoreState.html#/s:6Podest10StoreStateO10interestedyA2CmF">interested</a></code> or <code>subscribed</code>.</p>
+<p>Validates receipts resulting in <code>interested</code> or <code>subscribed</code>.</p>
 <h2 id='failed' class='heading'>failed</h2>
 
-<p>Processes error ending up <code><a href="../Enums/StoreState.html#/s:6Podest10StoreStateO7offlineyA2CmF">offline</a></code>, <code><a href="../Enums/StoreState.html#/s:6Podest10StoreStateO10interestedyA2CmF">interested</a></code>, <code>subscribed</code>.</p>
+<p>Processes error ending up <code>offline</code>, <code>interested</code>, <code>subscribed</code>.</p>
 <h2 id='purchasing-receiptschanged-update' class='heading'>purchasing | receiptsChanged | update</h2>
 
 <p>These events are ignored staying in <code>purchasing</code>.</p>
@@ -653,7 +653,7 @@ but produces the same result.</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="https://troubled.pro" target="_blank" rel="external">Michael Nisi</a>. All rights reserved. (Last updated: 2019-04-24)</p>
+          <p>&copy; 2019 <a class="link" href="https://troubled.pro" target="_blank" rel="external">Michael Nisi</a>. All rights reserved. (Last updated: 2019-04-30)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
