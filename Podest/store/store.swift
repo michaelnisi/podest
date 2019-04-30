@@ -29,7 +29,7 @@ struct PodestReceipt: Codable {
     guard
       let transactionIdentifier = transaction.transactionIdentifier,
       let transactionDate = transaction.transactionDate else {
-        return nil
+      return nil
     }
     self.productIdentifier = transaction.payment.productIdentifier
     self.transactionIdentifier = transactionIdentifier

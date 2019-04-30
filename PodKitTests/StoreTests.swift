@@ -69,7 +69,7 @@ class StoreTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    let bundle = Bundle.init(identifier: "ink.codes.PodKitTests")!
+    let bundle = Bundle.init(for: StoreTests.self)
     let url = bundle.url(forResource: "products", withExtension: "json")!
     let v = BuildVersion(bundle: bundle)
 
@@ -79,58 +79,61 @@ class StoreTests: XCTestCase {
     
     db = NSUbiquitousKeyValueStore()
     store = StoreFSM(url: url, paymentQueue: q, db: db, version: v)
+    
+    XCTAssertEqual(store.state, .initialized)
   }
   
   override func tearDown() {
     super.tearDown()
   }
   
-  func testActivateWithoutSubscriptionDelegate() {
-    let exp = expectation(description: "waiting")
-
-    store.resume()
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-      XCTAssertEqual(self.store.state, .offline(true))
-      exp.fulfill()
-    }
-    waitForExpectations(timeout: 5) { er in }
-  }
-  
-  func testActivateWithSubscriptionDelegate() {
+  func testResuming() {
     let subscriberDelegate = Accessor()
     store.subscriberDelegate = subscriberDelegate
     let delegate = StoreController()
     store.delegate = delegate
-    let exp = expectation(description: "fetching products")
     
     store.resume()
     
-    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(20)) {
+    let exp = expectation(description: "resuming")
+    let q = DispatchQueue.main
+    
+    q.asyncAfter(deadline: .now() + .milliseconds(15)) {
       XCTAssertEqual(self.store.state, .fetchingProducts)
-      
-      let req = SKProductsRequest(productIdentifiers: Set([
-        "ink.codes.podest.sponsor",
-        "ink.codes.podest.help",
-        "ink.codes.podest.love"
-      ]))
-      
-      // Unfortunately, StoreKit lacks proper testability.
-      let res = SKProductsResponse()
-      
-      self.store.productsRequest(req, didReceive: res)
-      
-      DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(20)) {
-        XCTAssertEqual(self.store.state, .interested(true))
-        XCTAssertEqual(delegate.products, [])
-        XCTAssertTrue(subscriberDelegate.isAccessible)
-        XCTAssertFalse(subscriberDelegate.isExpired)
-        exp.fulfill()
+      q.asyncAfter(deadline: .now() + .milliseconds(15)) {
+        let ids = Set(["abc", "def", "ghi"])
+        let req = SKProductsRequest(productIdentifiers: ids)
+        let res = SKProductsResponse()
+        
+        // The end, unfortunately I cannot mock a products response.
+        
+        self.store.productsRequest(req, didReceive: res)
+
+        q.asyncAfter(deadline: .now() + .milliseconds(15)) {
+          XCTAssertEqual(self.store.state, .interested(true))
+          XCTAssertEqual(delegate.products, [])
+          XCTAssertTrue(subscriberDelegate.isAccessible)
+          XCTAssertFalse(subscriberDelegate.isExpired)
+          exp.fulfill()
+        }
       }
     }
     
-    waitForExpectations(timeout: 5) { er in }
+    waitForExpectations(timeout: 5)
   }
   
+  func testResumingWithoutDelegate() {
+    let exp = expectation(description: "resuming")
+
+    store.resume()
+    
+    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(15)) {
+      XCTAssertEqual(self.store.state, .offline(true))
+      exp.fulfill()
+    }
+    
+    waitForExpectations(timeout: 5)
+  }
 }
 
 // MARK: - Expiring
@@ -148,7 +151,7 @@ extension StoreTests {
     
     store.resume()
     
-    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(20)) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(15)) {
       XCTAssertEqual(self.store.state, .fetchingProducts)
       
       let req = SKProductsRequest(productIdentifiers: Set())
@@ -156,7 +159,7 @@ extension StoreTests {
       
       self.store.productsRequest(req, didReceive: res)
       
-      DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(20)) {
+      DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(15)) {
         XCTAssertEqual(self.store.state, .interested(false))
         XCTAssertEqual(delegate.products, [])
         XCTAssertTrue(subscriberDelegate.isAccessible)

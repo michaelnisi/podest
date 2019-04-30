@@ -12,7 +12,6 @@
 		4C010A1F2101D6E90006CB53 /* PodKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C010A112101D6E90006CB53 /* PodKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C010A262101D7070006CB53 /* store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCBF20920805C6500A7359F /* store.swift */; };
 		4C010A272101D7070006CB53 /* StoreFSM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C175AA5208AFA26003071CA /* StoreFSM.swift */; };
-		4C010A282101D84F0006CB53 /* products.json in Resources */ = {isa = PBXBuildFile; fileRef = 4CCBF20B20805F5C00A7359F /* products.json */; };
 		4C02C29A2247544C00C7D647 /* StoreState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C02C2992247544C00C7D647 /* StoreState.swift */; };
 		4C02C29B2247544C00C7D647 /* StoreState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C02C2992247544C00C7D647 /* StoreState.swift */; };
 		4C07C97621EB0C9600ED8AB0 /* StoreLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C07C97521EB0C9600ED8AB0 /* StoreLayout.swift */; };
@@ -33,6 +32,7 @@
 		4C351CD11A7F5B7F00C5C88C /* SearchResultsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C351CD01A7F5B7E00C5C88C /* SearchResultsDataSource.swift */; };
 		4C3CDC282085A6C300BADBF8 /* StoreButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3CDC272085A6C300BADBF8 /* StoreButton.swift */; };
 		4C471523210F4F6F008D9E32 /* ReceiptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C471522210F4F6F008D9E32 /* ReceiptTests.swift */; };
+		4C4EDBFE22789D4700444B94 /* products.json in Resources */ = {isa = PBXBuildFile; fileRef = 4C4EDBFD22789D4600444B94 /* products.json */; };
 		4C5C9E4322396F55006DF298 /* HTMLAttributor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C2EDA4D2239699100528E99 /* HTMLAttributor.framework */; };
 		4C5C9E4422396F5E006DF298 /* HTMLAttributor.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4C2EDA4D2239699100528E99 /* HTMLAttributor.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4C5C9F0F223980BF006DF298 /* FileProxy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C5C9E542239715B006DF298 /* FileProxy.framework */; };
@@ -224,6 +224,7 @@
 		4C3CDC272085A6C300BADBF8 /* StoreButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreButton.swift; sourceTree = "<group>"; };
 		4C471522210F4F6F008D9E32 /* ReceiptTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptTests.swift; sourceTree = "<group>"; };
 		4C49DF412058319400DC86E6 /* PlayerTransitionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTransitionDelegate.swift; sourceTree = "<group>"; };
+		4C4EDBFD22789D4600444B94 /* products.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = products.json; sourceTree = "<group>"; };
 		4C5C9E4522396FED006DF298 /* fileproxy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = fileproxy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C5C9E542239715B006DF298 /* FileProxy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FileProxy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C5F4E7B21CB79A300156D56 /* EntryRowSelectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryRowSelectable.swift; sourceTree = "<group>"; };
@@ -421,6 +422,7 @@
 				4CE9694721DF668E00AEF409 /* ListDataSourceTests.swift */,
 				4CF9AC7D21FAEA9D009F70BB /* StringRepositoryTests.swift */,
 				4CE9694921DF692900AEF409 /* entries.json */,
+				4C4EDBFD22789D4600444B94 /* products.json */,
 				4CF9AC7F21FB1B7A009F70BB /* strings.json */,
 				4CDB9F3321F76E0900E0679D /* feeds.json */,
 				4C010A1E2101D6E90006CB53 /* Info.plist */,
@@ -933,7 +935,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4CE9694A21DF692900AEF409 /* entries.json in Resources */,
-				4C010A282101D84F0006CB53 /* products.json in Resources */,
+				4C4EDBFE22789D4700444B94 /* products.json in Resources */,
 				4CF9AC8021FB1B7A009F70BB /* strings.json in Resources */,
 				4CDB9F3421F76E0900E0679D /* feeds.json in Resources */,
 			);
