@@ -290,7 +290,7 @@ final class StoreFSM: NSObject {
     os_log("saved: ( %@, %@ )", log: log, type: .debug, r, str)
   }
 
-  /// Enumerates offered time periods in seconds.
+  /// Enumerates time periods in seconds.
   enum Period: TimeInterval {
     typealias RawValue = TimeInterval
     case subscription = 3.154e7
@@ -370,27 +370,6 @@ final class StoreFSM: NSObject {
   // Calling the delegate on a distinct system queue for keeping things
   // serially in order.
   private var delegateQueue = DispatchQueue.global()
-
-  private func updatedState(
-    after error: ShoppingError,
-    next nextState: StoreState
-  ) -> StoreState {
-    let er: ShoppingError = isReachable() ? error : .offline
-    
-    delegateQueue.async {
-      self.delegate?.store(self, error: er)
-    }
-    
-    if case .offline = er {
-      if case .subscribed  = validateReceipts() {
-        return .offline(true)
-      } else {
-        return .offline(validateTrial())
-      }
-    }
-
-    return nextState
-  }
 
   /// Is `true` for interested users with the intention of hiding the store for customers.
   private var isAccessible: Bool = false {
@@ -519,6 +498,33 @@ final class StoreFSM: NSObject {
     }
 
     return updateIsAccessible(matching: validateReceipts())
+  }
+  
+  /// Returns the next state after an `error`, overriding `nextState` in some
+  /// cases.
+  ///
+  /// Designated to **never** prompt subscribers about their expired free trial.
+  /// OK, there’s still the rare case, where users subscribed on another device
+  /// and are launching the app on an offline unsynchronized device. Thoughts?
+  private func updatedState(
+    after error: ShoppingError,
+    next nextState: StoreState
+  ) -> StoreState {
+    let er: ShoppingError = isReachable() ? error : .offline
+    
+    delegateQueue.async {
+      self.delegate?.store(self, error: er)
+    }
+    
+    if case .offline = er {
+      if case .subscribed  = validateReceipts() {
+        return .offline(true)
+      } else {
+        return .offline(validateTrial())
+      }
+    }
+    
+    return nextState
   }
   
   /// Returns the new store state after processing `event` relatively to the

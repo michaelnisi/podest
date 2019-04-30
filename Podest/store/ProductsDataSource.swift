@@ -177,9 +177,6 @@ extension ProductsDataSource: UICollectionViewDataSource {
       
       return cell
     case .product(let product):
-      os_log("** product: %{public}@",
-             log: log, type: .debug, product.productIdentifier)
-      
       let cell = collectionView.dequeueReusableCell(
         withReuseIdentifier: ProductsDataSource.productCellID,
         for: indexPath) as! ProductCell
