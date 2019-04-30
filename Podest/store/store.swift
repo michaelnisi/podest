@@ -214,7 +214,7 @@ protocol Expiring {
   /// Returns `true` if the trial period has been exceeded, `false` is returned
   /// within the trial period or if a valid subscription receipt is present.
   ///
-  /// Might modify internal state.
+  /// Might modify internal state or call delegates.
   func isExpired() -> Bool
 
 }

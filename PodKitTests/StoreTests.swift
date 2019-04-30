@@ -10,7 +10,7 @@ import XCTest
 import StoreKit
 @testable import PodKit
 
-private extension StoreDelegate {
+extension StoreDelegate {
   func store(_ store: Shopping, offers products: [SKProduct], error: ShoppingError?) {}
   func store(_ store: Shopping, purchasing productIdentifier: String) {}
   func store(_ store: Shopping, purchased productIdentifier: String) {}
@@ -19,7 +19,7 @@ private extension StoreDelegate {
   func store(_ store: Shopping, error: ShoppingError) {}
 }
 
-private extension Paying {
+extension Paying {
   func add(_ payment: SKPayment) {}
   func restoreCompletedTransactions() {}
   func finishTransaction(_ transaction: SKPaymentTransaction) {}
@@ -31,7 +31,40 @@ private class TestPaymentQueue: Paying {}
 
 class StoreTests: XCTestCase {
   
+  class Accessor: StoreAccessDelegate {
+    
+    func reach() -> Bool {
+      return true
+    }
+    
+    var isAccessible = false
+    
+    func store(_ store: Shopping, isAccessible: Bool) {
+      self.isAccessible = isAccessible
+    }
+    
+    var isExpired = false
+    
+    func store(_ store: Shopping, isExpired: Bool) {
+      self.isExpired = isExpired
+    }
+  }
+  
+  class StoreController: StoreDelegate {
+    
+    var products: [SKProduct]?
+    
+    func store(
+      _ store: Shopping,
+      offers products: [SKProduct],
+      error: ShoppingError?
+    ) {
+      self.products = products
+    }
+  }
+  
   var store: StoreFSM!
+  var db: NSUbiquitousKeyValueStore!
   
   override func setUp() {
     super.setUp()
@@ -43,8 +76,8 @@ class StoreTests: XCTestCase {
     XCTAssertEqual(v.env, .simulator)
 
     let q = TestPaymentQueue()
-    let db = NSUbiquitousKeyValueStore()
-
+    
+    db = NSUbiquitousKeyValueStore()
     store = StoreFSM(url: url, paymentQueue: q, db: db, version: v)
   }
   
@@ -64,53 +97,15 @@ class StoreTests: XCTestCase {
   }
   
   func testActivateWithSubscriptionDelegate() {
-    let exp = expectation(description: "waiting")
-    
-    class MainController: StoreAccessDelegate {
-      
-      func reach() -> Bool {
-        return true
-      }
-      
-      var isAccessible = false
-      
-      func store(_ store: Shopping, isAccessible: Bool) {
-        DispatchQueue.main.async {
-          self.isAccessible = isAccessible
-        }
-      }
-
-      var isExpired = false
-
-      func store(_ store: Shopping, isExpired: Bool) {
-        DispatchQueue.main.async {
-          self.isExpired = isExpired
-        }
-      }
-    }
-    
-    class StoreController: StoreDelegate {
-      var products: [SKProduct]?
-      func store(
-        _ store: Shopping,
-        offers products: [SKProduct],
-        error: ShoppingError?
-      ) {
-        DispatchQueue.main.async {
-          self.products = products
-        }
-      }
-    }
-    
-    let subscriberDelegate = MainController()
+    let subscriberDelegate = Accessor()
     store.subscriberDelegate = subscriberDelegate
-    
     let delegate = StoreController()
     store.delegate = delegate
+    let exp = expectation(description: "fetching products")
     
     store.resume()
     
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1 / 10) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(20)) {
       XCTAssertEqual(self.store.state, .fetchingProducts)
       
       let req = SKProductsRequest(productIdentifiers: Set([
@@ -124,10 +119,11 @@ class StoreTests: XCTestCase {
       
       self.store.productsRequest(req, didReceive: res)
       
-      DispatchQueue.main.asyncAfter(deadline: .now() + 1 / 10) {
+      DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(20)) {
         XCTAssertEqual(self.store.state, .interested(true))
         XCTAssertEqual(delegate.products, [])
         XCTAssertTrue(subscriberDelegate.isAccessible)
+        XCTAssertFalse(subscriberDelegate.isExpired)
         exp.fulfill()
       }
     }
@@ -141,14 +137,59 @@ class StoreTests: XCTestCase {
 
 extension StoreTests {
   
+  func testExpiredTrial() {
+    db.set(Date.distantPast.timeIntervalSince1970, forKey: StoreFSM.unsealedKey)
+    
+    let subscriberDelegate = Accessor()
+    store.subscriberDelegate = subscriberDelegate
+    let delegate = StoreController()
+    store.delegate = delegate
+    let exp = expectation(description: "fetching products")
+    
+    store.resume()
+    
+    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(20)) {
+      XCTAssertEqual(self.store.state, .fetchingProducts)
+      
+      let req = SKProductsRequest(productIdentifiers: Set())
+      let res = SKProductsResponse()
+      
+      self.store.productsRequest(req, didReceive: res)
+      
+      DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(20)) {
+        XCTAssertEqual(self.store.state, .interested(false))
+        XCTAssertEqual(delegate.products, [])
+        XCTAssertTrue(subscriberDelegate.isAccessible)
+        
+        XCTAssertFalse(
+          subscriberDelegate.isExpired,
+          "should not have been called yet"
+        )
+        
+        XCTAssertTrue(self.store!.isExpired())
+        
+        DispatchQueue.main.async {
+          XCTAssertTrue(
+            subscriberDelegate.isExpired,
+            "should be updated with isExpired method"
+          )
+          exp.fulfill()
+        }
+      }
+    }
+    
+    waitForExpectations(timeout: 5) { er in }
+  }
+  
   func testMakeExpiration() {
     let zero = Date(timeIntervalSince1970: 0)
+    let fixtures: [(Date, StoreFSM.Period, Date)] = [
+      (zero, .always, zero),
+      (zero, .subscription, zero.addingTimeInterval(3.154e7)),
+      (zero, .trial, zero.addingTimeInterval(2.419e6))
+    ]
     
-    for (date, period, wanted) in [
-      (zero, StoreFSM.Period.always, zero),
-      (zero, StoreFSM.Period.subscription, zero.addingTimeInterval(3.154e7)),
-      (zero, StoreFSM.Period.trial, zero.addingTimeInterval(2.419e6))
-    ] {
+    for (date, period, wanted) in fixtures {
       XCTAssertEqual(StoreFSM.makeExpiration(date: date, period: period), wanted)
     }
   }
