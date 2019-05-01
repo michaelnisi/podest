@@ -282,7 +282,7 @@ final class StoreFSM: NSObject {
 
     let id = receipt.productIdentifier
     let name = (id.split(separator: ".").last ?? "unknown").capitalized
-    let x = StoreFSM.makeExpiration(date: receipt.transactionDate, period: Period.subscription)
+    let x = StoreFSM.makeExpiration(date: receipt.transactionDate, period: .subscription)
     updateSettings(status: name, expiration: x)
 
     let str = String(data: data, encoding: .utf8)!
