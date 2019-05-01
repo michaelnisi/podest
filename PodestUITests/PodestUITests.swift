@@ -9,6 +9,13 @@
 import XCTest
 
 class PodestUITests: XCTestCase {
+  
+  struct Script {
+    let playerTitle = "#130 The Snapchat Thief"
+    let searchTerm = "new"
+    let suggestedTerm = "new america"
+    let resultTitle = "Adventures in New America"
+  }
 
   var app: XCUIApplication!
 
@@ -20,17 +27,27 @@ class PodestUITests: XCTestCase {
     setupSnapshot(app)
     app.launch()
   }
+  
+  let script = Script()
+  
+  var window: XCUIElement {
+    return app.children(matching: .window).element(boundBy: 0)
+  }
+  
+  var miniPlayer: XCUIElement {
+    return window.children(matching: .other)
+      .element.children(matching: .other)
+      .element(boundBy: 1).staticTexts[script.playerTitle]
+  }
+  
+  var exists = NSPredicate(format: "exists == 1")
 
   func testSearching() {
     let detail = app.tables.cells.element(boundBy: 0)
 
-    expectation(
-      for: NSPredicate(format: "exists == 1"),
-      evaluatedWith: detail,
-      handler: nil
-    )
-
-    waitForExpectations(timeout: 5, handler: nil)
+    wait(for: [
+      expectation(for: exists, evaluatedWith: detail)
+    ], timeout: 5)
 
     if UIDevice.current.userInterfaceIdiom == .pad {
       detail.tap()
@@ -47,55 +64,33 @@ class PodestUITests: XCTestCase {
 
     let searchSearchField = app.searchFields["Search"]
 
-    expectation(
-      for: NSPredicate(format: "exists == 1"),
-      evaluatedWith: searchSearchField,
-      handler: nil
-    )
-
-    waitForExpectations(timeout: 5, handler: nil)
-
+    wait(for: [
+      expectation(for: exists, evaluatedWith: searchSearchField)
+    ], timeout: 5)
     searchSearchField.tap()
-    searchSearchField.typeText("new")
+    searchSearchField.typeText(script.searchTerm)
 
     let suggestion = app
-      .tables["Search results"].staticTexts["new america"]
+      .tables["Search results"].staticTexts[script.suggestedTerm]
 
-    expectation(
-      for: NSPredicate(format: "exists == 1"),
-      evaluatedWith: suggestion,
-      handler: nil
-    )
-
-    waitForExpectations(timeout: 5, handler: nil)
-
+    wait(for: [
+      expectation(for: exists,evaluatedWith: suggestion)
+    ], timeout: 5)
     snapshot("4")
     suggestion.tap()
 
     let find = app
-      .tables["Search results"].staticTexts["Adventures in New America"]
+      .tables["Search results"].staticTexts[script.resultTitle]
 
-    expectation(
-      for: NSPredicate(format: "exists == 1"),
-      evaluatedWith: find,
-      handler: nil
-    )
-
-    waitForExpectations(timeout: 5, handler: nil)
-
+    wait(for: [
+      expectation(for: exists, evaluatedWith: find)
+    ], timeout: 5)
     snapshot("5")
     find.firstMatch.tap()
 
     let episode = app.tables.cells.element(boundBy: 0)
 
-    expectation(
-      for: NSPredicate(format: "exists == 1"),
-      evaluatedWith: episode,
-      handler: nil
-    )
-
-    waitForExpectations(timeout: 5, handler: nil)
-
+    wait(for: [expectation(for: exists, evaluatedWith: episode)], timeout: 5)
     episode.tap()
     snapshot("6")
 
@@ -104,39 +99,32 @@ class PodestUITests: XCTestCase {
   }
 
   func testPlaying() {
-    let window = app.children(matching: .window).element(boundBy: 0)
+    wait(for: [
+      expectation(for: exists, evaluatedWith: miniPlayer)
+    ], timeout: 5)
+    miniPlayer.tap()
 
-    window.children(matching: .other).element
-      .children(matching: .other)
-      .element(boundBy: 1).staticTexts["#130 The Snapchat Thief"].tap()
+    let playButton = window.children(matching: .other)
+      .element(boundBy: 1).children(matching: .other)
+      .element.children(matching: .other)
+      .element.children(matching: .other)
+      .element.children(matching: .other)
+      .element(boundBy: 1).children(matching: .other)
+      .element
 
-    let play = window.children(matching: .other).element(boundBy: 1)
-      .children(matching: .other).element
-      .children(matching: .other).element
-      .children(matching: .other).element
-      .children(matching: .other).element(boundBy: 1)
-      .children(matching: .other).element
-
-    expectation(
-      for: NSPredicate(format: "exists == 1"),
-      evaluatedWith: play,
-      handler: nil
-    )
-
-    waitForExpectations(timeout: 5, handler: nil)
-
-    play.tap()
+    wait(for: [
+      expectation(for: exists, evaluatedWith: playButton, handler: nil)
+    ], timeout: 5)
+    playButton.tap()
     snapshot("3")
   }
 
   func testBrowsing() {
-    expectation(
-      for: NSPredicate(format: "exists == 1"),
-      evaluatedWith: app.tables.cells.element(boundBy: 1),
-      handler: nil
-    )
+    let secondCell = app.tables.cells.element(boundBy: 1)
 
-    waitForExpectations(timeout: 5, handler: nil)
+    wait(for: [
+      expectation(for: exists, evaluatedWith: secondCell)
+    ], timeout: 5)
 
     if UIDevice.current.userInterfaceIdiom == .phone {
       snapshot("0")
@@ -147,16 +135,10 @@ class PodestUITests: XCTestCase {
 
     let feedButton = app.scrollViews.otherElements.buttons.element(boundBy: 0)
 
-    expectation(
-      for: NSPredicate(format: "exists == 1"),
-      evaluatedWith: feedButton,
-      handler: nil
-    )
-
-    waitForExpectations(timeout: 5, handler: nil)
-    
+    wait(for: [
+      expectation(for: exists, evaluatedWith: feedButton)
+    ], timeout: 5)
     snapshot("1")
-
     feedButton.tap()
     sleep(1)
 
@@ -167,5 +149,4 @@ class PodestUITests: XCTestCase {
 
     snapshot("2")
   }
-
 }

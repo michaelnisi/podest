@@ -1,7 +1,5 @@
-Superfluous spaces in episode summaries have been removed.
+This version, the first using a new simplified version number, provides more information about Podest in the Settings app, namely version, subscription, and expiration date for free trials. On iPad, episode images are displayed in the correct size. Large titles are refrained. And its springtime round these parts, time to change up colors.
 
-Messaging in the Queue has been adjusted and its background set to white. For some users, after the initial iCloud sync, an incorrect message had been displayed, that’s fixed now.
+From now on versions will be counted in whole numbers, eight, nine, 10, etc., with a relative build number, for example, 8 (2) for version eight, build two. Patches are going to be counted after a dot, like 8.1 for example. The previous Semantic Versioning didn’t prove itself practical for this app. The new version numbers may be decribed as semver without the major: MINOR.PATCH instead of MAJOR.MINOR.PATCH.
 
-The in-app store layout has been reorganized and the store now features app rating and review incentives.
-
-The clipped search list regression is cleared.
+Thanks to ABI stability, app size is down to five megabytes. Good job, Swift team.
