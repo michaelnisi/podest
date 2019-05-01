@@ -22,5 +22,5 @@ devices([
   "iPhone 8",
   "iPhone 8 Plus",
   "iPhone X",
-  "iPhone XS Max"
+  "iPhone Xs Max"
 ])
