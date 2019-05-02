@@ -14,6 +14,8 @@ languages([
 ])
 
 devices([
+  "iPad Pro (12.9-inch) (2nd generation)",
   "iPad Pro (12.9-inch) (3rd generation)",
+  "iPhone 8 Plus",
   "iPhone Xs Max"
 ])
