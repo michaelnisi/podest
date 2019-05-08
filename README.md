@@ -22,7 +22,7 @@ Podest is a podcast player app for iOS making podcasts simple. I’ve written ab
 
 ## Documentation
 
-Browse the [docs](https://michaelnisi.github.io/podest/index.html).
+More interesting things happen in frameworks like [FeedKit](https://github.com/michaelnisi/feedkit), but you may also browse app [docs](https://michaelnisi.github.io/podest/index.html).
 
 ## Install
 
