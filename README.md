@@ -4,21 +4,21 @@ Podest is a podcast player app for iOS making podcasts simple. I’ve written ab
 
 ## Dependencies
 
-- [michaelnisi/batchupdates](https://github.com/michaelnisi/batchupdates), Batch update table and collection views
-- [michaelnisi/fanboy-kit](https://github.com/michaelnisi/fanboy-kit), Search podcasts via proxy
-- [michaelnisi/feedkit](https://github.com/michaelnisi/feedkit), Get feeds and entries
-- [michaelnisi/fileproxy](https://github.com/michaelnisi/fileproxy), Manage background downloads
-- [michaelnisi/hattr](https://github.com/michaelnisi/hattr), Convert HTML to attributed strings
-- [michaelnisi/manger-kit](https://github.com/michaelnisi/manger-kit), Request podcasts via proxy
-- [michaelnisi/ola](https://github.com/michaelnisi/ola), Check reachability
-- [michaelnisi/patron](https://github.com/michaelnisi/patron), JSON HTTP client
-- [michaelnisi/playback](https://github.com/michaelnisi/playback), Play audio and video
-- [michaelnisi/skull](https://github.com/michaelnisi/skull), Swift SQLite
+- [michaelnisi/batchupdates](https://github.com/michaelnisi/batchupdates) Batch update table and collection views
+- [michaelnisi/fanboy-kit](https://github.com/michaelnisi/fanboy-kit) Search podcasts via proxy
+- [michaelnisi/feedkit](https://github.com/michaelnisi/feedkit) Get feeds and entries
+- [michaelnisi/fileproxy](https://github.com/michaelnisi/fileproxy) Manage background downloads
+- [michaelnisi/hattr](https://github.com/michaelnisi/hattr) Convert HTML to attributed strings
+- [michaelnisi/manger-kit](https://github.com/michaelnisi/manger-kit) Request podcasts via proxy
+- [michaelnisi/ola](https://github.com/michaelnisi/ola) Check reachability
+- [michaelnisi/patron](https://github.com/michaelnisi/patron) JSON HTTP client
+- [michaelnisi/playback](https://github.com/michaelnisi/playback) Play audio and video
+- [michaelnisi/skull](https://github.com/michaelnisi/skull) Swift SQLite
 
 ## Services
 
-- [fanboy-http](https://github.com/michaelnisi/fanboy-http), Search podcasts
-- [manger-http](https://github.com/michaelnisi/manger-http), Browse podcasts
+- [fanboy-http](https://github.com/michaelnisi/fanboy-http) Search podcasts
+- [manger-http](https://github.com/michaelnisi/manger-http) Browse podcasts
 
 ## Documentation
 
