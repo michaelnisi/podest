@@ -18,8 +18,8 @@ Podest is a podcast player app for iOS making podcasts simple. I’ve written ab
 
 ## Services
 
-- [fanboy-http](https://github.com/michaelnisi/fanboy-http) Search podcasts
-- [manger-http](https://github.com/michaelnisi/manger-http) Browse podcasts
+- [michaelnisi/fanboy-http](https://github.com/michaelnisi/fanboy-http) Search podcasts
+- [michaelnisi/manger-http](https://github.com/michaelnisi/manger-http) Browse podcasts
 
 ## Documentation
 
