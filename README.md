@@ -4,6 +4,7 @@ Podest is a podcast player app for iOS making podcasts simple. I’ve written ab
 
 ## Dependencies
 
+- [kean/Nuke](https://github.com/kean/Nuke), A powerful image loading and caching system
 - [michaelnisi/batchupdates](https://github.com/michaelnisi/batchupdates) Batch update table and collection views
 - [michaelnisi/fanboy-kit](https://github.com/michaelnisi/fanboy-kit) Search podcasts via proxy
 - [michaelnisi/feedkit](https://github.com/michaelnisi/feedkit) Get feeds and entries
