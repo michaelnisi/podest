@@ -115,7 +115,7 @@ extension PlayerTransitionDelegate: UIViewControllerTransitioningDelegate {
     source: UIViewController
   ) -> UIPresentationController? {
     switch presented {
-    case is PlayerViewController:
+    case is PlayerV1ViewController:
       return PlayerPresentationController(
         presentedViewController: presented, presenting: presenting)
     default:

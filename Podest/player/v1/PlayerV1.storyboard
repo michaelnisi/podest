@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Q8z-hD-NaL">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Q8z-hD-NaL">
     <device id="ipad9_7" orientation="landscape">
         <adaptation id="splitview2_3"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Player View Controller-->
+        <!--PlayerV1 View Controller-->
         <scene sceneID="2dX-Tr-y0I">
             <objects>
-                <viewController storyboardIdentifier="PlayerID" id="Q8z-hD-NaL" customClass="PlayerViewController" customModule="Podest" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PlayerV1ID" id="Q8z-hD-NaL" customClass="PlayerV1ViewController" customModule="Podest" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VBV-J7-OAZ">
                         <rect key="frame" x="0.0" y="0.0" width="694" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -156,7 +156,7 @@
         <image name="Pause" width="82" height="82"/>
         <image name="Play" width="82" height="82"/>
         <namedColor name="Purple">
-            <color red="0.56099998950958252" green="0.071000002324581146" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.5607843137254902" green="0.070588235294117646" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

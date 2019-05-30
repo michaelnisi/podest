@@ -29,7 +29,7 @@ final class RootViewController: UIViewController, Routing {
   private var svc: UISplitViewController!
 
   var minivc: MiniPlayerController!
-  var playervc: PlayerViewController?
+  var playervc: PlaybackControlDelegate?
 
   private var pnc: UINavigationController!
   private var snc: UINavigationController!
@@ -66,7 +66,7 @@ final class RootViewController: UIViewController, Routing {
 
   /// A reference to the current player transition delegate. Unfortunately, we
   /// need a place to hold on to it.
-  var playerTransition: PlayerTransitionDelegate?
+  var playerTransition: UIViewControllerTransitioningDelegate?
 
   /// Stores simplified playback state.
   struct SimplePlaybackState {

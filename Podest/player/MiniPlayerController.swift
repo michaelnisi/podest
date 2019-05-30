@@ -18,8 +18,12 @@ import Ola
 private let log = OSLog.disabled
 
 /// The minimized AV player.
-final class MiniPlayerController: SomePlayerViewController,
-Navigator, PlaybackControlDelegate {
+final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDelegate {
+  
+  var isForwardable: Bool = false
+  
+  var isBackwardable: Bool = false
+  
 
   private struct FetchEntryResult {
     let entry: Entry?
@@ -248,6 +252,36 @@ Navigator, PlaybackControlDelegate {
     configureSwipe()
   }
 
+}
+
+// MARK: - UIGestureRecognizerDelegate
+
+extension MiniPlayerController: UIGestureRecognizerDelegate {
+  
+  /// Returns `true` if we are vertically compact.
+  var isLandscape: Bool {
+    return traitCollection.containsTraits(
+      in: UITraitCollection(verticalSizeClass: .compact))
+  }
+  
+  func gestureRecognizer(
+    _ gestureRecognizer: UIGestureRecognizer,
+    shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+    switch gestureRecognizer {
+    case is UISwipeGestureRecognizer:
+      return !(otherGestureRecognizer is UIScreenEdgePanGestureRecognizer)
+    default:
+      return false
+    }
+  }
+  
+  func gestureRecognizer(
+    _ gestureRecognizer: UIGestureRecognizer,
+    shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+    return gestureRecognizer is UIScreenEdgePanGestureRecognizer
+  }
 }
 
 // MARK: - UITapGestureRecognizer

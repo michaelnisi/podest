@@ -21,7 +21,7 @@ extension PlayerPresentationAnimator: UIViewControllerAnimatedTransitioning {
 
   /// Adds a snapshot of the `player` view to `containerView`.
   static func addSnapshot(
-    using player: PlayerViewController, to containerView: UIView) -> UIView? {
+    using player: PlayerV1ViewController, to containerView: UIView) -> UIView? {
     player.heroImage.alpha = 0
     player.doneButton.alpha = 0
 
@@ -45,7 +45,7 @@ extension PlayerPresentationAnimator: UIViewControllerAnimatedTransitioning {
     // Presenting in a fixed constellation only.
 
     guard
-      let to = tc.viewController(forKey: .to) as? PlayerViewController,
+      let to = tc.viewController(forKey: .to) as? PlayerV1ViewController,
       let from = tc.viewController(forKey: .from) as? RootViewController else {
       return transitionContext.completeTransition(false)
     }
