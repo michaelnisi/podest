@@ -21,7 +21,7 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gaa-Vr-ILB">
                         <rect key="frame" x="0.0" y="0.0" width="617" height="680"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Oval" translatesAutoresizingMaskIntoConstraints="NO" id="eMo-mA-b07">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Oval" translatesAutoresizingMaskIntoConstraints="NO" id="eMo-mA-b07" userLabel="ImageView">
                                 <rect key="frame" x="0.0" y="0.0" width="617" height="680"/>
                             </imageView>
                         </subviews>
@@ -43,6 +43,9 @@
             </constraints>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <size key="customSize" width="521" height="565"/>
+            <connections>
+                <outlet property="imageView" destination="eMo-mA-b07" id="6eu-LE-GnS"/>
+            </connections>
             <point key="canvasLocation" x="478.98550724637687" y="325.44642857142856"/>
         </collectionViewCell>
     </objects>

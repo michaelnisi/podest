@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// An abstract custom layout.
 class CustomLayout: UICollectionViewLayout {
   
   /// The combined attributes frame.

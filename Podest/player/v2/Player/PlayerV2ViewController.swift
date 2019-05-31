@@ -54,6 +54,7 @@ class DoneButton {
 // MARK: - PlayerV2ViewController
 
 class PlayerV2ViewController: UICollectionViewController {
+  
   let dataSource = PlayerDataSource()
   var doneButton: DoneButton!
   var entryChangedBlock: ((Entry?) -> Void)?
@@ -63,8 +64,8 @@ class PlayerV2ViewController: UICollectionViewController {
 
 extension PlayerV2ViewController {
   
-  // Returns the newly created view controller for managing the `cell`.
-  func viewController(managing cell: UICollectionViewCell) -> UIViewController? {
+  /// Installs `cell` and returns its managing view controller.
+  private func install(cell: UICollectionViewCell) -> UIViewController? {
     switch cell {
     case let hosted as MoreCell:
       let sid: String = {
@@ -78,12 +79,18 @@ extension PlayerV2ViewController {
       
       guard let vc = storyboard?.instantiateViewController(
         withIdentifier: sid) else {
-        fatalError("unexpected view controller")
+        fatalError("missing view controller in storyboard")
       }
       
       hosted.container = vc
       
       return vc
+    
+    case let host as ControlsCell:
+      host.delegate = self
+      
+      return nil
+
     default:
       return nil
     }
@@ -93,15 +100,15 @@ extension PlayerV2ViewController {
     _ collectionView: UICollectionView, 
     willDisplay cell: UICollectionViewCell, 
     forItemAt indexPath: IndexPath) {
-    guard let vc = viewController(managing: cell) else {
+    guard let vc = install(cell: cell) else {
       return
     }
     
     addChild(vc)
-    
+
     vc.view.frame = cell.contentView.frame
-    
     cell.contentView.addSubview(vc.view)
+    
     vc.didMove(toParent: self)
   }
   
@@ -113,6 +120,8 @@ extension PlayerV2ViewController {
     case let hosted as MoreCell:
       hosted.container?.willMove(toParent: nil)
       hosted.container?.removeFromParent()
+    case let hosted as ControlsCell:
+      hosted.delegate = nil
     default:
       break
     }
@@ -138,9 +147,6 @@ extension PlayerV2ViewController {
     doneButton.doneBlock = {
       print("done")
     }
-    
-    navigationItem.leftBarButtonItem = UIBarButtonItem(
-      image: UIImage(named: "Done"), style: .plain, target: self, action: #selector(nop))
   }
   
   override func viewDidDisappear(_ animated: Bool) {
@@ -161,13 +167,54 @@ extension PlayerV2ViewController {
   
   private func makeToolbarItems(rate: Double = 1) -> [UIBarButtonItem] {
     return [
-      UIBarButtonItem(title: "\(rate) ×", style: .plain, target: self, action: #selector(nop)),
-      UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
-      UIBarButtonItem(image: UIImage(named: "Sleep"), style: .plain, target: self, action: #selector(nop)),
-      UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
-      UIBarButtonItem(image: UIImage(named: "AirPlay-Glyph-Audio"), style: .plain, target: self, action: #selector(nop)),
-      UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
-      UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(nop))
+      UIBarButtonItem(
+        title: "\(rate) ×", 
+        style: .plain, 
+        target: self, 
+        action: #selector(nop)
+      ),
+      UIBarButtonItem(
+        barButtonSystemItem: .flexibleSpace, 
+        target: nil, 
+        action: nil
+      ),
+      UIBarButtonItem(
+        image: UIImage(named: "Sleep"), 
+        style: .plain, 
+        target: self, 
+        action: #selector(nop)
+      ),
+      UIBarButtonItem(
+        barButtonSystemItem: .flexibleSpace, 
+        target: nil, 
+        action: nil
+      ),
+      UIBarButtonItem(
+        image: UIImage(named: "AirPlay-Glyph-Audio"), 
+        style: .plain, 
+        target: self, 
+        action: #selector(nop)
+      ),
+      UIBarButtonItem(
+        barButtonSystemItem: .flexibleSpace, 
+        target: nil, 
+        action: nil
+      ),
+      UIBarButtonItem(
+        barButtonSystemItem: .action, 
+        target: self, 
+        action: #selector(nop)
+      )
     ]
   }
 }
+
+// MARK: - PlaybackControlsDelegate
+
+extension PlayerV2ViewController: PlaybackControlsDelegate {
+  
+  func track(_ slider: UISlider, changed value: Float) {
+    print(value)
+  }
+}
+

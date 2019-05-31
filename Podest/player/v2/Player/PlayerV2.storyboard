@@ -5,7 +5,6 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -16,7 +15,7 @@
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="2OH-hb-XdT">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" name="Magenta"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="0EO-th-w7n">
                             <size key="itemSize" width="50" height="50"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -34,10 +33,10 @@
             </objects>
             <point key="canvasLocation" x="-74" y="205"/>
         </scene>
-        <!--Collection View Controller-->
+        <!--Up Next View Controller-->
         <scene sceneID="hBg-HL-a5W">
             <objects>
-                <collectionViewController storyboardIdentifier="QueueID" id="Ge1-gq-jEQ" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="QueueID" id="Ge1-gq-jEQ" customClass="UpNextViewController" customModule="Player" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="Qll-6b-GMf">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -59,10 +58,10 @@
             </objects>
             <point key="canvasLocation" x="1309" y="203"/>
         </scene>
-        <!--Collection View Controller-->
+        <!--Chapters View Controller-->
         <scene sceneID="xeB-aw-gUF">
             <objects>
-                <collectionViewController storyboardIdentifier="ChaptersID" id="7wr-qo-ITV" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="ChaptersID" id="7wr-qo-ITV" customClass="ChaptersViewController" customModule="Player" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="5mM-IM-obX">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -85,9 +84,4 @@
             <point key="canvasLocation" x="616" y="203"/>
         </scene>
     </scenes>
-    <resources>
-        <namedColor name="Magenta">
-            <color red="0.82352941176470584" green="0.094117647058823528" blue="0.58431372549019611" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-    </resources>
 </document>

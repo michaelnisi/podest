@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -126,6 +125,7 @@
                 </subviews>
             </view>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="tintColor" name="Purple"/>
             <constraints>
                 <constraint firstAttribute="bottomMargin" secondItem="fmL-9P-iii" secondAttribute="bottom" id="BJv-Un-brc"/>
                 <constraint firstAttribute="trailingMargin" secondItem="fmL-9P-iii" secondAttribute="trailing" id="QhD-UE-cQ5"/>
@@ -149,7 +149,7 @@
         <image name="Forward" width="81" height="82"/>
         <image name="Play" width="82" height="82"/>
         <namedColor name="Purple">
-            <color red="0.68235294117647061" green="0.32156862745098042" blue="0.87058823529411766" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.5607843137254902" green="0.070588235294117646" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

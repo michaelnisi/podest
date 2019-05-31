@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// Single horizontal row layout.
 class SingleRowLayout: CustomLayout {
   
   /// Returns the initial rectangular space for our layout.

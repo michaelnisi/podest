@@ -1,5 +1,5 @@
 //
-//  Players.swift
+//  integration.swift - integrate players
 //  Podest
 //
 //  Created by Michael Nisi on 18.11.18.
@@ -17,7 +17,7 @@ import Ola
 private let log = OSLog.disabled
 
 extension RootViewController: Players {
-  // Implementation of Players is broken down into caterogized extensions below.
+  // Implementation of Players is broken down into extensions below.
 }
 
 // MARK: - Placing the Mini-Player

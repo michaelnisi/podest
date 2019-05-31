@@ -16,7 +16,7 @@ private let log = OSLog(subsystem: "ink.codes.podest", category: "root")
 /// The root container view controller of this app, composing a split view
 /// controller, with two navigation controllers, and a player view controller.
 /// The `RootViewController` is mainly a proxy between components and, with its
-/// overseeing vista, supervises naigation and layout.
+/// overseeing vista, supervises navigation and layout.
 ///
 /// This class should be simple and stable glue code. More complex and dynamic
 /// things should be extracted, aiming for below 600 LOC.

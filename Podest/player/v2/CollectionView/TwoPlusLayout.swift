@@ -38,7 +38,7 @@ private extension CGRect {
   }
 }
 
-/// Single section layout for two visible items plus more.
+/// Single section layout for two initially visible items plus more to scroll.
 final class TwoPlusLayout: CustomLayout {
 
   private enum SegmentStyle {
@@ -68,7 +68,7 @@ final class TwoPlusLayout: CustomLayout {
   private static 
   func makeRectangle(collectionView cv: UICollectionView) -> CGRect {
     let m = cv.layoutMargins
-    let insets = UIEdgeInsets(top: m.top, left: 0, bottom: m.bottom, right: 0)
+    let insets = UIEdgeInsets(top: m.top, left: 0, bottom: 0, right: 0)
     
     return cv.bounds.inset(by: insets)
   }

@@ -71,7 +71,9 @@ extension PlayerDataSource: UICollectionViewDataSource {
     switch item {
     case .hero:
       let cell = collectionView.dequeueReusableCell(
-        withReuseIdentifier: "HeroCellID", for: indexPath)
+        withReuseIdentifier: "HeroCellID", for: indexPath) as! HeroCell
+      
+      cell.imageView.image = UIImage(named: "Dummy")
       
       return cell
       
