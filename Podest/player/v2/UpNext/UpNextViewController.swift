@@ -7,10 +7,17 @@
 //
 
 import UIKit
+import os.log
+
+private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
 class UpNextViewController: UICollectionViewController {
   
   let dataSource = UpNextDataSource()
+  
+  deinit {
+    os_log("** deinit", log: log, type: .debug)
+  }
 }
 
 // MARK: - UIViewController

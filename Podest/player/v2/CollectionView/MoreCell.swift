@@ -19,7 +19,8 @@ class MoreCell: UICollectionViewCell {
   var type: Kind!
   
   /// Our managing player view controller needs a reference to the container.
-  weak var container: UIViewController!
+  /// Also, we want to hold on to these for the lifespan of this cell.
+  var container: UIViewController!
   
   override func awakeFromNib() {
     super.awakeFromNib()

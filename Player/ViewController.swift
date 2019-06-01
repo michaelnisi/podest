@@ -9,12 +9,14 @@
 import UIKit
 
 class ViewController: UIViewController {
-
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    // Do any additional setup after loading the view.
+  
+  @IBAction func tapped(_ sender: UITapGestureRecognizer) {
+    guard let vc = storyboard?.instantiateViewController(
+      withIdentifier: "PlayerID") else {
+      fatalError("missing view controller")
+    }
+  
+    present(vc, animated: true)
   }
-
-
 }
 

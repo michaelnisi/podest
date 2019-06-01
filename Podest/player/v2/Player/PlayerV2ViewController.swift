@@ -8,6 +8,9 @@
 
 import UIKit
 import FeedKit
+import os.log
+
+private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
 // MARK: - DoneButton
 
@@ -58,6 +61,11 @@ class PlayerV2ViewController: UICollectionViewController {
   let dataSource = PlayerDataSource()
   var doneButton: DoneButton!
   var entryChangedBlock: ((Entry?) -> Void)?
+  var statusBarHidden = false
+  
+  deinit {
+    os_log("** deinit", log: log, type: .debug)
+  }
 }
 
 // MARK: - UICollectionViewDelegate
@@ -77,10 +85,19 @@ extension PlayerV2ViewController {
         }
       }()
       
+      os_log("finding view controller", log: log, type: .debug)
+      
+      guard hosted.container == nil else {
+        os_log("returning cached view controller", log: log, type: .debug)
+        return hosted.container
+      }
+      
       guard let vc = storyboard?.instantiateViewController(
         withIdentifier: sid) else {
         fatalError("missing view controller in storyboard")
       }
+      
+      os_log("instantiated view controller", log: log, type: .debug)
       
       hosted.container = vc
       
@@ -131,7 +148,14 @@ extension PlayerV2ViewController {
 // MARK: - UIViewController
 
 extension PlayerV2ViewController {
-  override var prefersStatusBarHidden: Bool { return true }
+  
+  override var prefersStatusBarHidden: Bool { 
+    return statusBarHidden 
+  }
+  
+  override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+    return .slide
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -144,9 +168,27 @@ extension PlayerV2ViewController {
     toolbarItems = makeToolbarItems(rate: 1.5) 
     
     doneButton = DoneButton(view: view)
-    doneButton.doneBlock = {
-      print("done")
+    doneButton.doneBlock = { [weak self] in
+      self?.dismiss(animated: true)
     }
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    UIView.animate(withDuration: 0.25) {
+      self.statusBarHidden = true
+      
+      self.setNeedsStatusBarAppearanceUpdate()
+    }
+  }
+  
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    
+    statusBarHidden = false
+    
+    self.setNeedsStatusBarAppearanceUpdate()
   }
   
   override func viewDidDisappear(_ animated: Bool) {
