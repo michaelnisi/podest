@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vbV-bQ-6oK">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="mcw-DX-iNt">
     <device id="retina6_1" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -8,6 +8,25 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="hTT-ko-YQb">
+            <objects>
+                <navigationController navigationBarHidden="YES" toolbarHidden="NO" id="mcw-DX-iNt" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="voK-qZ-56z">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="UcU-ZE-zdE">
+                        <rect key="frame" x="0.0" y="813" width="414" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
+                    <connections>
+                        <segue destination="vbV-bQ-6oK" kind="relationship" relationship="rootViewController" id="hux-eD-5GJ"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qLK-UE-rOh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-846" y="205"/>
+        </scene>
         <!--PlayerV2 View Controller-->
         <scene sceneID="xLj-dQ-ghy">
             <objects>
@@ -28,6 +47,7 @@
                             <outlet property="delegate" destination="vbV-bQ-6oK" id="cgE-jO-RIi"/>
                         </connections>
                     </collectionView>
+                    <navigationItem key="navigationItem" id="g0r-PL-OXN"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bpy-iB-uNv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

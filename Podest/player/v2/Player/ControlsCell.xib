@@ -26,24 +26,8 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="JEF-tI-rKH">
                                 <rect key="frame" x="0.0" y="0.0" width="390" height="463"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="vRs-jz-Acb" userLabel="Titles">
-                                        <rect key="frame" x="0.0" y="0.0" width="390" height="149"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dhm-je-Cx6" userLabel="Title">
-                                                <rect key="frame" x="0.0" y="0.0" width="390" height="120.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                                <state key="normal" title="Button"/>
-                                            </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ibd-sq-y46" userLabel="Subtitle">
-                                                <rect key="frame" x="0.0" y="128.5" width="390" height="20.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
                                     <view contentMode="scaleToFill" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="GDF-Xs-Uf9" userLabel="Playback">
-                                        <rect key="frame" x="0.0" y="157" width="390" height="149"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="390" height="149"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q8n-aD-IZ4" userLabel="Jump Back">
                                                 <rect key="frame" x="16" y="46.5" width="56" height="56"/>
@@ -81,7 +65,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="epE-uP-r8b" userLabel="Track">
-                                        <rect key="frame" x="0.0" y="314" width="390" height="149"/>
+                                        <rect key="frame" x="0.0" y="157" width="390" height="149"/>
                                         <subviews>
                                             <slider opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="L6K-Fc-WAT">
                                                 <rect key="frame" x="18" y="20" width="354" height="31"/>
@@ -111,6 +95,22 @@
                                             <constraint firstAttribute="trailing" secondItem="L6K-Fc-WAT" secondAttribute="trailing" constant="20" symbolic="YES" id="neN-zJ-CO3"/>
                                         </constraints>
                                     </view>
+                                    <stackView opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="vRs-jz-Acb" userLabel="Titles">
+                                        <rect key="frame" x="0.0" y="314" width="390" height="149"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dhm-je-Cx6" userLabel="Title">
+                                                <rect key="frame" x="0.0" y="0.0" width="390" height="120.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                <state key="normal" title="Button"/>
+                                            </button>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ibd-sq-y46" userLabel="Subtitle">
+                                                <rect key="frame" x="0.0" y="128.5" width="390" height="20.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                             </stackView>
                         </subviews>

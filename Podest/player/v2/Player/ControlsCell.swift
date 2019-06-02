@@ -9,6 +9,9 @@
 import UIKit
 
 /// Adopt this protocol for receiving events from playback controls.
+///
+/// Delegation is an alternative pattern to using a view controller for this
+/// cell, like we do for the other *fat* cells in this collection.
 protocol PlaybackControlsDelegate: class {
   func track(_ track: UISlider, changed value: Float)
 }
@@ -16,10 +19,9 @@ protocol PlaybackControlsDelegate: class {
 class ControlsCell: UICollectionViewCell {    
   @IBOutlet weak var titleButton: UIButton!
   @IBOutlet weak var subtitleLabel: UILabel!
-  
   @IBOutlet weak var trackSlider: UISlider!
   
-  /// Receives playback control events.
+  /// Receives events from this cell.
   weak var delegate: PlaybackControlsDelegate?
   
   @objc func trackSliderChange(slider: UISlider) {
