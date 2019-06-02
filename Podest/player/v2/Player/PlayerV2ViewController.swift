@@ -102,11 +102,6 @@ extension PlayerV2ViewController {
       hosted.container = vc
       
       return vc
-    
-    case let host as ControlsCell:
-      host.delegate = self
-      
-      return nil
 
     default:
       return nil
@@ -137,8 +132,6 @@ extension PlayerV2ViewController {
     case let hosted as MoreCell:
       hosted.container?.willMove(toParent: nil)
       hosted.container?.removeFromParent()
-    case let hosted as ControlsCell:
-      hosted.delegate = nil
     default:
       break
     }
@@ -250,13 +243,3 @@ extension PlayerV2ViewController {
     ]
   }
 }
-
-// MARK: - PlaybackControlsDelegate
-
-extension PlayerV2ViewController: PlaybackControlsDelegate {
-  
-  func track(_ slider: UISlider, changed value: Float) {
-    print(value)
-  }
-}
-

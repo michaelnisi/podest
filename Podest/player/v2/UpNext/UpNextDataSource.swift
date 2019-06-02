@@ -12,16 +12,16 @@ class UpNextDataSource: NSObject {
   
   typealias Item = String
   var sections: [[Item]] = [[
-    "Chapter One", 
-    "Chapter Two", 
-    "Chapter Three", 
-    "Chapter Four",
-    "Chapter Five",
-    "Chapter Six",
-    "Chapter Seven",
-    "Chapter Eight",
-    "Chapter Nine",
-    "Chapter Ten"
+    "Another One", 
+    "Another Two", 
+    "Another Three", 
+    "Another Four",
+    "Another Five",
+    "Another Six",
+    "Another Seven",
+    "Another Eight",
+    "Another Nine",
+    "Another Ten"
     ]]
 }
 

@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import os.log
+
+private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
 /// A conventional named nib.
 private struct NamedNib {
@@ -41,6 +44,15 @@ class PlayerDataSource: NSObject {
   
   func use(data: Data) {
     // TODO: Update sections and submit changesBlock
+  }
+}
+
+// MARK: - Receiving Target Actions
+
+extension PlayerDataSource {
+  
+  @objc func trackSliderChange(slider: UISlider) {
+    os_log("track slider change: %f", log: log, type: .debug, slider.value)
   }
 }
 
@@ -81,9 +93,10 @@ extension PlayerDataSource: UICollectionViewDataSource {
       let cell = collectionView.dequeueReusableCell(
         withReuseIdentifier: "ControlsCellID", for: indexPath) as! ControlsCell
       
-      cell.titleButton.setTitle("Carregando a Vida Atrás das Costas an immediacy that’s shared with the best of DJ Marfox or Nídia", for: .normal)
+      cell.titleButton.setTitle("#140 The Roman Mars Mazda Virus", for: .normal)
       
       cell.subtitleLabel.text = "Reply All"
+      cell.trackSlider.addTarget(self, action: #selector(trackSliderChange), for: .valueChanged)
       
       return cell
       
