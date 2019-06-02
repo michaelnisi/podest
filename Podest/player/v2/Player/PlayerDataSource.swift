@@ -93,10 +93,11 @@ extension PlayerDataSource: UICollectionViewDataSource {
       let cell = collectionView.dequeueReusableCell(
         withReuseIdentifier: "ControlsCellID", for: indexPath) as! ControlsCell
       
-      cell.titleButton.setTitle("#140 The Roman Mars Mazda Virus", for: .normal)
-      
       cell.subtitleLabel.text = "Reply All"
-      cell.trackSlider.addTarget(self, action: #selector(trackSliderChange), for: .valueChanged)
+      
+      cell.titleButton.setTitle("#140 The Roman Mars Mazda Virus", for: .normal)
+      cell.trackSlider.addTarget(
+        self, action: #selector(trackSliderChange), for: .valueChanged)
       
       return cell
       
