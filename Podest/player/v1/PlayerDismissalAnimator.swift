@@ -28,7 +28,7 @@ extension PlayerDismissalAnimator: UIViewControllerAnimatedTransitioning {
   ) -> UIViewPropertyAnimator? {
     guard transitionContext.isAnimated,
       let from = transitionContext.viewController(
-        forKey: .from) as? PlayerViewController,
+        forKey: .from) as? PlayerV1ViewController,
       let episode = from.episode else {
       return nil
     }
@@ -48,7 +48,7 @@ extension PlayerDismissalAnimator: UIViewControllerAnimatedTransitioning {
     // Dismissing player view controllers only.
 
     guard
-      let from = tc.viewController(forKey: .from)as? PlayerViewController else {
+      let from = tc.viewController(forKey: .from)as? PlayerV1ViewController else {
       return transitionContext.completeTransition(false)
     }
 

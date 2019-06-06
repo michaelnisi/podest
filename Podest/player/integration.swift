@@ -1,5 +1,5 @@
 //
-//  Players.swift
+//  integration.swift - integrate players
 //  Podest
 //
 //  Created by Michael Nisi on 18.11.18.
@@ -17,7 +17,7 @@ import Ola
 private let log = OSLog.disabled
 
 extension RootViewController: Players {
-  // Implementation of Players is broken down into caterogized extensions below.
+  // Implementation of Players is broken down into extensions below.
 }
 
 // MARK: - Placing the Mini-Player
@@ -187,15 +187,51 @@ extension RootViewController {
 
 }
 
+/// Player view controllers must adopt this protocol. It specifies a view 
+/// controller that knows how to navigate this app, is able to control playback, 
+/// and forwards its entry.
+protocol EntryPlayer: UIViewController, Navigator, PlaybackControlDelegate {
+  var entryChangedBlock: ((Entry?) -> Void)? { get set }
+}
+
 // MARK: - Presenting the Audio Player
 
 extension RootViewController {
+  
+  private enum PlayerVersion {
+    case v1, v2
+  }
 
-  private static func makeNowPlaying() -> PlayerViewController {
-    let sb = UIStoryboard(name: "Player", bundle: .main)
-    let vc = sb.instantiateViewController(withIdentifier: "PlayerID")
-      as! PlayerViewController
-    return vc
+  /// Returns a new player view controller of `version`.
+  ///
+  /// Within this factory function is the only place where concrete player view
+  /// controller types (and identifiers) are allowed.
+  private static func makeNowPlaying(version: PlayerVersion) -> EntryPlayer {
+    switch version {
+    case .v1:
+      let sb = UIStoryboard(name: "PlayerV1", bundle: .main)
+      
+      return sb.instantiateViewController(withIdentifier: "PlayerV1ID")
+        as! PlayerV1ViewController
+      
+    case .v2:
+      let sb = UIStoryboard(name: "PlayerV2", bundle: .main)
+      
+      return sb.instantiateViewController(withIdentifier: "PlayerV2ID")
+        as! PlayerV2ViewController
+    }
+  }
+  
+  /// Returns a matching transitioning delegate for `player`.
+  private static func makePlayerTransition(
+    player: EntryPlayer) -> UIViewControllerTransitioningDelegate? {
+    guard player is PlayerV1ViewController else {
+      return nil
+    }
+    
+    player.modalPresentationStyle = .custom
+    
+    return PlayerTransitionDelegate()
   }
 
   func showNowPlaying(entry: Entry) {
@@ -205,9 +241,7 @@ extension RootViewController {
 
     assert(entry == now.entry)
 
-    let vc = RootViewController.makeNowPlaying()
-
-    vc.modalPresentationStyle = .custom
+    var vc = RootViewController.makeNowPlaying(version: .v1)
     vc.navigationDelegate = self
 
     playervc = vc
@@ -230,7 +264,7 @@ extension RootViewController {
         return
       }
 
-      self?.playerTransition = PlayerTransitionDelegate()
+      self?.playerTransition = RootViewController.makePlayerTransition(player: vc)
       vc.transitioningDelegate = self?.playerTransition
 
       self?.present(vc, animated: true) {
@@ -241,9 +275,10 @@ extension RootViewController {
   }
 
   func hideNowPlaying(animated flag: Bool, completion: (() -> Void)?) {
-    guard presentedViewController is PlayerViewController else {
+    guard presentedViewController is EntryPlayer else {
       return
     }
+    
     playervc = nil
     playerTransition = PlayerTransitionDelegate()
     presentedViewController?.transitioningDelegate = playerTransition
@@ -293,7 +328,7 @@ extension RootViewController {
   }
 
   var isPlayerPresented: Bool {
-    return isPresentingVideo || presentedViewController is PlayerViewController
+    return isPresentingVideo || presentedViewController is EntryPlayer
   }
 
 }
@@ -324,7 +359,7 @@ extension RootViewController: PlaybackDelegate {
   }
 
   var isPresentingNowPlaying: Bool {
-    return presentedViewController is PlayerViewController
+    return presentedViewController is EntryPlayer
   }
 
   func playback(session: Playback, didChange state: PlaybackState) {

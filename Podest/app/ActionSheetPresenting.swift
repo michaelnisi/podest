@@ -26,7 +26,7 @@ extension ActionSheetPresenting where Self: UIViewController {
       return nil
     }
     
-    let t =  NSLocalizedString("Open Link", comment: "Open browser link")
+    let t = NSLocalizedString("Open Link", comment: "Open browser link")
     
     return UIAlertAction(title: t, style: .default) { action in
       UIApplication.shared.open(linkURL)

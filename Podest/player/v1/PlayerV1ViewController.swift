@@ -1,5 +1,5 @@
 //
-//  PlayerViewController.swift
+//  PlayerV1ViewController.swift
 //  Podest
 //
 //  Created by Michael on 3/9/17.
@@ -12,46 +12,7 @@ import os.log
 
 private let log = OSLog.disabled
 
-/// An abstract player view controller for common player things.
-class SomePlayerViewController: UIViewController {
-
-  /// Returns `true` if we are vertically compact.
-  var isLandscape: Bool {
-    return traitCollection.containsTraits(
-      in: UITraitCollection(verticalSizeClass: .compact))
-  }
-
-}
-
-// MARK: - UIGestureRecognizerDelegate
-
-/// Cancelling gesture recognizers within screen edge pan gestures. For example,
-/// players should not respond, when swiping down for Notification Center.
-extension SomePlayerViewController: UIGestureRecognizerDelegate {
-
-  func gestureRecognizer(
-    _ gestureRecognizer: UIGestureRecognizer,
-    shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
-  ) -> Bool {
-    switch gestureRecognizer {
-    case is UISwipeGestureRecognizer:
-      return !(otherGestureRecognizer is UIScreenEdgePanGestureRecognizer)
-    default:
-      return false
-    }
-  }
-
-  func gestureRecognizer(
-    _ gestureRecognizer: UIGestureRecognizer,
-    shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer
-  ) -> Bool {
-    return gestureRecognizer is UIScreenEdgePanGestureRecognizer
-  }
-
-}
-
-final class PlayerViewController: SomePlayerViewController,
-Navigator, PlaybackControlDelegate {
+final class PlayerV1ViewController: UIViewController, EntryPlayer {
 
   // MARK: Outlets
 
@@ -254,9 +215,39 @@ Navigator, PlaybackControlDelegate {
 
 }
 
+// MARK: - UIGestureRecognizerDelegate
+
+extension PlayerV1ViewController: UIGestureRecognizerDelegate { 
+  
+  /// Returns `true` if we are vertically compact.
+  var isLandscape: Bool {
+    return traitCollection.containsTraits(
+      in: UITraitCollection(verticalSizeClass: .compact))
+  }
+  
+  func gestureRecognizer(
+    _ gestureRecognizer: UIGestureRecognizer,
+    shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+    switch gestureRecognizer {
+    case is UISwipeGestureRecognizer:
+      return !(otherGestureRecognizer is UIScreenEdgePanGestureRecognizer)
+    default:
+      return false
+    }
+  }
+  
+  func gestureRecognizer(
+    _ gestureRecognizer: UIGestureRecognizer,
+    shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+    return gestureRecognizer is UIScreenEdgePanGestureRecognizer
+  }
+}
+
 // MARK: - HeroProviding
 
-extension PlayerViewController: HeroProviding {
+extension PlayerV1ViewController: HeroProviding {
   
   var hero: UIView? {
     return heroImage

@@ -1,5 +1,5 @@
 //
-//  core.swift
+//  api.swift
 //  Podest
 //
 //  The core API of the Podest podcast app may be read as UI requirements.

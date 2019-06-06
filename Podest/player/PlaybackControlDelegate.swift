@@ -11,6 +11,8 @@ import FeedKit
 
 /// Handles playback view relevant playback events. We can have few of these,
 /// mini-player, player, now playing, etc.
+///
+/// PlaybackUIInputs would be an alternative name.
 protocol PlaybackControlDelegate: class {
   
   var entry: Entry? { get set }
@@ -19,6 +21,9 @@ protocol PlaybackControlDelegate: class {
   func playing(entry: Entry)
   func pausing(entry: Entry)
   func dismiss()
+  
+  var isForwardable: Bool { get set }
+  var isBackwardable: Bool { get set }
 
 }
 

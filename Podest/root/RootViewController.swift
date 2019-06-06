@@ -16,7 +16,7 @@ private let log = OSLog(subsystem: "ink.codes.podest", category: "root")
 /// The root container view controller of this app, composing a split view
 /// controller, with two navigation controllers, and a player view controller.
 /// The `RootViewController` is mainly a proxy between components and, with its
-/// overseeing vista, supervises naigation and layout.
+/// overseeing vista, supervises navigation and layout.
 ///
 /// This class should be simple and stable glue code. More complex and dynamic
 /// things should be extracted, aiming for below 600 LOC.
@@ -29,7 +29,7 @@ final class RootViewController: UIViewController, Routing {
   private var svc: UISplitViewController!
 
   var minivc: MiniPlayerController!
-  var playervc: PlayerViewController?
+  var playervc: PlaybackControlDelegate?
 
   private var pnc: UINavigationController!
   private var snc: UINavigationController!
@@ -66,7 +66,7 @@ final class RootViewController: UIViewController, Routing {
 
   /// A reference to the current player transition delegate. Unfortunately, we
   /// need a place to hold on to it.
-  var playerTransition: PlayerTransitionDelegate?
+  var playerTransition: UIViewControllerTransitioningDelegate?
 
   /// Stores simplified playback state.
   struct SimplePlaybackState {
@@ -75,7 +75,10 @@ final class RootViewController: UIViewController, Routing {
   }
 
   /// An internal serial queue for synchronized access.
-  private let sQueue = DispatchQueue(label: "ink.codes.podest.root.serial")
+  private let sQueue = DispatchQueue(
+    label: "ink.codes.podest.RootViewController", 
+    target: .global()
+  )
 
   private var _playbackState: SimplePlaybackState?
 
