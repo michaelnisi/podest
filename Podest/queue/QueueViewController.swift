@@ -33,12 +33,12 @@ final class QueueViewController: UITableViewController, Navigator {
   /// The navigations delegate gets forwarded to the search proxy.
   var navigationDelegate: ViewControllers? {
     didSet {
-      searchProxy.navigationDelegate = navigationDelegate
+      searchProxy?.navigationDelegate = navigationDelegate
     }
   }
 
   var isSearchDismissed: Bool {
-    return searchProxy.isSearchDismissed
+    return searchProxy?.isSearchDismissed ?? true
   }
 
   // MARK: - Data Source

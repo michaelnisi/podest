@@ -510,19 +510,22 @@ public class UserClient {
   }
   
   /// An internal serial queue, mainly to serialize access.
-  private let serialQueue = DispatchQueue(label: "ink.codes.podest.sync")
+  private let sQueue = DispatchQueue(
+    label: "ink.codes.podest.UserClient", 
+    target: .global()
+  )
   
   private var _accountStatus: CKAccountStatus?
 
   private var accountStatus: CKAccountStatus? {
     get {
-      return serialQueue.sync {
+      return sQueue.sync {
         return _accountStatus
       }
     }
     
     set {
-      serialQueue.sync {
+      sQueue.sync {
         _accountStatus = newValue
       }
     }

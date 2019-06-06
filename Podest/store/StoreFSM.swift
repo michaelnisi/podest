@@ -356,7 +356,10 @@ final class StoreFSM: NSObject {
   // MARK: - Handling Events and Managing State
 
   /// An internal serial queue for synchronized access.
-  private let sQueue = DispatchQueue(label: "ink.codes.podest.store.serial")
+  private let sQueue = DispatchQueue(
+    label: "ink.codes.podest.StoreFSM",
+    target: .global()
+  )
 
   private (set) var state: StoreState {
     didSet {

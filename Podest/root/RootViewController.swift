@@ -75,7 +75,10 @@ final class RootViewController: UIViewController, Routing {
   }
 
   /// An internal serial queue for synchronized access.
-  private let sQueue = DispatchQueue(label: "ink.codes.podest.root.serial")
+  private let sQueue = DispatchQueue(
+    label: "ink.codes.podest.RootViewController", 
+    target: .global()
+  )
 
   private var _playbackState: SimplePlaybackState?
 

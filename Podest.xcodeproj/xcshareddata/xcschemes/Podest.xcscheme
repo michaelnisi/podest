@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
    LastUpgradeVersion = "1020"
-   version = "1.7">
+   version = "1.8">
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
@@ -75,6 +75,7 @@
       stopOnEveryThreadSanitizerIssue = "YES"
       stopOnEveryUBSanitizerIssue = "YES"
       stopOnEveryMainThreadCheckerIssue = "YES"
+      migratedStopOnEveryIssue = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
       <BuildableProductRunnable
@@ -90,11 +91,11 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "-ink.codes.podest.noSync"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-ink.codes.podest.removeReceipts"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-ink.codes.podest.flush"
@@ -102,7 +103,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-ink.codes.podest.noDownloading"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-ink.codes.podest.allButUpsideDown"

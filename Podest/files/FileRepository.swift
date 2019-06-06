@@ -40,7 +40,9 @@ final class FileRepository: NSObject {
   
   /// An internal serial queue for synchronized access.
   private let sQueue = DispatchQueue(
-    label: "ink.codes.podest.FileRepository-\(UUID().uuidString).serial")
+    label: "ink.codes.podest.FileRepository",
+    target: .global()
+  )
   
   private var _fileProxy: FileProxying?
   private var fileProxy: FileProxying {

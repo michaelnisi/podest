@@ -25,7 +25,9 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   
   /// An internal serial queue for synchronized access.
   private var sQueue = DispatchQueue(
-    label: "ink.codes.podest.QueueDataSource-\(UUID().uuidString).sQueue")
+    label: "ink.codes.podest.QueueDataSource-\(UUID().uuidString)",
+    target: .global()
+  )
   
   private var _sections: [Array<Item>] = [
     [.message(StringRepository.loadingQueue)]
