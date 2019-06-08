@@ -154,7 +154,12 @@ extension RootViewController {
     let ncs = svc.viewControllers as! [UINavigationController]
 
     for nc in ncs {
-      nc.view.backgroundColor = .white
+      if #available(iOS 13.0, *) {
+        nc.view.backgroundColor = .systemBackground
+      } else {
+        nc.view.backgroundColor = .white
+      }
+      
       nc.delegate = self
     }
 
