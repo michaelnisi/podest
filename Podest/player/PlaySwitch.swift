@@ -139,6 +139,8 @@ class PlaySwitch: UIControl {
     onImageView.isHidden = true
     offImageView.isHidden = false
     
+    backgroundImageView.tintColor = .tertiarySystemGroupedBackground
+    
     self.sendSubviewToBack(backgroundImageView)
   }
   

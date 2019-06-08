@@ -17,7 +17,6 @@ private struct SummaryAttributes {
 
   static var p: NSParagraphStyle = {
     var p = NSMutableParagraphStyle()
-
     p.lineSpacing = 2
 
     return p
@@ -26,14 +25,14 @@ private struct SummaryAttributes {
   let title1: [NSAttributedString.Key: Any] = [
     .font: UIFontMetrics.default.scaledFont(for:
       .systemFont(ofSize: 29, weight: .bold)),
-    .foregroundColor: UIColor.darkText,
+    .foregroundColor: UIColor.darkTextOrLabel,
     .paragraphStyle: p
   ]
 
   let h1: [NSAttributedString.Key: Any] = [
     .font: UIFontMetrics.default.scaledFont(for:
       .systemFont(ofSize: 19, weight: .bold)),
-    .foregroundColor: UIColor.darkText,
+    .foregroundColor: UIColor.darkTextOrLabel,
     .paragraphStyle: p
   ]
 

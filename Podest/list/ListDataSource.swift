@@ -186,7 +186,6 @@ extension ListDataSource: UITableViewDataSource {
         withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
       ) as! SubtitleTableViewCell
 
-      cell.accessoryType = .disclosureIndicator
       cell.selectionStyle = .default
       cell.backgroundColor = .white
 
@@ -200,7 +199,6 @@ extension ListDataSource: UITableViewDataSource {
 
       cell.detailTextLabel?.font = .preferredFont(forTextStyle: .body)
       cell.detailTextLabel?.numberOfLines = 3
-      cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
 
       cell.detailTextLabel?.attributedText = nil
       cell.detailTextLabel?.text = subtitle
@@ -224,7 +222,6 @@ extension ListDataSource: UITableViewDataSource {
 
       cell.detailTextLabel?.font = .preferredFont(forTextStyle: .body)
       cell.detailTextLabel?.numberOfLines = 0
-      cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
 
       cell.detailTextLabel?.attributedText = nil
       cell.detailTextLabel?.text = author

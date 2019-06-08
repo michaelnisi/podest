@@ -7,13 +7,21 @@
     {
       "idiom" : "universal",
       "color" : {
-        "color-space" : "srgb",
-        "components" : {
-          "red" : "88",
-          "alpha" : "1.000",
-          "blue" : "214",
-          "green" : "86"
+        "platform" : "ios",
+        "reference" : "systemPurpleColor"
+      }
+    },
+    {
+      "idiom" : "universal",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
         }
+      ],
+      "color" : {
+        "platform" : "ios",
+        "reference" : "systemPurpleColor"
       }
     }
   ]
