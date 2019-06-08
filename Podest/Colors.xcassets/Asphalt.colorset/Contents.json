@@ -7,31 +7,21 @@
     {
       "idiom" : "universal",
       "color" : {
-        "color-space" : "srgb",
-        "components" : {
-          "red" : "0x8E",
-          "alpha" : "1.000",
-          "blue" : "0x93",
-          "green" : "0x8E"
-        }
+        "platform" : "ios",
+        "reference" : "secondaryLabelColor"
       }
     },
     {
       "idiom" : "universal",
       "appearances" : [
         {
-          "appearance" : "contrast",
-          "value" : "high"
+          "appearance" : "luminosity",
+          "value" : "dark"
         }
       ],
       "color" : {
-        "color-space" : "srgb",
-        "components" : {
-          "red" : "0.333",
-          "alpha" : "1.000",
-          "blue" : "0.333",
-          "green" : "0.333"
-        }
+        "platform" : "ios",
+        "reference" : "secondaryLabelColor"
       }
     }
   ]

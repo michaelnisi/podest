@@ -440,7 +440,6 @@ extension QueueDataSource: UITableViewDataSource {
 
         cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .body)
         cell.detailTextLabel?.numberOfLines = 0
-        cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
       }
 
       cell.images = Podest.images
@@ -449,8 +448,6 @@ extension QueueDataSource: UITableViewDataSource {
 
       cell.textLabel?.text = entry.feedTitle ?? entry.title
       cell.detailTextLabel?.text = entry.title
-
-      cell.accessoryType = .disclosureIndicator
 
       return cell
     case .feed:

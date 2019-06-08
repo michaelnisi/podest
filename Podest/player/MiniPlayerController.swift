@@ -21,7 +21,6 @@ private let log = OSLog.disabled
 final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDelegate {
   
   var isForwardable: Bool = false
-  
   var isBackwardable: Bool = false
   
 
@@ -156,7 +155,8 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
 
   @IBOutlet var playSwitch: PlaySwitch!
 
-  var matte: UIView?
+  /// A temporary touch down feedback view.
+  var backdrop: UIView?
 
   @IBAction func onPlaySwitchValueChanged(_ sender: PlaySwitch) {
     guard let entry = self.entry else {
@@ -170,16 +170,22 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
     }
   }
 
-  var blurEffectView: UIVisualEffectView!
+  var fx: UIVisualEffectView!
+  
+  fileprivate func insertEffect(below sibling: UIView) {
+    let blur = UIBlurEffect(style: .systemChromeMaterial)
+    let blurView = UIVisualEffectView(effect: blur)
+    blurView.frame = view.frame
+    blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    
+    let vibrancy = UIVibrancyEffect(blurEffect: blur, style: .label)
+    let vibrancyView = UIVisualEffectView(effect: vibrancy)
+    vibrancyView.frame = view.frame
 
-  fileprivate func insertEffect(below subview: UIView) {
-    let blurEffect = UIBlurEffect(style: .extraLight)
-
-    blurEffectView = UIVisualEffectView(effect: blurEffect)
-    blurEffectView.frame = view.bounds
-    blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
-    view.insertSubview(blurEffectView, belowSubview: subview)
+    blurView.contentView.addSubview(vibrancyView)
+    view.insertSubview(blurView, belowSubview: sibling)
+    
+    self.fx = blurView
   }
 
   // MARK: - UIViewController
@@ -282,21 +288,24 @@ extension MiniPlayerController: UIGestureRecognizerDelegate {
 // MARK: - UITapGestureRecognizer
 
 extension MiniPlayerController {
+  
+  private func makeMatte() -> UIView {
+    let v = UIView(frame: fx.contentView.frame)
+    v.backgroundColor = .quaternarySystemFill
+    
+    return v
+  }
 
   private func showMatte() {
-    let sv = blurEffectView.contentView
+    let matte = makeMatte()
 
-    let v = UIView(frame: sv.frame)
-    let g = CGFloat(0.92)
-    v.backgroundColor = UIColor(red: g, green: g, blue: g, alpha: 1)
+    fx.contentView.addSubview(matte)
 
-    sv.addSubview(v)
-
-    matte = v
+    self.backdrop = matte
   }
 
   private func hideMatte() {
-    matte?.removeFromSuperview()
+    backdrop?.removeFromSuperview()
   }
 
   @objc func onTouchDown(sender: UILongPressGestureRecognizer) {
