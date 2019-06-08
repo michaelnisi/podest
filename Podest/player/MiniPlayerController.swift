@@ -173,6 +173,24 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
   var fx: UIVisualEffectView!
   
   fileprivate func insertEffect(below sibling: UIView) {
+    guard #available(iOS 13.0, *) else {
+      let blur = UIBlurEffect(style: .light)
+      let blurView = UIVisualEffectView(effect: blur)
+      blurView.frame = view.frame
+      blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+      
+      let vibrancy = UIVibrancyEffect(blurEffect: blur)
+      let vibrancyView = UIVisualEffectView(effect: vibrancy)
+      vibrancyView.frame = view.frame
+      
+      blurView.contentView.addSubview(vibrancyView)
+      view.insertSubview(blurView, belowSubview: sibling)
+      
+      self.fx = blurView
+      
+      return
+    }
+    
     let blur = UIBlurEffect(style: .systemChromeMaterial)
     let blurView = UIVisualEffectView(effect: blur)
     blurView.frame = view.frame
@@ -181,7 +199,7 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
     let vibrancy = UIVibrancyEffect(blurEffect: blur, style: .label)
     let vibrancyView = UIVisualEffectView(effect: vibrancy)
     vibrancyView.frame = view.frame
-
+    
     blurView.contentView.addSubview(vibrancyView)
     view.insertSubview(blurView, belowSubview: sibling)
     
@@ -296,7 +314,12 @@ extension MiniPlayerController {
   
   private func makeMatte() -> UIView {
     let v = UIView(frame: fx.contentView.frame)
-    v.backgroundColor = .quaternarySystemFill
+    
+    if #available(iOS 13.0, *) {
+      v.backgroundColor = .quaternarySystemFill
+    } else {
+      v.backgroundColor = .lightGray
+    }
     
     return v
   }
