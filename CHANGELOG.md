@@ -1,3 +1,15 @@
+## 8.1 (planned)
+
+### Squirrel Kitten
+
+Prepping for the release of iOS 13 in the fall, these changes add set the path into the future.
+
+Improved multitasking on iPad, the list header adjusts according to layout.
+
+An environment for building a new player has been installed.
+
+More effective image loading.
+
 ## 8 (2019-04-25)
 
 ### Egghead
