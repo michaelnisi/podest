@@ -306,7 +306,11 @@ extension EpisodeViewController {
       return
     }
 
-    Podest.images.loadImage(representing: entry, into: avatar)
+    Podest.images.loadImage(
+      representing: entry, 
+      into: avatar, 
+      options: FKImageLoadingOptions(quality: .high)
+    )
 
     imageLoaded = size
   }
