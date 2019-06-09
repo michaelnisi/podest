@@ -416,7 +416,6 @@ extension SearchResultsDataSource: UITableViewDataSource {
 
         cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .footnote)
         cell.detailTextLabel?.numberOfLines = 0
-        cell.detailTextLabel?.textColor = .darkTextOrLabel
         cell.detailTextLabel?.text = feed.author
 
         return cell
@@ -436,7 +435,6 @@ extension SearchResultsDataSource: UITableViewDataSource {
 
         cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .footnote)
         cell.detailTextLabel?.numberOfLines = 0
-        cell.detailTextLabel?.textColor = .darkTextOrLabel
         cell.detailTextLabel?.text = entry.feedTitle
 
         return cell
@@ -450,7 +448,6 @@ extension SearchResultsDataSource: UITableViewDataSource {
 
         cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .body)
         cell.detailTextLabel?.numberOfLines = 0
-        cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")!
 
         cell.images = Podest.images
         cell.item = feed
