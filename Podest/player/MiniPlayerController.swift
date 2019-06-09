@@ -230,6 +230,8 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
     defer {
       super.viewWillLayoutSubviews()
     }
+    
+    configureSwipe()
 
     guard needsUpdate else { return }
 
@@ -245,13 +247,6 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
 
     needsUpdate = false
   }
-
-  override
-  func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-    super.traitCollectionDidChange(previousTraitCollection)
-    configureSwipe()
-  }
-
 }
 
 // MARK: - UIGestureRecognizerDelegate

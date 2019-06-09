@@ -181,7 +181,7 @@ extension PlayerV2ViewController {
     
     statusBarHidden = false
     
-    self.setNeedsStatusBarAppearanceUpdate()
+    setNeedsStatusBarAppearanceUpdate()
   }
   
   override func viewDidDisappear(_ animated: Bool) {
