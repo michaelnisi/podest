@@ -118,7 +118,10 @@ EntryRowSelectable {
   /// This flag is `true` after the collection has been updated it has finished
   /// its animations.
   private var isReady = false
-
+  
+  /// The previous trait collection influences if we should show or hide the
+  /// the list header.
+  private var previousTraitCollection: UITraitCollection?
 }
 
 // MARK: - Fetching Feed and Entries
@@ -154,6 +157,8 @@ extension ListViewController {
   /// The crux: feed and entries are separate, the feed object might not be
   /// available yet or it might contain no summary—it must be fetched remotely.
   private func update(completionBlock: (() -> Void)? = nil) {
+    os_log("** updating: %@", log: log, type: .debug, self)
+    
     let op = makeUpdateOperation { [weak self] sections, changes, error in
       DispatchQueue.main.async {
         guard let tv = self?.tableView else {
@@ -214,7 +219,6 @@ extension ListViewController {
     clearsSelectionOnViewWillAppear = isCollapsed || isDifferent
 
     updateIsSubscribed()
-    update()
 
     super.viewWillAppear(animated)
   }
@@ -226,7 +230,6 @@ extension ListViewController {
 
     super.viewWillDisappear(animated)
   }
-
 }
 
 // MARK: - Responding to a Change in the Interface Environment
@@ -247,31 +250,35 @@ extension ListViewController {
 
     additionalSafeAreaInsets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
   }
+}
 
-  override func traitCollectionDidChange(
-    _ previousTraitCollection: UITraitCollection?) {
-    super.traitCollectionDidChange(previousTraitCollection)
+// MARK: - Layout Hooks
 
-    guard isViewLoaded else {
-      return
-    }
-
-    resignFirstResponder()
-
-    if isRegular {
-      title = feed?.title
-    } else {
-      title = nil
-    }
-
-    // Showing or hiding header if available height has changed.
-
-    if traitCollection.verticalSizeClass !=
-      previousTraitCollection?.verticalSizeClass {
-      update()
-    }
+extension ListViewController {
+  
+  /// This property is `true` if traits requires an update. The vertical size
+  /// class defines if we should show or hide the list header.
+  private var shouldUpdate: Bool {
+    return updating == nil && 
+      traitCollection.verticalSizeClass != previousTraitCollection?.verticalSizeClass
   }
-
+  
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
+    
+    // Starting with iOS 13, UIKit predicts traits during initialization, thus
+    // traitCollectionDidChange might not be called. Layout time is reliable.
+    // Starting without previous trait collection, we do not miss the initial
+    // call.
+    
+    guard traitCollection != previousTraitCollection else { return }
+    
+    resignFirstResponder()
+    if shouldUpdate { update() }
+    
+    title = isRegular ? feed?.title : nil
+    previousTraitCollection = traitCollection
+  }
 }
 
 // MARK: - State Preservation and Restoration
@@ -293,7 +300,6 @@ extension ListViewController {
 
     self.url = url
   }
-
 }
 
 // MARK: - Managing Refresh Control
@@ -362,7 +368,6 @@ extension ListViewController {
         self?.changeBatches.removeAll()
       }
     }
-
   }
 
 }
@@ -392,7 +397,6 @@ extension ListViewController {
 
     navigationDelegate?.show(entry: entry)
   }
-  
 }
 
 // MARK: - EntryProvider
@@ -405,7 +409,6 @@ extension ListViewController: EntryProvider {
       IndexPath(row: 0, section: 0)
     )
   }
-  
 }
 
 // MARK: - Action Sheets
@@ -449,7 +452,6 @@ extension ListViewController {
     
     return alert
   }
-  
 }
 
 // MARK: - Unsubscribe Action Sheet
@@ -497,7 +499,6 @@ extension ListViewController {
     
     return alert
   }
-  
 }
 
 // MARK: - Configure Navigation Item
@@ -574,5 +575,4 @@ extension ListViewController {
 
     navigationItem.setRightBarButtonItems(items, animated: true)
   }
-  
 }

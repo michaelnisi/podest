@@ -11,7 +11,7 @@ import FeedKit
 import os.log
 import BatchUpdates
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "list")
 
 /// Provides data for a table view displaying a podcast.
 final class ListDataSource: NSObject, SectionedDataSource {
@@ -47,17 +47,29 @@ final class ListDataSource: NSObject, SectionedDataSource {
   private let operationQueue = OperationQueue()
 
   var sections = [[Item.message(StringRepository.loadingPodcast)]]
-
-  /// The previous trait collection.
-  ///
-  /// The previous trait collection can sometimes help to reason about efficient
-  /// cell resetting, especially when using default cells, like we do.
-  var previousTraitCollection: UITraitCollection?
 }
 
 // MARK: - Fetching Feed and Entries
 
 extension ListDataSource {
+  
+  /// Returns `true` if `url` is not the URL of the current feed.
+  private func shouldUpdate(url: String) -> Bool {
+    for section in sections {
+      for item in section {
+        switch item {
+        case .feed(let feed, _):
+          if feed.url == url {
+            return false
+          }
+        default:
+          continue
+        }
+      }
+    }
+    
+    return true
+  }
 
   /// Drafts an update of this data source adding `operation` to its queue.
   /// After fetching the feed, completing its summary, and fetching the entries,
@@ -71,16 +83,23 @@ extension ListDataSource {
   /// via its `commit(batch:performingWith:completionBlock:)`. Only then
   /// sequential data consistency of collection changes can be ensured.
   ///
-  /// Cancels `operation` if user status doesn’t allow updating.
+  /// Cancels `operation` if user status doesn’t allow updating or we assume
+  /// that no updates are required, in this case `forcing` can override.
   ///
   /// - Parameters:
   ///   - operation: The update operation to execute.
   ///   - forcing: Overrides cache settings, replacing all entries.
   ///
-  /// - Returns: The installed operation that has been added to operation queue.
+  /// - Returns: The executing operation.
   func add(_ operation: ListOperation, forcing: Bool = false) -> ListOperation {
     guard !store.isExpired() else {
-      os_log("free trial expired", log: log)
+      os_log("cancelling: free trial expired", log: log)
+      operation.cancel()
+      return operation
+    }
+    
+    guard shouldUpdate(url: operation.url) || forcing else {
+      os_log("cancelling: no update required", log: log)
       operation.cancel()
       return operation
     }

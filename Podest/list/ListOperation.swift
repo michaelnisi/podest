@@ -13,7 +13,7 @@ import BatchUpdates
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "list")
 
-/// Loads feed at `url` and its entries.
+/// Loads podcast feed at `url` and its entries.
 class ListOperation: Operation, Receiving {
   
   let url: String
