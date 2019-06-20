@@ -58,7 +58,7 @@ final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
         isEnqueued != oldValue else {
         return
       }
-      
+
       configureNavigationItem()
     }
   }
@@ -211,7 +211,7 @@ extension EpisodeViewController {
 
     content?.resignFirstResponder()
   }
-  
+
 }
 
 // MARK: - State Preservation and Restoration
@@ -240,7 +240,7 @@ extension EpisodeViewController {
     os_log("episode: showing message", log: log, type: .debug)
 
     let messageView = MessageView.make()
-    
+
     messageView.frame = view.frame
     view.addSubview(messageView)
 
@@ -305,10 +305,10 @@ extension EpisodeViewController {
       (size.width > imageLoaded.width || size.height > imageLoaded.height) else {
       return
     }
-    
+
     Podest.images.loadImage(
-      representing: entry, 
-      into: avatar, 
+      representing: entry,
+      into: avatar,
       options: FKImageLoadingOptions(quality: .high)
     )
 
@@ -347,7 +347,7 @@ extension EpisodeViewController {
 
     DispatchQueue.global(qos: .userInteractive).async { [weak self] in
       let attributedText = StringRepository.makeSummaryWithHeadline(entry: entry)
-      
+
       DispatchQueue.main.async {
         self?.content?.attributedText = attributedText
 
@@ -365,12 +365,12 @@ extension EpisodeViewController {
 // MARK: - UIResponder
 
 extension EpisodeViewController {
-  
+
   @discardableResult override func resignFirstResponder() -> Bool {
     content?.resignFirstResponder()
     return super.resignFirstResponder()
   }
-  
+
 }
 
 // MARK: - Action Sheets
@@ -380,11 +380,11 @@ extension EpisodeViewController: ActionSheetPresenting {}
 // MARK: - Removing Action Sheet
 
 extension EpisodeViewController {
- 
+
   private static func makeDequeueAction(
     entry: Entry, viewController: EpisodeViewController) -> UIAlertAction {
     let t = NSLocalizedString("Remove Episode", comment: "Dequeue episode")
-    
+
     return UIAlertAction(title: t, style: .destructive) {
       [weak viewController] action in
       Podest.userQueue.dequeue(entry: entry) { dequeued, error in
@@ -403,79 +403,79 @@ extension EpisodeViewController {
       }
     }
   }
-  
+
   private static func makeRemoveActions(
     entry: Entry, viewController: EpisodeViewController) -> [UIAlertAction] {
     var actions =  [UIAlertAction]()
-    
+
     let dequeue = makeDequeueAction(entry: entry, viewController: viewController)
     let cancel = makeCancelAction()
-    
+
     actions.append(dequeue)
     actions.append(cancel)
-    
+
     return actions
   }
-  
+
   private func makeRemoveController() -> UIAlertController {
     guard let entry = self.entry else {
       fatalError("entry expected")
     }
-    
+
     let alert = UIAlertController(
       title: entry.title, message: nil, preferredStyle: .actionSheet
     )
-    
+
     let actions = EpisodeViewController.makeRemoveActions(
       entry: entry, viewController: self)
-    
+
     for action in actions {
       alert.addAction(action)
     }
-    
+
     return alert
   }
-  
+
 }
 
 // MARK: - Sharing Action Sheet
 
 extension EpisodeViewController {
-  
+
   private static func makeMoreActions(entry: Entry) -> [UIAlertAction] {
     var actions = [UIAlertAction]()
-    
+
     if let openLink = makeOpenLinkAction(string: entry.link) {
       actions.append(openLink)
     }
 
     let copyFeedURL = makeCopyFeedURLAction(string: entry.feed)
     actions.append(copyFeedURL)
-    
+
     let cancel = makeCancelAction()
     actions.append(cancel)
-    
+
     return actions
   }
-  
+
   private func makeMoreController() -> UIAlertController {
     guard let entry = self.entry else {
       fatalError("entry expected")
     }
-    
+
     let alert = UIAlertController(
       title: nil, message: nil, preferredStyle: .actionSheet
     )
-    
+
     let actions = EpisodeViewController.makeMoreActions(entry: entry)
-    
+
     for action in actions {
       alert.addAction(action)
     }
-    
+
     return alert
   }
-  
+
 }
 
 // MARK: - Configure Navigation Item
@@ -509,7 +509,7 @@ extension EpisodeViewController {
     }
 
     sender.isEnabled = false
-    
+
     Podest.userQueue.enqueue(entries: [entry], belonging: .user) {
       [weak self] enqueued, error in
       if let er = error {
@@ -570,7 +570,7 @@ extension EpisodeViewController {
 // MARK: - UITextViewDelegate
 
 extension EpisodeViewController: UITextViewDelegate {
-  
+
   func textView(
     _ textView: UITextView,
     shouldInteractWith URL: URL,
@@ -581,5 +581,5 @@ extension EpisodeViewController: UITextViewDelegate {
     }
     return !(navigationDelegate?.open(url: URL))!
   }
-  
+
 }
