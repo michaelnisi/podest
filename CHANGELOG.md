@@ -1,12 +1,10 @@
 ## 8.1 (planned)
 
-### Squirrel Kitten
+### Squirrel
 
-Prepping for the release of iOS 13 in the fall, these changes add set the path into the future.
+Prepping for iOS 13 this fall, these changes adjust layout timing and install scaffolding for a new player user interface, which should also be ready this fall.
 
 Improved multitasking on iPad, the list header adjusts according to layout.
-
-An environment for building a new player has been installed.
 
 More effective image loading.
 
