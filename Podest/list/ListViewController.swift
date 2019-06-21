@@ -114,11 +114,11 @@ EntryRowSelectable {
       refreshControlTimer?.cancel()
     }
   }
-  
+
   /// This flag is `true` after the collection has been updated it has finished
   /// its animations.
   private var isReady = false
-  
+
   /// The previous trait collection influences if we should show or hide the
   /// the list header.
   private var previousTraitCollection: UITraitCollection?
@@ -158,23 +158,23 @@ extension ListViewController {
   /// available yet or it might contain no summary—it must be fetched remotely.
   private func update(completionBlock: (() -> Void)? = nil) {
     os_log("** updating: %@", log: log, type: .debug, self)
-    
+
     let op = makeUpdateOperation { [weak self] sections, changes, error in
       DispatchQueue.main.async {
         guard let tv = self?.tableView else {
           return
         }
-        
+
         self?.isReady = false
-        
+
         self?.dataSource.commit(changes, performingWith: .table(tv)) { _ in
           if let entry = self?.navigationDelegate?.entry {
             self?.selectRow(representing: entry, animated: true)
           }
-          
+
           self?.additionalSafeAreaInsets = self?.navigationDelegate?.miniPlayerEdgeInsets ?? .zero
           self?.isReady = true
-          
+
           completionBlock?()
         }
       }
@@ -182,7 +182,7 @@ extension ListViewController {
 
     updating = dataSource.add(op)
   }
-  
+
 }
 
 // MARK: - Managing the View
@@ -211,11 +211,11 @@ extension ListViewController {
       CGRect(origin: .zero, size: CGSize(width: 0, height: 1))
     )
   }
-  
+
   override func viewWillAppear(_ animated: Bool) {
     let isCollapsed = (splitViewController?.isCollapsed)!
     let isDifferent = entry != navigationDelegate?.entry
-    
+
     clearsSelectionOnViewWillAppear = isCollapsed || isDifferent
 
     updateIsSubscribed()
@@ -242,7 +242,7 @@ extension ListViewController {
 
   override func viewLayoutMarginsDidChange() {
     super.viewLayoutMarginsDidChange()
-    
+
     // Preventing interference with collection animations.
     guard isReady else {
       return
@@ -255,27 +255,27 @@ extension ListViewController {
 // MARK: - Layout Hooks
 
 extension ListViewController {
-  
+
   /// This property is `true` if traits requires an update. The vertical size
   /// class defines if we should show or hide the list header.
   private var shouldUpdate: Bool {
-    return updating == nil && 
+    return updating == nil &&
       traitCollection.verticalSizeClass != previousTraitCollection?.verticalSizeClass
   }
-  
+
   override func viewWillLayoutSubviews() {
     super.viewWillLayoutSubviews()
-    
+
     // Starting with iOS 13, UIKit predicts traits during initialization, thus
     // traitCollectionDidChange might not be called. Layout time is reliable.
     // Starting without previous trait collection, we do not miss the initial
     // call.
-    
+
     guard traitCollection != previousTraitCollection else { return }
-    
+
     resignFirstResponder()
     if shouldUpdate { update() }
-    
+
     title = isRegular ? feed?.title : nil
     previousTraitCollection = traitCollection
   }
@@ -402,7 +402,7 @@ extension ListViewController {
 // MARK: - EntryProvider
 
 extension ListViewController: EntryProvider {
-  
+
   var entry: Entry? {
     return dataSource.entry(at:
       tableView?.indexPathForSelectedRow ??
@@ -418,38 +418,38 @@ extension ListViewController: ActionSheetPresenting {}
 // MARK: - Sharing Action Sheet
 
 extension ListViewController {
-  
+
   private static func makeSharingActionSheet(feed: Feed) -> [UIAlertAction] {
     var actions = [UIAlertAction]()
-    
+
     if let openLink = makeOpenLinkAction(string: feed.link) {
       actions.append(openLink)
     }
-    
+
     let copyFeedURL = makeCopyFeedURLAction(string: feed.url)
     actions.append(copyFeedURL)
-    
+
     let cancel = makeCancelAction()
     actions.append(cancel)
-    
+
     return actions
   }
-  
+
   private func makeShareController() -> UIAlertController {
     guard let feed = self.feed else {
       fatalError("feed expected")
     }
-    
+
     let alert = UIAlertController(
       title: nil, message: nil, preferredStyle: .actionSheet
     )
-    
+
     let actions = ListViewController.makeSharingActionSheet(feed: feed)
-    
+
     for action in actions {
       alert.addAction(action)
     }
-    
+
     return alert
   }
 }
@@ -457,7 +457,7 @@ extension ListViewController {
 // MARK: - Unsubscribe Action Sheet
 
 extension ListViewController {
-  
+
   private static func makeUnsubscribeAction(feed: Feed) -> UIAlertAction {
     let t = NSLocalizedString("Unsubscribe", comment: "Unsubscribe podcast")
 
@@ -469,34 +469,34 @@ extension ListViewController {
       }
     }
   }
-  
+
   private static func makeUnsubscribeActions(feed: Feed) -> [UIAlertAction] {
     var actions =  [UIAlertAction]()
-    
+
     let unsubscribe = makeUnsubscribeAction(feed: feed)
     let cancel = makeCancelAction()
-    
+
     actions.append(unsubscribe)
     actions.append(cancel)
-    
+
     return actions
   }
-  
+
   private func makeRemoveController() -> UIAlertController {
     guard let feed = self.feed else {
       fatalError("feed expected")
     }
-    
+
     let alert = UIAlertController(
       title: feed.title, message: nil, preferredStyle: .actionSheet
     )
-    
+
     let actions = ListViewController.makeUnsubscribeActions(feed: feed)
-    
+
     for action in actions {
       alert.addAction(action)
     }
-    
+
     return alert
   }
 }
@@ -504,15 +504,15 @@ extension ListViewController {
 // MARK: - Configure Navigation Item
 
 extension ListViewController {
-  
+
   // MARK: Action
-  
+
   @objc func onAction(_ sender: Any) {
     let alert = makeShareController()
 
     self.present(alert, animated: true, completion: nil)
   }
-  
+
   private func makeActionButton() -> UIBarButtonItem {
     return UIBarButtonItem(
       barButtonSystemItem: .action, target: self, action: #selector(onAction)
@@ -542,7 +542,7 @@ extension ListViewController {
 
     self.present(alert, animated: true, completion: nil)
   }
-  
+
   private func makeSubscribeButton(url: FeedURL) -> UIBarButtonItem {
     if isSubscribed {
       let t = NSLocalizedString("Unsubscribe", comment: "Unsubscribe podcast")
@@ -551,14 +551,14 @@ extension ListViewController {
         title: t, style: .done, target: self, action: #selector(onRemove)
       )
     }
-    
+
     let t = NSLocalizedString("Subscribe", comment: "Subscribe podcast")
 
     return UIBarButtonItem(
       title: t, style: .done, target: self, action: #selector(onAdd)
     )
   }
-  
+
   private func makeRightBarButtonItems(url: FeedURL) -> [UIBarButtonItem] {
     var items = isCompact ? [] : [makeActionButton()]
 
@@ -566,11 +566,11 @@ extension ListViewController {
 
     return items
   }
-  
+
   private func configureNavigationItem(url: FeedURL) {
     os_log("** configuring navigation item: %@",
            log: log, type: .debug, self)
-    
+
     let items = makeRightBarButtonItems(url: url)
 
     navigationItem.setRightBarButtonItems(items, animated: true)
