@@ -1,6 +1,6 @@
 # Podest - Get your podcasts
 
-![Snapshots](https://s3-eu-west-1.amazonaws.com/assets.codes.ink/podest/se%401x.png)
+![Snapshots](https://troubled.pro/img/podest/se@3x.png)
 
 Podest is a podcast player app for iOS making podcasts simple. I’ve written about my motivation [here](https://troubled.pro/2018/10/podest.html). Download the app on the [App Store](https://itunes.apple.com/us/app/podest/id794983364) and leave a rating or review to support this project.
 
