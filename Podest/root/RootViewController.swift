@@ -268,10 +268,11 @@ extension RootViewController: ViewControllers {
     }
 
     os_log("initiating ListViewController", log: log, type: .debug)
+    
     let vc = svc.storyboard?.instantiateViewController(withIdentifier:
       "EpisodesID") as! ListViewController
     vc.feed = feed
-
+    
     pnc.pushViewController(vc, animated: true)
   }
 
