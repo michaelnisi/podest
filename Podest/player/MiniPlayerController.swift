@@ -24,7 +24,6 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
   
   var isBackwardable: Bool = false
   
-
   private struct FetchEntryResult {
     let entry: Entry?
     let error: Error?
@@ -300,8 +299,6 @@ extension MiniPlayerController {
   }
 
   @objc func onTouchDown(sender: UILongPressGestureRecognizer) {
-    os_log("press received: %i", log: log, type: .debug, sender.state.rawValue)
-
     func isPlaySwitchHit() -> Bool {
       let p = sender.location(in: view)
       return view!.hitTest(p, with: nil) == playSwitch
