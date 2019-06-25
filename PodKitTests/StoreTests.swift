@@ -191,6 +191,43 @@ extension StoreTests {
   }
 }
 
+// MARK: - Updating Settings 
+
+extension StoreTests {
+  
+  func testMakeSettingsInfo() {
+    XCTAssertNil(StoreFSM.makeSettingsInfo(receipts: []))
+    
+    let wanted = Date()
+    
+    let receipts = [
+      PodestReceipt(
+        productIdentifier: "com.apple.peter", 
+        transactionIdentifier: "abc", 
+        transactionDate: Date(timeIntervalSinceNow: 120)
+      ),
+      PodestReceipt(
+        productIdentifier: "com.apple.paul", 
+        transactionIdentifier: "def", 
+        transactionDate: wanted
+      ),
+      PodestReceipt(
+        productIdentifier: "com.apple.mary", 
+        transactionIdentifier: "ghi", 
+        transactionDate: Date(timeIntervalSinceNow: 60)
+      )
+    ]
+    
+    let (status, expiration) = StoreFSM.makeSettingsInfo(receipts: receipts)!
+    
+    XCTAssertEqual(status, "Paul", "should find the youngest")
+    XCTAssertEqual(expiration, StoreFSM.makeExpiration(
+      date: wanted, 
+      period: .subscription
+    ))
+  }
+}
+
 // MARK: - Expiring
 
 extension StoreTests {
