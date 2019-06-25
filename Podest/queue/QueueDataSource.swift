@@ -67,8 +67,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   
   /// Removes all observers.
   func invalidate() {
-    dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
-
+    dispatchPrecondition(condition: .onQueue(.main))
     reloading?.cancel()
     
     invalidated = true
@@ -418,6 +417,15 @@ extension QueueDataSource: UITableViewDataSource {
   ) -> Int {
     return sections[section].count
   }
+  
+  private static func makeAccessory() -> UIView {
+    let frame = CGRect(x: 0, y: 0, width: 18, height: 18)
+    let view = PieView(frame: frame)
+    view.percentage = 1.0
+    view.backgroundColor = .clear
+    
+    return view
+  }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath
   ) -> UITableViewCell {
@@ -449,8 +457,22 @@ extension QueueDataSource: UITableViewDataSource {
 
       cell.textLabel?.text = entry.feedTitle ?? entry.title
       cell.detailTextLabel?.text = entry.title
-
-      cell.accessoryType = .disclosureIndicator
+      
+      // Tagging cell with entry for later being able to find it, when it’s time
+      // to update the accessory view.
+      cell.tag = entry.hashValue
+      
+      if cell.accessoryView == nil {
+        cell.accessoryView =  QueueDataSource.makeAccessory()
+      }
+      
+      if let pie = cell.accessoryView as? PieView {
+        if let uid = entry.enclosure?.url, Podest.playback.isUnplayed(uid: uid) {
+          pie.percentage = 1.0
+        } else {
+          pie.percentage = 0
+        }
+      }
 
       return cell
     case .feed:

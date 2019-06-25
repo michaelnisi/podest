@@ -89,7 +89,7 @@ extension PlayerPresentationAnimator: UIViewControllerAnimatedTransitioning {
       header.transform = .identity
 
       hero.center = to.container.convert(to.heroImage.center, to: cv)
-      hero.bounds = to.heroImage.bounds
+      hero.bounds = PlayerAnimator.makeSquareBounds(view: to.heroImage)
 
       bg.transform = .identity
 
