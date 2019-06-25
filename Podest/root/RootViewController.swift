@@ -33,7 +33,7 @@ final class RootViewController: UIViewController, Routing {
 
   private var pnc: UINavigationController!
   private var snc: UINavigationController!
-
+  
   weak var getDefaultEntry: Operation?
 
   /// The singular queue view controller.
@@ -42,7 +42,7 @@ final class RootViewController: UIViewController, Routing {
       return $0 is QueueViewController
     } as! QueueViewController
   }
-
+  
   /// The singular episode view controller.
   var episodeViewController: EpisodeViewController? {
     guard let nc = svc.isCollapsed ? pnc : snc,
@@ -68,6 +68,8 @@ final class RootViewController: UIViewController, Routing {
   /// need a place to hold on to it.
   var playerTransition: UIViewControllerTransitioningDelegate?
 
+  // MARK: - PlaybackResponding
+  
   /// Stores simplified playback state.
   struct SimplePlaybackState {
     let entry: Entry
@@ -89,19 +91,22 @@ final class RootViewController: UIViewController, Routing {
           guard let entry = minivc.entry else {
             return nil
           }
+          
           _playbackState = SimplePlaybackState(entry: entry, isPlaying: false)
         }
+        
         return _playbackState
       }
     }
+    
     set {
       sQueue.sync {
         _playbackState = newValue
-
-        var targets: [PlaybackControlDelegate] = [minivc]
-        if let player = playervc {
-          targets.append(player)
-        }
+        
+        // `PlaybackResponding` adopters can receive playback state updates.
+        
+        var targets: [PlaybackResponding] = [minivc, qvc]
+        if let player = playervc { targets.append(player) }
 
         DispatchQueue.main.async {
           self.showMiniPlayer(true)
@@ -136,15 +141,15 @@ final class RootViewController: UIViewController, Routing {
 // MARK: - UIViewController
 
 extension RootViewController {
-
+  
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
-
+    
     for vc in [pnc.topViewController, snc.topViewController] {
       vc?.viewLayoutMarginsDidChange()
     }
   }
-
+  
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -159,8 +164,6 @@ extension RootViewController {
     }
 
     pnc = ncs.first
-    pnc.navigationBar.prefersLargeTitles = true
-
     snc = ncs.last
 
     minivc = (children.last as! MiniPlayerController)
@@ -249,12 +252,11 @@ extension RootViewController: ViewControllers {
   }
 
   var feed: Feed? {
-    get {
-      guard let vc = pnc.topViewController as? ListViewController else {
-        return nil
-      }
-      return vc.feed
+    guard let vc = pnc.topViewController as? ListViewController else {
+      return nil
     }
+    
+    return vc.feed
   }
 
   func show(feed: Feed) {
@@ -274,43 +276,42 @@ extension RootViewController: ViewControllers {
   /// The currently selected entry. **Note** the distinction between displayed
   /// `entry` and `selectedEntry`.
   fileprivate var selectedEntry: Entry? {
-    get {
-      let vcs = pnc.viewControllers.reversed()
-      let entries: [Entry] = vcs.compactMap {
-        guard let ep = $0 as? EntryProvider else { return nil }
-        return ep.entry
-      }
-      return entries.first
+    let vcs = pnc.viewControllers.reversed()
+    let entries: [Entry] = vcs.compactMap {
+      guard let ep = $0 as? EntryProvider else { return nil }
+      return ep.entry
     }
+    
+    return entries.first
   }
-
+  
   var entry: Entry? {
-    get {
-      guard
-        let nc = svc.isCollapsed ? pnc : snc,
-        let vc = nc.topViewController as? EpisodeViewController else {
-        return nil
-      }
-      return vc.entry
+    guard
+      let nc = svc.isCollapsed ? pnc : snc,
+      let vc = nc.topViewController as? EpisodeViewController else {
+      return nil
     }
+    
+    return vc.entry
   }
-
+  
   /// During state restoration, it is necessary to access via entry locators,
   /// because entries might not be retrieved yet.
   private var locator: EntryLocator? {
-    get {
-      if let vc = snc.topViewController as? EpisodeViewController,
-        let locator = vc.locator {
-        return locator
-      }
-      let vcs = pnc.viewControllers.reversed()
-      guard
-        let i = vcs.firstIndex(where: { $0 is EpisodeViewController }),
-        let vc = vcs[i] as? EpisodeViewController else {
-        return nil
-      }
-      return vc.locator
+    if let vc = snc.topViewController as? EpisodeViewController,
+      let locator = vc.locator {
+      return locator
     }
+    
+    let vcs = pnc.viewControllers.reversed()
+    
+    guard
+      let i = vcs.firstIndex(where: { $0 is EpisodeViewController }),
+      let vc = vcs[i] as? EpisodeViewController else {
+      return nil
+    }
+    
+    return vc.locator
   }
 
   private func initiateEpisodeViewController() -> EpisodeViewController {
@@ -323,6 +324,7 @@ extension RootViewController: ViewControllers {
     let evc = initiateEpisodeViewController()
     evc.navigationDelegate = self
     evc.entry = entry
+    
     return evc
   }
 
@@ -331,6 +333,7 @@ extension RootViewController: ViewControllers {
     let evc = initiateEpisodeViewController()
     evc.navigationDelegate = self
     evc.locator = locator
+    
     return evc
   }
 
