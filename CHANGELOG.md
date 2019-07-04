@@ -2,17 +2,21 @@
 
 ### Squirrel
 
-Prepping for iOS 13 this fall, these changes adjust layout timing and install scaffolding for a new player user interface, which should also be ready this fall.
+Prepping for iOS 13 this fall, these changes adjust layout timing, improve performance, and install scaffolding for a new player user interface, which should also be dropping this fall. Also, of course, some bugs have been fixed.
 
 In some use cases, during search, the mini-player obscured lists. This has been fixed.
 
 Improved multitasking on iPad: the list header adjusts according to layout and the player animation maintains the aspect ratio of the episode image.
 
-Higher resolution and more effective image loading.
+Higher resolution images and more effectice loading and processing.
 
 The mini-player chrome got a gray border at its top edge.
 
 The Queue now indicates which episodes have not been played yet.
+
+Improved performance and effectiveness: using less threads and disabling HTTP pipelining.
+
+List loading displays correct error message when offline, previously this had been incorrectly reported as service unavailable.
 
 ## 8 (2019-04-25)
 
