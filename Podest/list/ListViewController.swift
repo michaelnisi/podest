@@ -13,9 +13,7 @@ import BatchUpdates
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "list")
 
-final class ListViewController: UITableViewController,
-Navigator,
-EntryRowSelectable {
+final class ListViewController: UITableViewController, Navigator, EntryRowSelectable {
 
   /// The URL of the feed to display.
   var url: String?
