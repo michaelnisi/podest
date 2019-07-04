@@ -45,6 +45,9 @@ final class SubtitleTableViewCell: UITableViewCell {
 
   override func layoutSubviews() {
     super.layoutSubviews()
+    
+    // Loading images in the view, instead of in the data source, is 
+    // unfortunate, but we need to know the size.
 
     guard
       let view = imageView,
@@ -67,5 +70,4 @@ final class SubtitleTableViewCell: UITableViewCell {
     imageSizeLoaded = view.bounds.size
     isReset = false
   }
-
 }
