@@ -27,8 +27,7 @@ final class SearchResultsDataSource: NSObject, SectionedDataSource {
 
   /// Creates a new search results data source.
   ///
-  /// - Parameters:
-  ///   - repo: The API to use for searching.
+  /// - Parameter repo: The API to use for searching.
   init(repo: Searching) {
     self.repo = repo
 
@@ -531,7 +530,7 @@ extension SearchResultsDataSource: UITableViewDataSourcePrefetching  {
     let items = imaginables(for: indexPaths)
     let size = estimateCellSize(tableView: tableView)
 
-    Podest.images.cancelPrefetching(for: items, at: size, quality: .medium)
+    Podest.images.cancelPrefetching(items, at: size, quality: .medium)
   }
   
 }

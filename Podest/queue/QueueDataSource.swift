@@ -612,7 +612,7 @@ extension QueueDataSource: UITableViewDataSourcePrefetching  {
     let items = imaginables(for: indexPaths)
     let size = estimateCellSize(tableView: tableView)
 
-    Podest.images.cancelPrefetching(for: items, at: size, quality: .medium)
+    Podest.images.cancelPrefetching(items, at: size, quality: .medium)
   }
   
 }
