@@ -111,8 +111,7 @@ extension RootViewController {
     minivc.view.isHidden = false
 
     guard animated, !isPresentingVideo else {
-      os_log("** applying constant: %f",
-             log: log, type: .debug, miniPlayerConstant)
+      os_log("applying constant: %f", log: log, type: .debug, miniPlayerConstant)
 
       miniPlayerLeading.constant = miniPlayerConstant - view.safeAreaInsets.right
       miniPlayerTop.constant = miniPlayerConstant
