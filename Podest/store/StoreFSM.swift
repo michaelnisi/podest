@@ -280,10 +280,9 @@ final class StoreFSM: NSObject {
 
     db.set(data, forKey: r)
 
-    let id = receipt.productIdentifier
-    let name = (id.split(separator: ".").last ?? "unknown").capitalized
-    let x = StoreFSM.makeExpiration(date: receipt.transactionDate, period: .subscription)
-    updateSettings(status: name, expiration: x)
+    if let (status, expiration) = StoreFSM.makeSettingsInfo(receipts: acc) {
+      updateSettings(status: status, expiration: expiration)
+    }
 
     let str = String(data: data, encoding: .utf8)!
 
@@ -338,6 +337,26 @@ final class StoreFSM: NSObject {
     
     return !Period.trial.isExpired(date: Date(timeIntervalSince1970: ts))
   }
+  
+  /// Returns a tuple for updating Settings.app with subscription status name 
+  /// and expiration date of the latest receipt in `receipts` or `nil` if 
+  /// `receipts` is empty.
+  static func makeSettingsInfo(receipts: [PodestReceipt]) -> (String, Date)? {
+    let sorted = receipts.sorted { $0.transactionDate < $1.transactionDate }
+    
+    guard let receipt = sorted.first else {
+      return nil
+    }
+    
+    let id = receipt.productIdentifier
+    let status = (id.split(separator: ".").last ?? "unknown").capitalized
+    let expiration = StoreFSM.makeExpiration(
+      date: receipt.transactionDate, 
+      period: .subscription
+    )
+    
+    return (status, expiration)
+  }
 
   private func validateReceipts() -> StoreState {
     let receipts = loadReceipts()
@@ -349,7 +368,11 @@ final class StoreFSM: NSObject {
       receipts, matching: productIdentifiers) else {
       return .interested(validateTrial(updatingSettings: true))
     }
-
+    
+    if let (status, expiration) = StoreFSM.makeSettingsInfo(receipts: receipts) {
+      updateSettings(status: status, expiration: expiration)
+    }
+    
     return .subscribed(id)
   }
 
