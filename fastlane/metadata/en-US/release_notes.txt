@@ -10,4 +10,12 @@ The Queue now indicates which episodes have not been played yet.
 
 Improved performance and effectiveness: using less threads and disabling HTTP pipelining.
 
-Of course, some bugs have been fixed along the way as well. List loading displays correct error message when offline, previously this had been incorrectly reported as service unavailable. In some use cases, during search, the mini-player obscured lists. This has been fixed. After an episode has been played to its end, Control Center is updated correctly and, played the next time, the episode will resume at the beginning.
+Following bugs have been fixed along the way:
+
+List loading displays correct error message when offline, previously this had been incorrectly reported as service unavailable.
+
+In some use cases, during search, the mini-player obscured lists. This has been fixed.
+
+After an episode has been played to its end, Control Center is updated correctly and, played the next time, the episode will resume at the beginning.
+
+Settings.app displays correct version and status.
