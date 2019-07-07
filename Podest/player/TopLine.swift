@@ -19,6 +19,10 @@ class TopLineLayer: CAShapeLayer {
     super.init(coder: aDecoder)
   }
   
+  override init(layer: Any) {
+    super.init(layer: layer)
+  }
+  
   override class func needsDisplay(forKey key: String) -> Bool {
     if (key == "bounds") {
       return true
