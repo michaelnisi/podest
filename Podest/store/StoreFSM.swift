@@ -93,6 +93,11 @@ final class StoreFSM: NSObject {
     db.set(Date().timeIntervalSince1970, forKey: StoreFSM.unsealedKey)
   }
   
+  private static func shouldUnseal(
+    _ db: NSUbiquitousKeyValueStore, env: BuildVersion.Environment) -> Bool {
+    return env == .sandbox || db.double(forKey: StoreFSM.unsealedKey) == 0 
+  }
+  
   /// Creates a new store with minimal dependencies. **Protocol dependencies**
   /// for easier testing.
   ///
@@ -116,7 +121,7 @@ final class StoreFSM: NSObject {
     self.version = version
     self.state = .initialized
     
-    if db.double(forKey: StoreFSM.unsealedKey) == 0 {
+    if StoreFSM.shouldUnseal(db, env: version.env) {
       StoreFSM.unseal(db)
     }
   }
@@ -170,16 +175,20 @@ final class StoreFSM: NSObject {
 
     do {
       os_log("loading product identifiers", log: log, type: .debug)
+      
       let json = try Data(contentsOf: url)
       let localProducts = try JSONDecoder().decode(
         [LocalProduct].self, from: json
       )
       _productIdentifiers = Set(localProducts.map { $0.productIdentifier })
+      
       os_log("product identifiers: %@", log: log, type: .debug,
              _productIdentifiers!)
+      
       return _productIdentifiers!
     } catch {
       os_log("no product identifiers", log: log, type: .error)
+      
       return []
     }
   }
@@ -334,7 +343,7 @@ final class StoreFSM: NSObject {
       let expiration = StoreFSM.makeExpiration(date: unsealed, period: Period.trial)
       updateSettings(status: "Free Trial", expiration: expiration)
     }
-    
+
     return !Period.trial.isExpired(date: Date(timeIntervalSince1970: ts))
   }
   
