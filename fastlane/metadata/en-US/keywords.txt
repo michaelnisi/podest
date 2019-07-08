@@ -1,1 +1,1 @@
-pod,pods,podcast,podcasts,podcatcher,radio,browser,player,audio,video,watch,listen,tv,queue,catcher
+pod,podcast,podcatcher,radio,browser,player,audio,video,watch,listen,tv,queue,catcher,open,source
