@@ -266,28 +266,12 @@ extension AppDelegate {
     _ application: UIApplication,
     supportedInterfaceOrientationsFor window: UIWindow?
   ) -> UIInterfaceOrientationMask {
-    guard let tc = window?.traitCollection else {
+    guard window?.traitCollection.userInterfaceIdiom != .phone else {
       return .portrait
     }
-
-    let regular = UITraitCollection(traitsFrom: [
-      UITraitCollection(horizontalSizeClass: .regular),
-      UITraitCollection(verticalSizeClass: .regular)
-    ])
-
-    guard tc.containsTraits(in: regular) else {
-      // A development argument allows landscape mode on larger phones.
-      if Podest.settings.allButUpsideDown, let size = window?.bounds.size {
-        let s = min(size.width, size.height)
-        return s >= 414 ? .allButUpsideDown : .portrait
-      } else {
-        return .portrait
-      }
-    }
-
+    
     return .allButUpsideDown
   }
-
 }
 
 // MARK: - Opening a URL-Specified Resource

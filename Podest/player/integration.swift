@@ -14,7 +14,7 @@ import AVKit
 import AVFoundation
 import Ola
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
 extension RootViewController: Players {
   // Implementation of Players is broken down into extensions below.
@@ -111,8 +111,7 @@ extension RootViewController {
     minivc.view.isHidden = false
 
     guard animated, !isPresentingVideo else {
-      os_log("** applying constant: %f",
-             log: log, type: .debug, miniPlayerConstant)
+      os_log("applying constant: %f", log: log, type: .debug, miniPlayerConstant)
 
       miniPlayerLeading.constant = miniPlayerConstant - view.safeAreaInsets.right
       miniPlayerTop.constant = miniPlayerConstant
@@ -139,13 +138,12 @@ extension RootViewController {
       self.view.layoutIfNeeded()
     }.startAnimation()
   }
-
 }
 
 // MARK: - Controlling Playback
 
 extension RootViewController {
-
+  
   func play(_ entry: Entry) {
     os_log("playing: %@", log: log, type: .debug, entry.title)
 
@@ -184,7 +182,6 @@ extension RootViewController {
     
     Podest.playback.pause()
   }
-
 }
 
 /// Player view controllers must adopt this protocol. It specifies a view 
@@ -288,7 +285,6 @@ extension RootViewController {
       completion?()
     }
   }
-
 }
 
 // MARK: - Presenting the Video Player
@@ -330,7 +326,6 @@ extension RootViewController {
   var isPlayerPresented: Bool {
     return isPresentingVideo || presentedViewController is EntryPlayer
   }
-
 }
 
 
@@ -341,7 +336,6 @@ extension AVPlayerViewController {
     let c = UITraitCollection(horizontalSizeClass: .compact)
     return !traitCollection.containsTraits(in: c)
   }
-
 }
 
 // MARK: - PlaybackDelegate
@@ -363,75 +357,18 @@ extension RootViewController: PlaybackDelegate {
   }
 
   func playback(session: Playback, didChange state: PlaybackState) {
+    os_log("playback state did change: %{public}@", 
+           log: log, type: .debug, String(describing: state))
+    
     switch state {
     case .paused(let entry, let error):
       defer {
         self.playbackControlProxy = SimplePlaybackState(entry: entry, isPlaying: false)
       }
 
-      guard let er = error else {
-        return
-      }
-
-      let content: (String, String)? = {
-        switch er {
-        case .log, .unknown:
-          fatalError("unexpected error")
-        case .unreachable:
-          return (
-            "You’re Offline",
-            """
-            Your episode – \(entry.title) – can’t be played because you are \
-            not connected to the Internet.
-
-            Turn off Airplane Mode or connect to Wi-Fi.
-            """
-          )
-          //        case .unreachable:
-          //          return (
-          //            "Unreachable Content",
-          //            """
-          //            Your episode – \(entry.title) – can’t be played because it’s \
-          //            currently unreachable.
-          //
-          //            Turn off Airplane Mode or connect to Wi-Fi.
-          //            """
-        //          )
-        case .failed:
-          return (
-            "Playback Error",
-            """
-            Sorry, playback of your episode – \(entry.title) – failed.
-
-            Try later or, if this happens repeatedly, remove it from your Queue.
-            """
-          )
-        case .media:
-          return (
-            "Strange Data",
-            """
-            Your episode – \(entry.title) – cannot be played.
-
-            It’s probably best to remove it from your Queue.
-            """
-          )
-        case .surprising(let surprisingError):
-          return (
-            "Oh No",
-            """
-            Your episode – \(entry.title) – cannot be played.
-
-            \(surprisingError.localizedDescription)
-
-            Please consider removing it from your Queue.
-            """
-          )
-        case .session:
-          return nil
-        }
-      }()
-
-      guard let c = content else {
+      guard 
+        let er = error, 
+        let c = PlayerMessage.makeMessage(entry: entry, error: er) else {
         return
       }
 
@@ -453,11 +390,11 @@ extension RootViewController: PlaybackDelegate {
         presenter?.present(alert, animated: true, completion: nil)
       }
 
-    case .listening(let entry):
+    case .listening(let entry):      
       self.playbackControlProxy = SimplePlaybackState(
         entry: entry, isPlaying: true)
 
-    case .preparing(let entry, let shouldPlay):
+    case .preparing(let entry, let shouldPlay):      
       self.playbackControlProxy = SimplePlaybackState(
         entry: entry, isPlaying: shouldPlay)
 
@@ -497,8 +434,4 @@ extension RootViewController: PlaybackDelegate {
   func dismissVideo() {
     hideVideoPlayer()
   }
-
 }
-
-
-

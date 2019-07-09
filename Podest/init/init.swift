@@ -53,7 +53,7 @@ private func httpAdditionalHeaders(service: Service) -> [AnyHashable : Any]? {
 private func makeFanboySession(service: Service) -> URLSession {
   let conf = URLSessionConfiguration.default
 
-  conf.httpShouldUsePipelining = true
+  conf.httpShouldUsePipelining = false
   conf.requestCachePolicy = .useProtocolCachePolicy
   conf.httpAdditionalHeaders = httpAdditionalHeaders(service: service)
 
@@ -97,7 +97,7 @@ private func makeSearchRepo(_ conf: Config) throws -> SearchRepository {
 private func makeMangerSession(service: Service) -> URLSession {
   let conf = URLSessionConfiguration.default
 
-  conf.httpShouldUsePipelining = true
+  conf.httpShouldUsePipelining = false
   conf.requestCachePolicy = .useProtocolCachePolicy
   conf.httpAdditionalHeaders = httpAdditionalHeaders(service: service)
   conf.timeoutIntervalForResource = 20

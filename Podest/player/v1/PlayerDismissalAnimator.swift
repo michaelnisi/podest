@@ -78,7 +78,7 @@ extension PlayerDismissalAnimator: UIViewControllerAnimatedTransitioning {
     let t = PlayerAnimator.makeOffset(orientation: o, distance: d)
 
     let heroCenter = to.minivc.view.convert(to.minivc.hero.center, to: cv)
-    let heroBounds = to.minivc.hero.bounds
+    let heroBounds = PlayerAnimator.makeSquareBounds(view: to.minivc.hero)
 
     let anim = UIViewPropertyAnimator(duration: duration, curve: .easeInOut) {
       transitionContext.view(forKey: .from)?.transform = t

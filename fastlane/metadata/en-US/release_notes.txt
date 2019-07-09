@@ -1,5 +1,21 @@
-This version, the first using a new simplified version number, provides more information about Podest in the Settings app, namely version, subscription, and expiration date for free trials. On iPad, episode images are displayed in the correct size. Large titles are refrained. And while it’s springtime round these parts, it’s time for new icon colors.
+In preparation for iOS 13 this fall, these changes adjust layout timing, improve performance, and install scaffolding for a new player user interface, which should also be dropping this fall.
 
-From now on versions will be counted in whole numbers, eight, nine, 10, etc., with a relative build number, for example, 8 (2) for version eight, build two. Patches are going to be counted after a dot, 8.1, say. Full-on Semantic Versioning didn’t prove itself practical for this app.
+Improved multitasking on iPad: the list header adjusts according to layout and the player animation maintains the aspect ratio of the episode image.
 
-Thanks to ABI stability, app size is down to five megabytes. Good job, Swift team.
+Higher resolution images and more effective loading and processing.
+
+The mini-player chrome got a gray border at its top edge.
+
+The Queue now indicates which episodes have not been played yet.
+
+Improved performance and effectiveness: using less threads and disabling HTTP pipelining.
+
+Following bugs have been fixed along the way:
+
+List loading displays correct error message when offline, previously this had been incorrectly reported as service unavailable.
+
+In some use cases, during search, the mini-player obscured lists. This has been fixed.
+
+After an episode has been played to its end, Control Center is updated correctly and, played the next time, the episode will resume at the beginning.
+
+Settings.app displays correct version and status.

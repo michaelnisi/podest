@@ -59,6 +59,9 @@ class DisplayTableViewCell: UITableViewCell {
 
   override func layoutSubviews() {
     super.layoutSubviews()
+    
+    // Loading images in the view, instead of in the data source, is 
+    // unfortunate, but we need to know the size.
 
     guard
       let view = largeImageView,
@@ -67,7 +70,9 @@ class DisplayTableViewCell: UITableViewCell {
       return
     }
 
-    // Passing animations to prevent redundant loading.
+    // Redispatching saves us one redundant loadImage call during animations,
+    // but it does not matter really, it would just be hitting the in-memory 
+    // cache.
 
     DispatchQueue.main.async { [weak self] in
       self?.images?.loadImage(
@@ -84,5 +89,4 @@ class DisplayTableViewCell: UITableViewCell {
       self?.isReset = false
     }
   }
-
 }

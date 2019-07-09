@@ -55,11 +55,9 @@ class PlayerAnimator: NSObject {
     // let view = transitionContext.view(forKey: .from)!
 
     let center = source.superview!.convert(source.center, to: cv)
-    let width = source.bounds.width
-
     let target = source.snapshotView(afterScreenUpdates: false)!
-
-    target.bounds = CGRect(x: 0, y: 0, width: width, height: width)
+    
+    target.contentMode = .scaleAspectFill
     target.center = center
 
     cv.addSubview(target)
@@ -100,7 +98,14 @@ class PlayerAnimator: NSObject {
       CGAffineTransform(translationX: distance, y: 0) :
       CGAffineTransform(translationX: 0, y: distance)
   }
-
+  
+  static func makeSquareBounds(view: UIView) -> CGRect {
+    let bounds = view.bounds
+    let edge = min(bounds.width, bounds.height)
+    let size = CGSize(width: edge, height: edge)
+    
+    return CGRect(origin: .zero, size: size)
+  }
 }
 
 // MARK: - PlayerTransitionDelegate
@@ -136,5 +141,4 @@ extension PlayerTransitionDelegate: UIViewControllerTransitioningDelegate {
   ) -> UIViewControllerAnimatedTransitioning? {
     return PlayerDismissalAnimator()
   }
-  
 }

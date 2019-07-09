@@ -561,8 +561,10 @@ extension EpisodeViewController {
       makeMoreButton(),
       makeQueueButton(for: entry)
     ]
-
-    navigationItem.rightBarButtonItems = items
+    
+    UIView.performWithoutAnimation {
+      navigationItem.rightBarButtonItems = items
+    }
   }
 
 }

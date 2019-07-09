@@ -237,7 +237,6 @@ extension ListDataSource: UITableViewDataSource {
         withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
       ) as! SubtitleTableViewCell
 
-      cell.accessoryType = .none
       cell.selectionStyle = .none
       cell.backgroundColor = ListDataSource.cellBackgroundColor
 

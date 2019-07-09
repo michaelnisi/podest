@@ -48,6 +48,13 @@
                                     <constraint firstAttribute="height" constant="60" id="xUn-HD-kf9"/>
                                 </constraints>
                             </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kak-3G-48Q" customClass="TopLineView" customModule="Podest" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="20" width="414" height="1"/>
+                                <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="mcS-7N-Rfk"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <constraints>
                             <constraint firstItem="1wk-kS-VNw" firstAttribute="bottom" secondItem="7ug-Sp-cPl" secondAttribute="bottom" constant="20" id="2qD-X2-NSN"/>
@@ -56,10 +63,13 @@
                             <constraint firstItem="KAh-dR-e3W" firstAttribute="trailing" secondItem="QSs-bV-FGL" secondAttribute="leading" priority="750" constant="8" symbolic="YES" id="Adj-FN-tEI"/>
                             <constraint firstItem="KAh-dR-e3W" firstAttribute="centerY" secondItem="QSs-bV-FGL" secondAttribute="centerY" id="EXa-qO-El0"/>
                             <constraint firstItem="QSs-bV-FGL" firstAttribute="centerX" secondItem="1wk-kS-VNw" secondAttribute="centerX" id="IAP-FJ-Pka"/>
+                            <constraint firstItem="Kak-3G-48Q" firstAttribute="top" secondItem="1wk-kS-VNw" secondAttribute="top" id="J6e-Uo-WDc"/>
                             <constraint firstItem="QSs-bV-FGL" firstAttribute="bottom" secondItem="1wk-kS-VNw" secondAttribute="bottom" constant="-20" id="LDE-U3-ORX"/>
                             <constraint firstItem="7ug-Sp-cPl" firstAttribute="centerX" secondItem="QSs-bV-FGL" secondAttribute="centerX" id="PTL-fX-rE3"/>
                             <constraint firstItem="QSs-bV-FGL" firstAttribute="centerY" secondItem="1wk-kS-VNw" secondAttribute="centerY" id="YX4-oF-xDh"/>
+                            <constraint firstItem="Kak-3G-48Q" firstAttribute="leading" secondItem="1wk-kS-VNw" secondAttribute="leading" id="b8z-ws-YS2"/>
                             <constraint firstItem="KAh-dR-e3W" firstAttribute="height" relation="lessThanOrEqual" secondItem="QSs-bV-FGL" secondAttribute="height" id="gTU-fh-w1z"/>
+                            <constraint firstItem="1wk-kS-VNw" firstAttribute="trailing" secondItem="Kak-3G-48Q" secondAttribute="trailing" id="lx1-MI-wW8"/>
                             <constraint firstAttribute="right" secondItem="7ug-Sp-cPl" secondAttribute="right" constant="20" symbolic="YES" id="ubp-dd-gMR"/>
                             <constraint firstItem="QSs-bV-FGL" firstAttribute="right" secondItem="1wk-kS-VNw" secondAttribute="right" constant="-20" id="xFF-Vz-O88"/>
                         </constraints>

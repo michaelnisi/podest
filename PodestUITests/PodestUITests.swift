@@ -12,9 +12,9 @@ class PodestUITests: XCTestCase {
   
   struct Script {
     let playerTitle = "#130 The Snapchat Thief"
-    let searchTerm = "new"
-    let suggestedTerm = "new america"
-    let resultTitle = "Adventures in New America"
+    let searchTerm = "ti"
+    let suggestedTerm = "new york times"
+    let resultTitle = "Still Processing"
   }
 
   var app: XCUIApplication!
@@ -35,7 +35,8 @@ class PodestUITests: XCTestCase {
   }
   
   var miniPlayer: XCUIElement {
-    return window.children(matching: .other)
+    return window
+      .children(matching: .other)
       .element.children(matching: .other)
       .element(boundBy: 1).staticTexts[script.playerTitle]
   }
@@ -130,7 +131,8 @@ class PodestUITests: XCTestCase {
       snapshot("0")
     }
 
-    let cell = app.tables.cells.element(boundBy: 0)
+    let cell = app.tables.cells.element(boundBy: 3)
+    
     cell.tap()
 
     let feedButton = app.scrollViews.otherElements.buttons.element(boundBy: 0)

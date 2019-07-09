@@ -113,6 +113,18 @@ extension SearchResultsController {
     }
   }
   
+  // If traits timing changes affect viewLayoutMarginsDidChange, try this:
+  
+//  override func viewWillLayoutSubviews() {
+//    super.viewWillLayoutSubviews()
+//    
+//    if #available(iOS 13.0, *) {
+//      updateAdditionalSafeAreaInsets()
+//    } else {
+//      // NOP
+//    }
+//  }
+  
   private var bottomInset: CGFloat {
     return max(delegate?.navigationDelegate?
       .miniPlayerEdgeInsets.bottom ?? 0, tableView.safeAreaInsets.bottom)

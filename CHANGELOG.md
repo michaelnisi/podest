@@ -1,12 +1,28 @@
-## 8.1 (planned)
+## 8.1 (2019-07-05)
 
-### Squirrel
+### Squirrel Pup
 
-Prepping for iOS 13 this fall, these changes adjust layout timing and install scaffolding for a new player user interface, which should also be ready this fall.
+In preparation for iOS 13 this fall, these changes adjust layout timing, improve performance, and install scaffolding for a new player user interface, which should also be dropping this fall.
 
-Improved multitasking on iPad, the list header adjusts according to layout.
+Improved multitasking on iPad: the list header adjusts according to layout and the player animation maintains the aspect ratio of the episode image.
 
-More effective image loading.
+Higher resolution images and more effective loading and processing.
+
+The mini-player chrome got a gray border at its top edge.
+
+The Queue now indicates which episodes have not been played yet.
+
+Improved performance and effectiveness: using less threads and disabling HTTP pipelining.
+
+Following bugs have been fixed along the way:
+
+List loading displays correct error message when offline, previously this had been incorrectly reported as service unavailable.
+
+In some use cases, during search, the mini-player obscured lists. This has been fixed.
+
+After an episode has been played to its end, Control Center is updated correctly and, played the next time, the episode will resume at the beginning.
+
+Settings.app displays correct version and status.
 
 ## 8 (2019-04-25)
 

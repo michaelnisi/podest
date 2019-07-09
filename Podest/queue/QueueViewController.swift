@@ -15,8 +15,8 @@ import Ola
 /// it renders the user’s queued episodes and, in its navigation item, provides
 /// the global search.
 final class QueueViewController: UITableViewController, Navigator {
-  
-  let log = OSLog.disabled
+
+  let log = OSLog(subsystem: "ink.codes.podest", category: "queue")
   
   /// A state machine handling events from the search controller.
   private var searchProxy: SearchControllerProxy!
@@ -294,7 +294,6 @@ extension QueueViewController {
 
     updateSelection()
   }
-
 }
 
 // MARK: - EntryRowSelectable
@@ -304,18 +303,44 @@ extension QueueViewController: EntryRowSelectable {}
 // MARK: - EntryProvider
 
 extension QueueViewController: EntryProvider {
-
+  
   /// Couple of options here, the currently selected entry, the entry in the
   /// player, the first entry in the queue, or `nil`.
   var entry: Entry? {
-    guard let indexPath = tableView.indexPathForSelectedRow else {
-      return Podest.playback.currentEntry ??
-        dataSource.entry(at: IndexPath(row: 0, section: 0))
-    }
-
-    return dataSource.entry(at: indexPath)
+    get { 
+      guard let indexPath = tableView.indexPathForSelectedRow else {
+        return Podest.playback.currentEntry ??
+          dataSource.entry(at: IndexPath(row: 0, section: 0))
+      }
+      
+      return dataSource.entry(at: indexPath)
+    } 
+    
+    set {}
   }
-
 }
 
+// MARK: - PlaybackResponding
 
+extension QueueViewController: PlaybackResponding {
+  
+  func dismiss() {
+    os_log("ignoring dismiss", log: log)
+  }
+  
+  func playing(entry: Entry) {
+    os_log("playing: %s", log: log, type: .debug, entry.title)
+    
+    guard let cell = tableView.visibleCells
+      .first(where: { $0.tag == entry.hashValue }), 
+      let pie = cell.accessoryView as? PieView else {
+      return
+    }
+    
+    pie.percentage = 0
+  }
+  
+  func pausing(entry: Entry) {
+    os_log("pausing: %s", log: log, type: .debug, entry.title)
+  }
+}

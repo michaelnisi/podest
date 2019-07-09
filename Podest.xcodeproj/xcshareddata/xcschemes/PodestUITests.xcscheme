@@ -76,6 +76,10 @@
             argument = "-ink.codes.podest.noDownloading"
             isEnabled = "YES">
          </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-ink.codes.podest.removeReceipts"
+            isEnabled = "YES">
+         </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>
       </AdditionalOptions>
