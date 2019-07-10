@@ -42,8 +42,6 @@ final class ProductsDataSource: NSObject, SectionedDataSource {
 
   static var messageCellID = "MessageCellID"
   static var productCellID = "ProductCellID"
-  static var productsHeaderID = "ProductsHeaderID"
-  static var productsFooterID = "ProductsFooterID"
   static var articleCellID = "ArticleCollectionViewCellID"
 
   private var _sections = [[Item.loading]]
