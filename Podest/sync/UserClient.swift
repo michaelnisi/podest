@@ -177,11 +177,11 @@ public class UserClient {
   }
   
   private static func makeFetchZoneChangesOptions(zoneIDs: [CKRecordZone.ID]
-  ) -> [CKRecordZone.ID : CKFetchRecordZoneChangesOperation.ZoneOptions] {
-    var r = [CKRecordZone.ID : CKFetchRecordZoneChangesOperation.ZoneOptions]()
+    ) -> [CKRecordZone.ID : CKFetchRecordZoneChangesOperation.ZoneConfiguration] {
+    var r = [CKRecordZone.ID : CKFetchRecordZoneChangesOperation.ZoneConfiguration]()
 
     for zoneID in zoneIDs {
-      let opts = CKFetchRecordZoneChangesOperation.ZoneOptions()
+      let opts = CKFetchRecordZoneChangesOperation.ZoneConfiguration()
 
       let zoneKey = UserDB.ChangeTokenKey(zoneID: zoneID)
       let prev = serverChangeToken(for: zoneKey)
@@ -196,19 +196,12 @@ public class UserClient {
   private func makeFetchRecordZoneChangesOperation(
     zoneIDs: [CKRecordZone.ID]
   ) -> CKFetchRecordZoneChangesOperation {
-    if #available(iOS 12.0, *) {
-      let confs = UserClient.makeZoneConfigurations(zoneIDs: zoneIDs)
-      let op = CKFetchRecordZoneChangesOperation(
-        recordZoneIDs: zoneIDs, configurationsByRecordZoneID: confs)
-      op.fetchAllChanges = true
-      return op
-    } else {
-      let opts = UserClient.makeFetchZoneChangesOptions(zoneIDs: zoneIDs)
-      let op = CKFetchRecordZoneChangesOperation(
-        recordZoneIDs: zoneIDs, optionsByRecordZoneID: opts)
-      op.fetchAllChanges = true
-      return op
-    }
+    let confs = UserClient.makeZoneConfigurations(zoneIDs: zoneIDs)
+    let op = CKFetchRecordZoneChangesOperation(
+      recordZoneIDs: zoneIDs, configurationsByRecordZoneID: confs)
+    op.fetchAllChanges = true
+    
+    return op
   }
 
   /// Our default database is the private cloud database.
