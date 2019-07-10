@@ -176,6 +176,14 @@ extension ListDataSource: UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return sections[section].count
   }
+  
+  static var cellBackgroundColor: UIColor {
+    if #available(iOS 13.0, *) {
+      return .systemGroupedBackground
+    } else {
+      return .white
+    }
+  }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     guard let item = itemAt(indexPath: indexPath) else {
@@ -206,7 +214,7 @@ extension ListDataSource: UITableViewDataSource {
       ) as! SubtitleTableViewCell
 
       cell.selectionStyle = .default
-      cell.backgroundColor = .white
+      cell.backgroundColor = ListDataSource.cellBackgroundColor
 
       cell.images = nil
       cell.item = entry
@@ -218,7 +226,6 @@ extension ListDataSource: UITableViewDataSource {
 
       cell.detailTextLabel?.font = .preferredFont(forTextStyle: .body)
       cell.detailTextLabel?.numberOfLines = 3
-      cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
 
       cell.detailTextLabel?.attributedText = nil
       cell.detailTextLabel?.text = subtitle
@@ -231,7 +238,7 @@ extension ListDataSource: UITableViewDataSource {
       ) as! SubtitleTableViewCell
 
       cell.selectionStyle = .none
-      cell.backgroundColor = .white
+      cell.backgroundColor = ListDataSource.cellBackgroundColor
 
       cell.images = nil
       cell.item = nil
@@ -241,7 +248,6 @@ extension ListDataSource: UITableViewDataSource {
 
       cell.detailTextLabel?.font = .preferredFont(forTextStyle: .body)
       cell.detailTextLabel?.numberOfLines = 0
-      cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
 
       cell.detailTextLabel?.attributedText = nil
       cell.detailTextLabel?.text = author

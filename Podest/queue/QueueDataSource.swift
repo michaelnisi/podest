@@ -22,22 +22,22 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     case feed(Feed)
     case message(NSAttributedString)
   }
-  
+
   /// An internal serial queue for synchronized access.
   private var sQueue = DispatchQueue(
     label: "ink.codes.podest.QueueDataSource-\(UUID().uuidString)",
     target: .global()
   )
-  
+
   private var _sections: [Array<Item>] = [
     [.message(StringRepository.loadingQueue)]
   ]
-  
+
   var isEmpty: Bool {
     guard let first = sections.first?.first, case .message = first else {
       return sections.isEmpty
     }
-    
+
     return true
   }
 
@@ -62,31 +62,31 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
     return false
   }
-  
+
   private var invalidated = false
-  
+
   /// Removes all observers.
   func invalidate() {
     dispatchPrecondition(condition: .onQueue(.main))
     reloading?.cancel()
-    
+
     invalidated = true
   }
-  
+
   private let userQueue: Queueing
 
   private let images: Images
 
   private let imageQuality: ImageQuality
-  
+
   init(userQueue: Queueing, images: Images, imageQuality: ImageQuality = .medium) {
     self.userQueue = userQueue
     self.images = images
     self.imageQuality = imageQuality
-    
+
     super.init()
   }
-  
+
   deinit {
     precondition(invalidated)
   }
@@ -123,7 +123,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
       precondition(messages.count == 1)
       return [messages]
     }
-    
+
     return [entries, feeds].filter {
       !$0.isEmpty
     }
@@ -216,7 +216,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     let now = Date().timeIntervalSince1970
     let diff = now - ts
     let yes = diff > deadline
-    
+
     if yes {
       if setting {
         UserDefaults.standard.set(now, forKey: k)
@@ -224,7 +224,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     } else {
       os_log("should not update: %f < %f", log: log, type: .debug, diff, deadline)
     }
-    
+
     return yes
   }
 
@@ -245,7 +245,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   private func makeShouldRemoveBlock() -> (Bool, @escaping (Bool) -> Void) -> Void {
     let now = Date().timeIntervalSince1970
     let stale = now - lastTimeFilesHaveBeenRemoved > 86400
-    
+
     return { newData, completionBlock in
       DispatchQueue.main.async {
         guard stale,
@@ -268,7 +268,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     get { return sQueue.sync { _updateError } }
     set { sQueue.sync { _updateError = newValue } }
   }
-  
+
   /// Updates the queue, reloading current items to update from, and asks the
   /// system to download enclosed media files in the background. Fuzzy
   /// preloading of episodes in limited batches, aquiring all files eventually.
@@ -350,10 +350,10 @@ final class QueueDataSource: NSObject, SectionedDataSource {
         preload(forwarding: newData, updateError: error)
       }
     }
-    
+
     // For simulators, not receiving remote notifications, we are pulling
     // iCloud manually, for less erratic conditions while working on sync.
-    
+
     #if targetEnvironment(simulator)
     guard window <= 60 else {
       return next()
@@ -372,11 +372,11 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     next()
     #endif
   }
-  
+
   // MARK: UITableViewDataSourcePrefetching
-  
+
   var _requests: [ImageRequest]?
-  
+
   /// The in-flight image prefetching requests. This property is serialized.
   private var requests: [ImageRequest]? {
     get {
@@ -408,22 +408,22 @@ extension QueueDataSource: UITableViewDataSource {
       tableView.register(cell.0, forCellReuseIdentifier: cell.1)
     }
   }
-  
+
   func numberOfSections(in tableView: UITableView) -> Int {
     return sections.count
   }
-  
+
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int
   ) -> Int {
     return sections[section].count
   }
-  
+
   private static func makeAccessory() -> UIView {
     let frame = CGRect(x: 0, y: 0, width: 18, height: 18)
     let view = PieView(frame: frame)
     view.percentage = 1.0
     view.backgroundColor = .clear
-    
+
     return view
   }
 
@@ -434,7 +434,7 @@ extension QueueDataSource: UITableViewDataSource {
     }
 
     tableView.separatorStyle = .singleLine
-    
+
     switch item {
     case .entry(let entry):
       let cell = tableView.dequeueReusableCell(
@@ -448,7 +448,6 @@ extension QueueDataSource: UITableViewDataSource {
 
         cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .body)
         cell.detailTextLabel?.numberOfLines = 0
-        cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
       }
 
       cell.images = Podest.images
@@ -457,15 +456,16 @@ extension QueueDataSource: UITableViewDataSource {
 
       cell.textLabel?.text = entry.feedTitle ?? entry.title
       cell.detailTextLabel?.text = entry.title
-      
+
       // Tagging cell with entry for later being able to find it, when it’s time
       // to update the accessory view.
       cell.tag = entry.hashValue
-      
+    
       if cell.accessoryView == nil {
         cell.accessoryView =  QueueDataSource.makeAccessory()
+        cell.tintColor = UIColor(named: "Purple")
       }
-      
+
       if let pie = cell.accessoryView as? PieView {
         if let uid = entry.enclosure?.url, Podest.playback.isUnplayed(uid: uid) {
           pie.percentage = 1.0
@@ -501,13 +501,13 @@ extension QueueDataSource: UITableViewDataSource {
 
     return true
   }
-  
+
 }
 
 // MARK: - EntryDataSource
 
 extension QueueDataSource: EntryIndexPathMapping {
-  
+
   func entry(at indexPath: IndexPath) -> Entry? {
     guard let item = itemAt(indexPath: indexPath) else {
       return nil
@@ -519,7 +519,7 @@ extension QueueDataSource: EntryIndexPathMapping {
       return nil
     }
   }
-  
+
   func indexPath(matching entry: Entry) -> IndexPath? {
     for (sectionIndex, section) in sections.enumerated() {
       for (itemIndex, item) in section.enumerated() {
@@ -532,13 +532,13 @@ extension QueueDataSource: EntryIndexPathMapping {
     }
     return nil
   }
-  
+
 }
 
 // MARK: - Handling Swipe Actions
 
 extension QueueDataSource {
-  
+
   /// Returns a fresh contextual action handler for the row at `indexPath`,
   /// dequeueing its episode, when submitted.
   func makeDequeueHandler(
@@ -558,7 +558,7 @@ extension QueueDataSource {
             completionHandler(false)
           }
         }
-    
+
         DispatchQueue.main.async {
           completionHandler(true)
         }
@@ -566,13 +566,13 @@ extension QueueDataSource {
     }
     return handler
   }
-  
+
 }
 
 // MARK: - UITableViewDataSourcePrefetching
 
 extension QueueDataSource: UITableViewDataSourcePrefetching  {
-  
+
   private func imaginables(for indexPaths: [IndexPath]) -> [Imaginable] {
     return indexPaths.compactMap { indexPath in
       guard let item = itemAt(indexPath: indexPath) else {
@@ -594,7 +594,7 @@ extension QueueDataSource: UITableViewDataSourcePrefetching  {
 
     return tmp?.imageView?.bounds.size ?? CGSize(width: 82, height: 82)
   }
-  
+
   func tableView(
     _ tableView: UITableView,
     prefetchRowsAt indexPaths: [IndexPath]
@@ -614,5 +614,5 @@ extension QueueDataSource: UITableViewDataSourcePrefetching  {
 
     Podest.images.cancelPrefetching(items, at: size, quality: .medium)
   }
-  
+
 }

@@ -189,7 +189,7 @@ extension AppDelegate {
 
     shouldRestoreState = launchOptions?[.url] == nil
 
-    window?.tintColor = UIColor(named: "Purple")
+    window?.tintColor = UIColor(named: "Purple")!
 
     if !Podest.store.isExpired() {
       application.setMinimumBackgroundFetchInterval(3600)

@@ -217,7 +217,7 @@ extension ListViewController {
     clearsSelectionOnViewWillAppear = isCollapsed || isDifferent
 
     updateIsSubscribed()
-
+   
     super.viewWillAppear(animated)
   }
 
