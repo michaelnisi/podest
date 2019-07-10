@@ -32,14 +32,14 @@ private struct SummaryAttributes {
   let h1: [NSAttributedString.Key: Any] = [
     .font: UIFontMetrics.default.scaledFont(for:
       .systemFont(ofSize: 19, weight: .bold)),
-    .foregroundColor: UIColor(named: "Asphalt")!,
+    .foregroundColor: UIColor(named: "Secondary")!,
     .paragraphStyle: p
   ]
 
   let body: [NSAttributedString.Key: Any] = [
     .font: UIFontMetrics.default.scaledFont(for:
       .systemFont(ofSize: 19, weight: .medium)),
-    .foregroundColor: UIColor(named: "Asphalt")!,
+    .foregroundColor: UIColor(named: "Secondary")!,
     .paragraphStyle: p
   ]
 
