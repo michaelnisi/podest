@@ -42,6 +42,14 @@ final class SubtitleTableViewCell: UITableViewCell {
   var imageQuality: ImageQuality = .medium
 
   private var imageSizeLoaded: CGSize?
+  
+  private func updateAccesoryViewColor() {
+    guard let pie = accessoryView as? PieView else {
+      return 
+    }
+    
+    pie.color = tintColor
+  }
 
   override func layoutSubviews() {
     super.layoutSubviews()
@@ -66,8 +74,14 @@ final class SubtitleTableViewCell: UITableViewCell {
         isDirect: true
       )
     )
-
+    
+    updateAccesoryViewColor()
+    
     imageSizeLoaded = view.bounds.size
     isReset = false
+  }
+  
+  override func tintColorDidChange() {
+    updateAccesoryViewColor()
   }
 }
