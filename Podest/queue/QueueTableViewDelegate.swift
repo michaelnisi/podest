@@ -40,6 +40,7 @@ extension QueueViewController {
     let h = dataSource.makeDequeueHandler(forRowAt: indexPath, of: tableView)
     let a = UIContextualAction(style: .destructive, title: nil, handler: h)
     let img = UIImage(named: "Trash")
+
     
     a.image = img
     

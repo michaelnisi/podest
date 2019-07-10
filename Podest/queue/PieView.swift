@@ -9,19 +9,28 @@
 import Foundation
 import UIKit
 
-/// Originally designed for indicating playback progression state in collection
-/// cells, now turned into a simple dot or no dot for unplayed and played.
+/// Originally conceived for indicating playback progression state, now boiled
+/// down to plain dot or no-dot for unplayed and played. An image would do.
 class PieLayer: CAShapeLayer {
   
-  @NSManaged var percentage: CGFloat
+  var percentage: CGFloat = 0 {
+    didSet {
+      if percentage != oldValue {
+        setNeedsDisplay()
+      }
+    }
+  }
   
-  private func _init() {
-    fillColor = UIColor(named: "Purple")!.cgColor
+  var color: CGColor = UIColor.blue.cgColor {
+    didSet {
+      if color != oldValue {
+        setNeedsDisplay()
+      }
+    }
   }
   
   override init() {
     super.init()
-    _init()
   }
   
   override init(layer: Any) {
@@ -29,28 +38,19 @@ class PieLayer: CAShapeLayer {
     
     if let layer = layer as? PieLayer {
       percentage = layer.percentage
-      _init()
+      color = layer.color
     }
   }
   
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
-    _init()
   }
   
   override func draw(in ctx: CGContext) {
     if percentage != 0 {
-      ctx.setFillColor(fillColor!)
+      ctx.setFillColor(color)
       ctx.fillEllipse(in: CGRect(x: 6, y: 0, width: 12, height: 12))
     }
-  }
-  
-  override class func needsDisplay(forKey key: String) -> Bool {
-    if key == "percentage" {
-      return true
-    }
-    
-    return super.needsDisplay(forKey: key)
   }
 }
 
@@ -60,12 +60,26 @@ class PieView: UIView {
     return PieLayer.self
   }
   
-  var percentage: CGFloat {
-    set { (self.layer as? PieLayer)?.percentage = newValue }
-    get { return (self.layer as? PieLayer)?.percentage ?? 0.0 }
+  var pieLayer: PieLayer {
+    return self.layer as! PieLayer
   }
   
-  override func draw(_ layer: CALayer, in ctx: CGContext) {
-    (layer.presentation() as? PieLayer)?.draw(in: ctx)
+  var percentage: CGFloat {
+    set { pieLayer.percentage = newValue }
+    get { return pieLayer.percentage }
+  }
+  
+  var color: UIColor {
+    set {
+      if #available(iOS 13.0, *) {
+        pieLayer.color = tintColor.resolvedColor(with: traitCollection).cgColor
+      } else {
+        pieLayer.color = tintColor.cgColor
+      }
+    }
+    
+    get { 
+      return UIColor(cgColor: pieLayer.color)
+    }
   }
 }

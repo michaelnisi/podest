@@ -460,9 +460,10 @@ extension QueueDataSource: UITableViewDataSource {
       // Tagging cell with entry for later being able to find it, when it’s time
       // to update the accessory view.
       cell.tag = entry.hashValue
-
+    
       if cell.accessoryView == nil {
         cell.accessoryView =  QueueDataSource.makeAccessory()
+        cell.tintColor = UIColor(named: "Purple")
       }
 
       if let pie = cell.accessoryView as? PieView {
