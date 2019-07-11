@@ -9,15 +9,30 @@
 import UIKit
 
 final class SuggestionCell: UITableViewCell {
-
+  
+  private static func makeLoupe() -> UIImage? {
+    guard #available(iOS 13.0, *) else {
+      return UIImage(named: "Loupe")
+    }
+    
+    let conf = UIImage.SymbolConfiguration(textStyle: .body)
+    
+    return UIImage(systemName: "magnifyingglass", withConfiguration: conf)
+  }
+  
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     
-    imageView?.image = UIImage(named: "Loupe")
+    imageView?.image = SuggestionCell.makeLoupe()
+    imageView?.tintColor = UIColor(named: "Secondary")
   }
   
   override func layoutSubviews() {
-    super.layoutSubviews()
+    defer {
+      super.layoutSubviews()
+    }
+    
+    if #available(iOS 13.0, *) { return }
     
     // Manual pixel adjusting is bad for obvious reasons.
     
