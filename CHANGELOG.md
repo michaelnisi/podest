@@ -1,3 +1,13 @@
+## 9.0 (planned)
+
+### Doolittle
+
+- Anticipate multiple windows
+- Replace player user interface
+- Review CloudKit usage
+- Review traits timing
+- Support dark mode
+
 ## 8.1 (2019-07-05)
 
 ### Squirrel Pup
