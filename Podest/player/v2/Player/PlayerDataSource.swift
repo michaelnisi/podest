@@ -8,6 +8,7 @@
 
 import UIKit
 import os.log
+import FeedKit
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
@@ -74,6 +75,18 @@ extension PlayerDataSource: UICollectionViewDataSource {
     return sections[section].count
   }
   
+  struct ReplyAllDummy: Imaginable {
+    
+    var iTunes: ITunesItem?
+    var image: String?
+    var title: String
+    
+    init() {
+      self.image = "https://is4-ssl.mzstatic.com/image/thumb/Music113/v4/af/b3/3e/afb33e56-ee5c-8ab3-57da-e095aa4b0b0b/source/600x600bb.jpg"
+      self.title = "Reply All"
+    }
+  }
+  
   func collectionView(
     _ collectionView: UICollectionView, 
     cellForItemAt indexPath: IndexPath
@@ -85,7 +98,8 @@ extension PlayerDataSource: UICollectionViewDataSource {
       let cell = collectionView.dequeueReusableCell(
         withReuseIdentifier: "HeroCellID", for: indexPath) as! HeroCell
       
-      cell.imageView.image = UIImage(named: "Oval")
+      ImageRepository.shared.loadImage(
+        representing: ReplyAllDummy(), into: cell.imageView)
       
       return cell
       
