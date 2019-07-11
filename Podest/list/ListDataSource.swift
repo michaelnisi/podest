@@ -177,14 +177,6 @@ extension ListDataSource: UITableViewDataSource {
     return sections[section].count
   }
   
-  static var cellBackgroundColor: UIColor {
-    if #available(iOS 13.0, *) {
-      return .systemGroupedBackground
-    } else {
-      return .white
-    }
-  }
-
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     guard let item = itemAt(indexPath: indexPath) else {
       fatalError("no item at index path: \(indexPath)")
@@ -214,7 +206,6 @@ extension ListDataSource: UITableViewDataSource {
       ) as! SubtitleTableViewCell
 
       cell.selectionStyle = .default
-      cell.backgroundColor = ListDataSource.cellBackgroundColor
 
       cell.images = nil
       cell.item = entry
@@ -238,7 +229,6 @@ extension ListDataSource: UITableViewDataSource {
       ) as! SubtitleTableViewCell
 
       cell.selectionStyle = .none
-      cell.backgroundColor = ListDataSource.cellBackgroundColor
 
       cell.images = nil
       cell.item = nil
