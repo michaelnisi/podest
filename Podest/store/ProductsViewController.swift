@@ -62,7 +62,7 @@ extension ProductsViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
+    
     navigationItem.title = "In-App Purchases"
     navigationItem.largeTitleDisplayMode = .always
     navigationItem.rightBarButtonItem = UIBarButtonItem(
