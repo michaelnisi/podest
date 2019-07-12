@@ -98,15 +98,28 @@ final class StoreFSM: NSObject {
     db.double(forKey: StoreFSM.unsealedKey)
   }
   
-  private static func unseal(_ db: NSUbiquitousKeyValueStore) {
-    os_log("unsealing", log: log, type: .debug)
-    db.set(Date().timeIntervalSince1970, forKey: StoreFSM.unsealedKey)
+  /// Sets unsealed timestamp in `db` and returns existing or new timestamp.
+  @discardableResult 
+  private static func unseal(
+    _ db: NSUbiquitousKeyValueStore, 
+    env: BuildVersion.Environment
+  ) -> TimeInterval {  
+    let value = db.double(forKey: StoreFSM.unsealedKey)
+    
+    guard env != .sandbox, value != 0 else {
+      os_log("unsealing", log: log)
+      
+      let ts = Date().timeIntervalSince1970
+      
+      db.set(ts, forKey: StoreFSM.unsealedKey)
+      
+      return ts
+    }
+    
+    return value
   }
   
-  private static func shouldUnseal(
-    _ db: NSUbiquitousKeyValueStore, env: BuildVersion.Environment) -> Bool {
-    return env == .sandbox || db.double(forKey: StoreFSM.unsealedKey) == 0 
-  }
+  private let reviewRequester: ReviewRequester
   
   /// Creates a new store with minimal dependencies. **Protocol dependencies**
   /// for easier testing.
@@ -131,9 +144,9 @@ final class StoreFSM: NSObject {
     self.version = version
     self.state = .initialized
     
-    if StoreFSM.shouldUnseal(db, env: version.env) {
-      StoreFSM.unseal(db)
-    }
+    let t = StoreFSM.unseal(db, env: version.env)
+    self.reviewRequester = ReviewRequester(
+      version: version, unsealedTime: t, log: log)
   }
 
   /// A date formatting block.
@@ -244,7 +257,7 @@ final class StoreFSM: NSObject {
     case (.sandbox, _), (.store, true), (.simulator, _):
       os_log("removing receipts", log: log)
       db.removeObject(forKey: StoreFSM.receiptsKey(suiting: version.env))
-      StoreFSM.unseal(db)
+      StoreFSM.unseal(db, env: version.env)
       
       return true
       
@@ -698,12 +711,14 @@ final class StoreFSM: NSObject {
         fatalError("unhandled event")
         
       case .considerReview:
-        setReviewTimeout()
+        reviewRequester.setReviewTimeout {
+          self.event(.review)
+        }
         
         return state
         
       case .review:
-        requestReview()
+        reviewRequester.requestReview()
       
         return state
       }
@@ -770,32 +785,6 @@ final class StoreFSM: NSObject {
       state = updatedState(after: e)
     }
   }
-
-  // MARK: Ratings and Reviews
-
-  /// The timeout triggering rating requests.
-  private var rateIncentiveTimeout: DispatchSourceTimer? {
-    willSet {
-      os_log("setting rate incentive timeout: %@", 
-             log: log, type: .debug, String(describing: newValue))
-      rateIncentiveTimeout?.cancel()
-    }
-  }
-  
-  /// The `rateIncentiveCountdown`starts with this value.
-  private static var rateIncentiveLength = 5
-
-  /// Countdown to trigger ratings. Set to -1 to deactivate ratings.
-  private var rateIncentiveCountdown = rateIncentiveLength {
-    didSet {
-      guard rateIncentiveCountdown >= 0 else {
-        return os_log("rating disabled", log: log, type: .info)
-      }
-      
-      os_log("rate incentive threshold: %{public}i",
-             log: log, type: .debug, rateIncentiveCountdown)
-    }
-  }
 }
 
 // MARK: - SKProductsRequestDelegate
@@ -831,7 +820,6 @@ extension StoreFSM: SKProductsRequestDelegate {
     }
 
   }
-
 }
 
 // MARK: - SKPaymentTransactionObserver
@@ -900,7 +888,6 @@ extension StoreFSM: SKPaymentTransactionObserver {
       }
     }
   }
-
 }
 
 // MARK: - Shopping
@@ -941,85 +928,23 @@ extension StoreFSM: Shopping {
   var canMakePayments: Bool {
     return SKPaymentQueue.canMakePayments()
   }
-
-
 }
 
 // MARK: - Rating
 
 extension StoreFSM: Rating {
     
-  private func requestReview() {
-    let build = version.build
-    
-    DispatchQueue.main.async {
-      let key = UserDefaults.lastVersionPromptedForReviewKey
-      
-      UserDefaults.standard.set(build, forKey: key)
-      SKStoreReviewController.requestReview()
-    }
-  }
-  
-  /// Waits two seconds before triggering a `.review` event, giving us a chance
-  /// to cancel (this timeout) when the context changes and a review is not
-  /// appropriate any longer. Of course, an existing timeout gets cancelled. 
-  /// 
-  /// Does nothing within three days of first launch.
-  /// 
-  /// Asking for ratings or reviews is only OK while users are idle for a moment
-  /// after they have been active. All other times can be considered harmful.
-  /// People hate getting interrupted.
-  private func setReviewTimeout() {
-    dispatchPrecondition(condition: .onQueue(.main))
-    
-    rateIncentiveTimeout = nil
-    
-    guard rateIncentiveCountdown >= 0 else {
-      os_log("not setting review timeout: rating disabled", log: log)
-      return
-    }
-    
-    rateIncentiveCountdown -= 1
-    
-    guard rateIncentiveCountdown == 0, 
-      Date().timeIntervalSince1970 - unsealedTime > 3600 * 24 * 3 else {
-      os_log("** not setting review timeout: too soon", log: log, type: .debug)
-        
-      return
-    }
-    
-    rateIncentiveCountdown = StoreFSM.rateIncentiveLength
-    
-    guard UserDefaults.standard
-      .lastVersionPromptedForReview != version.build else {
-      rateIncentiveCountdown = -1
-      
-      return
-    }
-    
-    rateIncentiveTimeout = setTimeout(delay: .seconds(2), queue: .main) {
-      self.event(.review)
-    }
-  }
-
   func considerReview() {
     event(.considerReview)
   }
 
   func cancelReview(resetting: Bool) {
-    dispatchPrecondition(condition: .onQueue(.main))
-    
-    rateIncentiveTimeout = nil
-    
-    if resetting {
-      rateIncentiveCountdown = StoreFSM.rateIncentiveLength
-    }
+    reviewRequester.cancelReview(resetting: resetting)
   }
 
   func cancelReview() {
     cancelReview(resetting: false)
   }
-
 }
 
 // MARK: - Expiring
@@ -1034,8 +959,7 @@ extension StoreFSM: Expiring {
         
         if expired {
           // Preventing overlapping alerts.
-          rateIncentiveTimeout = nil
-          rateIncentiveCountdown = -1
+          reviewRequester.disable()
         }
         
         delegateQueue.async {
@@ -1048,5 +972,4 @@ extension StoreFSM: Expiring {
       }
     }
   }
-
 }
