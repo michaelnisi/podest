@@ -12,7 +12,7 @@ import os.log
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "store")
 
-/// Enumerates known events within this state machine.
+/// Enumerates known events within the store.
 private enum StoreEvent {
   case resume
   case pause
@@ -24,6 +24,8 @@ private enum StoreEvent {
   case purchasing(ProductIdentifier)
   case receiptsChanged
   case update
+  case considerReview
+  case review
 }
 
 extension StoreEvent: CustomStringConvertible {
@@ -55,6 +57,10 @@ extension StoreEvent: CustomStringConvertible {
       return "StoreEvent: receiptsChanged"
     case .update:
       return "StoreEvent: update"
+    case .review:
+      return "StoreEvent: review"
+    case .considerReview:
+      return "StoreEvent: considerReview"
     }
   }
   
@@ -87,6 +93,10 @@ final class StoreFSM: NSObject {
   private let version: BuildVersion
 
   static var unsealedKey = "ink.codes.podest.store.unsealed"
+  
+  private var unsealedTime: TimeInterval {
+    db.double(forKey: StoreFSM.unsealedKey)
+  }
   
   private static func unseal(_ db: NSUbiquitousKeyValueStore) {
     os_log("unsealing", log: log, type: .debug)
@@ -141,7 +151,7 @@ final class StoreFSM: NSObject {
   
   weak var subscriberDelegate: StoreAccessDelegate?
   
-  // MARK: - Reachability
+  // MARK: Reachability
 
   /// Returns `true` if the App Store at `host` is reachable or else installs
   /// a callback and returns `falls`. This method uses `Ola` for reachability
@@ -152,7 +162,7 @@ final class StoreFSM: NSObject {
     return subscriberDelegate?.reach() ?? false
   }
 
-  // MARK: - Products and Identifiers
+  // MARK: Products and Identifiers
 
   /// Returns the first product matching `identifier`.
   private func product(matching identifier: ProductIdentifier) -> SKProduct? {
@@ -222,7 +232,7 @@ final class StoreFSM: NSObject {
     return .fetchingProducts
   }
 
-  // MARK: - Saving and Loading Receipts
+  // MARK: Saving and Loading Receipts
 
   /// Returns different key for store and sandbox `environment`.
   private static func receiptsKey(suiting environment: BuildVersion.Environment) -> String {
@@ -336,7 +346,7 @@ final class StoreFSM: NSObject {
   private func validateTrial(updatingSettings: Bool = false) -> Bool {
     os_log("validating trial", log: log, type: .debug)
     
-    let ts = db.double(forKey: StoreFSM.unsealedKey)
+    let ts = unsealedTime
     
     if updatingSettings {
       let unsealed = Date(timeIntervalSince1970: ts)
@@ -385,7 +395,7 @@ final class StoreFSM: NSObject {
     return .subscribed(id)
   }
 
-  // MARK: - Handling Events and Managing State
+  // MARK: Handling Events and Managing State
 
   /// An internal serial queue for synchronized access.
   private let sQueue = DispatchQueue(
@@ -585,7 +595,9 @@ final class StoreFSM: NSObject {
       case .resume:
         return addObservers()
 
-      case .pause:
+      case .pause, 
+           .considerReview,
+           .review:
         return state
 
       case .failed,
@@ -612,7 +624,7 @@ final class StoreFSM: NSObject {
       case .failed(let error):
         return updatedState(after: error, next: .interested(validateTrial()))
 
-      case .resume:
+      case .resume, .considerReview, .review:
         return state
 
       case .pause:
@@ -631,6 +643,9 @@ final class StoreFSM: NSObject {
 
       case .pause:
         return removeObservers()
+        
+      case .considerReview, .review:
+        return state
 
       case .resume, .failed, .pay, .productsReceived, .purchased, .purchasing:
         fatalError("unhandled event")
@@ -681,6 +696,16 @@ final class StoreFSM: NSObject {
 
       case .online:
         fatalError("unhandled event")
+        
+      case .considerReview:
+        setReviewTimeout()
+        
+        return state
+        
+      case .review:
+        requestReview()
+      
+        return state
       }
 
     // MARK: subscribed
@@ -725,6 +750,10 @@ final class StoreFSM: NSObject {
 
       case .productsReceived(let products, let error):
         return receiveProducts(products, error: error)
+        
+      case .considerReview, .review:
+        os_log("ignoring review while purchasing", log: log)
+        return state
 
       case .resume, .online:
         fatalError("unhandled event")
@@ -742,17 +771,29 @@ final class StoreFSM: NSObject {
     }
   }
 
-  // MARK: - Ratings and Reviews
+  // MARK: Ratings and Reviews
 
   /// The timeout triggering rating requests.
-  private var rateIncentiveTimeout: DispatchSourceTimer?
+  private var rateIncentiveTimeout: DispatchSourceTimer? {
+    willSet {
+      os_log("setting rate incentive timeout: %@", 
+             log: log, type: .debug, String(describing: newValue))
+      rateIncentiveTimeout?.cancel()
+    }
+  }
+  
+  /// The `rateIncentiveCountdown`starts with this value.
+  private static var rateIncentiveLength = 5
 
-  /// A counting threshold that must be crossed before a timeout is started
-  /// that eventually might trigger an actual rating request.
-  private var rateIncentiveThreshold = 10 {
+  /// Countdown to trigger ratings. Set to -1 to deactivate ratings.
+  private var rateIncentiveCountdown = rateIncentiveLength {
     didSet {
+      guard rateIncentiveCountdown >= 0 else {
+        return os_log("rating disabled", log: log, type: .info)
+      }
+      
       os_log("rate incentive threshold: %{public}i",
-             log: log, type: .debug, rateIncentiveThreshold)
+             log: log, type: .debug, rateIncentiveCountdown)
     }
   }
 }
@@ -907,44 +948,71 @@ extension StoreFSM: Shopping {
 // MARK: - Rating
 
 extension StoreFSM: Rating {
-
-  func requestReview() {
-    dispatchPrecondition(condition: .onQueue(.main))
-    rateIncentiveTimeout?.cancel()
-
-    guard rateIncentiveThreshold >= 0 else {
-      return
-    }
-
-    rateIncentiveThreshold -= 1
-
-    guard rateIncentiveThreshold == 0 else {
-      return
-    }
-
-    rateIncentiveThreshold = 10
+    
+  private func requestReview() {
     let build = version.build
-
-    guard UserDefaults.standard.lastVersionPromptedForReview != version.build else {
-      // Thwarting further attempts for same version.
-      rateIncentiveThreshold = -1
-
-      return
-    }
-
-    rateIncentiveTimeout = setTimeout(delay: .seconds(2), queue: .main) {
-      UserDefaults.standard.set(
-        build, forKey: UserDefaults.lastVersionPromptedForReviewKey)
+    
+    DispatchQueue.main.async {
+      let key = UserDefaults.lastVersionPromptedForReviewKey
+      
+      UserDefaults.standard.set(build, forKey: key)
       SKStoreReviewController.requestReview()
     }
+  }
+  
+  /// Waits two seconds before triggering a `.review` event, giving us a chance
+  /// to cancel (this timeout) when the context changes and a review is not
+  /// appropriate any longer. Of course, an existing timeout gets cancelled. 
+  /// 
+  /// Does nothing within three days of first launch.
+  /// 
+  /// Asking for ratings or reviews is only OK while users are idle for a moment
+  /// after they have been active. All other times can be considered harmful.
+  /// People hate getting interrupted.
+  private func setReviewTimeout() {
+    dispatchPrecondition(condition: .onQueue(.main))
+    
+    rateIncentiveTimeout = nil
+    
+    guard rateIncentiveCountdown >= 0 else {
+      os_log("not setting review timeout: rating disabled", log: log)
+      return
+    }
+    
+    rateIncentiveCountdown -= 1
+    
+    guard rateIncentiveCountdown == 0, 
+      Date().timeIntervalSince1970 - unsealedTime > 3600 * 24 * 3 else {
+      os_log("** not setting review timeout: too soon", log: log, type: .debug)
+        
+      return
+    }
+    
+    rateIncentiveCountdown = StoreFSM.rateIncentiveLength
+    
+    guard UserDefaults.standard
+      .lastVersionPromptedForReview != version.build else {
+      rateIncentiveCountdown = -1
+      
+      return
+    }
+    
+    rateIncentiveTimeout = setTimeout(delay: .seconds(2), queue: .main) {
+      self.event(.review)
+    }
+  }
+
+  func considerReview() {
+    event(.considerReview)
   }
 
   func cancelReview(resetting: Bool) {
     dispatchPrecondition(condition: .onQueue(.main))
-    rateIncentiveTimeout?.cancel()
-
+    
+    rateIncentiveTimeout = nil
+    
     if resetting {
-      rateIncentiveThreshold = 10
+      rateIncentiveCountdown = StoreFSM.rateIncentiveLength
     }
   }
 
@@ -966,8 +1034,8 @@ extension StoreFSM: Expiring {
         
         if expired {
           // Preventing overlapping alerts.
-          rateIncentiveTimeout?.cancel()
-          rateIncentiveThreshold = -1
+          rateIncentiveTimeout = nil
+          rateIncentiveCountdown = -1
         }
         
         delegateQueue.async {
