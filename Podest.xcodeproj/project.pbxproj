@@ -29,10 +29,11 @@
 		4C25AED51D578FA90056EE2F /* strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C25AED41D578FA90056EE2F /* strings.swift */; };
 		4C351CD11A7F5B7F00C5C88C /* SearchResultsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C351CD01A7F5B7E00C5C88C /* SearchResultsDataSource.swift */; };
 		4C3CDC282085A6C300BADBF8 /* StoreButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3CDC272085A6C300BADBF8 /* StoreButton.swift */; };
-		4C40A3F422BFD22800B353AD /* PieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C40A3F322BFD22800B353AD /* PieView.swift */; };
 		4C40A3F622C0818A00B353AD /* PlayerMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C40A3F522C0818A00B353AD /* PlayerMessage.swift */; };
 		4C471523210F4F6F008D9E32 /* ReceiptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C471522210F4F6F008D9E32 /* ReceiptTests.swift */; };
 		4C4EDBFE22789D4700444B94 /* products.json in Resources */ = {isa = PBXBuildFile; fileRef = 4C4EDBFD22789D4600444B94 /* products.json */; };
+		4C5A30C422D88D3900FAB4B3 /* ReviewRequester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5A30C322D88D3900FAB4B3 /* ReviewRequester.swift */; };
+		4C5A30C522D8D5D600FAB4B3 /* ReviewRequester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5A30C322D88D3900FAB4B3 /* ReviewRequester.swift */; };
 		4C5C9E4322396F55006DF298 /* HTMLAttributor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C2EDA4D2239699100528E99 /* HTMLAttributor.framework */; };
 		4C5C9E4422396F5E006DF298 /* HTMLAttributor.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4C2EDA4D2239699100528E99 /* HTMLAttributor.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4C5C9F0F223980BF006DF298 /* FileProxy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C5C9E542239715B006DF298 /* FileProxy.framework */; };
@@ -296,11 +297,11 @@
 		4C2EDA4D2239699100528E99 /* HTMLAttributor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HTMLAttributor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C351CD01A7F5B7E00C5C88C /* SearchResultsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsDataSource.swift; sourceTree = "<group>"; };
 		4C3CDC272085A6C300BADBF8 /* StoreButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreButton.swift; sourceTree = "<group>"; };
-		4C40A3F322BFD22800B353AD /* PieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieView.swift; sourceTree = "<group>"; };
 		4C40A3F522C0818A00B353AD /* PlayerMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerMessage.swift; sourceTree = "<group>"; };
 		4C471522210F4F6F008D9E32 /* ReceiptTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptTests.swift; sourceTree = "<group>"; };
 		4C49DF412058319400DC86E6 /* PlayerTransitionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTransitionDelegate.swift; sourceTree = "<group>"; };
 		4C4EDBFD22789D4600444B94 /* products.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = products.json; sourceTree = "<group>"; };
+		4C5A30C322D88D3900FAB4B3 /* ReviewRequester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRequester.swift; sourceTree = "<group>"; };
 		4C5C9E4522396FED006DF298 /* fileproxy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = fileproxy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C5C9E542239715B006DF298 /* FileProxy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FileProxy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C5F4E7B21CB79A300156D56 /* EntryRowSelectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryRowSelectable.swift; sourceTree = "<group>"; };
@@ -685,6 +686,7 @@
 			children = (
 				4CCBF20920805C6500A7359F /* store.swift */,
 				4C175AA5208AFA26003071CA /* StoreFSM.swift */,
+				4C5A30C322D88D3900FAB4B3 /* ReviewRequester.swift */,
 				4C02C2992247544C00C7D647 /* StoreState.swift */,
 				4C1F57A620810D850067AB7C /* ProductsViewController.swift */,
 				4C07C97521EB0C9600ED8AB0 /* StoreLayout.swift */,
@@ -738,7 +740,6 @@
 				4CED20D7226C2CFC0049B88D /* QueueTableViewDelegate.swift */,
 				4E7D10B21F6644DA0048CB43 /* QueueDataSource.swift */,
 				4CB6CF3D22BF69E5002452BF /* PlaybackStatusAccessory.swift */,
-				4C40A3F322BFD22800B353AD /* PieView.swift */,
 			);
 			path = queue;
 			sourceTree = "<group>";
@@ -1271,6 +1272,7 @@
 				4C72D43B22716613008F8B96 /* strings.swift in Sources */,
 				4C72D43222702B16008F8B96 /* ListOperation.swift in Sources */,
 				4C010A262101D7070006CB53 /* store.swift in Sources */,
+				4C5A30C522D8D5D600FAB4B3 /* ReviewRequester.swift in Sources */,
 				4C010A272101D7070006CB53 /* StoreFSM.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1373,6 +1375,7 @@
 				4CEC436521D68BD50097FFA7 /* MessageTableViewCell.swift in Sources */,
 				4C776B212084722C00A055CD /* MessageCollectionViewCell.swift in Sources */,
 				4C7C3FCF22A14A9F00B77157 /* stubs.swift in Sources */,
+				4C5A30C422D88D3900FAB4B3 /* ReviewRequester.swift in Sources */,
 				4C8B376422A0ED280004FD89 /* ChaptersDataSource.swift in Sources */,
 				4C8B375222A0ED280004FD89 /* UpNextCell.swift in Sources */,
 				4C8B376022A0ED280004FD89 /* CustomLayout.swift in Sources */,
@@ -1383,7 +1386,6 @@
 				4E8CA7091A126ADB004DE307 /* QueueViewController.swift in Sources */,
 				4C25AED51D578FA90056EE2F /* strings.swift in Sources */,
 				4E7F291B1E7D799200E12846 /* RootViewController.swift in Sources */,
-				4C40A3F422BFD22800B353AD /* PieView.swift in Sources */,
 				4CCBF20A20805C6500A7359F /* store.swift in Sources */,
 				4CED20DA226C2E8D0049B88D /* QueueStoreAccessDelegate.swift in Sources */,
 				4E8CA7071A126ADB004DE307 /* AppDelegate.swift in Sources */,
