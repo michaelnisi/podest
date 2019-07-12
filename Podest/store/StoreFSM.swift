@@ -119,7 +119,7 @@ final class StoreFSM: NSObject {
     return value
   }
   
-  private let reviewRequester: ReviewRequester
+  private var reviewRequester: ReviewRequester?
   
   /// Creates a new store with minimal dependencies. **Protocol dependencies**
   /// for easier testing.
@@ -711,14 +711,14 @@ final class StoreFSM: NSObject {
         fatalError("unhandled event")
         
       case .considerReview:
-        reviewRequester.setReviewTimeout {
-          self.event(.review)
+        reviewRequester?.setReviewTimeout { [weak self] in
+          self?.event(.review)
         }
         
         return state
         
       case .review:
-        reviewRequester.requestReview()
+        reviewRequester?.requestReview()
       
         return state
       }
@@ -767,7 +767,6 @@ final class StoreFSM: NSObject {
         return receiveProducts(products, error: error)
         
       case .considerReview, .review:
-        os_log("ignoring review while purchasing", log: log)
         return state
 
       case .resume, .online:
@@ -939,7 +938,7 @@ extension StoreFSM: Rating {
   }
 
   func cancelReview(resetting: Bool) {
-    reviewRequester.cancelReview(resetting: resetting)
+    reviewRequester?.cancelReview(resetting: resetting)
   }
 
   func cancelReview() {
@@ -959,7 +958,8 @@ extension StoreFSM: Expiring {
         
         if expired {
           // Preventing overlapping alerts.
-          reviewRequester.disable()
+          reviewRequester?.invalidate()
+          reviewRequester = nil
         }
         
         delegateQueue.async {

@@ -25,7 +25,7 @@ class ReviewRequester {
     self.log = log
   }
   
-  /// The timeout triggering rating requests.
+  /// The timer triggering rating requests.
   private var rateIncentiveTimeout: DispatchSourceTimer? {
     willSet {
       os_log("setting rate incentive timeout: %@", 
@@ -34,7 +34,7 @@ class ReviewRequester {
     }
   }
   
-  /// The `rateIncentiveCountdown`starts with this value.
+  /// Counting down from five.
   private static var rateIncentiveLength = 5
   
   /// Countdown to trigger ratings. Set to -1 to deactivate ratings.
@@ -49,7 +49,10 @@ class ReviewRequester {
     }
   }
   
+  /// Tells StoreKit to ask the user to rate or review your app, if appropriate.
   func requestReview() {
+    precondition(!invalidated)
+    
     let build = version.build
     
     DispatchQueue.main.async {
@@ -60,47 +63,63 @@ class ReviewRequester {
     }
   }
   
-  /// Waits two seconds before triggering a `.review` event, giving us a chance
-  /// to cancel (this timeout) when the context changes and a review is not
-  /// appropriate any longer. Of course, an existing timeout gets cancelled. 
+  var isReviewed: Bool {
+    UserDefaults.standard.lastVersionPromptedForReview == version.build
+  }
+  
+  var isTime: Bool {
+    Date().timeIntervalSince1970 - unsealedTime > 3600 * 24 * 3 
+  }
+  
+  /// Waits two seconds before submitting `reviewBlock` to the `.main` queue, 
+  /// giving us a chance to cancel (this timeout) when the context changes and 
+  /// a review is not appropriate any longer. Of course, any existing timeout 
+  /// gets cancelled. 
   /// 
-  /// Does nothing within three days of first launch.
+  /// Does nothing within three days of first launch or if inappropriate.
   /// 
   /// Asking for ratings or reviews is only OK while users are idle for a moment
   /// after they have been active. All other times can be considered harmful.
   /// People hate getting interrupted.
-  func setReviewTimeout(reviewBlock: @escaping () -> Void) {
+  /// 
+  /// - Returns: Returns `true` if a new timer has been installed.
+  @discardableResult
+  func setReviewTimeout(reviewBlock: @escaping () -> Void) -> Bool {
+    precondition(!invalidated)
     dispatchPrecondition(condition: .onQueue(.main))
     
     rateIncentiveTimeout = nil
     
     guard rateIncentiveCountdown >= 0 else {
       os_log("not setting review timeout: rating disabled", log: log)
-      return
+      return false
     }
     
     rateIncentiveCountdown -= 1
     
-    guard rateIncentiveCountdown == 0, 
-      Date().timeIntervalSince1970 - unsealedTime > 3600 * 24 * 3 else {
+    guard rateIncentiveCountdown == 0, isTime else {
         os_log("** not setting review timeout: too soon", log: log, type: .debug)
         
-        return
+        return false
     }
     
     rateIncentiveCountdown = ReviewRequester.rateIncentiveLength
     
-    guard UserDefaults.standard.lastVersionPromptedForReview != version.build else {
+    guard !isReviewed else {
       rateIncentiveCountdown = -1
   
-      return
+      return false
     }
     
-    rateIncentiveTimeout = setTimeout(delay: .seconds(2), queue: .main, handler: reviewBlock)
+    rateIncentiveTimeout = setTimeout(
+      delay: .seconds(2), queue: .main, handler: reviewBlock)
+    
+    return true
   }
   
   func cancelReview(resetting: Bool) {
     dispatchPrecondition(condition: .onQueue(.main))
+    precondition(!invalidated)
     
     rateIncentiveTimeout = nil
     
@@ -109,12 +128,14 @@ class ReviewRequester {
     }
   }
   
-  func cancelReview() {
-    cancelReview(resetting: false)
-  }
+  private var invalidated = false
   
-  func disable() {
+  /// Cancels timer and prevents further review requests.
+  func invalidate() {
+    precondition(!invalidated)
+    
     rateIncentiveTimeout = nil
     rateIncentiveCountdown = -1
+    invalidated = true
   }
 }
