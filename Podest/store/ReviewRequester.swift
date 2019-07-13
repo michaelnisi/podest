@@ -97,7 +97,6 @@ class ReviewRequester {
   @discardableResult
   func setReviewTimeout(reviewBlock: @escaping () -> Void) -> Bool {
     precondition(!invalidated)
-    dispatchPrecondition(condition: .onQueue(.main))
     
     rateIncentiveTimeout = nil
     
@@ -129,7 +128,6 @@ class ReviewRequester {
   }
   
   func cancelReview(resetting: Bool) {
-    dispatchPrecondition(condition: .onQueue(.main))
     precondition(!invalidated)
     
     rateIncentiveTimeout = nil
