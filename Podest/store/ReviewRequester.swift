@@ -33,8 +33,6 @@ class ReviewRequester {
   }
   
   /// The timer triggering rating requests.
-  /// 
-  /// Setting cancel old timer.
   private var rateIncentiveTimeout: DispatchSourceTimer? {
     willSet {
       os_log("setting rate incentive timeout: %@", 
@@ -100,17 +98,17 @@ class ReviewRequester {
     
     rateIncentiveTimeout = nil
     
-    guard rateIncentiveCountdown >= 0 else {
-      os_log("not setting review timeout: rating disabled", log: log)
+    guard rateIncentiveCountdown >= 0, isTime else {
+      os_log("not setting review timeout", log: log)
       return false
     }
     
     rateIncentiveCountdown -= 1
     
-    guard rateIncentiveCountdown == 0, isTime else {
-        os_log("** not setting review timeout: too soon", log: log, type: .debug)
-        
-        return false
+    os_log("** countdown: %i", log: log, type: .debug, rateIncentiveCountdown)
+    
+    guard rateIncentiveCountdown == 0 else {
+      return false
     }
     
     rateIncentiveCountdown = ReviewRequester.rateIncentiveLength
