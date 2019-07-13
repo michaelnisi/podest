@@ -10,7 +10,7 @@ import Foundation
 import StoreKit
 import os.log
 
-/// Considerately prompts users to leave a rating or a review on the App Store.
+/// Considerately prompts users for a rating or a review on the App Store.
 class ReviewRequester {
 
   private let version: BuildVersion
