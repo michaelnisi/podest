@@ -250,7 +250,7 @@ extension QueueViewController {
 
   override func viewDidAppear(_ animated: Bool) {
     if searchProxy.isSearchDismissed {
-      Podest.store.considerReview()
+      Podest.store.requestReview()
     }
 
     searchProxy.deselect(animated)
