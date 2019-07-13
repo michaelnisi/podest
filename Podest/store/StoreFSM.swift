@@ -26,6 +26,7 @@ private enum StoreEvent {
   case update
   case considerReview
   case review
+  case cancelReview(Bool)
 }
 
 extension StoreEvent: CustomStringConvertible {
@@ -61,6 +62,8 @@ extension StoreEvent: CustomStringConvertible {
       return "StoreEvent: review"
     case .considerReview:
       return "StoreEvent: considerReview"
+    case .cancelReview:
+      return "StoreEvent: cancelReview"
     }
   }
   
@@ -612,6 +615,11 @@ final class StoreFSM: NSObject {
            .considerReview,
            .review:
         return state
+        
+      case .cancelReview(let resetting):
+        reviewRequester?.cancelReview(resetting: resetting)
+        
+        return state
 
       case .failed,
            .online,
@@ -639,6 +647,11 @@ final class StoreFSM: NSObject {
 
       case .resume, .considerReview, .review:
         return state
+      
+      case .cancelReview(let resetting):
+        reviewRequester?.cancelReview(resetting: resetting)
+        
+        return state
 
       case .pause:
         return removeObservers()
@@ -658,6 +671,11 @@ final class StoreFSM: NSObject {
         return removeObservers()
         
       case .considerReview, .review:
+        return state
+        
+      case .cancelReview(let resetting):
+        reviewRequester?.cancelReview(resetting: resetting)
+        
         return state
 
       case .resume, .failed, .pay, .productsReceived, .purchased, .purchasing:
@@ -721,6 +739,11 @@ final class StoreFSM: NSObject {
         reviewRequester?.requestReview()
       
         return state
+        
+      case .cancelReview(let resetting):
+        reviewRequester?.cancelReview(resetting: resetting)
+        
+        return state
       }
 
     // MARK: subscribed
@@ -767,6 +790,11 @@ final class StoreFSM: NSObject {
         return receiveProducts(products, error: error)
         
       case .considerReview, .review:
+        return state
+        
+      case .cancelReview(let resetting):
+        reviewRequester?.cancelReview(resetting: resetting)
+        
         return state
 
       case .resume, .online:
@@ -934,15 +962,21 @@ extension StoreFSM: Shopping {
 extension StoreFSM: Rating {
     
   func considerReview() {
-    event(.considerReview)
+    DispatchQueue.global().async {
+      self.event(.considerReview)
+    }
   }
 
   func cancelReview(resetting: Bool) {
-    reviewRequester?.cancelReview(resetting: resetting)
+    DispatchQueue.global().async {
+      self.event(.cancelReview(resetting))
+    }
   }
 
   func cancelReview() {
-    cancelReview(resetting: false)
+    DispatchQueue.global().async {
+      self.event(.cancelReview(false))
+    }
   }
 }
 
