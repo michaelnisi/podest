@@ -63,5 +63,4 @@ extension QueueViewController {
     didEndEditingRowAt indexPath: IndexPath?) {
     reload()
   }
-  
 }
