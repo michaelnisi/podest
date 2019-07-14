@@ -1,3 +1,7 @@
+## 8.2 (planned)
+
+Match against full episode data (title, subtitle, summary, author) for search suggestions, previously only the summary was scanned.
+
 ## 8.1 (2019-07-05)
 
 ### Squirrel Pup
