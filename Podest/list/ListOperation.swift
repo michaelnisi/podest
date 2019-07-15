@@ -19,7 +19,7 @@ class ListOperation: Operation, Receiving {
   let url: String
   let originalFeed: Feed?
   let forcing: Bool
-  let isCompact: Bool
+  let withoutImage: Bool
   
   /// Creates a new list operation fetching feed and entries.
   ///
@@ -27,20 +27,20 @@ class ListOperation: Operation, Receiving {
   ///   - url: The URL of the podcast feed.
   ///   - originalFeed: The original feed object if available.
   ///   - forcing: Overrides cache settings, forcing reloading (to some degree).
-  ///   - isCompact: Characterizes the user interface.
+  ///   - withoutImage: Characterizes the user interface.
   init(
     url: String,
     originalFeed: Feed?,
     forcing: Bool = false,
-    isCompact: Bool = false
+    withoutImage: Bool = false
   ) {
     self.url = url
     self.originalFeed = originalFeed
     self.forcing = forcing
-    self.isCompact = isCompact
+    self.withoutImage = withoutImage
     
     os_log("initializing: ( %@, %@, %i, %i )", log: log, type: .debug,
-           url, String(describing: originalFeed), forcing, isCompact)
+           url, String(describing: originalFeed), forcing, withoutImage)
     
     super.init()
   }
@@ -50,7 +50,7 @@ class ListOperation: Operation, Receiving {
     self.url = operation.url
     self.originalFeed = operation.originalFeed
     self.forcing = operation.forcing
-    self.isCompact = operation.isCompact
+    self.withoutImage = operation.withoutImage
     
     super.init()
   }
@@ -58,7 +58,7 @@ class ListOperation: Operation, Receiving {
   override var description: String {
     return """
     ListOperation: (\(url), \(originalFeed?.title ?? "none"), \
-    \(forcing), \(isCompact))
+    \(forcing), \(withoutImage))
     """
   }
   
@@ -86,7 +86,7 @@ class ListOperation: Operation, Receiving {
     sections current: [Array<Item>],
     items: [Item],
     error: Error?,
-    isCompact: Bool
+    withoutImage: Bool
   ) -> [Array<Item>] {
     var messages = [Item]()
     
@@ -116,7 +116,7 @@ class ListOperation: Operation, Receiving {
         case .author:
           footer.insert(item)
         case .feed:
-          guard !isCompact else {
+          guard !withoutImage else {
             continue
           }
           header.insert(item)
@@ -133,7 +133,7 @@ class ListOperation: Operation, Receiving {
       case .entry:
         entries.append(item)
       case .feed:
-        guard !isCompact else {
+        guard !withoutImage else {
           messages.append(.message(StringRepository.loadingEpisodes))
           continue
         }
@@ -154,13 +154,13 @@ class ListOperation: Operation, Receiving {
     sections current: [Array<Item>],
     items: [Item],
     error: Error?,
-    isCompact: Bool
+    withoutImage: Bool
   ) -> ([Array<Item>], [[Change<Item>]]) {
     let sections = makeSections(
       sections: current,
       items: items,
       error: error,
-      isCompact: isCompact
+      withoutImage: withoutImage
     )
     
     let changes = ListDataSource.makeChanges(old: current, new: sections)
@@ -203,7 +203,7 @@ final class FetchFeedOperation: ListOperation, Providing {
       sections: current,
       items: items,
       error: error,
-      isCompact: isCompact
+      withoutImage: withoutImage
     )
     
     guard !isCancelled else {
@@ -294,7 +294,7 @@ final class FetchEntriesOperation: ListOperation {
       sections: current,
       items: items,
       error: error,
-      isCompact: isCompact
+      withoutImage: withoutImage
     )
     
     guard !isCancelled else {

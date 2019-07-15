@@ -45,7 +45,7 @@ final class RootViewController: UIViewController, Routing {
   
   /// The singular episode view controller.
   var episodeViewController: EpisodeViewController? {
-    guard let nc = svc.isCollapsed ? pnc : snc,
+    guard let nc = isCollapsed ? pnc : snc,
       let vc = nc.topViewController as? EpisodeViewController else {
       return nil
     }
@@ -135,7 +135,6 @@ final class RootViewController: UIViewController, Routing {
       }
     }
   }
-
 }
 
 // MARK: - UIViewController
@@ -178,7 +177,7 @@ extension RootViewController {
     qvc.navigationDelegate = self
 
     Podest.playback.delegate = self
-
+    
     // Setting this last for a reason.
     svc.preferredDisplayMode = .allVisible
   }
@@ -191,9 +190,9 @@ extension RootViewController {
 
   override func encodeRestorableState(with coder: NSCoder) {
     super.encodeRestorableState(with: coder)
-
-    coder.encode(svc, forKey: "SplitID")
+    
     coder.encode(minivc, forKey: "MiniPlayerID")
+    coder.encode(svc, forKey: "SplitID")
   }
 
   override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
@@ -228,8 +227,15 @@ extension RootViewController {
 
 extension RootViewController: ViewControllers {
   
-  var isCollapsed: Bool {
-    return splitViewController?.isCollapsed ?? true
+  var isCollapsed: Bool {    
+    guard svc.isCollapsed else {
+      os_log("** scrutinizing uncollapsed for ui-idiom: %{public}i", 
+             log: log, traitCollection.userInterfaceIdiom.rawValue)
+
+      return snc.children.isEmpty
+    }
+    
+    return svc.isCollapsed
   }
 
   func showStore() {
@@ -292,7 +298,7 @@ extension RootViewController: ViewControllers {
   
   var entry: Entry? {
     guard
-      let nc = svc.isCollapsed ? pnc : snc,
+      let nc = isCollapsed ? pnc : snc,
       let vc = nc.topViewController as? EpisodeViewController else {
       return nil
     }
@@ -351,14 +357,6 @@ extension RootViewController: ViewControllers {
       }
 
       let evc = self.makeEpisodeViewController(entry: entry)
-
-      // So far an ongoing investigation shows that after display mode
-      // changes, while the video player is presented, the split view controller
-      // doesn’t report isCollapsed correctly, hence the additional checking of
-      // of the secondary’s children. I hate this, but I don’t know better yet.
-      // More analysis required.
-
-      let isCollapsed = snc.children.isEmpty || svc.isCollapsed
 
       if isCollapsed {
         os_log("pushing view controller: %{public}@",
@@ -498,7 +496,6 @@ extension RootViewController: UserProxy {
       completionBlock?(error)
     }
   }
-
 }
 
 // MARK: - UINavigationControllerDelegate
@@ -558,7 +555,6 @@ extension RootViewController: UINavigationControllerDelegate {
       configureDetails(showing: viewController)
     }
   }
-
 }
 
 // MARK: - UISplitViewControllerDelegate
@@ -629,6 +625,11 @@ extension RootViewController: UISplitViewControllerDelegate {
   ) -> UIViewController? {
     os_log("primaryViewController: forCollapsing: %{public}@",
            log: log, type: .debug, splitViewController)
+    
+    guard traitCollection.userInterfaceIdiom != .phone else {
+      os_log("** choosing primary view controller on phone", log: log, type: .debug)
+      return nil
+    }
 
     let vcs = viewControllersForPrimary(reducing: pnc.viewControllers)
 
@@ -636,6 +637,7 @@ extension RootViewController: UISplitViewControllerDelegate {
 
     if let entry = self.entry ?? self.selectedEntry {
       let evc = makeEpisodeViewController(entry: entry)
+      
       pnc.setViewControllers(vcs + [evc], animated: false)
     } else if let locator = self.locator { // restoring state
       os_log("restoring: %{public}@",
@@ -654,6 +656,11 @@ extension RootViewController: UISplitViewControllerDelegate {
   ) -> Bool {
     os_log("splitViewController: collapseSecondary: onto: %{public}@",
            log: log, type: .debug, primaryViewController)
+    
+    guard traitCollection.userInterfaceIdiom != .phone else {
+      os_log("** not collapsing on phone", log: log, type: .debug)
+      return true
+    }
 
     guard
       let nc = secondaryViewController as? UINavigationController,
@@ -684,9 +691,16 @@ extension RootViewController: UISplitViewControllerDelegate {
   func splitViewController(
     _ splitViewController: UISplitViewController,
     separateSecondaryFrom primaryViewController: UIViewController
-  ) -> UIViewController? {
+  ) -> UIViewController? {        
     os_log("splitViewController: separateSecondaryFrom: %{public}@",
            log: log, type: .debug, primaryViewController)
+    
+    guard traitCollection.userInterfaceIdiom != .phone else {
+      os_log("** not separating on phone", log: log, type: .debug)
+      snc.setViewControllers([], animated: false)
+      
+      return snc
+    }
 
     if let evc = makeEpisodeViewController() {
       configureDetails(showing: evc)
@@ -696,6 +710,7 @@ extension RootViewController: UISplitViewControllerDelegate {
     }
 
     let vcs = viewControllersForPrimary(reducing: pnc.viewControllers)
+    
     pnc.setViewControllers(vcs, animated: false)
 
     return snc

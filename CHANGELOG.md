@@ -2,11 +2,21 @@
 
 ### Doolittle
 
+- Episode
+- Player
+
+- Support dark mode
 - Anticipate multiple windows
-- Replace player user interface
 - Review CloudKit usage
 - Review traits timing
-- Support dark mode
+
+## 8.2 (2019-07-19)
+
+Good news, everyone! Two long-standing issues have been resolved.
+
+Match against full episode data (title, subtitle, summary, author) for search suggestions, previously only the summary was scanned.
+
+Watching a video on your phone in landscape no longer affects the list header.
 
 ## 8.1 (2019-07-05)
 
