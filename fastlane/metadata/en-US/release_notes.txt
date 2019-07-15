@@ -1,1 +1,5 @@
+Good news, everyone! Two long-standing issues have been resolved.
+
 Finally, you can type episode titles into the searchbar to receive matching suggestions. A bug, where only summaries would be scanned, had been thwarting this until now.
+
+Watching a video on your phone in landscape no longer affects the list header.

@@ -237,7 +237,7 @@ extension QueueViewController {
   }
 
   override func viewWillAppear(_ animated: Bool) {
-    let isCollapsed = (splitViewController?.isCollapsed)!
+    let isCollapsed = (navigationDelegate?.isCollapsed)!
     let isDifferent = entry != navigationDelegate?.entry
     let isNotDismissed = !searchProxy.isSearchDismissed
 

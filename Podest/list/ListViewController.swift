@@ -137,7 +137,7 @@ extension ListViewController {
     }
 
     let op = ListOperation(
-      url: url, originalFeed: feed, isCompact: isCompact)
+      url: url, originalFeed: feed, withoutImage: !isCompact)
 
     op.feedBlock = { [weak self] feed, error in
       DispatchQueue.main.async {
@@ -191,6 +191,11 @@ extension ListViewController {
     return traitCollection.verticalSizeClass == .regular &&
       traitCollection.horizontalSizeClass == .regular
   }
+  
+  private var isCompact: Bool {
+    return navigationDelegate?.isCollapsed ?? 
+      (traitCollection.horizontalSizeClass == .compact)
+  }
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -211,10 +216,9 @@ extension ListViewController {
   }
 
   override func viewWillAppear(_ animated: Bool) {
-    let isCollapsed = (splitViewController?.isCollapsed)!
     let isDifferent = entry != navigationDelegate?.entry
 
-    clearsSelectionOnViewWillAppear = isCollapsed || isDifferent
+    clearsSelectionOnViewWillAppear = isCompact || isDifferent
 
     updateIsSubscribed()
 
@@ -233,10 +237,6 @@ extension ListViewController {
 // MARK: - Responding to a Change in the Interface Environment
 
 extension ListViewController {
-
-  private var isCompact: Bool {
-    return !(splitViewController?.isCollapsed ?? false)
-  }
 
   override func viewLayoutMarginsDidChange() {
     super.viewLayoutMarginsDidChange()
@@ -558,7 +558,7 @@ extension ListViewController {
   }
 
   private func makeRightBarButtonItems(url: FeedURL) -> [UIBarButtonItem] {
-    var items = isCompact ? [] : [makeActionButton()]
+    var items = !isCompact ? [] : [makeActionButton()]
 
     items.append(makeSubscribeButton(url: url))
 

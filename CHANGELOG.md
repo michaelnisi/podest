@@ -1,6 +1,10 @@
 ## 8.2 (planned)
 
+Good news, everyone! Two long-standing issues have been resolved.
+
 Match against full episode data (title, subtitle, summary, author) for search suggestions, previously only the summary was scanned.
+
+Watching a video on your phone in landscape no longer affects the list header.
 
 ## 8.1 (2019-07-05)
 

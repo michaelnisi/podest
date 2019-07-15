@@ -119,6 +119,9 @@ protocol ViewControllers: Players {
 
   /// An additional property to check wether the main split view controller, to
   /// which some participants might not have access, is collapsed or not.
+  ///
+  /// Shun using `UISplitViewController.isCollapsed` directly, it might not be
+  /// up-to-date in all use cases.
   var isCollapsed: Bool { get }
 }
 
