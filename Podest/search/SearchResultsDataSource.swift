@@ -406,8 +406,12 @@ extension SearchResultsDataSource: UITableViewDataSource {
 
         cell.accessoryType = .none
 
-        cell.item = nil
+        if let imageView = cell.imageView { 
+          Podest.images.cancel(displaying: imageView)
+        }
+        
         cell.imageView?.image = nil
+        cell.layoutSubviewsBlock = nil
 
         cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .body)
         cell.textLabel?.numberOfLines = 0
@@ -425,9 +429,13 @@ extension SearchResultsDataSource: UITableViewDataSource {
         ) as! SubtitleTableViewCell
 
         cell.accessoryType = .none
-
-        cell.item = nil
+        
+        if let imageView = cell.imageView { 
+          Podest.images.cancel(displaying: imageView)
+        }
+        
         cell.imageView?.image = nil
+        cell.layoutSubviewsBlock = nil
 
         cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .body)
         cell.textLabel?.numberOfLines = 0
@@ -445,6 +453,22 @@ extension SearchResultsDataSource: UITableViewDataSource {
         ) as! SubtitleTableViewCell
 
         cell.accessoryType = .disclosureIndicator
+        
+        if let imageView = cell.imageView { 
+          Podest.images.cancel(displaying: imageView)
+        }
+        cell.imageView?.image = UIImage(named: "Oval")
+        cell.layoutSubviewsBlock = { imageView in
+          Podest.images.loadImage(
+            representing: feed,
+            into: imageView,
+            options: FKImageLoadingOptions(
+              fallbackImage: UIImage(named: "Oval"),
+              quality: .medium,
+              isDirect: true
+            )
+          )
+        }
 
         cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
         cell.textLabel?.numberOfLines = 0
@@ -452,9 +476,6 @@ extension SearchResultsDataSource: UITableViewDataSource {
         cell.detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .body)
         cell.detailTextLabel?.numberOfLines = 0
         cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
-
-        cell.images = Podest.images
-        cell.item = feed
 
         cell.textLabel?.text = feed.title
         cell.detailTextLabel?.text = StringRepository.feedCellSubtitle(for: feed)

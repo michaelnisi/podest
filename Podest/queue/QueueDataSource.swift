@@ -77,12 +77,10 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
   private let images: Images
 
-  private let imageQuality: ImageQuality
-  
-  init(userQueue: Queueing, images: Images, imageQuality: ImageQuality = .medium) {
+
+  init(userQueue: Queueing, images: Images) {
     self.userQueue = userQueue
     self.images = images
-    self.imageQuality = imageQuality
     
     super.init()
   }
@@ -450,11 +448,23 @@ extension QueueDataSource: UITableViewDataSource {
         cell.detailTextLabel?.numberOfLines = 0
         cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
       }
-
-      cell.images = Podest.images
-      cell.item = entry
-      cell.imageQuality = imageQuality
-
+      
+      if let imageView = cell.imageView { 
+        Podest.images.cancel(displaying: imageView)
+      }
+      cell.imageView?.image = UIImage(named: "Oval")
+      cell.layoutSubviewsBlock = { imageView in
+        Podest.images.loadImage(
+          representing: entry,
+          into: imageView,
+          options: FKImageLoadingOptions(
+            fallbackImage: UIImage(named: "Oval"),
+            quality: .medium,
+            isDirect: true
+          )
+        )
+      }
+      
       cell.textLabel?.text = entry.feedTitle ?? entry.title
       cell.detailTextLabel?.text = entry.title
       

@@ -207,9 +207,13 @@ extension ListDataSource: UITableViewDataSource {
 
       cell.selectionStyle = .default
       cell.backgroundColor = .white
-
-      cell.images = nil
-      cell.item = entry
+      
+      if let imageView = cell.imageView { 
+        Podest.images.cancel(displaying: imageView)
+      }
+      
+      cell.imageView?.image = nil
+      cell.layoutSubviewsBlock = nil
 
       cell.textLabel?.font = .preferredFont(forTextStyle: .headline)
       cell.textLabel?.numberOfLines = 0
@@ -232,9 +236,13 @@ extension ListDataSource: UITableViewDataSource {
 
       cell.selectionStyle = .none
       cell.backgroundColor = .white
-
-      cell.images = nil
-      cell.item = nil
+      
+      if let imageView = cell.imageView { 
+        Podest.images.cancel(displaying: imageView)
+      }
+      
+      cell.imageView?.image = nil
+      cell.layoutSubviewsBlock = nil
 
       cell.textLabel?.attributedText = nil
       cell.textLabel?.text = nil
