@@ -15,7 +15,7 @@ import os.log
 import Playback
 import Ola
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
 /// The minimized AV player.
 final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDelegate {
@@ -45,7 +45,8 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
         os_log("could not fetch entry: %{public}@",
                log: log, type: .error, er as CVarArg)
 
-        // We’re just a mini-player, we don’t know what to do.
+        // We are but a mini-player, we don’t know what to do.
+        
         return DispatchQueue.main.async { [weak self] in
           if let me = self {
             me.navigationDelegate?.viewController(me, error: er)
@@ -55,7 +56,10 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
 
       DispatchQueue.main.async { [weak self] in
         self?.entry = entry
-        self?.navigationDelegate?.showMiniPlayer(animated)
+        
+        self?.navigationDelegate?
+          .showMiniPlayer(animated: animated, completion: nil)
+        
         self?.isRestoring = false
       }
     }
@@ -213,6 +217,7 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     configureSwipe()
+    needsUpdate = true
   }
 
   private func loadImage(representing entry: Entry) {
@@ -232,10 +237,8 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
     
     configureSwipe()
 
-    guard needsUpdate else { return }
-
-    guard let entry = self.entry else {
-      fatalError("entry cannot be nil")
+    guard needsUpdate, let entry = self.entry else { 
+      return 
     }
 
     titleLabel.text = entry.title
@@ -334,7 +337,7 @@ extension MiniPlayerController {
         return
       }
 
-      navigationDelegate?.showNowPlaying(entry: entry)
+      navigationDelegate?.showNowPlaying(entry: entry, animated: true, completion: nil)
 
     case .possible, .changed:
       break
@@ -359,7 +362,7 @@ extension MiniPlayerController {
 
     switch sender.state {
     case .ended:
-      navigationDelegate?.showNowPlaying(entry: entry)
+      navigationDelegate?.showNowPlaying(entry: entry, animated: true, completion: nil)
       
     case .began, .changed, .cancelled, .failed, .possible:
       break

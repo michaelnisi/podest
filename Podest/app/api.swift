@@ -24,9 +24,6 @@ protocol Players {
 
   /// Pause playback.
   func pause()
-
-  /// Returns `true` if `entry` is playing.
-  func isPlaying(_ entry: Entry) -> Bool
   
   // MARK: Mini Player
 
@@ -34,19 +31,19 @@ protocol Players {
   var miniPlayerEdgeInsets: UIEdgeInsets { get }
 
   /// Shows the mini-player or does nothing.
-  func showMiniPlayer(_ animated: Bool)
+  func showMiniPlayer(animated: Bool, completion: (() -> Void)?)
 
   /// Hides the mini-player and/or resets values. Should be used to install
   /// the mini-player initially.
-  func hideMiniPlayer(_ animated: Bool)
+  func hideMiniPlayer(animated: Bool, completion: (() -> Void)?)
   
   // MARK: Now Playing
 
   /// Presents the main player with `entry`.
-  func showNowPlaying(entry: Entry)
+  func showNowPlaying(entry: Entry, animated: Bool, completion: (() -> Void)?)
 
   /// Dismisses the main player.
-  func hideNowPlaying(animated flag: Bool, completion: (() -> Void)?)
+  func hideNowPlaying(animated: Bool, completion: (() -> Void)?)
 
   /// `true` if the main player, audio or video, is visible at the moment.
   var isPlayerPresented: Bool { get }
@@ -54,10 +51,10 @@ protocol Players {
   // MARK: Video
 
   /// Presents video `player`.
-  func showVideo(player: AVPlayer)
+  func showVideo(player: AVPlayer, animated: Bool, completion: (() -> Void)?)
 
   /// Hides video player.
-  func hideVideoPlayer()
+  func hideVideoPlayer(animated: Bool, completion: (() -> Void)?)
 }
 
 // MARK: - Accessing Entries

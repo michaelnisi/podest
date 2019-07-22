@@ -29,7 +29,7 @@ final class RootViewController: UIViewController, Routing {
   private var svc: UISplitViewController!
 
   var minivc: MiniPlayerController!
-  var playervc: PlaybackControlDelegate?
+  weak var playervc: PlaybackControlDelegate? 
 
   private var pnc: UINavigationController!
   private var snc: UINavigationController!
@@ -37,7 +37,7 @@ final class RootViewController: UIViewController, Routing {
   weak var getDefaultEntry: Operation?
 
   /// The singular queue view controller.
-  private var qvc: QueueViewController {
+  var qvc: QueueViewController {
     return pnc.viewControllers.first {
       return $0 is QueueViewController
     } as! QueueViewController
@@ -58,8 +58,8 @@ final class RootViewController: UIViewController, Routing {
     return pnc?.topViewController as? ListViewController
   }
 
-  /// This one-shot block installs the mini-player, initially.
-  lazy var installMiniPlayer: () = hideMiniPlayer(false)
+  /// This one-shot block installs the mini-player initially.
+  lazy var installMiniPlayer: () = hideMiniPlayer(animated: false)
 
   /// The width or height of the mini-player, taken from the storyboard.
   var miniPlayerConstant: CGFloat = 0
@@ -67,74 +67,6 @@ final class RootViewController: UIViewController, Routing {
   /// A reference to the current player transition delegate. Unfortunately, we
   /// need a place to hold on to it.
   var playerTransition: UIViewControllerTransitioningDelegate?
-
-  // MARK: - PlaybackResponding
-  
-  /// Stores simplified playback state.
-  struct SimplePlaybackState {
-    let entry: Entry
-    let isPlaying: Bool
-  }
-
-  /// An internal serial queue for synchronized access.
-  private let sQueue = DispatchQueue(
-    label: "ink.codes.podest.RootViewController", 
-    target: .global()
-  )
-
-  private var _playbackState: SimplePlaybackState?
-
-  var playbackControlProxy: SimplePlaybackState? {
-    get {
-      return sQueue.sync {
-        if _playbackState == nil {
-          guard let entry = minivc.entry else {
-            return nil
-          }
-          
-          _playbackState = SimplePlaybackState(entry: entry, isPlaying: false)
-        }
-        
-        return _playbackState
-      }
-    }
-    
-    set {
-      sQueue.sync {
-        _playbackState = newValue
-        
-        // `PlaybackResponding` adopters can receive playback state updates.
-        
-        var targets: [PlaybackResponding] = [minivc, qvc]
-        if let player = playervc { targets.append(player) }
-
-        DispatchQueue.main.async {
-          self.showMiniPlayer(true)
-        }
-
-        guard let now = _playbackState else {
-          for t in targets {
-            DispatchQueue.main.async {
-              t.dismiss()
-            }
-          }
-          return
-        }
-
-        for t in targets {
-          if now.isPlaying {
-            DispatchQueue.main.async {
-              t.playing(entry: now.entry)
-            }
-          } else {
-            DispatchQueue.main.async {
-              t.pausing(entry: now.entry)
-            }
-          }
-        }
-      }
-    }
-  }
 }
 
 // MARK: - UIViewController
@@ -246,7 +178,7 @@ extension RootViewController: ViewControllers {
 
     switch viewController {
     case minivc:
-      hideMiniPlayer(true)
+      hideMiniPlayer(animated: true)
     default:
       break
     }
