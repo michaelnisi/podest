@@ -10,7 +10,15 @@
 - Review CloudKit usage
 - Review traits timing
 
-## 8.2 (2019-07-19)
+## 8.3 (2019-07-25)
+
+Search result image sizes have been fixed.
+
+Improved video playback integration, animating the mini-player when skipping between audio and video, and allowing seemless skipping from video to video using Now Playing on Apple Watch.
+
+No more flickering of the mini-player play button.
+
+## 8.2 (2019-07-15)
 
 Good news, everyone! Two long-standing issues have been resolved.
 

@@ -465,7 +465,7 @@ extension QueueDataSource: UITableViewDataSource {
       cell.textLabel?.text = entry.feedTitle ?? entry.title
       cell.detailTextLabel?.text = entry.title
 
-      // Tagging cell with entry for later being able to find it, when it’s time
+      // Tagging cell with entry for later being able to find it again, 
       // to update the accessory view.
       cell.tag = entry.hashValue
 
