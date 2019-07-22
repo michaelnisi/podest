@@ -52,7 +52,7 @@ final class ListDataSource: NSObject, SectionedDataSource {
 // MARK: - Fetching Feed and Entries
 
 extension ListDataSource {
-  
+
   /// Returns `true` if `url` is not the URL of the current feed.
   private func shouldUpdate(url: String) -> Bool {
     for section in sections {
@@ -67,7 +67,7 @@ extension ListDataSource {
         }
       }
     }
-    
+
     return true
   }
 
@@ -97,7 +97,7 @@ extension ListDataSource {
       operation.cancel()
       return operation
     }
-    
+
     guard shouldUpdate(url: operation.url) || forcing else {
       os_log("cancelling: no update required", log: log)
       operation.cancel()
@@ -105,7 +105,7 @@ extension ListDataSource {
     }
 
     os_log("updating: %@", log: log, type: .debug, operation)
-    
+
     let a = FetchFeedOperation(operation: operation)
 
     a.updatesBlock = operation.updatesBlock
@@ -153,11 +153,11 @@ extension ListDataSource {
 // MARK: - UITableViewDataSource
 
 extension ListDataSource: UITableViewDataSource {
-  
+
   /// Registers nib objects with `collectionView` under identifiers.
   static func registerCells(with tableView: UITableView) {
     typealias Nib = UITableView.Nib
-    
+
     let cells = [
       (Nib.message.nib, Nib.message.id),
       (Nib.subtitle.nib, Nib.subtitle.id),
@@ -176,7 +176,7 @@ extension ListDataSource: UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return sections[section].count
   }
-  
+
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     guard let item = itemAt(indexPath: indexPath) else {
       fatalError("no item at index path: \(indexPath)")
@@ -206,9 +206,14 @@ extension ListDataSource: UITableViewDataSource {
       ) as! SubtitleTableViewCell
 
       cell.selectionStyle = .default
+      cell.backgroundColor = .white
 
-      cell.images = nil
-      cell.item = entry
+      if let imageView = cell.imageView {
+        Podest.images.cancel(displaying: imageView)
+      }
+
+      cell.imageView?.image = nil
+      cell.layoutSubviewsBlock = nil
 
       cell.textLabel?.font = .preferredFont(forTextStyle: .headline)
       cell.textLabel?.numberOfLines = 0
@@ -229,9 +234,14 @@ extension ListDataSource: UITableViewDataSource {
       ) as! SubtitleTableViewCell
 
       cell.selectionStyle = .none
+      cell.backgroundColor = .white
 
-      cell.images = nil
-      cell.item = nil
+      if let imageView = cell.imageView {
+        Podest.images.cancel(displaying: imageView)
+      }
+
+      cell.imageView?.image = nil
+      cell.layoutSubviewsBlock = nil
 
       cell.textLabel?.attributedText = nil
       cell.textLabel?.text = nil
@@ -266,13 +276,12 @@ extension ListDataSource: UITableViewDataSource {
 
     return true
   }
-
 }
 
 // MARK: - EntryIndexPathMapping
 
 extension ListDataSource: EntryIndexPathMapping {
-  
+
   func entry(at indexPath: IndexPath) -> Entry? {
     dispatchPrecondition(condition: .onQueue(.main))
 
@@ -290,7 +299,7 @@ extension ListDataSource: EntryIndexPathMapping {
   /// Returns the first index path matching `entry`.
   func indexPath(matching entry: Entry) -> IndexPath? {
     dispatchPrecondition(condition: .onQueue(.main))
-    
+
     for (s, section) in sections.enumerated() {
       for (r, item) in section.enumerated() {
         guard case .entry(let e, _) = item, e == entry else {
@@ -303,5 +312,4 @@ extension ListDataSource: EntryIndexPathMapping {
 
     return nil
   }
-
 }

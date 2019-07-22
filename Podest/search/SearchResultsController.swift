@@ -27,7 +27,6 @@ protocol SearchResultsControllerDelegate: Navigator {
   /// In landscape, episodes can be selected, flipping to portrait must clear
   /// these selections in place.
   var isCollapsed: Bool { get }
-
 }
 
 final class SearchResultsController: UITableViewController {
@@ -63,7 +62,6 @@ final class SearchResultsController: UITableViewController {
   func reset() {
     suggest("")
   }
-
 }
 
 // MARK: - UIViewController
@@ -89,9 +87,7 @@ extension SearchResultsController {
     tableView.estimatedRowHeight = 64
 
     var separatorInset = tableView.separatorInset
-
     separatorInset.left = UITableView.automaticDimension
-
     tableView.separatorInset = separatorInset
 
     clearsSelectionOnViewWillAppear = true
@@ -182,7 +178,6 @@ extension SearchResultsController {
   override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
     delegate?.searchResultsWillBeginDragging(self)
   }
-  
 }
 
 // MARK: - UITableViewDelegate
@@ -208,7 +203,6 @@ extension SearchResultsController {
 
     delegate?.searchResults(self, didSelectFind: find)
   }
-
 }
 
 // MARK: - Selecting Rows
@@ -222,5 +216,4 @@ extension SearchResultsController {
 
     tableView.deselectRow(at: indexPath, animated: animated)
   }
-
 }
