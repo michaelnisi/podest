@@ -206,10 +206,9 @@ extension ListDataSource: UITableViewDataSource {
       ) as! SubtitleTableViewCell
 
       cell.selectionStyle = .default
-      cell.backgroundColor = .white
 
       if let imageView = cell.imageView {
-        Podest.images.cancel(displaying: imageView)
+        images.cancel(displaying: imageView)
       }
 
       cell.imageView?.image = nil
@@ -234,10 +233,9 @@ extension ListDataSource: UITableViewDataSource {
       ) as! SubtitleTableViewCell
 
       cell.selectionStyle = .none
-      cell.backgroundColor = .white
 
       if let imageView = cell.imageView {
-        Podest.images.cancel(displaying: imageView)
+        images.cancel(displaying: imageView)
       }
 
       cell.imageView?.image = nil

@@ -15,14 +15,14 @@ import os.log
 import Playback
 import Ola
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
 /// The minimized AV player.
 final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDelegate {
-  
+
   var isForwardable: Bool = false
   var isBackwardable: Bool = false
-  
+
   private struct FetchEntryResult {
     let entry: Entry?
     let error: Error?
@@ -44,7 +44,8 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
         os_log("could not fetch entry: %{public}@",
                log: log, type: .error, er as CVarArg)
 
-        // We’re just a mini-player, we don’t know what to do.
+        // We are but a mini-player, we don’t know what to do.
+
         return DispatchQueue.main.async { [weak self] in
           if let me = self {
             me.navigationDelegate?.viewController(me, error: er)
@@ -54,7 +55,10 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
 
       DispatchQueue.main.async { [weak self] in
         self?.entry = entry
-        self?.navigationDelegate?.showMiniPlayer(animated)
+
+        self?.navigationDelegate?
+          .showMiniPlayer(animated: animated, completion: nil)
+
         self?.isRestoring = false
       }
     }
@@ -170,38 +174,38 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
   }
 
   var fx: UIVisualEffectView!
-  
+
   fileprivate func insertEffect(below sibling: UIView) {
     guard #available(iOS 13.0, *) else {
       let blur = UIBlurEffect(style: .light)
       let blurView = UIVisualEffectView(effect: blur)
       blurView.frame = view.frame
       blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-      
+
       let vibrancy = UIVibrancyEffect(blurEffect: blur)
       let vibrancyView = UIVisualEffectView(effect: vibrancy)
       vibrancyView.frame = view.frame
-      
+
       blurView.contentView.addSubview(vibrancyView)
       view.insertSubview(blurView, belowSubview: sibling)
-      
+
       self.fx = blurView
-      
+
       return
     }
-    
+
     let blur = UIBlurEffect(style: .systemChromeMaterial)
     let blurView = UIVisualEffectView(effect: blur)
     blurView.frame = view.frame
     blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-    
+
     let vibrancy = UIVibrancyEffect(blurEffect: blur, style: .label)
     let vibrancyView = UIVisualEffectView(effect: vibrancy)
     vibrancyView.frame = view.frame
-    
+
     blurView.contentView.addSubview(vibrancyView)
     view.insertSubview(blurView, belowSubview: sibling)
-    
+
     self.fx = blurView
   }
 
@@ -237,6 +241,8 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     configureSwipe()
+
+    needsUpdate = true
   }
 
   private func loadImage(representing entry: Entry) {
@@ -253,13 +259,11 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
     defer {
       super.viewWillLayoutSubviews()
     }
-    
+
     configureSwipe()
 
-    guard needsUpdate else { return }
-
-    guard let entry = self.entry else {
-      fatalError("entry cannot be nil")
+    guard needsUpdate, let entry = self.entry else {
+      return
     }
 
     titleLabel.text = entry.title
@@ -275,13 +279,13 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
 // MARK: - UIGestureRecognizerDelegate
 
 extension MiniPlayerController: UIGestureRecognizerDelegate {
-  
+
   /// Returns `true` if we are vertically compact.
   var isLandscape: Bool {
     return traitCollection.containsTraits(
       in: UITraitCollection(verticalSizeClass: .compact))
   }
-  
+
   func gestureRecognizer(
     _ gestureRecognizer: UIGestureRecognizer,
     shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
@@ -293,7 +297,7 @@ extension MiniPlayerController: UIGestureRecognizerDelegate {
       return false
     }
   }
-  
+
   func gestureRecognizer(
     _ gestureRecognizer: UIGestureRecognizer,
     shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer
@@ -305,16 +309,16 @@ extension MiniPlayerController: UIGestureRecognizerDelegate {
 // MARK: - UITapGestureRecognizer
 
 extension MiniPlayerController {
-  
+
   private func makeMatte() -> UIView {
     let v = UIView(frame: fx.contentView.frame)
-    
+
     if #available(iOS 13.0, *) {
       v.backgroundColor = .quaternarySystemFill
     } else {
       v.backgroundColor = .lightGray
     }
-    
+
     return v
   }
 
@@ -366,16 +370,15 @@ extension MiniPlayerController {
         return
       }
 
-      navigationDelegate?.showNowPlaying(entry: entry)
+      navigationDelegate?.showNowPlaying(entry: entry, animated: true, completion: nil)
 
     case .possible, .changed:
       break
-      
+
     @unknown default:
       fatalError("unknown case in switch: \(sender.state)")
     }
   }
-
 }
 
 // MARK: - UISwipeGestureRecognizer
@@ -391,11 +394,11 @@ extension MiniPlayerController {
 
     switch sender.state {
     case .ended:
-      navigationDelegate?.showNowPlaying(entry: entry)
-      
+      navigationDelegate?.showNowPlaying(entry: entry, animated: true, completion: nil)
+
     case .began, .changed, .cancelled, .failed, .possible:
       break
-      
+
     @unknown default:
       fatalError("unknown case in switch: \(sender.state)")
     }
@@ -405,7 +408,6 @@ extension MiniPlayerController {
   private func configureSwipe() {
     swipe.direction = isLandscape ? .left : .up
   }
-
 }
 
 // MARK: - UIScreenEdgePanGestureRecognizer
@@ -415,5 +417,4 @@ extension MiniPlayerController {
   @objc func onEdgePan(sender: UIScreenEdgePanGestureRecognizer) {
     os_log("edge pan received", log: log, type: .debug)
   }
-
 }
