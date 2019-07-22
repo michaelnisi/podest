@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 extension QueueViewController {
-  
+
   override func tableView(
     _ tableView: UITableView,
     willSelectRowAt indexPath: IndexPath

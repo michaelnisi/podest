@@ -77,12 +77,9 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
   private let images: Images
 
-  private let imageQuality: ImageQuality
-
-  init(userQueue: Queueing, images: Images, imageQuality: ImageQuality = .medium) {
+  init(userQueue: Queueing, images: Images) {
     self.userQueue = userQueue
     self.images = images
-    self.imageQuality = imageQuality
 
     super.init()
   }
@@ -256,9 +253,8 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
         self.lastTimeFilesHaveBeenRemoved = now
 
-       completionBlock(true)
+        completionBlock(true)
       }
-
     }
   }
 
@@ -450,9 +446,21 @@ extension QueueDataSource: UITableViewDataSource {
         cell.detailTextLabel?.numberOfLines = 0
       }
 
-      cell.images = Podest.images
-      cell.item = entry
-      cell.imageQuality = imageQuality
+      if let imageView = cell.imageView {
+        Podest.images.cancel(displaying: imageView)
+      }
+      cell.imageView?.image = UIImage(named: "Oval")
+      cell.layoutSubviewsBlock = { imageView in
+        Podest.images.loadImage(
+          representing: entry,
+          into: imageView,
+          options: FKImageLoadingOptions(
+            fallbackImage: UIImage(named: "Oval"),
+            quality: .medium,
+            isDirect: true
+          )
+        )
+      }
 
       cell.textLabel?.text = entry.feedTitle ?? entry.title
       cell.detailTextLabel?.text = entry.title
@@ -460,7 +468,7 @@ extension QueueDataSource: UITableViewDataSource {
       // Tagging cell with entry for later being able to find it, when it’s time
       // to update the accessory view.
       cell.tag = entry.hashValue
-    
+
       if cell.accessoryView == nil {
         cell.accessoryView =  QueueDataSource.makeAccessory()
         cell.tintColor = UIColor(named: "Purple")
@@ -566,7 +574,6 @@ extension QueueDataSource {
     }
     return handler
   }
-
 }
 
 // MARK: - UITableViewDataSourcePrefetching
@@ -614,5 +621,4 @@ extension QueueDataSource: UITableViewDataSourcePrefetching  {
 
     Podest.images.cancelPrefetching(items, at: size, quality: .medium)
   }
-
 }
