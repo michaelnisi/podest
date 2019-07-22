@@ -1,5 +1,3 @@
-Good news, everyone! Two long-standing issues have been resolved.
+Search result image sizes have been fixed.
 
-Finally, you can type episode titles into the searchbar to receive matching suggestions. A bug, where only summaries would be scanned, had been thwarting this until now.
-
-Watching a video on your phone in landscape no longer affects the list header.
+Improved video playback integration, animating the mini-player when skipping between audio and video, and allowing seemless skipping from video to video using Now Playing on Apple Watch.

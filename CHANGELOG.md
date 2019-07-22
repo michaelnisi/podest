@@ -1,4 +1,10 @@
-## 8.2 (planned)
+## 8.3 (planned)
+
+Search result image sizes have been fixed.
+
+Improved video playback integration, animating the mini-player when skipping between audio and video, and allowing seemless skipping from video to video using Now Playing on Apple Watch.
+
+## 8.2 (2019-07-15)
 
 Good news, everyone! Two long-standing issues have been resolved.
 
