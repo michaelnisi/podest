@@ -37,22 +37,17 @@ class PlaySwitch: UIControl {
   
   var isOn: Bool = false {
     didSet {
-      guard oldValue != isOn else { return }
       onImageView.isHidden = !isOn
       offImageView.isHidden = isOn
     }
   }
   
   private var prev: UIImageView {
-    get {
-      return isOn ? offImageView : onImageView
-    }
+    return isOn ? offImageView : onImageView
   }
   
   private var current: UIImageView {
-    get {
-      return isOn ? onImageView : offImageView
-    }
+    return isOn ? onImageView : offImageView
   }
   
   private func resetImages() {
@@ -91,19 +86,26 @@ class PlaySwitch: UIControl {
   
   override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
     super.endTracking(touch, with: event)
+    
     isOn = !isOn
+    
     sendActions(for: .valueChanged)
     resetImages()
+    
     isCancelled = false
   }
   
   override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
     guard hitTest(touch.location(in: self), with: event) != nil else {
       resetImages()
+      
       isCancelled = true
+      
       return false
     }
+    
     isCancelled = false
+    
     return true
   }
 
@@ -113,6 +115,7 @@ class PlaySwitch: UIControl {
   override func cancelTracking(with event: UIEvent?) {
     super.cancelTracking(with: event)
     resetImages()
+    
     isCancelled = true
   }
   
@@ -151,5 +154,4 @@ class PlaySwitch: UIControl {
     super.init(frame: frame)
     commonInit()
   }
-  
 }
