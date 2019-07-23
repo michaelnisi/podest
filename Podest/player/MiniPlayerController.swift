@@ -19,11 +19,11 @@ private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
 /// The minimized AV player.
 final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDelegate {
-  
+
   var isForwardable: Bool = false
-  
+
   var isBackwardable: Bool = false
-  
+
   private struct FetchEntryResult {
     let entry: Entry?
     let error: Error?
@@ -46,7 +46,7 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
                log: log, type: .error, er as CVarArg)
 
         // We are but a mini-player, we don’t know what to do.
-        
+
         return DispatchQueue.main.async { [weak self] in
           if let me = self {
             me.navigationDelegate?.viewController(me, error: er)
@@ -56,10 +56,10 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
 
       DispatchQueue.main.async { [weak self] in
         self?.entry = entry
-        
+
         self?.navigationDelegate?
           .showMiniPlayer(animated: animated, completion: nil)
-        
+
         self?.isRestoring = false
       }
     }
@@ -217,6 +217,7 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     configureSwipe()
+
     needsUpdate = true
   }
 
@@ -234,11 +235,11 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
     defer {
       super.viewWillLayoutSubviews()
     }
-    
+
     configureSwipe()
 
-    guard needsUpdate, let entry = self.entry else { 
-      return 
+    guard needsUpdate, let entry = self.entry else {
+      return
     }
 
     titleLabel.text = entry.title
@@ -254,13 +255,13 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
 // MARK: - UIGestureRecognizerDelegate
 
 extension MiniPlayerController: UIGestureRecognizerDelegate {
-  
+
   /// Returns `true` if we are vertically compact.
   var isLandscape: Bool {
     return traitCollection.containsTraits(
       in: UITraitCollection(verticalSizeClass: .compact))
   }
-  
+
   func gestureRecognizer(
     _ gestureRecognizer: UIGestureRecognizer,
     shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
@@ -272,7 +273,7 @@ extension MiniPlayerController: UIGestureRecognizerDelegate {
       return false
     }
   }
-  
+
   func gestureRecognizer(
     _ gestureRecognizer: UIGestureRecognizer,
     shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer
@@ -341,7 +342,7 @@ extension MiniPlayerController {
 
     case .possible, .changed:
       break
-      
+
     @unknown default:
       fatalError("unknown case in switch: \(sender.state)")
     }
@@ -363,10 +364,10 @@ extension MiniPlayerController {
     switch sender.state {
     case .ended:
       navigationDelegate?.showNowPlaying(entry: entry, animated: true, completion: nil)
-      
+
     case .began, .changed, .cancelled, .failed, .possible:
       break
-      
+
     @unknown default:
       fatalError("unknown case in switch: \(sender.state)")
     }

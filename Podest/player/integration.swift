@@ -59,7 +59,7 @@ extension RootViewController {
 
     func done() {
       minivc.locator = nil
-      
+
       completion?()
     }
 
@@ -124,7 +124,7 @@ extension RootViewController {
 
       view.layoutIfNeeded()
       completion?()
-      
+
       return
     }
 
@@ -145,11 +145,11 @@ extension RootViewController {
     let anim = UIViewPropertyAnimator(duration: 0.3, curve: .easeOut) {
       self.view.layoutIfNeeded()
     }
-    
+
     anim.addCompletion { position in
       completion?()
     }
-    
+
     anim.startAnimation()
   }
 }
@@ -157,7 +157,7 @@ extension RootViewController {
 // MARK: - Controlling Playback
 
 extension RootViewController {
-  
+
   func play(_ entry: Entry) {
     os_log("playing: %@", log: log, type: .debug, entry.title)
 
@@ -187,20 +187,20 @@ extension RootViewController {
     guard Podest.playback.currentEntry != nil else {
       return
     }
-    
+
     Podest.playback.pause()
   }
 }
 
-/// Player view controllers must adopt this protocol. It specifies a view 
-/// controller that knows how to navigate this app, is able to control playback, 
+/// Player view controllers must adopt this protocol. It specifies a view
+/// controller that knows how to navigate this app, is able to control playback,
 /// and forwards its entry.
 protocol EntryPlayer: UIViewController, Navigator, PlaybackControlDelegate {}
 
 // MARK: - Presenting the Audio Player
 
 extension RootViewController {
-  
+
   private enum PlayerVersion {
     case v1, v2
   }
@@ -213,47 +213,47 @@ extension RootViewController {
     switch version {
     case .v1:
       let sb = UIStoryboard(name: "PlayerV1", bundle: .main)
-      
+
       return sb.instantiateViewController(withIdentifier: "PlayerV1ID")
         as! PlayerV1ViewController
-      
+
     case .v2:
       let sb = UIStoryboard(name: "PlayerV2", bundle: .main)
-      
+
       return sb.instantiateViewController(withIdentifier: "PlayerV2ID")
         as! PlayerV2ViewController
     }
   }
-  
+
   /// Returns a matching transitioning delegate for `player`.
   private static func makePlayerTransition(
     player: EntryPlayer) -> UIViewControllerTransitioningDelegate? {
     guard player is PlayerV1ViewController else {
       return nil
     }
-    
+
     player.modalPresentationStyle = .custom
-    
+
     return PlayerTransitionDelegate()
   }
-  
+
   func showNowPlaying(entry: Entry, animated: Bool, completion: (() -> Void)?) {
     os_log("showing now playing", log: log, type: .debug)
     dispatchPrecondition(condition: .onQueue(.main))
-    
+
     var vc = RootViewController.makeNowPlaying(version: .v1)
     vc.navigationDelegate = self
     playervc = vc
     let isPlaying = Podest.playback.isPlaying(guid: entry.guid)
-    
-    update(state: SimplePlaybackState(entry: entry, isPlaying: isPlaying)) 
-    
+
+    update(state: SimplePlaybackState(entry: entry, isPlaying: isPlaying))
+
     playerTransition = RootViewController.makePlayerTransition(player: vc)
     vc.transitioningDelegate = playerTransition
-    
+
     self.present(vc, animated: animated) { [weak self] in
       self?.playerTransition = nil
-      
+
       completion?()
     }
   }
@@ -261,19 +261,19 @@ extension RootViewController {
   func hideNowPlaying(animated: Bool, completion: (() -> Void)?) {
     os_log("hiding now playing", log: log, type: .debug)
     dispatchPrecondition(condition: .onQueue(.main))
-    
+
     guard presentedViewController is EntryPlayer else {
       completion?()
-      
+
       return
     }
-    
+
     playerTransition = PlayerTransitionDelegate()
     presentedViewController?.transitioningDelegate = playerTransition
 
     dismiss(animated: animated)  { [weak self] in
       self?.playerTransition = nil
-      
+
       completion?()
     }
   }
@@ -282,7 +282,7 @@ extension RootViewController {
 // MARK: - Presenting the Video Player
 
 extension RootViewController {
-  
+
   var videoPlayer: AVPlayerViewController? {
     dispatchPrecondition(condition: .onQueue(.main))
     return presentedViewController as? AVPlayerViewController
@@ -291,23 +291,23 @@ extension RootViewController {
   var isPresentingVideo: Bool {
     return videoPlayer != nil
   }
-  
+
   func showVideo(player: AVPlayer, animated: Bool, completion: (() -> Void)? = nil) {
     guard videoPlayer == nil else {
       videoPlayer?.player = player
-      
+
       return
     }
-    
+
     hideMiniPlayer(animated: true) { [weak self] in
       let vc = AVPlayerViewController()
-      
+
       vc.modalPresentationCapturesStatusBarAppearance = false
       vc.modalPresentationStyle = .fullScreen
       vc.updatesNowPlayingInfoCenter = false
       vc.allowsPictureInPicturePlayback = false
       vc.player = player
-      
+
       self?.present(vc, animated: animated) {
         os_log("presented video player", log: log, type: .debug)
         completion?()
@@ -317,13 +317,13 @@ extension RootViewController {
 
   func hideVideoPlayer(animated: Bool, completion: (() -> Void)? = nil) {
     dispatchPrecondition(condition: .onQueue(.main))
-    
+
     guard isPresentingVideo else {
       completion?()
-      
+
       return
     }
-    
+
     dismiss(animated: animated) { [weak self] in
       os_log("dismissed video player", log: log, type: .debug)
       self?.showMiniPlayer(animated: animated) {
@@ -350,28 +350,28 @@ extension AVPlayerViewController {
 // MARK: - Updating Playback Controls
 
 extension RootViewController {
-  
+
   /// Simplified playback state for playback UI.
   struct SimplePlaybackState {
     let entry: Entry
     let isPlaying: Bool
   }
-  
+
   /// Updates all playback responding participants (players) with `state`.
-  func update(state: SimplePlaybackState?) {    
+  func update(state: SimplePlaybackState?) {
     dispatchPrecondition(condition: .onQueue(.main))
-    
+
     var targets: [PlaybackResponding] = [self.minivc, self.qvc]
     if let t = self.playervc { targets.append(t) }
-    
+
     guard let now = state else {
       for t in targets { t.dismiss() }
       return
     }
-    
+
     for t in targets {
       let entry = now.entry
-      
+
       now.isPlaying ? t.playing(entry: entry) : t.pausing(entry: entry)
     }
   }
@@ -396,9 +396,9 @@ extension RootViewController: PlaybackDelegate {
   }
 
   func playback(session: Playback, didChange state: PlaybackState) {
-    os_log("playback state did change: %{public}@", 
+    os_log("playback state did change: %{public}@",
            log: log, type: .debug, String(describing: state))
-    
+
     switch state {
     case .paused(let entry, let error):
       DispatchQueue.main.async {
@@ -406,13 +406,15 @@ extension RootViewController: PlaybackDelegate {
           let s = SimplePlaybackState(entry: entry, isPlaying: false)
           self.update(state: s)
         }
-        
-        guard 
-          let er = error, 
+
+        // Guarding error existence is counter-intuitive, don’t you think?
+
+        guard
+          let er = error,
           let c = PlayerMessage.makeMessage(entry: entry, error: er) else {
           return
         }
-        
+
         let alert = UIAlertController(
           title: c.0, message: c.1, preferredStyle: .alert
         )
@@ -426,56 +428,56 @@ extension RootViewController: PlaybackDelegate {
         // Now Playing or ourselves should be presenting the alert.
 
         let p = self.isPresentingNowPlaying ? self.presentedViewController : self
-        
+
         p?.present(alert, animated: true, completion: nil)
       }
 
-    case .listening(let entry):      
+    case .listening(let entry):
       DispatchQueue.main.async {
         let s = SimplePlaybackState(entry: entry, isPlaying: true)
-        
+
         self.update(state: s)
-        
+
         self.hideVideoPlayer(animated: true) {
           self.showMiniPlayer(animated: true)
         }
       }
 
-    case .preparing(let entry, let shouldPlay):   
+    case .preparing(let entry, let shouldPlay):
       DispatchQueue.main.async {
         let s = SimplePlaybackState(entry: entry, isPlaying: shouldPlay)
-        
+
         self.update(state: s)
-        
+
         guard !self.isPlayerPresented, !self.isPresentingVideo else {
           return
         }
-        
+
         self.showMiniPlayer(animated: true)
       }
 
     case .viewing(let entry, let player):
       DispatchQueue.main.async {
         let s = SimplePlaybackState(entry: entry, isPlaying: true)
-        
+
         self.update(state: s)
-        
+
         if !self.isPresentingNowPlaying {
           self.showVideo(player: player, animated: true)
         }
       }
-      
+
     case .inactive(let error, let resuming):
       if let er = error {
         os_log("session error: %{public}@", log: log, type: .error, er as CVarArg)
         fatalError(String(describing: er))
       }
-      
+
       guard !resuming else {
         return
       }
-      
-      DispatchQueue.main.async {        
+
+      DispatchQueue.main.async {
         self.hideMiniPlayer(animated: true)
       }
     }

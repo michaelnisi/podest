@@ -16,7 +16,7 @@ import AVFoundation.AVPlayer
 
 /// Playback section of the `ViewControllers` protocol.
 protocol Players {
-  
+
   // MARK: Essentials
 
   /// Starts playing `entry`.
@@ -24,7 +24,7 @@ protocol Players {
 
   /// Pause playback.
   func pause()
-  
+
   // MARK: Mini Player
 
   /// The mini-player edge insets, updated for device orientation.
@@ -36,7 +36,7 @@ protocol Players {
   /// Hides the mini-player and/or resets values. Should be used to install
   /// the mini-player initially.
   func hideMiniPlayer(animated: Bool, completion: (() -> Void)?)
-  
+
   // MARK: Now Playing
 
   /// Presents the main player with `entry`.
@@ -47,10 +47,11 @@ protocol Players {
 
   /// `true` if the main player, audio or video, is visible at the moment.
   var isPlayerPresented: Bool { get }
-  
+
   // MARK: Video
 
-  /// Presents video `player`.
+  /// Presents video `player`. If a video player controller is currently
+  /// presented, it it reused and `player` is set as its player.
   func showVideo(player: AVPlayer, animated: Bool, completion: (() -> Void)?)
 
   /// Hides video player.
@@ -61,14 +62,14 @@ protocol Players {
 
 /// Often we are only interested in the entry represented by participants.
 protocol EntryProvider {
-  
+
   /// Provides an entry that makes sense in this context.
   var entry: Entry? { get }
 }
 
 /// Maps entries to index paths.
 protocol EntryIndexPathMapping {
-  
+
   /// Returns the first index path matching `entry`.
   func indexPath(matching entry: Entry) -> IndexPath?
 }
@@ -79,39 +80,39 @@ protocol EntryIndexPathMapping {
 /// Instead of reaching deep into the controller hierarchy, things that need
 /// to be accessed from the outside should be exposed here.
 protocol ViewControllers: Players {
-  
+
   // MARK: Browsing
-  
+
   /// The currently shown feed.
   var feed: Feed? { get }
-  
+
   /// The currently shown entry.
   var entry: Entry? { get }
-  
+
   /// Shows this entry.
   func show(entry: Entry)
-  
+
   /// Shows this feed listing its entries.
   func show(feed: Feed)
-  
+
   // MARK: Shopping
-  
+
   /// Shows the in-app store.
   func showStore()
-  
+
   // MARK: Errors
-  
+
   /// A general error callback for errors that should be handled centrally.
   func viewController(_ viewController: UIViewController, error: Error)
-  
+
   // MARK: External, lower level API
-  
+
   /// Tries to route and open any `url`.
   func open(url: URL) -> Bool
-  
+
   /// Show the feed matching the feed `url`.
   func openFeed(url: String)
-  
+
   // MARK: UI
 
   /// An additional property to check wether the main split view controller, to
