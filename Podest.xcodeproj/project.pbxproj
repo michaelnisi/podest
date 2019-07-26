@@ -14,6 +14,7 @@
 		4C010A272101D7070006CB53 /* StoreFSM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C175AA5208AFA26003071CA /* StoreFSM.swift */; };
 		4C02C29A2247544C00C7D647 /* StoreState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C02C2992247544C00C7D647 /* StoreState.swift */; };
 		4C02C29B2247544C00C7D647 /* StoreState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C02C2992247544C00C7D647 /* StoreState.swift */; };
+		4C03FE2F22EAB96600A2C3B6 /* ReviewRequester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C03FE2E22EAB96600A2C3B6 /* ReviewRequester.swift */; };
 		4C07C97621EB0C9600ED8AB0 /* StoreLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C07C97521EB0C9600ED8AB0 /* StoreLayout.swift */; };
 		4C07C97721EB13BB00ED8AB0 /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C776B1F2084722C00A055CD /* MessageCollectionViewCell.swift */; };
 		4C07C97A21EBA69200ED8AB0 /* ArticleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C07C97821EBA69200ED8AB0 /* ArticleCollectionViewCell.swift */; };
@@ -280,6 +281,7 @@
 		4C010A1E2101D6E90006CB53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4C010A2A2101DBB00006CB53 /* FeedKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FeedKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C02C2992247544C00C7D647 /* StoreState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreState.swift; sourceTree = "<group>"; };
+		4C03FE2E22EAB96600A2C3B6 /* ReviewRequester.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewRequester.swift; sourceTree = "<group>"; };
 		4C07C97521EB0C9600ED8AB0 /* StoreLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreLayout.swift; sourceTree = "<group>"; };
 		4C07C97821EBA69200ED8AB0 /* ArticleCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCollectionViewCell.swift; sourceTree = "<group>"; };
 		4C07C97921EBA69200ED8AB0 /* ArticleCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArticleCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -683,6 +685,7 @@
 			children = (
 				4CCBF20920805C6500A7359F /* store.swift */,
 				4C175AA5208AFA26003071CA /* StoreFSM.swift */,
+				4C03FE2E22EAB96600A2C3B6 /* ReviewRequester.swift */,
 				4C02C2992247544C00C7D647 /* StoreState.swift */,
 				4C1F57A620810D850067AB7C /* ProductsViewController.swift */,
 				4C07C97521EB0C9600ED8AB0 /* StoreLayout.swift */,
@@ -1365,6 +1368,7 @@
 				4C8B375E22A0ED280004FD89 /* TwoPlusLayout.swift in Sources */,
 				4C8B374822A0ED280004FD89 /* ControlsCell.swift in Sources */,
 				4C351CD11A7F5B7F00C5C88C /* SearchResultsDataSource.swift in Sources */,
+				4C03FE2F22EAB96600A2C3B6 /* ReviewRequester.swift in Sources */,
 				4E65BB2E1F138BA500C7F1A3 /* UserSyncing.swift in Sources */,
 				4CEC436521D68BD50097FFA7 /* MessageTableViewCell.swift in Sources */,
 				4C776B212084722C00A055CD /* MessageCollectionViewCell.swift in Sources */,
