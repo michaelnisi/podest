@@ -1,4 +1,4 @@
-# Podest - Get your podcasts
+# Podest - Download fine podcasts
 
 ![Snapshots](https://troubled.pro/img/podest/se@3x.png)
 
