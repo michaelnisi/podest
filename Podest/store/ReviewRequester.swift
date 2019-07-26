@@ -41,8 +41,8 @@ class ReviewRequester {
     }
   }
   
-  /// Counting down from five for simple activity tracking.
-  private static let rateIncentiveLength = 5
+  /// Counting down to zero before requesting a rating.
+  private static let rateIncentiveLength = 6
   
   /// Countdown to trigger ratings. Set to -1 to deactivate ratings.
   private var rateIncentiveCountdown = rateIncentiveLength {

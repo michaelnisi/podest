@@ -169,11 +169,6 @@ final class StoreFSM: NSObject {
   
   // MARK: Reachability
 
-  /// Returns `true` if the App Store at `host` is reachable or else installs
-  /// a callback and returns `falls`. This method uses `Ola` for reachability
-  /// checking. Set `host` to `localhost` during testing—that should be fine.
-  /// Replacing this with a block would be better:
-  /// (
   private func isReachable() -> Bool {
     return subscriberDelegate?.reach() ?? false
   }
@@ -225,6 +220,7 @@ final class StoreFSM: NSObject {
 
     let req = SKProductsRequest(productIdentifiers: self.productIdentifiers)
     req.delegate = self
+    
     req.start()
     
     request = req
