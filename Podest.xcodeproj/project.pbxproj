@@ -15,6 +15,7 @@
 		4C02C29A2247544C00C7D647 /* StoreState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C02C2992247544C00C7D647 /* StoreState.swift */; };
 		4C02C29B2247544C00C7D647 /* StoreState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C02C2992247544C00C7D647 /* StoreState.swift */; };
 		4C03FE2F22EAB96600A2C3B6 /* ReviewRequester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C03FE2E22EAB96600A2C3B6 /* ReviewRequester.swift */; };
+		4C03FE3022EAF16A00A2C3B6 /* ReviewRequester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C03FE2E22EAB96600A2C3B6 /* ReviewRequester.swift */; };
 		4C07C97621EB0C9600ED8AB0 /* StoreLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C07C97521EB0C9600ED8AB0 /* StoreLayout.swift */; };
 		4C07C97721EB13BB00ED8AB0 /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C776B1F2084722C00A055CD /* MessageCollectionViewCell.swift */; };
 		4C07C97A21EBA69200ED8AB0 /* ArticleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C07C97821EBA69200ED8AB0 /* ArticleCollectionViewCell.swift */; };
@@ -1271,6 +1272,7 @@
 				4C72D43B22716613008F8B96 /* strings.swift in Sources */,
 				4C72D43222702B16008F8B96 /* ListOperation.swift in Sources */,
 				4C010A262101D7070006CB53 /* store.swift in Sources */,
+				4C03FE3022EAF16A00A2C3B6 /* ReviewRequester.swift in Sources */,
 				4C010A272101D7070006CB53 /* StoreFSM.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
