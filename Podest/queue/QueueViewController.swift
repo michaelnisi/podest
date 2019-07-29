@@ -42,13 +42,19 @@ final class QueueViewController: UITableViewController, Navigator {
   }
 
   // MARK: - Data Source
-
+  
+  /// The queue data source, indirectly via its spread dependencies, intializes 
+  /// a large part of a our object tree on the main queue.
   lazy var dataSource: QueueDataSource = {
     dispatchPrecondition(condition: .onQueue(.main))
-
+    
     return QueueDataSource(
-      userQueue: Podest.userQueue,
-      images: Podest.images
+      userQueue: Podest.userQueue, 
+      store: Podest.store, 
+      files: Podest.files , 
+      userLibrary: Podest.userLibrary, 
+      images: Podest.images, 
+      playback: Podest.playback
     )
   }()
 

@@ -10,6 +10,7 @@ import UIKit
 import FeedKit
 import os.log
 import BatchUpdates
+import Playback
 
 private let log = OSLog.disabled
 
@@ -69,22 +70,41 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   func invalidate() {
     dispatchPrecondition(condition: .onQueue(.main))
     reloading?.cancel()
+    played.removeAll()
 
     invalidated = true
   }
+  
+  // MARK: - Dependencies
 
-  private let userQueue: Queueing
-
-  private let images: Images
-
-
-  init(userQueue: Queueing, images: Images) {
+  let userQueue: Queueing
+  let store: Shopping
+  let files: Downloading
+  let userLibrary: Subscribing
+  let images: Images
+  let playback: Playback
+  
+  // MARK: - 
+  
+  init(
+    userQueue: Queueing, 
+    store: Shopping, 
+    files: Downloading, 
+    userLibrary: Subscribing, 
+    images: Images, 
+    playback: Playback
+  ) {
     self.userQueue = userQueue
+    self.store = store
+    self.files = files
+    self.userLibrary = userLibrary
     self.images = images
-
-    super.init()
+    self.playback = playback
   }
-
+  
+  /// Transiently keeping track of played items.
+  private var played = Set<Int>()
+  
   deinit {
     precondition(invalidated)
   }
@@ -289,7 +309,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     considering error: Error? = nil,
     completionHandler: ((Bool, Error?) -> Void)? = nil)
   {
-    guard !Podest.store.isExpired() else {
+    guard !store.isExpired() else {
       os_log("free trial expired", log: log)
       return DispatchQueue.main.async {
         completionHandler?(false, error)
@@ -307,8 +327,8 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
         os_log("preloading and removing files: %i", log: log, type: .debug, rm)
 
-        DispatchQueue.global().async {
-          Podest.files.preloadQueue(removingFiles: rm) { error in
+        DispatchQueue.global().async { [weak self] in
+          self?.files.preloadQueue(removingFiles: rm) { error in
             if let er = error {
               os_log("queue preloading error: %{public}@",
                      log: log, type: .debug, er as CVarArg)
@@ -336,7 +356,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
       os_log("updating queue", log: log, type: .debug)
 
-      Podest.userLibrary.update { newData, error in
+      userLibrary.update { newData, error in
         if let er = error {
           os_log("updating error: %{public}@", log: log, er as CVarArg)
           self.updateError = error
@@ -359,7 +379,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
     os_log("** simulating iCloud pull", log: log)
 
-    Podest.iCloud.pull { newData, error in
+    iCloud.pull { newData, error in
       if let er = error {
         os_log("** simulated iCloud pull failed: %{public}@",
                log: log, er as CVarArg)
@@ -391,7 +411,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
 }
 
-// MARK: - Configuring a Table View
+// MARK: - UITableViewDataSource
 
 extension QueueDataSource: UITableViewDataSource {
 
@@ -450,13 +470,13 @@ extension QueueDataSource: UITableViewDataSource {
       }
 
       if let imageView = cell.imageView {
-        Podest.images.cancel(displaying: imageView)
+        images.cancel(displaying: imageView)
       }
 
-      cell.layoutSubviewsBlock = { imageView in
+      cell.layoutSubviewsBlock = { [weak self] imageView in
         cell.imageView?.image = UIImage(named: "Oval")
 
-        Podest.images.loadImage(
+        self?.images.loadImage(
           representing: entry,
           into: imageView,
           options: FKImageLoadingOptions(
@@ -479,10 +499,17 @@ extension QueueDataSource: UITableViewDataSource {
       }
 
       if let pie = cell.accessoryView as? PieView {
-        if let uid = entry.enclosure?.url, Podest.playback.isUnplayed(uid: uid) {
+        if let uid = entry.enclosure?.url,
+          !played.contains(cell.tag),
+          playback.isUnplayed(uid: uid) {
           pie.percentage = 1.0
         } else {
           pie.percentage = 0
+
+          // Once marked as played, the item should not become unplayed again,
+          // while in this collection.
+
+          played.insert(cell.tag)
         }
       }
 
@@ -563,9 +590,11 @@ extension QueueDataSource {
       guard let entry = self.entry(at: indexPath) else {
         return
       }
-      self.userQueue.dequeue(entry: entry) { guids, error in
+
+      userQueue.dequeue(entry: entry) { guids, error in
         guard error == nil else {
           os_log("dequeue error: %{public}@", type: .error, error! as CVarArg)
+
           return DispatchQueue.main.async {
             completionHandler(false)
           }
@@ -576,6 +605,7 @@ extension QueueDataSource {
         }
       }
     }
+
     return handler
   }
 
@@ -614,7 +644,7 @@ extension QueueDataSource: UITableViewDataSourcePrefetching  {
     let items = imaginables(for: indexPaths)
     let size = estimateCellSize(tableView: tableView)
 
-    Podest.images.prefetchImages(for: items, at: size, quality: .medium)
+    images.prefetchImages(for: items, at: size, quality: .medium)
   }
 
   func tableView(
@@ -624,7 +654,7 @@ extension QueueDataSource: UITableViewDataSourcePrefetching  {
     let items = imaginables(for: indexPaths)
     let size = estimateCellSize(tableView: tableView)
 
-    Podest.images.cancelPrefetching(items, at: size, quality: .medium)
+    images.cancelPrefetching(items, at: size, quality: .medium)
   }
 
 }
