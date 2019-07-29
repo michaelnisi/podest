@@ -105,7 +105,7 @@ class ReviewRequester {
     
     rateIncentiveCountdown -= 1
     
-    os_log("** countdown: %i", log: log, type: .debug, rateIncentiveCountdown)
+    os_log("countdown: %i", log: log, type: .debug, rateIncentiveCountdown)
     
     guard rateIncentiveCountdown == 0 else {
       return false

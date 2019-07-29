@@ -66,7 +66,6 @@ extension StoreEvent: CustomStringConvertible {
       return "StoreEvent: cancelReview"
     }
   }
-  
 }
 
 private class DefaultPaymentQueue: Paying {}
