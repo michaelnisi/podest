@@ -65,70 +65,70 @@
     },
     {
       "file": "/Users/michael/swift/podest/Podest/app/AppDelegate.swift",
-      "line": 297,
+      "line": 281,
       "symbol": "AppDelegate.application(_:open:options:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/app/AppDelegate.swift",
-      "line": 310,
+      "line": 294,
       "symbol": "AppDelegate.application(_:performFetchWithCompletionHandler:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/app/AppDelegate.swift",
-      "line": 406,
+      "line": 390,
       "symbol": "AppDelegate.application(_:didRegisterForRemoteNotificationsWithDeviceToken:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/app/AppDelegate.swift",
-      "line": 421,
+      "line": 405,
       "symbol": "AppDelegate.application(_:didFailToRegisterForRemoteNotificationsWithError:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/app/AppDelegate.swift",
-      "line": 474,
+      "line": 458,
       "symbol": "AppDelegate.applicationWillResignActive(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/app/AppDelegate.swift",
-      "line": 484,
+      "line": 468,
       "symbol": "AppDelegate.applicationDidBecomeActive(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/app/AppDelegate.swift",
-      "line": 526,
+      "line": 510,
       "symbol": "AppDelegate.applicationDidEnterBackground(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/app/AppDelegate.swift",
-      "line": 532,
+      "line": 516,
       "symbol": "AppDelegate.applicationDidReceiveMemoryWarning(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/app/AppDelegate.swift",
-      "line": 536,
+      "line": 520,
       "symbol": "AppDelegate.applicationWillTerminate(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/app/AppDelegate.swift",
-      "line": 548,
+      "line": 532,
       "symbol": "AppDelegate.library(_:changed:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -429,42 +429,42 @@
     },
     {
       "file": "/Users/michael/swift/podest/Podest/episode/EpisodeViewController.swift",
-      "line": 365,
+      "line": 369,
       "symbol": "EpisodeViewController.resignFirstResponder()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/episode/EpisodeViewController.swift",
-      "line": 481,
+      "line": 485,
       "symbol": "EpisodeViewController.onPlay(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/episode/EpisodeViewController.swift",
-      "line": 493,
+      "line": 497,
       "symbol": "EpisodeViewController.onRemove(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/episode/EpisodeViewController.swift",
-      "line": 502,
+      "line": 506,
       "symbol": "EpisodeViewController.onAdd(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/episode/EpisodeViewController.swift",
-      "line": 536,
+      "line": 540,
       "symbol": "EpisodeViewController.onMore(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/episode/EpisodeViewController.swift",
-      "line": 570,
+      "line": 576,
       "symbol": "EpisodeViewController.textView(_:shouldInteractWith:in:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -555,35 +555,35 @@
     },
     {
       "file": "/Users/michael/swift/podest/Podest/files/FileRepository.swift",
-      "line": 136,
+      "line": 138,
       "symbol": "FileRepository.MobileData",
       "symbol_kind": "source.lang.swift.decl.enum",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/files/FileRepository.swift",
-      "line": 137,
+      "line": 139,
       "symbol": "FileRepository.MobileData.unknown",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/files/FileRepository.swift",
-      "line": 138,
+      "line": 140,
       "symbol": "FileRepository.MobileData.off",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/files/FileRepository.swift",
-      "line": 139,
+      "line": 141,
       "symbol": "FileRepository.MobileData.noStreaming",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/files/FileRepository.swift",
-      "line": 140,
+      "line": 142,
       "symbol": "FileRepository.MobileData.noDownloading",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
@@ -926,35 +926,35 @@
     },
     {
       "file": "/Users/michael/swift/podest/Podest/list/ListDataSource.swift",
-      "line": 153,
+      "line": 172,
       "symbol": "ListDataSource.numberOfSections(in:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/list/ListDataSource.swift",
-      "line": 157,
+      "line": 176,
       "symbol": "ListDataSource.tableView(_:numberOfRowsInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/list/ListDataSource.swift",
-      "line": 161,
+      "line": 180,
       "symbol": "ListDataSource.tableView(_:cellForRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/list/ListDataSource.swift",
-      "line": 249,
+      "line": 270,
       "symbol": "ListDataSource.isMessage",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/list/ListDataSource.swift",
-      "line": 263,
+      "line": 283,
       "symbol": "ListDataSource.entry(at:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -983,7 +983,7 @@
     {
       "file": "/Users/michael/swift/podest/Podest/list/ListOperation.swift",
       "line": 22,
-      "symbol": "ListOperation.isCompact",
+      "symbol": "ListOperation.withoutImage",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
@@ -1108,6 +1108,13 @@
     },
     {
       "file": "/Users/michael/swift/podest/Podest/list/ListViewController.swift",
+      "line": null,
+      "symbol": "ListViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/list/ListViewController.swift",
       "line": 16,
       "symbol": "ListViewController",
       "symbol_kind": "source.lang.swift.decl.class",
@@ -1115,84 +1122,84 @@
     },
     {
       "file": "/Users/michael/swift/podest/Podest/list/ListViewController.swift",
-      "line": 192,
+      "line": 200,
       "symbol": "ListViewController.viewDidLoad()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/list/ListViewController.swift",
-      "line": 210,
+      "line": 218,
       "symbol": "ListViewController.viewWillAppear(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/list/ListViewController.swift",
-      "line": 221,
+      "line": 228,
       "symbol": "ListViewController.viewWillDisappear(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/list/ListViewController.swift",
-      "line": 239,
+      "line": 241,
       "symbol": "ListViewController.viewLayoutMarginsDidChange()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/list/ListViewController.swift",
-      "line": 250,
-      "symbol": "ListViewController.traitCollectionDidChange(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/list/ListViewController.swift",
-      "line": 280,
-      "symbol": "ListViewController.encodeRestorableState(with:)",
+      "line": 264,
+      "symbol": "ListViewController.viewWillLayoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/list/ListViewController.swift",
       "line": 286,
+      "symbol": "ListViewController.encodeRestorableState(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/list/ListViewController.swift",
+      "line": 292,
       "symbol": "ListViewController.decodeRestorableState(with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/list/ListViewController.swift",
-      "line": 302,
+      "line": 307,
       "symbol": "ListViewController.refreshControlValueChanged(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/list/ListViewController.swift",
-      "line": 323,
+      "line": 328,
       "symbol": "ListViewController.scrollViewWillBeginDragging(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/list/ListViewController.swift",
-      "line": 327,
+      "line": 332,
       "symbol": "ListViewController.scrollViewDidEndDragging(_:willDecelerate:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/list/ListViewController.swift",
-      "line": 373,
+      "line": 377,
       "symbol": "ListViewController.tableView(_:willSelectRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/list/ListViewController.swift",
-      "line": 384,
+      "line": 388,
       "symbol": "ListViewController.tableView(_:didSelectRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -1220,126 +1227,140 @@
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
-      "line": 61,
+      "line": 23,
+      "symbol": "MiniPlayerController.isForwardable",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
+      "line": 24,
+      "symbol": "MiniPlayerController.isBackwardable",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
+      "line": 67,
       "symbol": "MiniPlayerController.locator",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
-      "line": 109,
+      "line": 115,
       "symbol": "MiniPlayerController.isPlaying",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
-      "line": 118,
+      "line": 124,
       "symbol": "MiniPlayerController.encodeRestorableState(with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
-      "line": 134,
+      "line": 140,
       "symbol": "MiniPlayerController.decodeRestorableState(with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
-      "line": 145,
+      "line": 151,
       "symbol": "MiniPlayerController.swipe",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
-      "line": 149,
+      "line": 155,
       "symbol": "MiniPlayerController.titleLabel",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
-      "line": 151,
+      "line": 157,
       "symbol": "MiniPlayerController.hero",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
-      "line": 153,
+      "line": 159,
       "symbol": "MiniPlayerController.playSwitch",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
-      "line": 155,
-      "symbol": "MiniPlayerController.matte",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
-      "line": 157,
+      "line": 164,
       "symbol": "MiniPlayerController.onPlaySwitchValueChanged(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
-      "line": 169,
-      "symbol": "MiniPlayerController.blurEffectView",
+      "line": 176,
+      "symbol": "MiniPlayerController.fx",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
-      "line": 183,
+      "line": 214,
       "symbol": "MiniPlayerController.viewDidLoad()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
-      "line": 210,
+      "line": 241,
       "symbol": "MiniPlayerController.viewDidAppear(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
-      "line": 225,
+      "line": 258,
       "symbol": "MiniPlayerController.viewWillLayoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
-      "line": 246,
-      "symbol": "MiniPlayerController.traitCollectionDidChange(_:)",
+      "line": 289,
+      "symbol": "MiniPlayerController.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
-      "line": 273,
+      "line": 301,
+      "symbol": "MiniPlayerController.gestureRecognizer(_:shouldBeRequiredToFailBy:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
+      "line": 337,
       "symbol": "MiniPlayerController.onTouchDown(sender:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
-      "line": 327,
+      "line": 388,
       "symbol": "MiniPlayerController.onSwipe(sender:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/MiniPlayerController.swift",
-      "line": 357,
+      "line": 417,
       "symbol": "MiniPlayerController.onEdgePan(sender:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -1381,303 +1402,1367 @@
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/PlaySwitch.swift",
-      "line": 74,
+      "line": 69,
       "symbol": "PlaySwitch.beginTracking(_:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/PlaySwitch.swift",
-      "line": 92,
+      "line": 87,
       "symbol": "PlaySwitch.endTracking(_:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/PlaySwitch.swift",
-      "line": 100,
+      "line": 98,
       "symbol": "PlaySwitch.continueTracking(_:with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/PlaySwitch.swift",
-      "line": 113,
+      "line": 115,
       "symbol": "PlaySwitch.cancelTracking(with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/PlaySwitch.swift",
-      "line": 145,
+      "line": 154,
       "symbol": "PlaySwitch.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/PlaySwitch.swift",
-      "line": 150,
+      "line": 159,
       "symbol": "PlaySwitch.init(frame:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/PlaybackControlDelegate.swift",
+      "line": 15,
+      "symbol": "PlaybackResponding.playing(entry:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/PlaybackControlDelegate.swift",
       "line": 16,
+      "symbol": "PlaybackResponding.pausing(entry:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/PlaybackControlDelegate.swift",
+      "line": 17,
+      "symbol": "PlaybackResponding.dismiss()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/PlaybackControlDelegate.swift",
+      "line": 24,
       "symbol": "PlaybackControlDelegate.entry",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/PlaybackControlDelegate.swift",
-      "line": 17,
+      "line": 25,
       "symbol": "PlaybackControlDelegate.isPlaying",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/PlaybackControlDelegate.swift",
-      "line": 19,
-      "symbol": "PlaybackControlDelegate.playing(entry:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/player/PlaybackControlDelegate.swift",
-      "line": 20,
-      "symbol": "PlaybackControlDelegate.pausing(entry:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/player/PlaybackControlDelegate.swift",
-      "line": 21,
-      "symbol": "PlaybackControlDelegate.dismiss()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "line": 27,
+      "symbol": "PlaybackControlDelegate.isForwardable",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/PlaybackControlDelegate.swift",
       "line": 28,
+      "symbol": "PlaybackControlDelegate.isBackwardable",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/PlaybackControlDelegate.swift",
+      "line": 34,
       "symbol": "PlaybackControlDelegate.playing(entry:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/PlaybackControlDelegate.swift",
-      "line": 35,
+      "line": 41,
       "symbol": "PlaybackControlDelegate.pausing(entry:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/player/PlaybackControlDelegate.swift",
-      "line": 42,
+      "line": 48,
       "symbol": "PlaybackControlDelegate.dismiss()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": null,
-      "symbol": "PlayerViewController",
-      "symbol_kind": "source.lang.swift.decl.extension",
+      "file": "/Users/michael/swift/podest/Podest/player/PlayerMessage.swift",
+      "line": 16,
+      "symbol": "PlayerMessage.makeMessage(entry:error:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 32,
-      "symbol": "SomePlayerViewController.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 44,
-      "symbol": "SomePlayerViewController.gestureRecognizer(_:shouldBeRequiredToFailBy:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 53,
-      "symbol": "PlayerViewController",
+      "file": "/Users/michael/swift/podest/Podest/player/TopLine.swift",
+      "line": 12,
+      "symbol": "TopLineLayer",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 58,
-      "symbol": "PlayerViewController.doneButton",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "file": "/Users/michael/swift/podest/Podest/player/TopLine.swift",
+      "line": 14,
+      "symbol": "TopLineLayer.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 59,
-      "symbol": "PlayerViewController.heroImage",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "file": "/Users/michael/swift/podest/Podest/player/TopLine.swift",
+      "line": 18,
+      "symbol": "TopLineLayer.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
+      "file": "/Users/michael/swift/podest/Podest/player/TopLine.swift",
+      "line": 22,
+      "symbol": "TopLineLayer.init(layer:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/TopLine.swift",
+      "line": 26,
+      "symbol": "TopLineLayer.needsDisplay(forKey:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/TopLine.swift",
+      "line": 34,
+      "symbol": "TopLineLayer.draw(in:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/TopLine.swift",
+      "line": 50,
+      "symbol": "TopLineView",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/TopLine.swift",
+      "line": 52,
+      "symbol": "TopLineView.layerClass",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/TopLine.swift",
+      "line": 56,
+      "symbol": "TopLineView.draw(_:in:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/TopLine.swift",
       "line": 60,
-      "symbol": "PlayerViewController.titleButton",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 61,
-      "symbol": "PlayerViewController.subtitleLabel",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 62,
-      "symbol": "PlayerViewController.playSwitch",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 63,
-      "symbol": "PlayerViewController.backwardButton",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 64,
-      "symbol": "PlayerViewController.forwardButton",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 65,
-      "symbol": "PlayerViewController.episode",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 66,
-      "symbol": "PlayerViewController.container",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 70,
-      "symbol": "PlayerViewController.doneTouchUpInside(_:)",
+      "symbol": "TopLineView.layoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 74,
-      "symbol": "PlayerViewController.playSwitchValueChanged(_:)",
+      "file": "/Users/michael/swift/podest/Podest/player/integration.swift",
+      "line": 29,
+      "symbol": "RootViewController.isMiniPlayerHidden",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/integration.swift",
+      "line": 292,
+      "symbol": "RootViewController.videoPlayer",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/integration.swift",
+      "line": 297,
+      "symbol": "RootViewController.isPresentingVideo",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/integration.swift",
+      "line": 350,
+      "symbol": "AVPlayerViewController.prefersStatusBarHidden",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/integration.swift",
+      "line": 362,
+      "symbol": "RootViewController.SimplePlaybackState.entry",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/integration.swift",
+      "line": 363,
+      "symbol": "RootViewController.SimplePlaybackState.isPlaying",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/integration.swift",
+      "line": 400,
+      "symbol": "RootViewController.isPresentingNowPlaying",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/stubs.swift",
+      "line": 24,
+      "symbol": "PlayerV2ViewController.entry",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/stubs.swift",
+      "line": 34,
+      "symbol": "PlayerV2ViewController.isPlaying",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/stubs.swift",
+      "line": 43,
+      "symbol": "PlayerV2ViewController.isForwardable",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/stubs.swift",
+      "line": 52,
+      "symbol": "PlayerV2ViewController.isBackwardable",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerDismissalAnimator.swift",
+      "line": null,
+      "symbol": "PlayerDismissalAnimator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerDismissalAnimator.swift",
+      "line": 12,
+      "symbol": "PlayerDismissalAnimator",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerDismissalAnimator.swift",
+      "line": 16,
+      "symbol": "PlayerDismissalAnimator.transitionDuration(using:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerDismissalAnimator.swift",
+      "line": 41,
+      "symbol": "PlayerDismissalAnimator.animateTransition(using:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerDismissalAnimator.swift",
+      "line": 122,
+      "symbol": "PlayerDismissalAnimator.animationEnded(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerPresentationAnimator.swift",
+      "line": null,
+      "symbol": "PlayerPresentationAnimator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerPresentationAnimator.swift",
+      "line": 12,
+      "symbol": "PlayerPresentationAnimator",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerPresentationAnimator.swift",
+      "line": 16,
+      "symbol": "PlayerPresentationAnimator.transitionDuration(using:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerPresentationAnimator.swift",
+      "line": 36,
+      "symbol": "PlayerPresentationAnimator.animateTransition(using:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerPresentationAnimator.swift",
+      "line": 125,
+      "symbol": "PlayerPresentationAnimator.animationEnded(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerTransitionDelegate.swift",
+      "line": null,
+      "symbol": "PlayerTransitionDelegate",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerTransitionDelegate.swift",
+      "line": 16,
+      "symbol": "HeroProviding.hero",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerTransitionDelegate.swift",
+      "line": 35,
+      "symbol": "PlayerAnimator.duration",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerTransitionDelegate.swift",
+      "line": 36,
+      "symbol": "PlayerAnimator.log",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerTransitionDelegate.swift",
+      "line": 38,
+      "symbol": "PlayerAnimator.init(duration:log:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerTransitionDelegate.swift",
+      "line": 84,
+      "symbol": "PlayerAnimator.Orientation",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerTransitionDelegate.swift",
+      "line": 85,
+      "symbol": "PlayerAnimator.Orientation.horizontal",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerTransitionDelegate.swift",
+      "line": 85,
+      "symbol": "PlayerAnimator.Orientation.vertical",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerTransitionDelegate.swift",
       "line": 87,
-      "symbol": "PlayerViewController.backwardTouchUpInside(_:)",
+      "symbol": "PlayerAnimator.Orientation.init(traitCollection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 91,
-      "symbol": "PlayerViewController.forwardTouchUpInside(_:)",
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerTransitionDelegate.swift",
+      "line": 94,
+      "symbol": "PlayerAnimator.makeOffset(orientation:distance:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerTransitionDelegate.swift",
+      "line": 102,
+      "symbol": "PlayerAnimator.makeSquareBounds(view:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerTransitionDelegate.swift",
+      "line": 113,
+      "symbol": "PlayerTransitionDelegate",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerTransitionDelegate.swift",
+      "line": 117,
+      "symbol": "PlayerTransitionDelegate.presentationController(forPresented:presenting:source:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 95,
-      "symbol": "PlayerViewController.titleTouchUpInside(_:)",
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerTransitionDelegate.swift",
+      "line": 131,
+      "symbol": "PlayerTransitionDelegate.animationController(forPresented:presenting:source:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 162,
-      "symbol": "PlayerViewController.entry",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 178,
-      "symbol": "PlayerViewController.isPlaying",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 184,
-      "symbol": "PlayerViewController.isBackwardable",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 190,
-      "symbol": "PlayerViewController.isForwardable",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 202,
-      "symbol": "PlayerViewController.swipeRight",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 203,
-      "symbol": "PlayerViewController.swipeDown",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 205,
-      "symbol": "PlayerViewController.onSwipe(sender:)",
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerTransitionDelegate.swift",
+      "line": 139,
+      "symbol": "PlayerTransitionDelegate.animationController(forDismissed:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 220,
-      "symbol": "PlayerViewController.deinit",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": null,
+      "symbol": "PlayerV1ViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 232,
-      "symbol": "PlayerViewController.viewDidLoad()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": null,
+      "symbol": "PlayerV1ViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 250,
-      "symbol": "PlayerViewController.viewWillAppear(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 15,
+      "symbol": "PlayerV1ViewController",
+      "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/michael/swift/podest/Podest/player/PlayerViewController.swift",
-      "line": 261,
-      "symbol": "PlayerViewController.hero",
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 19,
+      "symbol": "PlayerV1ViewController.doneButton",
       "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 20,
+      "symbol": "PlayerV1ViewController.heroImage",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 21,
+      "symbol": "PlayerV1ViewController.titleButton",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 22,
+      "symbol": "PlayerV1ViewController.subtitleLabel",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 23,
+      "symbol": "PlayerV1ViewController.playSwitch",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 24,
+      "symbol": "PlayerV1ViewController.backwardButton",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 25,
+      "symbol": "PlayerV1ViewController.forwardButton",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 26,
+      "symbol": "PlayerV1ViewController.episode",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 27,
+      "symbol": "PlayerV1ViewController.container",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 31,
+      "symbol": "PlayerV1ViewController.doneTouchUpInside(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 35,
+      "symbol": "PlayerV1ViewController.playSwitchValueChanged(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 48,
+      "symbol": "PlayerV1ViewController.backwardTouchUpInside(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 52,
+      "symbol": "PlayerV1ViewController.forwardTouchUpInside(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 56,
+      "symbol": "PlayerV1ViewController.titleTouchUpInside(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 123,
+      "symbol": "PlayerV1ViewController.entry",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 139,
+      "symbol": "PlayerV1ViewController.isPlaying",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 145,
+      "symbol": "PlayerV1ViewController.isBackwardable",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 151,
+      "symbol": "PlayerV1ViewController.isForwardable",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 163,
+      "symbol": "PlayerV1ViewController.swipeRight",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 164,
+      "symbol": "PlayerV1ViewController.swipeDown",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 166,
+      "symbol": "PlayerV1ViewController.onSwipe(sender:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 181,
+      "symbol": "PlayerV1ViewController.deinit",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 193,
+      "symbol": "PlayerV1ViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 211,
+      "symbol": "PlayerV1ViewController.viewWillAppear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 228,
+      "symbol": "PlayerV1ViewController.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 240,
+      "symbol": "PlayerV1ViewController.gestureRecognizer(_:shouldBeRequiredToFailBy:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v1/PlayerV1ViewController.swift",
+      "line": 252,
+      "symbol": "PlayerV1ViewController.hero",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Chapters/ChapterCell.swift",
+      "line": 11,
+      "symbol": "ChapterCell",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Chapters/ChapterCell.swift",
+      "line": 13,
+      "symbol": "ChapterCell.titleLabel",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Chapters/ChapterCell.swift",
+      "line": 15,
+      "symbol": "ChapterCell.awakeFromNib()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Chapters/ChaptersDataSource.swift",
+      "line": null,
+      "symbol": "ChaptersDataSource",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Chapters/ChaptersDataSource.swift",
+      "line": null,
+      "symbol": "ChaptersDataSource",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Chapters/ChaptersDataSource.swift",
+      "line": 11,
+      "symbol": "ChaptersDataSource",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Chapters/ChaptersDataSource.swift",
+      "line": 13,
+      "symbol": "ChaptersDataSource.Item",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Chapters/ChaptersDataSource.swift",
+      "line": 14,
+      "symbol": "ChaptersDataSource.sections",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Chapters/ChaptersDataSource.swift",
+      "line": 30,
+      "symbol": "ChaptersDataSource.registerCells(collectionView:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Chapters/ChaptersDataSource.swift",
+      "line": 40,
+      "symbol": "ChaptersDataSource.collectionView(_:numberOfItemsInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Chapters/ChaptersDataSource.swift",
+      "line": 46,
+      "symbol": "ChaptersDataSource.collectionView(_:cellForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Chapters/ChaptersViewController.swift",
+      "line": null,
+      "symbol": "ChaptersViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Chapters/ChaptersViewController.swift",
+      "line": 14,
+      "symbol": "ChaptersViewController",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Chapters/ChaptersViewController.swift",
+      "line": 16,
+      "symbol": "ChaptersViewController.dataSource",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Chapters/ChaptersViewController.swift",
+      "line": 18,
+      "symbol": "ChaptersViewController.deinit",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Chapters/ChaptersViewController.swift",
+      "line": 27,
+      "symbol": "ChaptersViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/CollectionView/CustomLayout.swift",
+      "line": 29,
+      "symbol": "CustomLayout.prepare()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/CollectionView/CustomLayout.swift",
+      "line": 33,
+      "symbol": "CustomLayout.collectionViewContentSize",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/CollectionView/CustomLayout.swift",
+      "line": 38,
+      "symbol": "CustomLayout.shouldInvalidateLayout(forBoundsChange:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/CollectionView/CustomLayout.swift",
+      "line": 43,
+      "symbol": "CustomLayout.layoutAttributesForItem(at:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/CollectionView/CustomLayout.swift",
+      "line": 72,
+      "symbol": "CustomLayout.layoutAttributesForElements(in:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/CollectionView/CustomLayout.swift",
+      "line": 99,
+      "symbol": "CustomLayout.finalLayoutAttributesForDisappearingItem(at:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/CollectionView/CustomLayout.swift",
+      "line": 104,
+      "symbol": "CustomLayout.initialLayoutAttributesForAppearingItem(at:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/CollectionView/MoreCell.swift",
+      "line": 16,
+      "symbol": "MoreCell.Kind.chapters",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/CollectionView/MoreCell.swift",
+      "line": 16,
+      "symbol": "MoreCell.Kind.queue",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/CollectionView/MoreCell.swift",
+      "line": 19,
+      "symbol": "MoreCell.type",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/CollectionView/MoreCell.swift",
+      "line": 25,
+      "symbol": "MoreCell.awakeFromNib()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/CollectionView/SingleRowLayout.swift",
+      "line": 23,
+      "symbol": "SingleRowLayout.prepare()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/CollectionView/TwoPlusLayout.swift",
+      "line": 76,
+      "symbol": "TwoPlusLayout.prepare()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/ControlsCell.swift",
+      "line": 11,
+      "symbol": "ControlsCell",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/ControlsCell.swift",
+      "line": 12,
+      "symbol": "ControlsCell.titleButton",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/ControlsCell.swift",
+      "line": 13,
+      "symbol": "ControlsCell.subtitleLabel",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/ControlsCell.swift",
+      "line": 14,
+      "symbol": "ControlsCell.trackSlider",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/ControlsCell.swift",
+      "line": 16,
+      "symbol": "ControlsCell.awakeFromNib()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/HeroCell.swift",
+      "line": 11,
+      "symbol": "HeroCell",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/HeroCell.swift",
+      "line": 13,
+      "symbol": "HeroCell.imageView",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/HeroCell.swift",
+      "line": 15,
+      "symbol": "HeroCell.awakeFromNib()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerDataSource.swift",
+      "line": null,
+      "symbol": "PlayerDataSource",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerDataSource.swift",
+      "line": null,
+      "symbol": "PlayerDataSource",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerDataSource.swift",
+      "line": 27,
+      "symbol": "PlayerDataSource",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerDataSource.swift",
+      "line": 37,
+      "symbol": "PlayerDataSource.Data",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerDataSource.swift",
+      "line": 38,
+      "symbol": "PlayerDataSource.Data.title",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerDataSource.swift",
+      "line": 39,
+      "symbol": "PlayerDataSource.Data.more",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerDataSource.swift",
+      "line": 46,
+      "symbol": "PlayerDataSource.use(data:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerDataSource.swift",
+      "line": 55,
+      "symbol": "PlayerDataSource.trackSliderChange(slider:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerDataSource.swift",
+      "line": 64,
+      "symbol": "PlayerDataSource.registerCells(collectionView:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerDataSource.swift",
+      "line": 71,
+      "symbol": "PlayerDataSource.collectionView(_:numberOfItemsInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerDataSource.swift",
+      "line": 78,
+      "symbol": "PlayerDataSource.ReplyAllDummy",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerDataSource.swift",
+      "line": 80,
+      "symbol": "PlayerDataSource.ReplyAllDummy.iTunes",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerDataSource.swift",
+      "line": 81,
+      "symbol": "PlayerDataSource.ReplyAllDummy.image",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerDataSource.swift",
+      "line": 82,
+      "symbol": "PlayerDataSource.ReplyAllDummy.title",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerDataSource.swift",
+      "line": 84,
+      "symbol": "PlayerDataSource.ReplyAllDummy.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerDataSource.swift",
+      "line": 90,
+      "symbol": "PlayerDataSource.collectionView(_:cellForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": null,
+      "symbol": "PlayerV2ViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": null,
+      "symbol": "PlayerV2ViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": null,
+      "symbol": "PlayerV2ViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": null,
+      "symbol": "PlayerV2ViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": 21,
+      "symbol": "DoneButton.doneBlock",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": 30,
+      "symbol": "DoneButton.touchUpInside()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": 38,
+      "symbol": "DoneButton.init(view:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": 59,
+      "symbol": "PlayerV2ViewController",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": 61,
+      "symbol": "PlayerV2ViewController.dataSource",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": 62,
+      "symbol": "PlayerV2ViewController.doneButton",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": 63,
+      "symbol": "PlayerV2ViewController.entryChangedBlock",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": 64,
+      "symbol": "PlayerV2ViewController.statusBarHidden",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": 66,
+      "symbol": "PlayerV2ViewController.deinit",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": 111,
+      "symbol": "PlayerV2ViewController.collectionView(_:willDisplay:forItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": 127,
+      "symbol": "PlayerV2ViewController.collectionView(_:didEndDisplaying:forItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": 145,
+      "symbol": "PlayerV2ViewController.prefersStatusBarHidden",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": 149,
+      "symbol": "PlayerV2ViewController.preferredStatusBarUpdateAnimation",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": 153,
+      "symbol": "PlayerV2ViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": 169,
+      "symbol": "PlayerV2ViewController.viewWillAppear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": 179,
+      "symbol": "PlayerV2ViewController.viewWillDisappear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": 187,
+      "symbol": "PlayerV2ViewController.viewDidDisappear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/Player/PlayerV2ViewController.swift",
+      "line": 201,
+      "symbol": "PlayerV2ViewController.nop()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/UpNext/EpisodeCell.swift",
+      "line": 11,
+      "symbol": "EpisodeCell",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/UpNext/EpisodeCell.swift",
+      "line": 13,
+      "symbol": "EpisodeCell.awakeFromNib()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/UpNext/UpNextCell.swift",
+      "line": 11,
+      "symbol": "UpNextCell",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/UpNext/UpNextCell.swift",
+      "line": 13,
+      "symbol": "UpNextCell.awakeFromNib()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/UpNext/UpNextDataSource.swift",
+      "line": null,
+      "symbol": "UpNextDataSource",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/UpNext/UpNextDataSource.swift",
+      "line": null,
+      "symbol": "UpNextDataSource",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/UpNext/UpNextDataSource.swift",
+      "line": 11,
+      "symbol": "UpNextDataSource",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/UpNext/UpNextDataSource.swift",
+      "line": 13,
+      "symbol": "UpNextDataSource.Item",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/UpNext/UpNextDataSource.swift",
+      "line": 14,
+      "symbol": "UpNextDataSource.sections",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/UpNext/UpNextDataSource.swift",
+      "line": 30,
+      "symbol": "UpNextDataSource.registerCells(collectionView:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/UpNext/UpNextDataSource.swift",
+      "line": 40,
+      "symbol": "UpNextDataSource.collectionView(_:numberOfItemsInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/UpNext/UpNextDataSource.swift",
+      "line": 46,
+      "symbol": "UpNextDataSource.collectionView(_:cellForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/UpNext/UpNextViewController.swift",
+      "line": null,
+      "symbol": "UpNextViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/UpNext/UpNextViewController.swift",
+      "line": 14,
+      "symbol": "UpNextViewController",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/UpNext/UpNextViewController.swift",
+      "line": 16,
+      "symbol": "UpNextViewController.dataSource",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/UpNext/UpNextViewController.swift",
+      "line": 18,
+      "symbol": "UpNextViewController.deinit",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/player/v2/UpNext/UpNextViewController.swift",
+      "line": 27,
+      "symbol": "UpNextViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/queue/PieView.swift",
+      "line": 16,
+      "symbol": "PieLayer.percentage",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/queue/PieView.swift",
+      "line": 22,
+      "symbol": "PieLayer.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/queue/PieView.swift",
+      "line": 27,
+      "symbol": "PieLayer.init(layer:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/queue/PieView.swift",
+      "line": 36,
+      "symbol": "PieLayer.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/queue/PieView.swift",
+      "line": 41,
+      "symbol": "PieLayer.draw(in:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/queue/PieView.swift",
+      "line": 48,
+      "symbol": "PieLayer.needsDisplay(forKey:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/queue/PieView.swift",
+      "line": 57,
+      "symbol": "PieView",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/queue/PieView.swift",
+      "line": 59,
+      "symbol": "PieView.layerClass",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/queue/PieView.swift",
+      "line": 63,
+      "symbol": "PieView.percentage",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/queue/PieView.swift",
+      "line": 68,
+      "symbol": "PieView.draw(_:in:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
@@ -1703,70 +2788,70 @@
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueDataSource.swift",
-      "line": 81,
-      "symbol": "QueueDataSource.init(userQueue:images:imageQuality:)",
+      "line": 80,
+      "symbol": "QueueDataSource.init(userQueue:images:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueDataSource.swift",
-      "line": 89,
+      "line": 87,
       "symbol": "QueueDataSource.deinit",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueDataSource.swift",
-      "line": 377,
+      "line": 374,
       "symbol": "QueueDataSource._requests",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueDataSource.swift",
-      "line": 411,
+      "line": 408,
       "symbol": "QueueDataSource.numberOfSections(in:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueDataSource.swift",
-      "line": 415,
+      "line": 412,
       "symbol": "QueueDataSource.tableView(_:numberOfRowsInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueDataSource.swift",
-      "line": 420,
+      "line": 426,
       "symbol": "QueueDataSource.tableView(_:cellForRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueDataSource.swift",
-      "line": 472,
+      "line": 504,
       "symbol": "QueueDataSource.tableView(_:canEditRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueDataSource.swift",
-      "line": 487,
+      "line": 519,
       "symbol": "QueueDataSource.entry(at:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueDataSource.swift",
-      "line": 574,
+      "line": 605,
       "symbol": "QueueDataSource.tableView(_:prefetchRowsAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueDataSource.swift",
-      "line": 584,
+      "line": 615,
       "symbol": "QueueDataSource.tableView(_:cancelPrefetchingForRowsAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -1822,455 +2907,252 @@
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueViewController.swift",
-      "line": 56,
+      "line": 55,
       "symbol": "QueueViewController.updateSelection(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueViewController.swift",
-      "line": 67,
+      "line": 66,
       "symbol": "QueueViewController.probe",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueViewController.swift",
-      "line": 77,
+      "line": 76,
       "symbol": "QueueViewController.onShowStore()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueViewController.swift",
-      "line": 81,
+      "line": 80,
       "symbol": "QueueViewController.isStoreAccessible",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueViewController.swift",
-      "line": 101,
+      "line": 100,
       "symbol": "QueueViewController.refreshControlValueChanged(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueViewController.swift",
-      "line": 125,
+      "line": 124,
       "symbol": "QueueViewController.scrollViewDidEndDragging(_:willDecelerate:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueViewController.swift",
-      "line": 148,
+      "line": 147,
       "symbol": "QueueViewController.scrollViewWillBeginDragging(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueViewController.swift",
-      "line": 181,
+      "line": 180,
       "symbol": "QueueViewController.viewDidLoad()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueViewController.swift",
-      "line": 239,
+      "line": 238,
       "symbol": "QueueViewController.viewWillAppear(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueViewController.swift",
-      "line": 251,
+      "line": 250,
       "symbol": "QueueViewController.viewDidAppear(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueViewController.swift",
-      "line": 265,
+      "line": 264,
       "symbol": "QueueViewController.viewDidDisappear(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueViewController.swift",
-      "line": 271,
+      "line": 270,
       "symbol": "QueueViewController.viewWillDisappear(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueViewController.swift",
-      "line": 284,
+      "line": 283,
       "symbol": "QueueViewController.viewLayoutMarginsDidChange()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/queue/QueueViewController.swift",
-      "line": 290,
+      "line": 289,
       "symbol": "QueueViewController.traitCollectionDidChange(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerDismissalAnimator.swift",
-      "line": null,
-      "symbol": "PlayerDismissalAnimator",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerDismissalAnimator.swift",
-      "line": 12,
-      "symbol": "PlayerDismissalAnimator",
-      "symbol_kind": "source.lang.swift.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerDismissalAnimator.swift",
-      "line": 16,
-      "symbol": "PlayerDismissalAnimator.transitionDuration(using:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerDismissalAnimator.swift",
-      "line": 41,
-      "symbol": "PlayerDismissalAnimator.animateTransition(using:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerDismissalAnimator.swift",
-      "line": 122,
-      "symbol": "PlayerDismissalAnimator.animationEnded(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerPresentationAnimator.swift",
-      "line": null,
-      "symbol": "PlayerPresentationAnimator",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerPresentationAnimator.swift",
-      "line": 12,
-      "symbol": "PlayerPresentationAnimator",
-      "symbol_kind": "source.lang.swift.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerPresentationAnimator.swift",
-      "line": 16,
-      "symbol": "PlayerPresentationAnimator.transitionDuration(using:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerPresentationAnimator.swift",
-      "line": 36,
-      "symbol": "PlayerPresentationAnimator.animateTransition(using:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerPresentationAnimator.swift",
-      "line": 125,
-      "symbol": "PlayerPresentationAnimator.animationEnded(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerTransitionDelegate.swift",
-      "line": null,
-      "symbol": "PlayerTransitionDelegate",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerTransitionDelegate.swift",
-      "line": 16,
-      "symbol": "HeroProviding.hero",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerTransitionDelegate.swift",
-      "line": 35,
-      "symbol": "PlayerAnimator.duration",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerTransitionDelegate.swift",
-      "line": 36,
-      "symbol": "PlayerAnimator.log",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerTransitionDelegate.swift",
-      "line": 38,
-      "symbol": "PlayerAnimator.init(duration:log:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerTransitionDelegate.swift",
-      "line": 86,
-      "symbol": "PlayerAnimator.Orientation",
-      "symbol_kind": "source.lang.swift.decl.enum",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerTransitionDelegate.swift",
-      "line": 87,
-      "symbol": "PlayerAnimator.Orientation.horizontal",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerTransitionDelegate.swift",
-      "line": 87,
-      "symbol": "PlayerAnimator.Orientation.vertical",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerTransitionDelegate.swift",
-      "line": 89,
-      "symbol": "PlayerAnimator.Orientation.init(traitCollection:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerTransitionDelegate.swift",
-      "line": 96,
-      "symbol": "PlayerAnimator.makeOffset(orientation:distance:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerTransitionDelegate.swift",
-      "line": 108,
-      "symbol": "PlayerTransitionDelegate",
-      "symbol_kind": "source.lang.swift.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerTransitionDelegate.swift",
-      "line": 112,
-      "symbol": "PlayerTransitionDelegate.presentationController(forPresented:presenting:source:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerTransitionDelegate.swift",
-      "line": 126,
-      "symbol": "PlayerTransitionDelegate.animationController(forPresented:presenting:source:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/PlayerTransitionDelegate.swift",
-      "line": 134,
-      "symbol": "PlayerTransitionDelegate.animationController(forDismissed:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/Players.swift",
-      "line": 27,
-      "symbol": "RootViewController.isMiniPlayerHidden",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/Players.swift",
-      "line": 263,
-      "symbol": "RootViewController.isPresentingVideo",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/Players.swift",
-      "line": 305,
-      "symbol": "AVPlayerViewController.prefersStatusBarHidden",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/Players.swift",
+      "file": "/Users/michael/swift/podest/Podest/queue/QueueViewController.swift",
       "line": 326,
-      "symbol": "RootViewController.isPresentingNowPlaying",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "symbol": "QueueViewController.dismiss()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/queue/QueueViewController.swift",
+      "line": 330,
+      "symbol": "QueueViewController.playing(entry:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/queue/QueueViewController.swift",
+      "line": 342,
+      "symbol": "QueueViewController.pausing(entry:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 25,
+      "line": 26,
       "symbol": "RootViewController.miniPlayerTop",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 26,
+      "line": 27,
       "symbol": "RootViewController.miniPlayerBottom",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 27,
+      "line": 28,
       "symbol": "RootViewController.miniPlayerLeading",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 31,
+      "line": 32,
       "symbol": "RootViewController.minivc",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 32,
-      "symbol": "RootViewController.playervc",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 37,
+      "line": 40,
       "symbol": "RootViewController.getDefaultEntry",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 73,
-      "symbol": "RootViewController.SimplePlaybackState.entry",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 74,
-      "symbol": "RootViewController.SimplePlaybackState.isPlaying",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 82,
-      "symbol": "RootViewController.playbackControlProxy",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 137,
+      "line": 79,
       "symbol": "RootViewController.viewDidLayoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 145,
+      "line": 87,
       "symbol": "RootViewController.viewDidLoad()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 175,
+      "line": 120,
       "symbol": "RootViewController.viewDidAppear(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 181,
+      "line": 126,
       "symbol": "RootViewController.encodeRestorableState(with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 188,
+      "line": 133,
       "symbol": "RootViewController.dismiss(animated:completion:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 199,
+      "line": 144,
       "symbol": "RootViewController.present(_:animated:completion:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 243,
+      "line": 195,
       "symbol": "RootViewController.resignSearch()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 569,
+      "line": 512,
       "symbol": "RootViewController.splitViewController(_:willChangeTo:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 615,
+      "line": 558,
       "symbol": "RootViewController.primaryViewController(forCollapsing:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 638,
+      "line": 587,
       "symbol": "RootViewController.splitViewController(_:collapseSecondary:onto:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 672,
+      "line": 626,
       "symbol": "RootViewController.splitViewController(_:separateSecondaryFrom:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 694,
+      "line": 656,
       "symbol": "RootViewController.splitViewController(_:show:sender:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 702,
+      "line": 664,
       "symbol": "RootViewController.splitViewController(_:showDetail:sender:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/root/RootViewController.swift",
-      "line": 715,
+      "line": 677,
       "symbol": "RootViewController.hero",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
@@ -2389,77 +3271,91 @@
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsController.swift",
-      "line": 33,
+      "line": 32,
       "symbol": "SearchResultsController",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsController.swift",
-      "line": 37,
+      "line": 36,
       "symbol": "SearchResultsController.delegate",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsController.swift",
-      "line": 55,
+      "line": 54,
       "symbol": "SearchResultsController.search(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsController.swift",
-      "line": 59,
+      "line": 58,
       "symbol": "SearchResultsController.suggest(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsController.swift",
-      "line": 63,
+      "line": 62,
       "symbol": "SearchResultsController.reset()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsController.swift",
-      "line": 73,
+      "line": 71,
       "symbol": "SearchResultsController.viewDidLoad()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsController.swift",
-      "line": 123,
+      "line": 97,
+      "symbol": "SearchResultsController.updateAdditionalSafeAreaInsets()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/search/SearchResultsController.swift",
+      "line": 102,
+      "symbol": "SearchResultsController.viewLayoutMarginsDidChange()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/search/SearchResultsController.swift",
+      "line": 159,
       "symbol": "SearchResultsController.traitCollectionDidChange(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsController.swift",
-      "line": 143,
+      "line": 178,
       "symbol": "SearchResultsController.scrollViewWillBeginDragging(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsController.swift",
-      "line": 153,
+      "line": 187,
       "symbol": "SearchResultsController.tableView(_:willSelectRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsController.swift",
-      "line": 164,
+      "line": 198,
       "symbol": "SearchResultsController.tableView(_:didSelectRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsController.swift",
-      "line": 179,
+      "line": 212,
       "symbol": "SearchResultsController.deselect(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -2480,63 +3376,63 @@
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsDataSource.swift",
-      "line": 226,
+      "line": 224,
       "symbol": "SearchResultsDataSource.suggest(term:updatesBlock:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsDataSource.swift",
-      "line": 276,
+      "line": 274,
       "symbol": "SearchResultsDataSource.search(term:updatesBlock:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsDataSource.swift",
-      "line": 319,
+      "line": 317,
       "symbol": "SearchResultsDataSource.findAt(indexPath:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsDataSource.swift",
-      "line": 351,
+      "line": 349,
       "symbol": "SearchResultsDataSource.numberOfSections(in:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsDataSource.swift",
-      "line": 355,
+      "line": 353,
       "symbol": "SearchResultsDataSource.tableView(_:numberOfRowsInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsDataSource.swift",
-      "line": 361,
+      "line": 359,
       "symbol": "SearchResultsDataSource.tableView(_:titleForHeaderInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsDataSource.swift",
-      "line": 386,
+      "line": 384,
       "symbol": "SearchResultsDataSource.tableView(_:cellForRowAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsDataSource.swift",
-      "line": 517,
+      "line": 534,
       "symbol": "SearchResultsDataSource.tableView(_:prefetchRowsAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SearchResultsDataSource.swift",
-      "line": 527,
+      "line": 544,
       "symbol": "SearchResultsDataSource.tableView(_:cancelPrefetchingForRowsAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -2550,14 +3446,14 @@
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SuggestionCell.swift",
-      "line": 13,
+      "line": 23,
       "symbol": "SuggestionCell.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/search/SuggestionCell.swift",
-      "line": 18,
+      "line": 30,
       "symbol": "SuggestionCell.layoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -2803,77 +3699,42 @@
     {
       "file": "/Users/michael/swift/podest/Podest/store/ProductsDataSource.swift",
       "line": 45,
-      "symbol": "ProductsDataSource.productsHeaderID",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/store/ProductsDataSource.swift",
-      "line": 46,
-      "symbol": "ProductsDataSource.productsFooterID",
-      "symbol_kind": "source.lang.swift.decl.var.static",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/store/ProductsDataSource.swift",
-      "line": 47,
       "symbol": "ProductsDataSource.articleCellID",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/ProductsDataSource.swift",
-      "line": 72,
+      "line": 70,
       "symbol": "ProductsDataSource.priceFormatter",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/ProductsDataSource.swift",
-      "line": 136,
+      "line": 134,
       "symbol": "ProductsDataSource.collectionView(_:numberOfItemsInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/ProductsDataSource.swift",
-      "line": 143,
+      "line": 141,
       "symbol": "ProductsDataSource.storeItem(where:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/ProductsDataSource.swift",
-      "line": 147,
+      "line": 145,
       "symbol": "ProductsDataSource.collectionView(_:cellForItemAt:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/ProductsDataSource.swift",
-      "line": 237,
+      "line": 235,
       "symbol": "ProductsDataSource.cell(_:payProductMatching:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/store/ProductsHeader.swift",
-      "line": 11,
-      "symbol": "ProductsHeader",
-      "symbol_kind": "source.lang.swift.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/store/ProductsHeader.swift",
-      "line": 13,
-      "symbol": "ProductsHeader.body",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/store/ProductsHeader.swift",
-      "line": 15,
-      "symbol": "ProductsHeader.awakeFromNib()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
@@ -2913,6 +3774,13 @@
       "warning": "undocumented"
     },
     {
+      "file": "/Users/michael/swift/podest/Podest/store/ReviewRequester.swift",
+      "line": 128,
+      "symbol": "ReviewRequester.cancelReview(resetting:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Users/michael/swift/podest/Podest/store/StoreButton.swift",
       "line": 15,
       "symbol": "StoreButton.cornerRadius",
@@ -2921,70 +3789,70 @@
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/StoreFSM.swift",
-      "line": 89,
+      "line": 97,
       "symbol": "StoreFSM.unsealedKey",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/StoreFSM.swift",
-      "line": 223,
+      "line": 253,
       "symbol": "StoreFSM.removeReceipts(forcing:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/StoreFSM.swift",
-      "line": 267,
+      "line": 297,
       "symbol": "StoreFSM.makeExpiration(date:period:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/StoreFSM.swift",
-      "line": 296,
+      "line": 325,
       "symbol": "StoreFSM.Period.subscription",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/StoreFSM.swift",
-      "line": 297,
+      "line": 326,
       "symbol": "StoreFSM.Period.trial",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/StoreFSM.swift",
-      "line": 298,
+      "line": 327,
       "symbol": "StoreFSM.Period.always",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/StoreFSM.swift",
-      "line": 361,
+      "line": 417,
       "symbol": "StoreFSM.state",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/StoreFSM.swift",
-      "line": 729,
+      "line": 816,
       "symbol": "StoreFSM.productsRequest(_:didReceive:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/StoreFSM.swift",
-      "line": 815,
+      "line": 901,
       "symbol": "StoreFSM.paymentQueue(_:updatedTransactions:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/StoreFSM.swift",
-      "line": 853,
+      "line": 938,
       "symbol": "StoreFSM.pause()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -3103,140 +3971,140 @@
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
-      "line": 53,
+      "line": 52,
       "symbol": "Contact.email",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
-      "line": 54,
+      "line": 53,
       "symbol": "Contact.github",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
-      "line": 55,
+      "line": 54,
       "symbol": "Contact.privacy",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
-      "line": 56,
+      "line": 55,
       "symbol": "Contact.review",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
-      "line": 61,
+      "line": 60,
       "symbol": "Paying.add(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/michael/swift/podest/Podest/store/store.swift",
+      "line": 61,
+      "symbol": "Paying.restoreCompletedTransactions()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
       "line": 62,
-      "symbol": "Paying.restoreCompletedTransactions()",
+      "symbol": "Paying.finishTransaction(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
       "line": 63,
-      "symbol": "Paying.finishTransaction(_:)",
+      "symbol": "Paying.add(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
       "line": 64,
-      "symbol": "Paying.add(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/store/store.swift",
-      "line": 65,
       "symbol": "Paying.remove(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
-      "line": 70,
+      "line": 69,
       "symbol": "Paying.add(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
-      "line": 74,
+      "line": 73,
       "symbol": "Paying.restoreCompletedTransactions()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
-      "line": 78,
+      "line": 77,
       "symbol": "Paying.finishTransaction(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
-      "line": 82,
+      "line": 81,
       "symbol": "Paying.add(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
-      "line": 86,
+      "line": 85,
       "symbol": "Paying.remove(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
-      "line": 97,
+      "line": 95,
       "symbol": "ShoppingError.invalidProduct(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
-      "line": 98,
+      "line": 96,
       "symbol": "ShoppingError.offline",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
-      "line": 99,
+      "line": 97,
       "symbol": "ShoppingError.serviceUnavailable",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
-      "line": 100,
+      "line": 98,
       "symbol": "ShoppingError.cancelled",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
-      "line": 101,
+      "line": 99,
       "symbol": "ShoppingError.failed",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/store/store.swift",
-      "line": 103,
+      "line": 101,
       "symbol": "ShoppingError.init(underlyingError:productIdentifier:restoring:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -3278,119 +4146,119 @@
     },
     {
       "file": "/Users/michael/swift/podest/Podest/strings/strings.swift",
-      "line": 88,
+      "line": 87,
       "symbol": "Summary.attributedString",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/strings/strings.swift",
-      "line": 119,
+      "line": 118,
       "symbol": "StringRepository.purge()",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/strings/strings.swift",
-      "line": 187,
+      "line": 186,
       "symbol": "StringRepository.string(from:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/strings/strings.swift",
-      "line": 199,
+      "line": 198,
       "symbol": "StringRepository.string(from:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/strings/strings.swift",
-      "line": 244,
+      "line": 243,
       "symbol": "StringRepository.feedCellSubtitles",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/strings/strings.swift",
-      "line": 252,
+      "line": 251,
       "symbol": "StringRepository.feedCellSubtitle(for:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/strings/strings.swift",
-      "line": 344,
+      "line": 343,
       "symbol": "StringRepository.emptyFeed(titled:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/strings/strings.swift",
-      "line": 363,
+      "line": 362,
       "symbol": "StringRepository.noEpisodeSelected()",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/strings/strings.swift",
-      "line": 395,
+      "line": 394,
       "symbol": "StringRepository.emptyQueue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/strings/strings.swift",
-      "line": 403,
+      "line": 402,
       "symbol": "StringRepository.loadingPodcast",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/strings/strings.swift",
-      "line": 408,
+      "line": 407,
       "symbol": "StringRepository.loadingEpisodes",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/strings/strings.swift",
-      "line": 413,
+      "line": 412,
       "symbol": "StringRepository.loadingQueue",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/strings/strings.swift",
-      "line": 418,
+      "line": 417,
       "symbol": "StringRepository.noEpisode(with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/strings/strings.swift",
-      "line": 433,
+      "line": 432,
       "symbol": "StringRepository.noResult(for:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/strings/strings.swift",
-      "line": 440,
+      "line": 439,
       "symbol": "StringRepository.serviceUnavailable",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/strings/strings.swift",
-      "line": 447,
+      "line": 446,
       "symbol": "StringRepository.offline",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/strings/strings.swift",
-      "line": 454,
+      "line": 453,
       "symbol": "StringRepository.unknown(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
@@ -3586,35 +4454,14 @@
     },
     {
       "file": "/Users/michael/swift/podest/Podest/tables/SubtitleTableViewCell.swift",
-      "line": 12,
+      "line": 11,
       "symbol": "SubtitleTableViewCell",
       "symbol_kind": "source.lang.swift.decl.class",
       "warning": "undocumented"
     },
     {
       "file": "/Users/michael/swift/podest/Podest/tables/SubtitleTableViewCell.swift",
-      "line": 14,
-      "symbol": "SubtitleTableViewCell.images",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/tables/SubtitleTableViewCell.swift",
-      "line": 29,
-      "symbol": "SubtitleTableViewCell.item",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/tables/SubtitleTableViewCell.swift",
-      "line": 42,
-      "symbol": "SubtitleTableViewCell.imageQuality",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/michael/swift/podest/Podest/tables/SubtitleTableViewCell.swift",
-      "line": 46,
+      "line": 16,
       "symbol": "SubtitleTableViewCell.layoutSubviews()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
