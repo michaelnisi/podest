@@ -46,10 +46,7 @@ final class QueueViewController: UITableViewController, Navigator {
   lazy var dataSource: QueueDataSource = {
     dispatchPrecondition(condition: .onQueue(.main))
 
-    return QueueDataSource(
-      userQueue: Podest.userQueue,
-      images: Podest.images
-    )
+    return QueueDataSource()
   }()
 
   func updateSelection(_ animated: Bool = true) {

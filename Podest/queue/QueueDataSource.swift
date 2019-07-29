@@ -73,17 +73,9 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     invalidated = true
   }
 
-  private let userQueue: Queueing
-
-  private let images: Images
-
-  init(userQueue: Queueing, images: Images) {
-    self.userQueue = userQueue
-    self.images = images
-
-    super.init()
-  }
-
+  /// Transiently keeping track of played items.
+  private var played = Set<Int>()
+  
   deinit {
     precondition(invalidated)
   }
@@ -163,7 +155,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
     os_log("reloading queue", log: log, type: .debug)
 
-    reloading = userQueue.populate(entriesBlock: { entries, error in
+    reloading = Podest.userQueue.populate(entriesBlock: { entries, error in
       os_log("accumulating reloaded entries", log: log, type: .debug)
 
       dispatchPrecondition(condition: .notOnQueue(.main))
@@ -305,7 +297,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
         os_log("preloading and removing files: %i", log: log, type: .debug, rm)
 
-        DispatchQueue.global().async {
+        DispatchQueue.global().async { 
           Podest.files.preloadQueue(removingFiles: rm) { error in
             if let er = error {
               os_log("queue preloading error: %{public}@",
@@ -356,7 +348,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     }
 
     os_log("** simulating iCloud pull", log: log)
-
+    
     Podest.iCloud.pull { newData, error in
       if let er = error {
         os_log("** simulated iCloud pull failed: %{public}@",
@@ -389,7 +381,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
 }
 
-// MARK: - Configuring a Table View
+// MARK: - UITableViewDataSource
 
 extension QueueDataSource: UITableViewDataSource {
 
@@ -449,6 +441,7 @@ extension QueueDataSource: UITableViewDataSource {
       if let imageView = cell.imageView {
         Podest.images.cancel(displaying: imageView)
       }
+      
       cell.imageView?.image = UIImage(named: "Oval")
       cell.layoutSubviewsBlock = { imageView in
         Podest.images.loadImage(
@@ -475,10 +468,17 @@ extension QueueDataSource: UITableViewDataSource {
       }
 
       if let pie = cell.accessoryView as? PieView {
-        if let uid = entry.enclosure?.url, Podest.playback.isUnplayed(uid: uid) {
+        if let uid = entry.enclosure?.url, 
+          !played.contains(cell.tag),
+          Podest.playback.isUnplayed(uid: uid) {
           pie.percentage = 1.0
         } else {
           pie.percentage = 0
+          
+          // Once marked as played, the item should not become unplayed again,
+          // while in this collection.
+          
+          played.insert(cell.tag)
         }
       }
 
@@ -559,9 +559,11 @@ extension QueueDataSource {
       guard let entry = self.entry(at: indexPath) else {
         return
       }
-      self.userQueue.dequeue(entry: entry) { guids, error in
+      
+      Podest.userQueue.dequeue(entry: entry) { guids, error in
         guard error == nil else {
           os_log("dequeue error: %{public}@", type: .error, error! as CVarArg)
+          
           return DispatchQueue.main.async {
             completionHandler(false)
           }
@@ -572,6 +574,7 @@ extension QueueDataSource {
         }
       }
     }
+    
     return handler
   }
 }
