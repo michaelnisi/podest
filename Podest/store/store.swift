@@ -45,7 +45,6 @@ struct PodestReceipt: Codable {
     self.transactionIdentifier = transactionIdentifier
     self.transactionDate = transactionDate
   }
-
 }
 
 /// Trade representative contact information.
@@ -86,7 +85,6 @@ extension Paying {
   func remove(_ observer: SKPaymentTransactionObserver) {
     SKPaymentQueue.default().remove(observer)
   }
-  
 }
 
 // MARK: - API
@@ -148,7 +146,6 @@ enum ShoppingError: Error {
       }
     }
   }
-
 }
 
 /// Get notified when accessiblity to the store changes.
@@ -166,7 +163,6 @@ protocol StoreAccessDelegate: class {
 
   /// Receives expiration updates.
   func store(_ store: Shopping, isExpired: Bool)
-
 }
 
 /// Receives shopping events.
@@ -187,14 +183,13 @@ protocol StoreDelegate: class {
 
   /// Display an error message after this callback.
   func store(_ store: Shopping, error: ShoppingError)
-  
 }
 
 /// Ask users for rating and reviews.
 protocol Rating {
 
   /// Requests user to rate the app if appropriate.
-  func requestReview()
+  func considerReview()
 
   /// Cancels previous review request, `resetting` the cycle to defer the next.
   ///
@@ -205,7 +200,6 @@ protocol Rating {
 
   /// Cancels previous review request.
   func cancelReview()
-
 }
 
 /// Checking user status.
@@ -216,7 +210,6 @@ protocol Expiring {
   ///
   /// Might modify internal state or call delegates.
   func isExpired() -> Bool
-
 }
 
 /// A set of methods to offer in-app purchases.
@@ -246,6 +239,5 @@ protocol Shopping: SKPaymentTransactionObserver, Rating, Expiring {
   
   /// Notifies the store that the App Store is reachable.
   func online()
-  
 }
 
