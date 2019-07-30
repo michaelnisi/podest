@@ -191,9 +191,23 @@ extension ListDataSource: UITableViewDataSource {
 
       cell.selectionStyle = .none
 
-      cell.images = images
-      cell.imageQuality = .high
-      cell.item = feed
+      if let imageView = cell.largeImageView {
+        Podest.images.cancel(displaying: imageView)
+      }
+      
+      cell.layoutSubviewsBlock = { imageView in
+        imageView.image = UIImage(named: "Oval")
+        
+        Podest.images.loadImage(
+          representing: feed,
+          into: imageView,
+          options: FKImageLoadingOptions(
+            fallbackImage: UIImage(named: "Oval"),
+            quality: .high,
+            isClean: true
+          )
+        )
+      }
 
       cell.textView?.attributedText = summary
 

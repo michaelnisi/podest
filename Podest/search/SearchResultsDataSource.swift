@@ -49,7 +49,7 @@ final class SearchResultsDataSource: NSObject, SectionedDataSource {
 
   /// The previous trait collection.
   var previousTraitCollection: UITraitCollection?
-  
+
 }
 
 // MARK: - Diffing Sections
@@ -346,17 +346,17 @@ extension SearchResultsDataSource: UITableViewDataSource {
       tableView.register(cell.0, forCellReuseIdentifier: cell.1)
     }
   }
-  
+
   func numberOfSections(in tableView: UITableView) -> Int {
     return sections.count
   }
-  
+
   func tableView(
     _ tableView: UITableView,
     numberOfRowsInSection section: Int) -> Int {
     return sections[section].count
   }
-  
+
   func tableView(
     _ tableView: UITableView,
     titleForHeaderInSection section: Int
@@ -381,7 +381,7 @@ extension SearchResultsDataSource: UITableViewDataSource {
       return nil
     }
   }
-  
+
   func tableView(
     _ tableView: UITableView,
     cellForRowAt indexPath: IndexPath
@@ -406,10 +406,10 @@ extension SearchResultsDataSource: UITableViewDataSource {
 
         cell.accessoryType = .none
 
-        if let imageView = cell.imageView { 
+        if let imageView = cell.imageView {
           Podest.images.cancel(displaying: imageView)
         }
-        
+
         cell.imageView?.image = nil
         cell.layoutSubviewsBlock = nil
 
@@ -429,11 +429,11 @@ extension SearchResultsDataSource: UITableViewDataSource {
         ) as! SubtitleTableViewCell
 
         cell.accessoryType = .none
-        
-        if let imageView = cell.imageView { 
+
+        if let imageView = cell.imageView {
           Podest.images.cancel(displaying: imageView)
         }
-        
+
         cell.imageView?.image = nil
         cell.layoutSubviewsBlock = nil
 
@@ -453,12 +453,14 @@ extension SearchResultsDataSource: UITableViewDataSource {
         ) as! SubtitleTableViewCell
 
         cell.accessoryType = .disclosureIndicator
-        
-        if let imageView = cell.imageView { 
+
+        if let imageView = cell.imageView {
           Podest.images.cancel(displaying: imageView)
         }
-        cell.imageView?.image = UIImage(named: "Oval")
+
         cell.layoutSubviewsBlock = { imageView in
+          cell.imageView?.image = UIImage(named: "Oval")
+
           Podest.images.loadImage(
             representing: feed,
             into: imageView,
@@ -497,19 +499,18 @@ extension SearchResultsDataSource: UITableViewDataSource {
       return cell
     }
   }
-  
 }
 
 // MARK: - Managing Data Prefetching
 
 extension SearchResultsDataSource: UITableViewDataSourcePrefetching  {
-  
+
   private func imaginables(for indexPaths: [IndexPath]) -> [Imaginable] {
     return indexPaths.compactMap { indexPath in
       guard let item = itemAt(indexPath: indexPath) else {
         return nil
       }
-      
+
       switch item {
       case .find(let find):
         switch find {
@@ -530,10 +531,10 @@ extension SearchResultsDataSource: UITableViewDataSourcePrefetching  {
   private func estimateCellSize(tableView: UITableView) -> CGSize {
     let ip = IndexPath(row: 0, section: 0)
     let tmp = !self.isEmpty ? tableView.cellForRow(at: ip) : nil
-    
+
     return tmp?.imageView?.bounds.size ?? CGSize(width: 82, height: 82)
   }
-  
+
   func tableView(
     _ tableView: UITableView,
     prefetchRowsAt indexPaths: [IndexPath]
@@ -553,5 +554,4 @@ extension SearchResultsDataSource: UITableViewDataSourcePrefetching  {
 
     Podest.images.cancelPrefetching(items, at: size, quality: .medium)
   }
-  
 }
