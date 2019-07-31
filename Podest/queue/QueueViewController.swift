@@ -48,13 +48,18 @@ final class QueueViewController: UITableViewController, Navigator {
   lazy var dataSource: QueueDataSource = {
     dispatchPrecondition(condition: .onQueue(.main))
     
+    // Explicit dependencies may be wordy but they are expressive, enabling
+    // controlled intialization in regards of timing and target thread. We want
+    // to initialize these core objects on the main thread.
+    
     return QueueDataSource(
       userQueue: Podest.userQueue, 
       store: Podest.store, 
       files: Podest.files , 
       userLibrary: Podest.userLibrary, 
       images: Podest.images, 
-      playback: Podest.playback
+      playback: Podest.playback,
+      iCloud: Podest.iCloud
     )
   }()
 

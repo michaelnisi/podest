@@ -12,7 +12,7 @@ import os.log
 import BatchUpdates
 import Playback
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "queue")
 
 /// Provides access to queue and subscription data.
 final class QueueDataSource: NSObject, SectionedDataSource {
@@ -81,6 +81,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   let userLibrary: Subscribing
   let images: Images
   let playback: Playback
+  let iCloud: UserSyncing
   
   init(
     userQueue: Queueing, 
@@ -88,14 +89,18 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     files: Downloading, 
     userLibrary: Subscribing, 
     images: Images, 
-    playback: Playback
+    playback: Playback,
+    iCloud: UserSyncing
   ) {
+    os_log("initializing queue data source", log: log, type: .info)
+    
     self.userQueue = userQueue
     self.store = store
     self.files = files
     self.userLibrary = userLibrary
     self.images = images
     self.playback = playback
+    self.iCloud = iCloud
   }
   
   /// Transiently keeping track of played items.
