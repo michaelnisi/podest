@@ -24,8 +24,6 @@ final class ListDataSource: NSObject, SectionedDataSource {
     case message(NSAttributedString)
   }
 
-  // MARK: - Properties
-
   private let browser: Browsing
   private let images: Images
   private let store: Expiring
@@ -191,14 +189,11 @@ extension ListDataSource: UITableViewDataSource {
 
       cell.selectionStyle = .none
 
-      if let imageView = cell.largeImageView {
-        Podest.images.cancel(displaying: imageView)
-      }
+      images.cancel(displaying: cell.largeImageView)
+      cell.invalidate(image: UIImage(named: "Oval"))
       
-      cell.layoutSubviewsBlock = { imageView in
-        imageView.image = UIImage(named: "Oval")
-        
-        Podest.images.loadImage(
+      cell.layoutSubviewsBlock = { [weak self] imageView in
+        self?.images.loadImage(
           representing: feed,
           into: imageView,
           options: FKImageLoadingOptions(
@@ -212,6 +207,7 @@ extension ListDataSource: UITableViewDataSource {
       cell.textView?.attributedText = summary
 
       return cell
+      
     case .entry(let entry, let subtitle):
       tableView.separatorStyle = .singleLine
 
@@ -220,14 +216,9 @@ extension ListDataSource: UITableViewDataSource {
       ) as! SubtitleTableViewCell
 
       cell.selectionStyle = .default
-      cell.backgroundColor = .white
-      
-      if let imageView = cell.imageView { 
-        Podest.images.cancel(displaying: imageView)
-      }
-      
-      cell.imageView?.image = nil
-      cell.layoutSubviewsBlock = nil
+  
+      images.cancel(displaying: cell.imageView)
+      cell.invalidate(image: nil)
 
       cell.textLabel?.font = .preferredFont(forTextStyle: .headline)
       cell.textLabel?.numberOfLines = 0
@@ -249,14 +240,9 @@ extension ListDataSource: UITableViewDataSource {
       ) as! SubtitleTableViewCell
 
       cell.selectionStyle = .none
-      cell.backgroundColor = .white
       
-      if let imageView = cell.imageView { 
-        Podest.images.cancel(displaying: imageView)
-      }
-      
-      cell.imageView?.image = nil
-      cell.layoutSubviewsBlock = nil
+      images.cancel(displaying: cell.imageView)
+      cell.invalidate(image: nil)
 
       cell.textLabel?.attributedText = nil
       cell.textLabel?.text = nil
@@ -329,5 +315,4 @@ extension ListDataSource: EntryIndexPathMapping {
 
     return nil
   }
-
 }

@@ -75,16 +75,12 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     invalidated = true
   }
   
-  // MARK: - Dependencies
-
   let userQueue: Queueing
   let store: Shopping
   let files: Downloading
   let userLibrary: Subscribing
   let images: Images
   let playback: Playback
-  
-  // MARK: - 
   
   init(
     userQueue: Queueing, 
@@ -469,13 +465,10 @@ extension QueueDataSource: UITableViewDataSource {
         cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
       }
 
-      if let imageView = cell.imageView {
-        images.cancel(displaying: imageView)
-      }
-
+      images.cancel(displaying: cell.imageView)
+      cell.invalidate(image: UIImage(named: "Oval"))
+      
       cell.layoutSubviewsBlock = { [weak self] imageView in
-        cell.imageView?.image = UIImage(named: "Oval")
-
         self?.images.loadImage(
           representing: entry,
           into: imageView,

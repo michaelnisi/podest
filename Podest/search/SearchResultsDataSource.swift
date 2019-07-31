@@ -24,12 +24,16 @@ final class SearchResultsDataSource: NSObject, SectionedDataSource {
   }
 
   private let repo: Searching
+  private let images: Images
 
   /// Creates a new search results data source.
   ///
-  /// - Parameter repo: The API to use for searching.
-  init(repo: Searching) {
+  /// - Parameters: 
+  ///   - repo: The API to use for searching.
+  ///   - images: The image repository for image loading.
+  init(repo: Searching, images: Images) {
     self.repo = repo
+    self.images = images
 
     super.init()
   }
@@ -330,7 +334,7 @@ extension SearchResultsDataSource {
 
 }
 
-// MARK: - Configuring a Table View
+// MARK: - Configuring the Table View
 
 extension SearchResultsDataSource: UITableViewDataSource {
 
@@ -406,12 +410,8 @@ extension SearchResultsDataSource: UITableViewDataSource {
 
         cell.accessoryType = .none
 
-        if let imageView = cell.imageView {
-          Podest.images.cancel(displaying: imageView)
-        }
-
-        cell.imageView?.image = nil
-        cell.layoutSubviewsBlock = nil
+        images.cancel(displaying: cell.imageView)
+        cell.invalidate(image: nil)
 
         cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .body)
         cell.textLabel?.numberOfLines = 0
@@ -430,12 +430,8 @@ extension SearchResultsDataSource: UITableViewDataSource {
 
         cell.accessoryType = .none
 
-        if let imageView = cell.imageView {
-          Podest.images.cancel(displaying: imageView)
-        }
-
-        cell.imageView?.image = nil
-        cell.layoutSubviewsBlock = nil
+        images.cancel(displaying: cell.imageView)
+        cell.invalidate(image: nil)
 
         cell.textLabel?.font = UIFont.preferredFont(forTextStyle: .body)
         cell.textLabel?.numberOfLines = 0
@@ -454,14 +450,11 @@ extension SearchResultsDataSource: UITableViewDataSource {
 
         cell.accessoryType = .disclosureIndicator
 
-        if let imageView = cell.imageView {
-          Podest.images.cancel(displaying: imageView)
-        }
+        images.cancel(displaying: cell.imageView)
+        cell.invalidate(image: UIImage(named: "Oval"))
 
-        cell.layoutSubviewsBlock = { imageView in
-          cell.imageView?.image = UIImage(named: "Oval")
-
-          Podest.images.loadImage(
+        cell.layoutSubviewsBlock = { [weak self] imageView in
+          self?.images.loadImage(
             representing: feed,
             into: imageView,
             options: FKImageLoadingOptions(
@@ -542,7 +535,7 @@ extension SearchResultsDataSource: UITableViewDataSourcePrefetching  {
     let items = imaginables(for: indexPaths)
     let size = estimateCellSize(tableView: tableView)
 
-    Podest.images.prefetchImages(for: items, at: size, quality: .medium)
+    images.prefetchImages(for: items, at: size, quality: .medium)
   }
 
   func tableView(
@@ -552,6 +545,6 @@ extension SearchResultsDataSource: UITableViewDataSourcePrefetching  {
     let items = imaginables(for: indexPaths)
     let size = estimateCellSize(tableView: tableView)
 
-    Podest.images.cancelPrefetching(items, at: size, quality: .medium)
+    images.cancelPrefetching(items, at: size, quality: .medium)
   }
 }

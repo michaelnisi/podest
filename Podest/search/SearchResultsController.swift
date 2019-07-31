@@ -31,7 +31,10 @@ protocol SearchResultsControllerDelegate: Navigator {
 
 final class SearchResultsController: UITableViewController {
 
-  private let dataSource = SearchResultsDataSource(repo: Podest.finder)
+  private let dataSource = SearchResultsDataSource(
+    repo: Podest.finder, 
+    images: Podest.images
+  )
 
   var delegate: SearchResultsControllerDelegate?
 

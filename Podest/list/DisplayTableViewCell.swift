@@ -39,4 +39,9 @@ class DisplayTableViewCell: UITableViewCell {
     
     layoutSubviewsBlock = nil
   }
+  
+  func invalidate(image: UIImage?) {
+    layoutSubviewsBlock = nil
+    largeImageView.image = image
+  }
 }
