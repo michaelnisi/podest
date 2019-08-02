@@ -24,4 +24,9 @@ final class SubtitleTableViewCell: UITableViewCell {
     
     layoutSubviewsBlock = nil
   }
+  
+  func invalidate(image: UIImage?) {
+    layoutSubviewsBlock = nil
+    imageView?.image = image
+  }
 }

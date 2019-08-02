@@ -17,10 +17,10 @@ import Ola
 final class QueueViewController: UITableViewController, Navigator {
 
   let log = OSLog(subsystem: "ink.codes.podest", category: "queue")
-  
+
   /// A state machine handling events from the search controller.
   private var searchProxy: SearchControllerProxy!
-  
+
   /// Saving the refresh control hiding animation.
   private var refreshControlTimer: DispatchSourceTimer? {
     willSet {
@@ -43,10 +43,24 @@ final class QueueViewController: UITableViewController, Navigator {
 
   // MARK: - Data Source
 
+  /// The queue data source, indirectly via its spread dependencies, intializes
+  /// a large part of a our object tree on the main queue.
   lazy var dataSource: QueueDataSource = {
     dispatchPrecondition(condition: .onQueue(.main))
 
-    return QueueDataSource()
+    // Explicit dependencies may be wordy but they are expressive, enabling
+    // controlled intialization in regards of timing and target thread. We want
+    // to initialize these core objects on the main thread.
+
+    return QueueDataSource(
+      userQueue: Podest.userQueue,
+      store: Podest.store,
+      files: Podest.files ,
+      userLibrary: Podest.userLibrary,
+      images: Podest.images,
+      playback: Podest.playback,
+      iCloud: Podest.iCloud
+    )
   }()
 
   func updateSelection(_ animated: Bool = true) {
@@ -59,7 +73,7 @@ final class QueueViewController: UITableViewController, Navigator {
   }
 
   // MARK: - Store Reachability
-  
+
   var probe: Ola? {
     willSet {
       probe?.invalidate()
@@ -69,7 +83,7 @@ final class QueueViewController: UITableViewController, Navigator {
   // MARK: - Keeping Store Access
 
   private var isStoreAccessibleChanged: Bool = false
-  
+
   @objc func onShowStore() {
     navigationDelegate?.showStore()
   }
@@ -77,13 +91,13 @@ final class QueueViewController: UITableViewController, Navigator {
   var isStoreAccessible: Bool = false {
     didSet {
       isStoreAccessibleChanged = isStoreAccessible != oldValue
-      
+
       // Disabling the button must be immediate.
-      
+
       guard isStoreAccessibleChanged, !isStoreAccessible else {
         return
       }
-      
+
       updateStoreButton()
     }
   }
@@ -100,7 +114,7 @@ extension QueueViewController {
     }
 
     refreshControlTimer = nil
-    
+
     dataSource.update(minding: 60)
   }
 
@@ -215,7 +229,7 @@ extension QueueViewController {
     guard viewIfLoaded != nil, isStoreAccessibleChanged else {
       return
     }
-    
+
     if isStoreAccessible {
       let it = UIBarButtonItem(
         title: "Free Trial",
@@ -254,7 +268,7 @@ extension QueueViewController {
     if Podest.store.isExpired() {
       os_log("free trial expired", log: log)
     }
-    
+
     super.viewDidAppear(animated)
   }
 
@@ -299,19 +313,19 @@ extension QueueViewController: EntryRowSelectable {}
 // MARK: - EntryProvider
 
 extension QueueViewController: EntryProvider {
-  
+
   /// Couple of options here, the currently selected entry, the entry in the
   /// player, the first entry in the queue, or `nil`.
   var entry: Entry? {
-    get { 
+    get {
       guard let indexPath = tableView.indexPathForSelectedRow else {
         return Podest.playback.currentEntry ??
           dataSource.entry(at: IndexPath(row: 0, section: 0))
       }
-      
+
       return dataSource.entry(at: indexPath)
-    } 
-    
+    }
+
     set {}
   }
 }
@@ -319,23 +333,23 @@ extension QueueViewController: EntryProvider {
 // MARK: - PlaybackResponding
 
 extension QueueViewController: PlaybackResponding {
-  
+
   func dismiss() {
     os_log("ignoring dismiss", log: log)
   }
-  
+
   func playing(entry: Entry) {
     os_log("playing: %s", log: log, type: .debug, entry.title)
-    
+
     guard let cell = tableView.visibleCells
-      .first(where: { $0.tag == entry.hashValue }), 
+      .first(where: { $0.tag == entry.hashValue }),
       let pie = cell.accessoryView as? PieView else {
       return
     }
-    
+
     pie.percentage = 0
   }
-  
+
   func pausing(entry: Entry) {
     os_log("pausing: %s", log: log, type: .debug, entry.title)
   }

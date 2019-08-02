@@ -10,7 +10,11 @@
 - Review CloudKit usage
 - Review traits timing
 
-## 8.3 (2019-07-25)
+## 8.4 (2019-07-31)
+
+Smoother transitions through better image caching.
+
+## 8.3 (2019-07-23)
 
 Search result image sizes have been fixed.
 

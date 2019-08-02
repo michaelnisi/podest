@@ -10,8 +10,9 @@ import UIKit
 import FeedKit
 import os.log
 import BatchUpdates
+import Playback
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "queue")
 
 /// Provides access to queue and subscription data.
 final class QueueDataSource: NSObject, SectionedDataSource {
@@ -63,19 +64,48 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     return false
   }
 
+  /// Transiently keeping track of played items.
+  private var played = Set<Int>()
+
   private var invalidated = false
 
   /// Removes all observers.
   func invalidate() {
     dispatchPrecondition(condition: .onQueue(.main))
     reloading?.cancel()
+    played.removeAll()
 
     invalidated = true
   }
 
-  /// Transiently keeping track of played items.
-  private var played = Set<Int>()
-  
+  let userQueue: Queueing
+  let store: Shopping
+  let files: Downloading
+  let userLibrary: Subscribing
+  let images: Images
+  let playback: Playback
+  let iCloud: UserSyncing
+
+  init(
+    userQueue: Queueing,
+    store: Shopping,
+    files: Downloading,
+    userLibrary: Subscribing,
+    images: Images,
+    playback: Playback,
+    iCloud: UserSyncing
+  ) {
+    os_log("initializing queue data source", log: log, type: .info)
+
+    self.userQueue = userQueue
+    self.store = store
+    self.files = files
+    self.userLibrary = userLibrary
+    self.images = images
+    self.playback = playback
+    self.iCloud = iCloud
+  }
+
   deinit {
     precondition(invalidated)
   }
@@ -279,7 +309,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     considering error: Error? = nil,
     completionHandler: ((Bool, Error?) -> Void)? = nil)
   {
-    guard !Podest.store.isExpired() else {
+    guard !store.isExpired() else {
       os_log("free trial expired", log: log)
       return DispatchQueue.main.async {
         completionHandler?(false, error)
@@ -297,8 +327,8 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
         os_log("preloading and removing files: %i", log: log, type: .debug, rm)
 
-        DispatchQueue.global().async { 
-          Podest.files.preloadQueue(removingFiles: rm) { error in
+        DispatchQueue.global().async { [weak self] in
+          self?.files.preloadQueue(removingFiles: rm) { error in
             if let er = error {
               os_log("queue preloading error: %{public}@",
                      log: log, type: .debug, er as CVarArg)
@@ -326,7 +356,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
       os_log("updating queue", log: log, type: .debug)
 
-      Podest.userLibrary.update { newData, error in
+      userLibrary.update { newData, error in
         if let er = error {
           os_log("updating error: %{public}@", log: log, er as CVarArg)
           self.updateError = error
@@ -348,8 +378,8 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     }
 
     os_log("** simulating iCloud pull", log: log)
-    
-    Podest.iCloud.pull { newData, error in
+
+    iCloud.pull { newData, error in
       if let er = error {
         os_log("** simulated iCloud pull failed: %{public}@",
                log: log, er as CVarArg)
@@ -438,13 +468,11 @@ extension QueueDataSource: UITableViewDataSource {
         cell.detailTextLabel?.numberOfLines = 0
       }
 
-      if let imageView = cell.imageView {
-        Podest.images.cancel(displaying: imageView)
-      }
-      
-      cell.imageView?.image = UIImage(named: "Oval")
-      cell.layoutSubviewsBlock = { imageView in
-        Podest.images.loadImage(
+      images.cancel(displaying: cell.imageView)
+      cell.invalidate(image: UIImage(named: "Oval"))
+
+      cell.layoutSubviewsBlock = { [weak self] imageView in
+        self?.images.loadImage(
           representing: entry,
           into: imageView,
           options: FKImageLoadingOptions(
@@ -458,8 +486,7 @@ extension QueueDataSource: UITableViewDataSource {
       cell.textLabel?.text = entry.feedTitle ?? entry.title
       cell.detailTextLabel?.text = entry.title
 
-      // Tagging cell with entry for later being able to find it again, 
-      // to update the accessory view.
+      // Tagging cell with entry, so we can find it later.
       cell.tag = entry.hashValue
 
       if cell.accessoryView == nil {
@@ -468,16 +495,16 @@ extension QueueDataSource: UITableViewDataSource {
       }
 
       if let pie = cell.accessoryView as? PieView {
-        if let uid = entry.enclosure?.url, 
+        if let uid = entry.enclosure?.url,
           !played.contains(cell.tag),
-          Podest.playback.isUnplayed(uid: uid) {
+          playback.isUnplayed(uid: uid) {
           pie.percentage = 1.0
         } else {
           pie.percentage = 0
-          
+
           // Once marked as played, the item should not become unplayed again,
           // while in this collection.
-          
+
           played.insert(cell.tag)
         }
       }
@@ -559,11 +586,11 @@ extension QueueDataSource {
       guard let entry = self.entry(at: indexPath) else {
         return
       }
-      
-      Podest.userQueue.dequeue(entry: entry) { guids, error in
+
+      userQueue.dequeue(entry: entry) { guids, error in
         guard error == nil else {
           os_log("dequeue error: %{public}@", type: .error, error! as CVarArg)
-          
+
           return DispatchQueue.main.async {
             completionHandler(false)
           }
@@ -574,7 +601,7 @@ extension QueueDataSource {
         }
       }
     }
-    
+
     return handler
   }
 }
@@ -612,7 +639,7 @@ extension QueueDataSource: UITableViewDataSourcePrefetching  {
     let items = imaginables(for: indexPaths)
     let size = estimateCellSize(tableView: tableView)
 
-    Podest.images.prefetchImages(for: items, at: size, quality: .medium)
+    images.prefetchImages(for: items, at: size, quality: .medium)
   }
 
   func tableView(
@@ -622,6 +649,6 @@ extension QueueDataSource: UITableViewDataSourcePrefetching  {
     let items = imaginables(for: indexPaths)
     let size = estimateCellSize(tableView: tableView)
 
-    Podest.images.cancelPrefetching(items, at: size, quality: .medium)
+    images.cancelPrefetching(items, at: size, quality: .medium)
   }
 }

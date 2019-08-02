@@ -1,7 +1,1 @@
-This patch fixes an annoying image glitch and brings better video playback. It might be the best version so far.
-
-Correct aspect ratio of Search Result and Queue images.
-
-Improved video playback integration, animating the mini-player when skipping between audio and video, and allowing seemless remote controlled skipping from video to video, for example, with Now Playing on Apple Watch.
-
-No more flickering of the play button in the mini-player at the bottom.
+Smoother transitions through better image caching.

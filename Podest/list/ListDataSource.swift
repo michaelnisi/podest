@@ -24,8 +24,6 @@ final class ListDataSource: NSObject, SectionedDataSource {
     case message(NSAttributedString)
   }
 
-  // MARK: - Properties
-
   private let browser: Browsing
   private let images: Images
   private let store: Expiring
@@ -191,13 +189,25 @@ extension ListDataSource: UITableViewDataSource {
 
       cell.selectionStyle = .none
 
-      cell.images = images
-      cell.imageQuality = .high
-      cell.item = feed
+      images.cancel(displaying: cell.largeImageView)
+      cell.invalidate(image: UIImage(named: "Oval"))
+
+      cell.layoutSubviewsBlock = { [weak self] imageView in
+        self?.images.loadImage(
+          representing: feed,
+          into: imageView,
+          options: FKImageLoadingOptions(
+            fallbackImage: UIImage(named: "Oval"),
+            quality: .high,
+            isClean: true
+          )
+        )
+      }
 
       cell.textView?.attributedText = summary
 
       return cell
+
     case .entry(let entry, let subtitle):
       tableView.separatorStyle = .singleLine
 
@@ -207,12 +217,8 @@ extension ListDataSource: UITableViewDataSource {
 
       cell.selectionStyle = .default
 
-      if let imageView = cell.imageView {
-        images.cancel(displaying: imageView)
-      }
-
-      cell.imageView?.image = nil
-      cell.layoutSubviewsBlock = nil
+      images.cancel(displaying: cell.imageView)
+      cell.invalidate(image: nil)
 
       cell.textLabel?.font = .preferredFont(forTextStyle: .headline)
       cell.textLabel?.numberOfLines = 0
@@ -234,12 +240,8 @@ extension ListDataSource: UITableViewDataSource {
 
       cell.selectionStyle = .none
 
-      if let imageView = cell.imageView {
-        images.cancel(displaying: imageView)
-      }
-
-      cell.imageView?.image = nil
-      cell.layoutSubviewsBlock = nil
+      images.cancel(displaying: cell.imageView)
+      cell.invalidate(image: nil)
 
       cell.textLabel?.attributedText = nil
       cell.textLabel?.text = nil
