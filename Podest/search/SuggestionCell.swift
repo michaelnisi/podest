@@ -23,6 +23,8 @@ final class SuggestionCell: UITableViewCell {
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     
+    initColors()
+    
     imageView?.image = SuggestionCell.makeLoupe()
     imageView?.tintColor = UIColor(named: "Secondary")
   }

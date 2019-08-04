@@ -8,6 +8,20 @@
 
 import UIKit
 
+extension UITableViewCell {
+  
+  /// Sets label colors working around an issue introduces with Xcode Version 
+  /// 11.0 beta 5, where IB label colors stopped adjusting to mode changes.
+  func initColors() {
+    if #available(iOS 13.0, *) {
+      textLabel?.textColor = .label
+      detailTextLabel?.textColor = .secondaryLabel
+    } else {
+      // Use colors set in IB inspector.
+    }
+  }
+}
+
 final class SubtitleTableViewCell: UITableViewCell {
   
   /// The layout block runs once after layout before it’s dismissed.
@@ -28,5 +42,11 @@ final class SubtitleTableViewCell: UITableViewCell {
   func invalidate(image: UIImage?) {
     layoutSubviewsBlock = nil
     imageView?.image = image
+  }
+    
+  required init?(coder: NSCoder) {
+    super.init(coder: coder)
+    
+    initColors()
   }
 }
