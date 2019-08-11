@@ -38,11 +38,15 @@ final class ListDataSource: NSObject, SectionedDataSource {
     self.browser = browser
     self.images = images
     self.store = store
+    
+    let queue = OperationQueue()
+    queue.qualityOfService = .userInteractive
+    self.operationQueue = queue
 
     super.init()
   }
 
-  private let operationQueue = OperationQueue()
+  private let operationQueue: OperationQueue
 
   var sections = [[Item.message(StringRepository.loadingPodcast)]]
 }

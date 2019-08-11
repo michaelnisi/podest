@@ -41,7 +41,7 @@ final class FileRepository: NSObject {
   /// An internal serial queue for synchronized access.
   private let sQueue = DispatchQueue(
     label: "ink.codes.podest.FileRepository",
-    target: .global()
+    target: .global(qos: .utility)
   )
   
   private var _fileProxy: FileProxying?
@@ -250,7 +250,7 @@ extension FileRepository: Downloading {
   }
   
   func preload(url: URL) {
-    DispatchQueue.global().async {
+    DispatchQueue.global(qos: .utility).async {
       os_log("preloading: %{public}@",
              log: log, type: .debug, url as CVarArg)
 

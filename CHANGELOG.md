@@ -10,6 +10,10 @@
 - Review CloudKit usage
 - Review traits timing
 
+## 8.5 (2019-08-12)
+
+Less memory use, more effective CPU utilization, and lighter energy impact.
+
 ## 8.4 (2019-07-31)
 
 Smoother transitions through better image caching.

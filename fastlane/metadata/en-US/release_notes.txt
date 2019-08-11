@@ -1,1 +1,1 @@
-Smoother transitions through better image caching.
+Less memory use, more effective CPU utilization, and lighter energy impact.

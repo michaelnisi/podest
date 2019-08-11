@@ -290,15 +290,15 @@ extension EpisodeViewController {
     isEnqueued = guids.contains(e.guid)
   }
 
-  /// Loads hero in suitable size. NOP if the image size hasn’t changed since the
-  /// last time the image has been loaded.
+  /// Loads hero in suitable size. NOP if the image size hasn’t changed since 
+  /// the last time the image has been loaded.
   ///
   /// Here’s the thing about these images, once we have an entry, we can assume
-  /// that we already have the image URLs, because an entry cannot exist without
+  /// that we already have the image URLs because an entry cannot exist without
   /// its parent feed, which provides the image URLs. Orphans are undefined and
   /// thus considered programming errors. To load the correct image though, we
-  /// have to know its size, depending on the layout. For example, larger size
-  /// image on iPad.
+  /// have to know its size, depending on the layout. For example, larger sizes
+  /// on iPad.
   private func loadImage() {
     guard let entry = self.entry,
       let size = avatar.image?.size,

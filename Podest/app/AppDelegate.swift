@@ -33,7 +33,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
   private var shouldRestoreState = true
   private var shouldSaveState = true
 
-  /// An object that adopts `Routing` for funnelling down app events.
+  /// An object that adopts `Routing` for event funnelling.
   ///
   /// In the current design, the root view controller.
   private var root: Routing {
@@ -56,7 +56,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 
   /// `true` while pushing to iCloud.
-  private var isPushing = false
+  private var isPushing = false { 
+    willSet {
+      dispatchPrecondition(condition: .onQueue(.main))
+    }
+  }
 }
 
 // MARK: - Interpreting Background Fetch Results
@@ -92,7 +96,6 @@ extension AppDelegate {
       return .noData
     }
   }
-
 }
 
 // MARK: - Syncing with iCloud
@@ -118,14 +121,14 @@ extension AppDelegate {
 
     isPulling = true
 
-    Podest.iCloud.pull { newData, error in
+    Podest.iCloud.pull { [weak self] newData, error in
       let result = AppDelegate.makeBackgroundFetchResult(newData, error)
 
       if case .newData = result {
         os_log("reloading queue after merge", log: log, type: .info)
 
         DispatchQueue.main.async {
-          self.root.reload { error in
+          self?.root.reload { error in
             dispatchPrecondition(condition: .onQueue(.main))
 
             if let er = error {
@@ -133,14 +136,14 @@ extension AppDelegate {
                      log: log, type: .error, er as CVarArg)
             }
 
-            self.isPulling = false
+            self?.isPulling = false
 
             completionBlock?(result)
           }
         }
       } else {
         DispatchQueue.main.async {
-          self.isPulling = false
+          self?.isPulling = false
 
           completionBlock?(result)
         }
@@ -173,7 +176,6 @@ extension AppDelegate {
       completionBlock?()
     }
   }
-
 }
 
 // MARK: - Initializing the App
@@ -237,7 +239,6 @@ extension AppDelegate {
       fatalError("unknown case in switch: \(application.applicationState)")
     }
   }
-
 }
 
 // MARK: - Managing App State Restoration
@@ -255,7 +256,6 @@ extension AppDelegate {
     shouldSaveApplicationState coder: NSCoder) -> Bool {
     return shouldSaveState
   }
-
 }
 
 // MARK: - Managing Interface Geometry
@@ -284,7 +284,6 @@ extension AppDelegate {
     options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
     return root.open(url: url)
   }
-
 }
 
 // MARK: - Downloading Data in the Background
@@ -380,7 +379,6 @@ extension AppDelegate {
       completionHandler(.failed)
     }
   }
-
 }
 
 // MARK: - Handling Remote Notification Registration
@@ -396,9 +394,9 @@ extension AppDelegate {
 
     let nc = NotificationCenter.default
 
-    nc.addObserver(forName: .CKAccountChanged, object: nil, queue: .main) { _ in
+    nc.addObserver(forName: .CKAccountChanged, object: nil, queue: .main) { [weak self] _ in
       Podest.iCloud.resetAccountStatus()
-      self.pull()
+      self?.pull()
     }
   }
 
@@ -409,7 +407,6 @@ extension AppDelegate {
     os_log("failed to register: %{public}@",
            log: log, type: .error, error as CVarArg)
   }
-
 }
 
 // MARK: - Responding to App State Changes and System Events
@@ -475,15 +472,15 @@ extension AppDelegate {
     }
 
     func updateQueue(considering syncError: Error? = nil) -> Void {
-      DispatchQueue.main.async {
-        self.root.update(considering: syncError) { _, error in
+      DispatchQueue.main.async { [weak self] in
+        self?.root.update(considering: syncError) { _, error in
           if let er = error {
             os_log("updating queue produced error: %{public}@",
                    log: log, er as CVarArg)
           }
 
-          self.install(application)
-          self.isPulling = false
+          self?.install(application)
+          self?.isPulling = false
         }
       }
     }
@@ -522,7 +519,6 @@ extension AppDelegate {
     flush()
     closeFiles()
   }
-
 }
 
 /// Handling Library Changes
@@ -536,7 +532,6 @@ extension AppDelegate: LibraryDelegate {
       self?.push()
     }
   }
-
 }
 
 /// Handling Queue Changes
@@ -557,7 +552,7 @@ extension AppDelegate: QueueDelegate {
       os_log("missing enclosure: %{public}@", log: log, type: .error, enqueued)
       return
     }
-
+    
     Podest.files.preload(url: url)
   }
 
@@ -569,5 +564,4 @@ extension AppDelegate: QueueDelegate {
 
     Podest.files.cancel(url: url)
   }
-
 }

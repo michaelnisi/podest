@@ -505,7 +505,7 @@ public class UserClient {
   /// An internal serial queue, mainly to serialize access.
   private let sQueue = DispatchQueue(
     label: "ink.codes.podest.UserClient", 
-    target: .global()
+    target: .global(qos: .userInitiated)
   )
   
   private var _accountStatus: CKAccountStatus?
