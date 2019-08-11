@@ -1,3 +1,7 @@
+## 8.5 (planned)
+
+Lighter energy impact, less memory use, and more effective CPU usage.
+
 ## 8.4 (2019-07-31)
 
 Smoother transitions through better image caching.
