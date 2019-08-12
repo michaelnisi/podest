@@ -16,7 +16,7 @@ import Ola
 /// the global search.
 final class QueueViewController: UITableViewController, Navigator {
 
-  let log = OSLog(subsystem: "ink.codes.podest", category: "queue")
+  let log = OSLog.disabled
   
   /// A state machine handling events from the search controller.
   private var searchProxy: SearchControllerProxy!
@@ -52,7 +52,7 @@ final class QueueViewController: UITableViewController, Navigator {
     // controlled intialization in regards of timing and target thread. We want
     // to initialize these core objects on the main thread.
     
-    return QueueDataSource(
+    let ds = QueueDataSource(
       userQueue: Podest.userQueue, 
       store: Podest.store, 
       files: Podest.files , 
@@ -61,6 +61,14 @@ final class QueueViewController: UITableViewController, Navigator {
       playback: Podest.playback,
       iCloud: Podest.iCloud
     )
+    
+    ds.entriesBlock = { [weak self] entries in
+      dispatchPrecondition(condition: .onQueue(.main))
+      Podest.images.preloadImages(
+        representing: entries, at: CGSize(width: 600, height: 600))
+    }
+    
+    return ds
   }()
 
   func updateSelection(_ animated: Bool = true) {

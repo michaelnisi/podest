@@ -27,7 +27,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   /// An internal serial queue for synchronized access.
   private var sQueue = DispatchQueue(
     label: "ink.codes.podest.QueueDataSource-\(UUID().uuidString)",
-    target: .global()
+    target: .global(qos: .userInteractive)
   )
 
   private var _sections: [Array<Item>] = [
@@ -159,6 +159,9 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
     return changes
   }
+  
+  /// This block receives the currently enqueued entries with each change.
+  var entriesBlock: (([Entry]) -> Void)?
 
   private weak var reloading: Operation?
 
@@ -184,8 +187,8 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     var acc = [Item]()
 
     os_log("reloading queue", log: log, type: .debug)
-
-    reloading = userQueue.populate(entriesBlock: { entries, error in
+    
+    reloading = userQueue.populate(entriesBlock: { [weak self] entries, error in
       os_log("accumulating reloaded entries", log: log, type: .debug)
 
       dispatchPrecondition(condition: .notOnQueue(.main))
@@ -201,6 +204,10 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
       for entry in entries {
         acc.append(.entry(entry))
+      }
+      
+      DispatchQueue.main.async {
+        self?.entriesBlock?(entries)
       }
     }) { error in
       os_log("queue reloading complete", log: log, type: .debug)
@@ -328,7 +335,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
         os_log("preloading and removing files: %i", log: log, type: .debug, rm)
 
-        DispatchQueue.global().async { [weak self] in
+        DispatchQueue.global(qos: .utility).async { [weak self] in
           self?.files.preloadQueue(removingFiles: rm) { error in
             if let er = error {
               os_log("queue preloading error: %{public}@",
@@ -445,6 +452,29 @@ extension QueueDataSource: UITableViewDataSource {
 
     return view
   }
+  
+  /// Loads image into `cell` if cell is not already configured to load said
+  /// image.
+  private func prepareImage(cell: SubtitleTableViewCell, displaying entry: Entry) {
+    guard cell.tag != entry.hashValue else {
+      return os_log("** already loading", log: log, type: .debug)
+    }
+    
+    images.cancel(displaying: cell.imageView)
+    cell.invalidate(image: UIImage(named: "Oval"))
+    
+    cell.layoutSubviewsBlock = { [weak self] imageView in
+      self?.images.loadImage(
+        representing: entry,
+        into: imageView,
+        options: FKImageLoadingOptions(
+          fallbackImage: UIImage(named: "Oval"),
+          quality: .medium,
+          isDirect: true
+        )
+      )
+    }        
+  }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath
   ) -> UITableViewCell {
@@ -469,21 +499,8 @@ extension QueueDataSource: UITableViewDataSource {
         cell.detailTextLabel?.numberOfLines = 0
         cell.detailTextLabel?.textColor = UIColor(named: "Asphalt")
       }
-
-      images.cancel(displaying: cell.imageView)
-      cell.invalidate(image: UIImage(named: "Oval"))
       
-      cell.layoutSubviewsBlock = { [weak self] imageView in
-        self?.images.loadImage(
-          representing: entry,
-          into: imageView,
-          options: FKImageLoadingOptions(
-            fallbackImage: UIImage(named: "Oval"),
-            quality: .medium,
-            isDirect: true
-          )
-        )
-      }
+      prepareImage(cell: cell, displaying: entry)
 
       cell.textLabel?.text = entry.feedTitle ?? entry.title
       cell.detailTextLabel?.text = entry.title
@@ -642,7 +659,7 @@ extension QueueDataSource: UITableViewDataSourcePrefetching  {
     let items = imaginables(for: indexPaths)
     let size = estimateCellSize(tableView: tableView)
 
-    images.prefetchImages(for: items, at: size, quality: .medium)
+    images.prefetchImages(representing: items, at: size, quality: .medium)
   }
 
   func tableView(
