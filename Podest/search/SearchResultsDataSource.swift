@@ -535,7 +535,7 @@ extension SearchResultsDataSource: UITableViewDataSourcePrefetching  {
     let items = imaginables(for: indexPaths)
     let size = estimateCellSize(tableView: tableView)
 
-    images.prefetchImages(for: items, at: size, quality: .medium)
+    images.prefetchImages(representing: items, at: size, quality: .medium)
   }
 
   func tableView(
