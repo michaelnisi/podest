@@ -1,6 +1,6 @@
-## 8.5 (planned)
+## 8.5 (2019-08-12)
 
-Lighter energy impact, less memory use, and more effective CPU usage.
+Less memory use, more effective CPU utilization, and lighter energy impact.
 
 ## 8.4 (2019-07-31)
 
