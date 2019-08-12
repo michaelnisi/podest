@@ -95,7 +95,7 @@ final class ProductsDataSource: NSObject, SectionedDataSource {
   }
 
   /// A distinct worker queue for diffing.
-  private var worker = DispatchQueue.global()
+  private var worker = DispatchQueue.global(qos: .userInteractive)
 
   private let store: Shopping
 

@@ -390,7 +390,7 @@ final class StoreFSM: NSObject {
   /// An internal serial queue for synchronized access.
   private let sQueue = DispatchQueue(
     label: "ink.codes.podest.StoreFSM",
-    target: .global()
+    target: .global(qos: .userInitiated)
   )
 
   private (set) var state: StoreState {
@@ -404,7 +404,7 @@ final class StoreFSM: NSObject {
 
   // Calling the delegate on a distinct system queue for keeping things
   // serially in order.
-  private var delegateQueue = DispatchQueue.global()
+  private var delegateQueue = DispatchQueue.global(qos: .userInitiated)
 
   /// Is `true` for interested users with the intention of hiding the store for customers.
   private var isAccessible: Bool = false {
@@ -472,7 +472,7 @@ final class StoreFSM: NSObject {
       case NSUbiquitousKeyValueStoreAccountChange:
         os_log("push received: account change", log: log, type: .info)
 
-        DispatchQueue.global().async {
+        DispatchQueue.global(qos: .utility).async {
           self.event(.receiptsChanged)
         }
 
@@ -486,7 +486,7 @@ final class StoreFSM: NSObject {
 
         os_log("push received: initial sync | server change",
                log: log, type: .info)
-        DispatchQueue.global().async {
+        DispatchQueue.global(qos: .utility).async {
           self.event(.receiptsChanged)
         }
 
@@ -771,7 +771,7 @@ extension StoreFSM: SKProductsRequestDelegate {
       self.request = nil
     }
 
-    DispatchQueue.global().async {
+    DispatchQueue.global(qos: .utility).async {
       let error: ShoppingError? = {
         let invalidIDs = response.invalidProductIdentifiers
 
@@ -853,7 +853,7 @@ extension StoreFSM: SKPaymentTransactionObserver {
   ) {
     os_log("payment queue has updated transactions", log: log, type: .debug)
     
-    DispatchQueue.global().async {
+    DispatchQueue.global(qos: .utility).async {
       for t in transactions {
         self.process(transaction: t)
       }
@@ -867,32 +867,32 @@ extension StoreFSM: SKPaymentTransactionObserver {
 extension StoreFSM: Shopping {
   
   func online() {
-    DispatchQueue.global().async {
+    DispatchQueue.global(qos: .utility).async {
       self.event(.online)
     }
   }
   
   func update() {
-    DispatchQueue.global().async {
+    DispatchQueue.global(qos: .utility).async {
       self.event(.update)
     }
   }
   
   func resume() {
     os_log("resuming: %@", log: log, type: .debug, String(describing: version))
-    DispatchQueue.global().async {
+    DispatchQueue.global(qos: .utility).async {
       self.event(.resume)
     }
   }
   
   func pause() {
-    DispatchQueue.global().async {
+    DispatchQueue.global(qos: .utility).async {
       self.event(.pause)
     }
   }
 
   func payProduct(matching productIdentifier: String) {
-    DispatchQueue.global().async {
+    DispatchQueue.global(qos: .userInitiated).async {
       self.event(.pay(productIdentifier))
     }
   }
@@ -900,8 +900,6 @@ extension StoreFSM: Shopping {
   var canMakePayments: Bool {
     return SKPaymentQueue.canMakePayments()
   }
-
-
 }
 
 // MARK: - Rating
