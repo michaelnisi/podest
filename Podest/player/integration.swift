@@ -14,7 +14,7 @@ import AVKit
 import AVFoundation
 import Ola
 
-private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
+private let log = OSLog.disabled
 
 // MARK: - Players
 
@@ -178,8 +178,7 @@ extension RootViewController {
                log: log, type: .error, error as CVarArg)
       }
 
-      Podest.playback.setCurrentEntry(entry)
-      Podest.playback.resume()
+      Podest.playback.resume(entry: entry)
     }
   }
 
@@ -188,7 +187,7 @@ extension RootViewController {
       return
     }
 
-    Podest.playback.pause()
+    Podest.playback.pause(entry: nil)
   }
 }
 
@@ -462,23 +461,15 @@ extension RootViewController: PlaybackDelegate {
 
         self.update(state: s)
 
-        if !self.isPresentingNowPlaying {
+        if !self.isPresentingNowPlaying, !self.isPresentingStore {
           self.showVideo(player: player, animated: true)
         }
       }
 
-    case .inactive(let error, let resuming):
+    case .inactive(let error):
       if let er = error {
         os_log("session error: %{public}@", log: log, type: .error, er as CVarArg)
         fatalError(String(describing: er))
-      }
-
-      guard !resuming else {
-        return
-      }
-
-      DispatchQueue.main.async {
-        self.hideMiniPlayer(animated: true)
       }
     }
   }

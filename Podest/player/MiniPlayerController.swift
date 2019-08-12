@@ -107,7 +107,8 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
 
       Podest.userQueue.enqueue(entries: [entry]) { enqueued, error in
         if let er = error {
-          os_log("enqueue warning: %{public}@", type: .debug, er as CVarArg)
+          os_log("enqueue warning: %{public}@", 
+                 log: log, type: .debug, er as CVarArg)
         }
       }
     }
@@ -141,7 +142,7 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
   override func decodeRestorableState(with coder: NSCoder) {
     isRestoring = true
     locator = EntryLocator(coder: coder)
-
+    
     super.decodeRestorableState(with: coder)
   }
 
