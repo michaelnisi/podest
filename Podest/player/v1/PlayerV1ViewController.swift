@@ -114,6 +114,16 @@ final class PlayerV1ViewController: UIViewController, EntryPlayer {
       return
     }
     
+    // Before rendering forward and backward buttons, we need to make sure the
+    // queue is up-to-date by skipping to our item.
+    
+    do {
+      try Podest.userQueue.skip(to: entry)  
+    } catch {
+      // TODO: Trap here, this is a programming error
+      os_log("queue error: %{public}@", log: log, type: .error, error as CVarArg)
+    }
+ 
     configureView(entry)
     loadImage(entry)
 
@@ -129,6 +139,7 @@ final class PlayerV1ViewController: UIViewController, EntryPlayer {
       }
 
       update()
+      
       entryChangedBlock?(entry)
     }
   }
