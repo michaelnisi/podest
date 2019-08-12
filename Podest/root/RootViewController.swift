@@ -164,6 +164,14 @@ extension RootViewController: ViewControllers {
     
     return svc.isCollapsed
   }
+  
+  var isPresentingStore: Bool {
+    guard let c = presentedViewController as? UINavigationController else {
+      return false
+    }
+    
+    return c.topViewController is ProductsViewController
+  }
 
   func showStore() {
     os_log("showing store", log: log, type: .debug)
