@@ -76,6 +76,7 @@ private func makeSearchRepo(_ conf: Config) throws -> SearchRepository {
 
   let queue = OperationQueue()
   queue.maxConcurrentOperationCount = 1
+  queue.qualityOfService = .userInitiated
 
   return SearchRepository(
     cache: c,
@@ -119,6 +120,7 @@ private func makeFeedRepo(_ conf: Config) throws -> FeedRepository {
   let opts = conf.service("production", at: "*")!
   let svc = makeMangerService(options: opts)
   let queue = OperationQueue()
+  queue.qualityOfService = .userInitiated
 
   return FeedRepository(cache: c, svc: svc, queue: queue)
 }
@@ -297,6 +299,7 @@ final private class Config {
   fileprivate func freshUserLibrary() throws -> UserLibrary {
     let queue = OperationQueue()
     queue.maxConcurrentOperationCount = 1
+    queue.qualityOfService = .userInitiated
 
     return UserLibrary(cache: userCache, browser: browser, queue: queue)
   }
@@ -316,6 +319,7 @@ final private class Config {
     let q = OperationQueue()
     q.name = "ink.codes.podest.sync"
     q.maxConcurrentOperationCount = 1
+    q.qualityOfService = .utility
 
     let client = UserClient(cache: userCache, probe: probe, queue: q)
 
