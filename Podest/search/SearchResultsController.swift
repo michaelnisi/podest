@@ -105,24 +105,16 @@ extension SearchResultsController {
   override func viewLayoutMarginsDidChange() {
     super.viewLayoutMarginsDidChange()
     
-    if #available(iOS 13.0, *) {
-      updateAdditionalSafeAreaInsets()
-    } else {
-      // NOP
-    }
+    guard #available(iOS 13.0, *) else { return }
+    updateAdditionalSafeAreaInsets()
   }
   
-  // If traits timing changes affect viewLayoutMarginsDidChange, try this:
-  
-//  override func viewWillLayoutSubviews() {
-//    super.viewWillLayoutSubviews()
-//    
-//    if #available(iOS 13.0, *) {
-//      updateAdditionalSafeAreaInsets()
-//    } else {
-//      // NOP
-//    }
-//  }
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    guard #available(iOS 13.0, *) else { return }
+    updateAdditionalSafeAreaInsets()
+  }
   
   private var bottomInset: CGFloat {
     return max(delegate?.navigationDelegate?

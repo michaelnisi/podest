@@ -122,7 +122,6 @@ extension SearchResultsDataSource {
 
     return changes
   }
-
 }
 
 // MARK: - Suggesting and Searching
@@ -311,7 +310,6 @@ extension SearchResultsDataSource {
       }
     }
   }
-
 }
 
 // MARK: - Accessing Items
@@ -330,7 +328,6 @@ extension SearchResultsDataSource {
       return nil
     }
   }
-
 }
 
 // MARK: - Configuring the Table View
@@ -384,7 +381,31 @@ extension SearchResultsDataSource: UITableViewDataSource {
       return nil
     }
   }
+  
+  private static var body: [NSAttributedString.Key: Any] = [
+    .font: UIFontMetrics.default.scaledFont(for: 
+      .systemFont(ofSize: 19, weight: .medium)),
+    .foregroundColor: UIColor(named: "Primary")!
+  ]
+  
+  @available(iOS 13.0, *)
+  private static var magnifyingGlass: NSAttributedString {
+    let conf = UIImage.SymbolConfiguration(scale: .default)
+    let img = UIImage(systemName: "magnifyingglass", withConfiguration: conf)?
+      .withTintColor(UIColor(named: "Secondary")!)
+    
+    return NSAttributedString(attachment: NSTextAttachment(image: img!)) 
+  }
+  
+  @available(iOS 13.0, *)
+  private static func makeAttributed(term: String) -> NSAttributedString {    
+    let s = NSMutableAttributedString(string: "   \(term)", attributes: body)  
 
+    s.insert(magnifyingGlass, at: 0)
+    
+    return s
+  }
+  
   func tableView(
     _ tableView: UITableView,
     cellForRowAt indexPath: IndexPath
@@ -392,14 +413,20 @@ extension SearchResultsDataSource: UITableViewDataSource {
     guard let item = itemAt(indexPath: indexPath) else {
       fatalError("no item at index path: \(indexPath)")
     }
+    
     switch item {
     case .find(let find):
       switch find {
       case .suggestedTerm(let sug):
         let cell = tableView.dequeueReusableCell(
           withIdentifier: UITableView.Nib.suggestion.id, for: indexPath)
-
-        cell.textLabel?.text = sug.term
+        
+        if #available(iOS 13.0, *) {
+          cell.textLabel?.attributedText = SearchResultsDataSource
+            .makeAttributed(term: sug.term)
+        } else {
+          cell.textLabel?.text = sug.term
+        } 
 
         return cell
       case .recentSearch(let feed), .suggestedFeed(let feed):

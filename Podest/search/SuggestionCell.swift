@@ -9,23 +9,15 @@
 import UIKit
 
 final class SuggestionCell: UITableViewCell {
-  
-  private static func makeLoupe() -> UIImage? {
-    guard #available(iOS 13.0, *) else {
-      return UIImage(named: "Loupe")
-    }
-    
-    let conf = UIImage.SymbolConfiguration(textStyle: .body)
-    
-    return UIImage(systemName: "magnifyingglass", withConfiguration: conf)
-  }
-  
+
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     
     initColors()
     
-    imageView?.image = SuggestionCell.makeLoupe()
+    if #available(iOS 13.0, *) { return }
+
+    imageView?.image = UIImage(named: "Loupe")
     imageView?.tintColor = UIColor(named: "Secondary")
   }
   
