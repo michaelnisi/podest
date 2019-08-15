@@ -200,7 +200,7 @@ extension QueueViewController {
     super.viewDidLoad()
 
     definesPresentationContext = true
-
+    
     refreshControl = UIRefreshControl()
     installRefreshControl()
 
@@ -210,7 +210,7 @@ extension QueueViewController {
 
     navigationItem.searchController = searchController
     navigationItem.title = "Queue"
-    navigationItem.largeTitleDisplayMode = .never
+    navigationItem.largeTitleDisplayMode = .automatic
 
     self.searchProxy = searchProxy
 
@@ -325,16 +325,12 @@ extension QueueViewController: EntryProvider {
   /// Couple of options here, the currently selected entry, the entry in the
   /// player, the first entry in the queue, or `nil`.
   var entry: Entry? {
-    get {
-      guard let indexPath = tableView.indexPathForSelectedRow else {
-        return Podest.playback.currentEntry ??
-          dataSource.entry(at: IndexPath(row: 0, section: 0))
-      }
-
-      return dataSource.entry(at: indexPath)
+    guard let indexPath = tableView.indexPathForSelectedRow else {
+      return Podest.playback.currentEntry ??
+        dataSource.entry(at: IndexPath(row: 0, section: 0))
     }
-
-    set {}
+    
+    return dataSource.entry(at: indexPath)
   }
 }
 

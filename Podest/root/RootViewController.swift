@@ -103,6 +103,8 @@ extension RootViewController {
     }
 
     pnc = ncs.first
+    pnc.navigationBar.prefersLargeTitles = true
+    
     snc = ncs.last
 
     minivc = (children.last as! MiniPlayerController)
