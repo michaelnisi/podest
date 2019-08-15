@@ -389,13 +389,13 @@ extension SearchResultsDataSource: UITableViewDataSource {
   ]
   
   @available(iOS 13.0, *)
-  private static var magnifyingGlass: NSAttributedString {
+  private static var magnifyingGlass: NSAttributedString = {
     let conf = UIImage.SymbolConfiguration(scale: .default)
     let img = UIImage(systemName: "magnifyingglass", withConfiguration: conf)?
       .withTintColor(UIColor(named: "Secondary")!)
     
     return NSAttributedString(attachment: NSTextAttachment(image: img!)) 
-  }
+  }()
   
   @available(iOS 13.0, *)
   private static func makeAttributed(term: String) -> NSAttributedString {    
