@@ -79,7 +79,11 @@ extension RootViewController {
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     
-    for vc in [pnc.topViewController, snc.topViewController] {
+    for vc in [
+      pnc.topViewController,
+      pnc.navigationItem.searchController?.searchResultsController,
+      snc.topViewController
+    ] {
       vc?.viewLayoutMarginsDidChange()
     }
   }

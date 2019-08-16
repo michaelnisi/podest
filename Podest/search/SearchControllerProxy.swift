@@ -11,7 +11,7 @@ import UIKit
 import os.log
 import FeedKit
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "search")
 
 private enum SearchState: Equatable {
   case dismissed

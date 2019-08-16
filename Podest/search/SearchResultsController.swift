@@ -108,14 +108,7 @@ extension SearchResultsController {
     guard #available(iOS 13.0, *) else { return }
     updateAdditionalSafeAreaInsets()
   }
-  
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    
-    guard #available(iOS 13.0, *) else { return }
-    updateAdditionalSafeAreaInsets()
-  }
-  
+
   private var bottomInset: CGFloat {
     return max(delegate?.navigationDelegate?
       .miniPlayerEdgeInsets.bottom ?? 0, tableView.safeAreaInsets.bottom)
