@@ -109,7 +109,6 @@ final class QueueViewController: UITableViewController, Navigator {
       updateStoreButton()
     }
   }
-
 }
 
 // MARK: - UIRefreshControl
@@ -166,7 +165,6 @@ extension QueueViewController {
   override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
     Podest.store.cancelReview()
   }
-
 }
 
 // MARK: - UISearchController
@@ -188,7 +186,6 @@ extension QueueViewController {
 
     return (sc, fsm)
   }
-
 }
 
 // MARK: - UIViewController
@@ -291,7 +288,6 @@ extension QueueViewController {
 
     super.viewWillDisappear(animated)
   }
-
 }
 
 // MARK: - Responding to a Change in the Interface Environment
