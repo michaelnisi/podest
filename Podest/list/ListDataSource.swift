@@ -255,7 +255,7 @@ extension ListDataSource: UITableViewDataSource {
 
       cell.detailTextLabel?.attributedText = nil
       cell.detailTextLabel?.text = author
-
+      
       return cell
 
     case .message(let text):
