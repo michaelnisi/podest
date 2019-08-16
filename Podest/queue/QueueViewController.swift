@@ -176,18 +176,17 @@ extension QueueViewController {
   /// Returns a new search controller and its managing proxy for accessing it.
   private static
   func makeSearchProxy() -> (UISearchController, SearchControllerProxy) {
-    let searchResultsController = SearchResultsController()
-
-    let searchController = UISearchController(
-      searchResultsController: searchResultsController
-    )
-
+    let rc = SearchResultsController()
+    let sc = UISearchController(searchResultsController: rc)
+    sc.searchBar.autocorrectionType = .no
+    sc.searchBar.autocapitalizationType = .none
+    
     let fsm = SearchControllerProxy(
-      searchController: searchController,
-      searchResultsController: searchResultsController
+      searchController: sc,
+      searchResultsController: rc
     )
 
-    return (searchController, fsm)
+    return (sc, fsm)
   }
 
 }
@@ -199,16 +198,16 @@ extension QueueViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    definesPresentationContext = true
-    
-    refreshControl = UIRefreshControl()
-    installRefreshControl()
-
     let (searchController, searchProxy) = QueueViewController.makeSearchProxy()
 
     searchProxy.install()
-
+    
+    definesPresentationContext = true
     navigationItem.searchController = searchController
+    
+    refreshControl = UIRefreshControl()
+    installRefreshControl()
+    
     navigationItem.title = "Queue"
     navigationItem.largeTitleDisplayMode = .automatic
 
