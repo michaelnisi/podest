@@ -330,6 +330,34 @@ extension SearchResultsDataSource {
   }
 }
 
+// MARK: - Glyphs
+
+extension SearchResultsDataSource {
+  
+  private static var body: [NSAttributedString.Key: Any] = [
+    .font: UIFont.preferredFont(forTextStyle: .body),
+    .foregroundColor: UIColor(named: "Primary")!
+  ]
+  
+  @available(iOS 13.0, *)
+  private static var magnifyingGlass: NSAttributedString = {
+    let conf = UIImage.SymbolConfiguration(scale: .default)
+    let img = UIImage(systemName: "magnifyingglass", withConfiguration: conf)?
+      .withTintColor(UIColor(named: "Secondary")!)
+    
+    return NSAttributedString(attachment: NSTextAttachment(image: img!)) 
+  }()
+  
+  @available(iOS 13.0, *)
+  private static func makeAttributed(term: String) -> NSAttributedString {    
+    let s = NSMutableAttributedString(string: "   \(term)", attributes: body)  
+
+    s.insert(magnifyingGlass, at: 0)
+    
+    return s
+  }
+}
+
 // MARK: - Configuring the Table View
 
 extension SearchResultsDataSource: UITableViewDataSource {
@@ -380,30 +408,6 @@ extension SearchResultsDataSource: UITableViewDataSource {
     case .message:
       return nil
     }
-  }
-  
-  private static var body: [NSAttributedString.Key: Any] = [
-    .font: UIFontMetrics.default.scaledFont(for: 
-      .systemFont(ofSize: 19, weight: .medium)),
-    .foregroundColor: UIColor(named: "Primary")!
-  ]
-  
-  @available(iOS 13.0, *)
-  private static var magnifyingGlass: NSAttributedString = {
-    let conf = UIImage.SymbolConfiguration(scale: .default)
-    let img = UIImage(systemName: "magnifyingglass", withConfiguration: conf)?
-      .withTintColor(UIColor(named: "Secondary")!)
-    
-    return NSAttributedString(attachment: NSTextAttachment(image: img!)) 
-  }()
-  
-  @available(iOS 13.0, *)
-  private static func makeAttributed(term: String) -> NSAttributedString {    
-    let s = NSMutableAttributedString(string: "   \(term)", attributes: body)  
-
-    s.insert(magnifyingGlass, at: 0)
-    
-    return s
   }
   
   func tableView(
