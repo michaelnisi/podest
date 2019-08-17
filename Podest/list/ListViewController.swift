@@ -187,11 +187,6 @@ extension ListViewController {
 
 extension ListViewController {
 
-  private var isRegular: Bool {
-    return traitCollection.verticalSizeClass == .regular &&
-      traitCollection.horizontalSizeClass == .regular
-  }
-  
   private var isCompact: Bool {
     return navigationDelegate?.isCollapsed ?? 
       (traitCollection.horizontalSizeClass == .compact)
@@ -274,7 +269,6 @@ extension ListViewController {
     resignFirstResponder()
     if shouldUpdate { update() }
 
-    title = isRegular ? feed?.title : nil
     previousTraitCollection = traitCollection
   }
 }
