@@ -13,20 +13,7 @@ import FeedKit
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "search")
 
-private enum SearchState: Equatable {
-  case dismissed
-  case searching(String)
-  case suggesting(String)
-}
-
-private enum SearchEvent: Equatable {
-  case suggest(String)
-  case search(String)
-  case dismiss
-}
-
-/// A finite state machine proxying between search controller and search
-/// results controller.
+/// Integrates a search controller.
 ///
 /// Managing three simple search states:
 ///
@@ -35,15 +22,30 @@ private enum SearchEvent: Equatable {
 /// - `.suggesting` Suggestions are displayed while users are typing.
 final class SearchControllerProxy: NSObject {
 
+  let targetController: UIViewController?
+  
   private let searchController: UISearchController
   private let searchResultsController: SearchResultsController
+  
+  /// Prepares search for `viewController`.
+  init(viewController vc: UIViewController) {
+    let rc = SearchResultsController()
+    
+    let sc = UISearchController(searchResultsController: rc)
+    sc.searchBar.autocorrectionType = .no
+    sc.searchBar.autocapitalizationType = .none
+    
+    if #available(iOS 13.0, *) {
+      // NOP
+    } else {
+      vc.definesPresentationContext = true
+    }
 
-  init(
-    searchController: UISearchController,
-    searchResultsController: SearchResultsController
-  ) {
-    self.searchController = searchController
-    self.searchResultsController = searchResultsController
+    vc.navigationItem.searchController = sc
+    
+    self.targetController = vc
+    self.searchController = sc
+    self.searchResultsController = rc
   }
 
   var navigationDelegate: ViewControllers?
@@ -63,8 +65,22 @@ final class SearchControllerProxy: NSObject {
 
     navigationDelegate = nil
   }
+  
+  // MARK: - FSM
+  
+  private enum State: Equatable {
+    case dismissed
+    case searching(String)
+    case suggesting(String)
+  }
 
-  private var state: SearchState = .dismissed {
+  private enum Event: Equatable {
+    case suggest(String)
+    case search(String)
+    case dismiss
+  }
+
+  private var state: State = .dismissed {
     didSet {
       os_log("queue: new state: %{public}@, old state: %{public}@",
              log: log, type: .debug,
@@ -86,7 +102,7 @@ final class SearchControllerProxy: NSObject {
     return searchController.searchBar
   }
 
-  private func event(_ e: SearchEvent) {
+  private func event(_ e: Event) {
     let src = searchResultsController
 
     switch state {
@@ -180,7 +196,6 @@ final class SearchControllerProxy: NSObject {
   func dismiss() {
     event(.dismiss)
   }
-  
 }
 
 // MARK: - UISearchBarDelegate
@@ -194,28 +209,32 @@ extension SearchControllerProxy: UISearchBarDelegate {
 
     search(text)
   }
-
 }
+
+// MARK: - Home
+
+extension SearchControllerProxy: HomePresenting {}
 
 // MARK: - UISearchResultsUpdating
 
 extension SearchControllerProxy: UISearchResultsUpdating {
-
+  
   func updateSearchResults(for sc: UISearchController) {
     switch state {
     case .dismissed:
-      return
+      return removeHome()
     case .searching(let term), .suggesting(let term):
       let newTerm = sc.searchBar.text ?? ""
-
+      
+      newTerm == "" ? showHome() : removeHome()
+      
       guard term != newTerm else {
         return
       }
-
+      
       suggest(newTerm)
     }
   }
-
 }
 
 // MARK: - UISearchControllerDelegate
@@ -224,13 +243,13 @@ extension SearchControllerProxy: UISearchControllerDelegate {
 
   func willPresentSearchController(_ searchController: UISearchController) {
     Podest.store.cancelReview()
+    
     suggest("")
   }
 
   func willDismissSearchController(_ sc: UISearchController) {
     dismiss()
   }
-
 }
 
 // MARK: - SearchResultsControllerDelegate
@@ -270,5 +289,4 @@ extension SearchControllerProxy: SearchResultsControllerDelegate {
     os_log("resigning first responder", log: log, type: .debug)
     searchBar.resignFirstResponder()
   }
-
 }

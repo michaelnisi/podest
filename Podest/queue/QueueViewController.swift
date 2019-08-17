@@ -120,8 +120,6 @@ extension QueueViewController {
       return
     }
 
-    refreshControlTimer = nil
-
     dataSource.update(minding: 60)
   }
 
@@ -132,7 +130,6 @@ extension QueueViewController {
       for: .valueChanged
     )
   }
-
 }
 
 // MARK: - UIScrollViewDelegate
@@ -167,65 +164,31 @@ extension QueueViewController {
   }
 }
 
-// MARK: - UISearchController
-
-extension QueueViewController {
-
-  /// Returns a new search controller and its managing proxy for accessing it.
-  private static
-  func makeSearchProxy() -> (UISearchController, SearchControllerProxy) {
-    let rc = SearchResultsController()
-    let sc = UISearchController(searchResultsController: rc)
-    sc.searchBar.autocorrectionType = .no
-    sc.searchBar.autocapitalizationType = .none
-    
-    let fsm = SearchControllerProxy(
-      searchController: sc,
-      searchResultsController: rc
-    )
-
-    return (sc, fsm)
-  }
-}
-
 // MARK: - UIViewController
 
 extension QueueViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
-    let (searchController, searchProxy) = QueueViewController.makeSearchProxy()
-
-    searchProxy.install()
-    
-    definesPresentationContext = true
-    navigationItem.searchController = searchController
-    
-    refreshControl = UIRefreshControl()
-    installRefreshControl()
     
     navigationItem.title = "Queue"
-    navigationItem.largeTitleDisplayMode = .automatic
-
-    self.searchProxy = searchProxy
-
-    QueueDataSource.registerCells(with: tableView)
-
+    refreshControl = UIRefreshControl()
+    searchProxy = SearchControllerProxy(viewController: self)
+    
     tableView.rowHeight = UITableView.automaticDimension
     tableView.estimatedRowHeight = 104
-
     var separatorInset = tableView.separatorInset
     separatorInset.left = UITableView.automaticDimension
     tableView.separatorInset = separatorInset
-
     tableView.dataSource = dataSource
     tableView.prefetchDataSource = dataSource
-
+    
     clearsSelectionOnViewWillAppear = true
-
     Podest.store.subscriberDelegate = self
-
+    
+    installRefreshControl()
+    searchProxy.install()
+    QueueDataSource.registerCells(with: tableView)
     Podest.store.resume()
   }
 

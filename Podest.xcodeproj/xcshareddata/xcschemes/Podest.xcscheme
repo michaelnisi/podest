@@ -98,7 +98,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-ink.codes.podest.noDownloading"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-ink.codes.podest.allButUpsideDown"
