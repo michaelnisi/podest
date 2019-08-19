@@ -146,8 +146,8 @@ extension QueueViewController {
       rc.endRefreshing()
     }
 
-    refreshControlTimer = setTimeout(delay: .milliseconds(600), queue: .main) {
-      [weak self] in
+    refreshControlTimer = setTimeout(
+      delay: .milliseconds(600), queue: .main) { [weak self] in
       self?.refreshControlTimer = nil
 
       guard let rc = self?.refreshControl, !rc.isRefreshing else {
@@ -156,7 +156,6 @@ extension QueueViewController {
 
       self?.reload()
     }
-
   }
 
   override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
@@ -172,18 +171,21 @@ extension QueueViewController {
     super.viewDidLoad()
     
     navigationItem.title = "Queue"
+    
     refreshControl = UIRefreshControl()
     searchProxy = SearchControllerProxy(viewController: self)
-    
+    clearsSelectionOnViewWillAppear = true
+        
     tableView.rowHeight = UITableView.automaticDimension
     tableView.estimatedRowHeight = 104
+    
     var separatorInset = tableView.separatorInset
     separatorInset.left = UITableView.automaticDimension
     tableView.separatorInset = separatorInset
+    
     tableView.dataSource = dataSource
     tableView.prefetchDataSource = dataSource
     
-    clearsSelectionOnViewWillAppear = true
     Podest.store.subscriberDelegate = self
     
     installRefreshControl()
@@ -235,8 +237,10 @@ extension QueueViewController {
     if Podest.store.isExpired() {
       os_log("free trial expired", log: log)
     }
-
+    
     super.viewDidAppear(animated)
+    
+    reload()
   }
 
   override func viewDidDisappear(_ animated: Bool) {
@@ -247,23 +251,28 @@ extension QueueViewController {
 
   override func viewWillDisappear(_ animated: Bool) {
     refreshControlTimer = nil
+    
     Podest.store.cancelReview()
 
     super.viewWillDisappear(animated)
   }
 }
 
-// MARK: - Responding to a Change in the Interface Environment
+// MARK: - UI Enviroment Changes
 
 extension QueueViewController {
 
-  override func viewLayoutMarginsDidChange() {
-    super.viewLayoutMarginsDidChange()
+  override func viewLayoutMarginsDidChange() {    
+    navigationItem.searchController?.searchResultsController?
+      .viewLayoutMarginsDidChange()
 
     additionalSafeAreaInsets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
+    
+    super.viewLayoutMarginsDidChange()
   }
 
-  override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+  override func traitCollectionDidChange(
+    _ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
 
     dataSource.previousTraitCollection = previousTraitCollection
@@ -302,14 +311,7 @@ extension QueueViewController: PlaybackResponding {
 
   func playing(entry: Entry) {
     os_log("playing: %s", log: log, type: .debug, entry.title)
-
-    guard let cell = tableView.visibleCells
-      .first(where: { $0.tag == entry.hashValue }),
-      let pie = cell.accessoryView as? PieView else {
-      return
-    }
-
-    pie.percentage = 0
+    reload()
   }
 
   func pausing(entry: Entry) {

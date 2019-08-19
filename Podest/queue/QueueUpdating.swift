@@ -20,7 +20,7 @@ extension QueueViewController {
   ///
   /// NOP if the table view is in editing mode.
   func reload(_ animated: Bool = true, completionBlock: ((Error?) -> Void)? = nil) {
-    guard !tableView.isEditing else {
+    guard tableView.window != nil, !tableView.isEditing else {
       completionBlock?(nil)
       return
     }

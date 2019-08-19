@@ -19,7 +19,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
   /// Enumerates queue data source item types.
   enum Item: Hashable {
-    case entry(Entry)
+    case entry(Entry, Bool)
     case feed(Feed)
     case message(NSAttributedString)
   }
@@ -64,16 +64,12 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     return false
   }
 
-  /// Transiently keeping track of played items.
-  private var played = Set<Int>()
-
   private var invalidated = false
 
   /// Removes all observers.
   func invalidate() {
     dispatchPrecondition(condition: .onQueue(.main))
     reloading?.cancel()
-    played.removeAll()
 
     invalidated = true
   }
@@ -164,6 +160,14 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   var entriesBlock: (([Entry]) -> Void)?
 
   private weak var reloading: Operation?
+  
+  private func isUnplayed(url: String?) -> Bool {
+    guard let uid = url else {
+      return false
+    }
+    
+    return playback.isUnplayed(uid: uid)
+  }
 
   /// Reloads the queue locally, fetching missing items remotely if necessary.
   ///
@@ -176,7 +180,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   /// `commit(batch:performingWith:)`.
   func reload(completionBlock: (([[Change<Item>]], Error?) -> Void)? = nil) {
     dispatchPrecondition(condition: .onQueue(.main))
-
+    
     if completionBlock == nil {
       guard reloading == nil else {
         os_log("ignoring redundant queue reloading request", log: log)
@@ -203,7 +207,9 @@ final class QueueDataSource: NSObject, SectionedDataSource {
       }
 
       for entry in entries {
-        acc.append(.entry(entry))
+        let fresh = self?.isUnplayed(url: entry.enclosure?.url) ?? false
+        
+        acc.append(.entry(entry, fresh))
       }
 
       DispatchQueue.main.async {
@@ -443,15 +449,6 @@ extension QueueDataSource: UITableViewDataSource {
     return sections[section].count
   }
 
-  private static func makeAccessory() -> UIView {
-    let frame = CGRect(x: 0, y: 0, width: 18, height: 18)
-    let view = PieView(frame: frame)
-    view.percentage = 1.0
-    view.backgroundColor = .clear
-
-    return view
-  }
-
   /// Loads image into `cell` if cell is not already configured to load said
   /// image.
   private func prepareImage(cell: SubtitleTableViewCell, displaying entry: Entry) {
@@ -461,7 +458,8 @@ extension QueueDataSource: UITableViewDataSource {
 
     images.cancel(displaying: cell.imageView)
     cell.invalidate(image: UIImage(named: "Oval"))
-
+    
+    cell.tag = entry.hashValue
     cell.layoutSubviewsBlock = { [weak self] imageView in
       self?.images.loadImage(
         representing: entry,
@@ -474,6 +472,15 @@ extension QueueDataSource: UITableViewDataSource {
       )
     }
   }
+  
+  private static func makeAccessory() -> UIView {
+    let frame = CGRect(x: 0, y: 0, width: 18, height: 18)
+    let view = PieView(frame: frame)
+    view.percentage = 1.0
+    view.backgroundColor = .clear
+
+    return view
+  }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath
   ) -> UITableViewCell {
@@ -484,7 +491,7 @@ extension QueueDataSource: UITableViewDataSource {
     tableView.separatorStyle = .singleLine
 
     switch item {
-    case .entry(let entry):
+    case .entry(let entry, let isUnplayed):
       let cell = tableView.dequeueReusableCell(
         withIdentifier: UITableView.Nib.subtitle.id, for: indexPath
       ) as! SubtitleTableViewCell
@@ -502,31 +509,18 @@ extension QueueDataSource: UITableViewDataSource {
 
       cell.textLabel?.text = entry.feedTitle ?? entry.title
       cell.detailTextLabel?.text = entry.title
-
-      // Tagging cell with entry, so we can find it later.
-      cell.tag = entry.hashValue
-
+      
       if cell.accessoryView == nil {
         cell.accessoryView =  QueueDataSource.makeAccessory()
         cell.tintColor = UIColor(named: "Purple")
       }
-
+      
       if let pie = cell.accessoryView as? PieView {
-        if let uid = entry.enclosure?.url,
-          !played.contains(cell.tag),
-          playback.isUnplayed(uid: uid) {
-          pie.percentage = 1.0
-        } else {
-          pie.percentage = 0
-
-          // Once marked as played, the item should not become unplayed again,
-          // while in this collection.
-
-          played.insert(cell.tag)
-        }
+        pie.percentage = isUnplayed ? 1.0 : 0
       }
-
+      
       return cell
+      
     case .feed:
       // We might reuse the feed cell from search here.
       fatalError("niy")
@@ -565,7 +559,7 @@ extension QueueDataSource: EntryIndexPathMapping {
       return nil
     }
     switch item {
-    case .entry(let entry):
+    case .entry(let entry, _):
       return entry
     case .feed, .message:
       return nil
@@ -575,7 +569,7 @@ extension QueueDataSource: EntryIndexPathMapping {
   func indexPath(matching entry: Entry) -> IndexPath? {
     for (sectionIndex, section) in sections.enumerated() {
       for (itemIndex, item) in section.enumerated() {
-        if case .entry(let itemEntry) = item {
+        if case .entry(let itemEntry, _) = item {
           if itemEntry == entry {
             return IndexPath(item: itemIndex, section: sectionIndex)
           }
@@ -633,7 +627,7 @@ extension QueueDataSource: UITableViewDataSourcePrefetching  {
         return nil
       }
       switch item {
-      case .entry(let entry):
+      case .entry(let entry, _):
         return entry
       default:
         return nil
