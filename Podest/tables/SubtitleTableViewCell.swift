@@ -24,16 +24,16 @@ extension UITableViewCell {
 
 final class SubtitleTableViewCell: UITableViewCell {
   
-  /// The layout block runs once after layout before it’s dismissed.
+  /// This closure runs once after laying out subviews (before its dismissal).
   var layoutSubviewsBlock: ((UIImageView) -> Void)?
   
   override func layoutSubviews() {
     super.layoutSubviews()
 
-    guard let imageView = self.imageView else {
+    guard let imageView = self.imageView, imageView.bounds != .zero else {
       return
     }
-
+    
     layoutSubviewsBlock?(imageView)
     
     layoutSubviewsBlock = nil
