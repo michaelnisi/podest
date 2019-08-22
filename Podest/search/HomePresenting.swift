@@ -11,24 +11,20 @@ import UIKit
 
 /// Presents a home screen, something like Safari’s Favourites.
 protocol HomePresenting {
-  var targetController: UIViewController? { get }
   
-  func showHome()
+  /// The target table view controller for adding Home to.
+  var targetController: UITableViewController? { get }
+  
+  /// Adds Home to target view controller.
+  func addHome()
+  
+  /// Removes Home from target view controller.
   func removeHome()
 }
 
-/// NOP defaults.
-extension HomePresenting {
-  var targetController: UIViewController? { nil }
-  
-  func showHome() {}
-  func removeHome() {}
-} 
-
-/* 🚧
 extension HomePresenting {
   
-  var home: UIViewController? {
+  private var home: UIViewController? {
     guard let home = targetController?.children
       .last as? UICollectionViewController else {
       return nil
@@ -37,30 +33,42 @@ extension HomePresenting {
     return home
   }
   
-  var isShowingHome: Bool {
+  private var isShowingHome: Bool {
      home != nil
   }
-  
-  func showHome() {
+}
+
+// MARK: - HomePresenting
+
+extension HomePresenting {
+    
+  func addHome() {
     guard !isShowingHome else {
       return
     }
     
     let storyboard = UIStoryboard(name: "Home", bundle: .main)
     let vc = storyboard.instantiateViewController(withIdentifier: "HomeID")
-    
+      
     let transition: CATransition = CATransition()
     transition.duration = 0.3
     transition.type = .fade
+    
+    guard let container = targetController else {
+      return
+    }
 
-    targetController?.view.layer.add(transition, forKey: nil)
-    targetController?.view.addSubview(vc.view)
-    targetController?.addChild(vc)
+    container.view.layer.add(transition, forKey: nil)
+    container.view.addSubview(vc.view)
+    container.addChild(vc)
   }
   
   func removeHome() {
+    targetController?.tableView.scrollToRow(
+      at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+    
+    home?.willMove(toParent: nil)
     home?.view.removeFromSuperview()
     home?.removeFromParent()
   }
 }
- */

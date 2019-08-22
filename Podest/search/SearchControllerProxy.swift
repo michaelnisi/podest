@@ -22,13 +22,13 @@ private let log = OSLog(subsystem: "ink.codes.podest", category: "search")
 /// - `.suggesting` Suggestions are displayed while users are typing.
 final class SearchControllerProxy: NSObject {
 
-  let targetController: UIViewController?
+  let targetController: UITableViewController?
   
   private let searchController: UISearchController
   private let searchResultsController: SearchResultsController
   
   /// Prepares search for `viewController`.
-  init(viewController vc: UIViewController) {
+  init(viewController vc: UITableViewController) {
     let rc = SearchResultsController()
     
     let sc = UISearchController(searchResultsController: rc)
@@ -222,11 +222,9 @@ extension SearchControllerProxy: UISearchResultsUpdating {
   func updateSearchResults(for sc: UISearchController) {
     switch state {
     case .dismissed:
-      return removeHome()
+      return
     case .searching(let term), .suggesting(let term):
       let newTerm = sc.searchBar.text ?? ""
-      
-      newTerm == "" ? showHome() : removeHome()
       
       guard term != newTerm else {
         return
@@ -243,11 +241,12 @@ extension SearchControllerProxy: UISearchControllerDelegate {
 
   func willPresentSearchController(_ searchController: UISearchController) {
     Podest.store.cancelReview()
-    
+    addHome()
     suggest("")
   }
 
   func willDismissSearchController(_ sc: UISearchController) {
+    removeHome()
     dismiss()
   }
 }
@@ -262,10 +261,14 @@ extension SearchControllerProxy: SearchResultsControllerDelegate {
 
   private func show(feed: Feed) {
     navigationDelegate?.show(feed: feed)
+    
+    searchController.isActive = false
   }
 
   private func show(entry: Entry) {
     navigationDelegate?.show(entry: entry)
+    
+    searchController.isActive = false
   }
 
   func searchResults(

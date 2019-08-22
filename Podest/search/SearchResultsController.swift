@@ -41,7 +41,6 @@ final class SearchResultsController: UITableViewController {
   /// Returns a new closure over self refreshing the table view.
   private func makeReloadBlock() -> () -> Void {
     return { [weak self] in
-      self?.adjustInsets()
       self?.tableView.reloadData()
 
       let zero = IndexPath(row: 0, section: 0)
@@ -76,7 +75,9 @@ extension SearchResultsController {
 
     tableView.dataSource = dataSource
     tableView.prefetchDataSource = dataSource
+    
     tableView.keyboardDismissMode = .onDrag
+    tableView.backgroundColor = .groupTableViewBackground
     
     if #available(iOS 13.0, *) {
       // NOP
@@ -88,53 +89,29 @@ extension SearchResultsController {
 
     tableView.rowHeight = UITableView.automaticDimension
     tableView.estimatedRowHeight = 64
-
+    
     var separatorInset = tableView.separatorInset
     separatorInset.left = UITableView.automaticDimension
     tableView.separatorInset = separatorInset
 
     clearsSelectionOnViewWillAppear = true
   }
+}
+
+// MARK: - Extending Safe Area
+
+extension SearchResultsController {
+
+  override var additionalSafeAreaInsets: UIEdgeInsets {
+    get { delegate?.navigationDelegate?.miniPlayerEdgeInsets ?? .zero }
+    set {}
+  }
+}
+
+// MARK: - UI Enviroment Changes
+
+extension SearchResultsController {
   
-  @available (iOS 13.0, *)
-  func updateAdditionalSafeAreaInsets () {
-    additionalSafeAreaInsets = delegate?.navigationDelegate?
-      .miniPlayerEdgeInsets ?? .zero
-  }
-  
-  override func viewLayoutMarginsDidChange() {
-    super.viewLayoutMarginsDidChange()
-    
-    guard #available(iOS 13.0, *) else { return }
-    updateAdditionalSafeAreaInsets()
-  }
-
-  private var bottomInset: CGFloat {
-    return max(delegate?.navigationDelegate?
-      .miniPlayerEdgeInsets.bottom ?? 0, tableView.safeAreaInsets.bottom)
-  }
-
-  /// Integrates the mini-player height into the insets.
-  private func adjustInsets() {
-    if #available(iOS 13.0, *) {
-      // NOP
-    } else {
-      tableView.contentInset = UIEdgeInsets(
-        top: tableView.safeAreaInsets.top,
-        left: tableView.contentInset.left,
-        bottom: bottomInset + tableView.safeAreaInsets.bottom,
-        right: tableView.contentInset.right
-      )
-      
-      tableView.scrollIndicatorInsets = UIEdgeInsets(
-        top: tableView.safeAreaInsets.top,
-        left: tableView.scrollIndicatorInsets.left,
-        bottom: bottomInset + tableView.safeAreaInsets.bottom,
-        right: tableView.scrollIndicatorInsets.right
-      )
-    }
-  }
-
   private func clearSelection(_ animated: Bool = false) {
     guard delegate?.isCollapsed ?? true,
       let ip = tableView.indexPathForSelectedRow else {
@@ -148,14 +125,9 @@ extension SearchResultsController {
     _ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
     
-    clearSelection(true)
     dataSource.previousTraitCollection = previousTraitCollection
     
-    // Waiting for the searchbar to be resized by SearchController.
-    
-    DispatchQueue.main.async { [weak self] in
-      self?.adjustInsets()
-    }
+    clearSelection(true)
   }
 }
 
