@@ -195,15 +195,19 @@ extension EpisodeViewController {
 
 }
 
-// MARK: - Responding to a Change in the Interface Environment
+// MARK: - Extending Safe Area
 
 extension EpisodeViewController {
 
-  override func viewLayoutMarginsDidChange() {
-    super.viewLayoutMarginsDidChange()
-
-    additionalSafeAreaInsets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
+  override var additionalSafeAreaInsets: UIEdgeInsets {
+    get { navigationDelegate?.miniPlayerEdgeInsets ?? .zero }
+    set {}
   }
+}
+
+// MARK: - Responding to a Change in the Interface Environment
+
+extension EpisodeViewController {
 
   override func traitCollectionDidChange(
     _ previousTraitCollection: UITraitCollection?) {
@@ -211,7 +215,6 @@ extension EpisodeViewController {
 
     content?.resignFirstResponder()
   }
-
 }
 
 // MARK: - State Preservation and Restoration
