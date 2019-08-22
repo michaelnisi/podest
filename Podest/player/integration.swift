@@ -342,7 +342,6 @@ extension RootViewController {
   }
 }
 
-
 /// This extension hides the status bar in landscape.
 extension AVPlayerViewController {
 
