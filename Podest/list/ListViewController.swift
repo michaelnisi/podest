@@ -170,7 +170,6 @@ extension ListViewController {
             self?.selectRow(representing: entry, animated: true)
           }
 
-          self?.additionalSafeAreaInsets = self?.navigationDelegate?.miniPlayerEdgeInsets ?? .zero
           self?.isReady = true
 
           completionBlock?()
@@ -229,19 +228,13 @@ extension ListViewController {
   }
 }
 
-// MARK: - Responding to a Change in the Interface Environment
+// MARK: - Extending Safe Area
 
 extension ListViewController {
 
-  override func viewLayoutMarginsDidChange() {
-    super.viewLayoutMarginsDidChange()
-
-    // Preventing interference with collection animations.
-    guard isReady else {
-      return
-    }
-
-    additionalSafeAreaInsets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
+  override var additionalSafeAreaInsets: UIEdgeInsets {
+    get { navigationDelegate?.miniPlayerEdgeInsets ?? .zero }
+    set {}
   }
 }
 
