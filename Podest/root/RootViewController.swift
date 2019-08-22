@@ -76,15 +76,12 @@ final class RootViewController: UIViewController, Routing {
 
 extension RootViewController {
   
-  override func viewDidLayoutSubviews() {
+  override func viewDidLayoutSubviews() { 
     super.viewDidLayoutSubviews()
     
-    for vc in [
-      pnc.topViewController,
-      pnc.navigationItem.searchController?.searchResultsController,
-      snc.topViewController
-    ] {
-      vc?.viewLayoutMarginsDidChange()
+    os_log("invalidating container layouts", log: log)
+    for vc in [pnc, snc] {
+      vc?.view.setNeedsLayout()
     }
   }
   
