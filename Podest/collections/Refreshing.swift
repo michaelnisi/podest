@@ -14,7 +14,7 @@ private let log = OSLog(subsystem: "ink.codes.podest", category: "Refreshing")
 /// Defines a controller for issuing collection content refreshing.
 ///
 /// Peek into `QueueUpdating.swift` for an implementation.
-protocol Refreshing {
+protocol Refreshing: class {
   func reload()
 }
 
@@ -51,7 +51,7 @@ class RefreshingFSM {
     }
   }
   
-  var delegate: Refreshing?
+  weak var delegate: Refreshing?
 }
 
 extension RefreshingFSM {
