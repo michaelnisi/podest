@@ -13,7 +13,7 @@ import UIKit
 protocol HomePresenting {
   
   /// The target table view controller for adding Home to.
-  var targetController: UITableViewController? { get }
+  var targetController: UITableViewController { get }
   
   /// Adds Home to target view controller.
   func addHome()
@@ -25,7 +25,7 @@ protocol HomePresenting {
 extension HomePresenting {
   
   private var home: UIViewController? {
-    guard let home = targetController?.children
+    guard let home = targetController.children
       .last as? UICollectionViewController else {
       return nil
     }
@@ -54,17 +54,13 @@ extension HomePresenting {
     transition.duration = 0.3
     transition.type = .fade
     
-    guard let container = targetController else {
-      return
-    }
-
-    container.view.layer.add(transition, forKey: nil)
-    container.view.addSubview(vc.view)
-    container.addChild(vc)
+    targetController.view.layer.add(transition, forKey: nil)
+    targetController.view.addSubview(vc.view)
+    targetController.addChild(vc)
   }
   
   func removeHome() {
-    targetController?.tableView.scrollToRow(
+    targetController.tableView.scrollToRow(
       at: IndexPath(row: 0, section: 0), at: .top, animated: false)
     
     home?.willMove(toParent: nil)

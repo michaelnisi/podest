@@ -22,13 +22,19 @@ private let log = OSLog(subsystem: "ink.codes.podest", category: "search")
 /// - `.suggesting` Suggestions are displayed while users are typing.
 final class SearchControllerProxy: NSObject {
 
-  let targetController: UITableViewController?
-  
-  private let searchController: UISearchController
-  private let searchResultsController: SearchResultsController
-  
+  let targetController: UITableViewController
+
   /// Prepares search for `viewController`.
   init(viewController vc: UITableViewController) {
+    targetController = vc
+  }
+  
+  var navigationDelegate: ViewControllers?
+  
+  private var searchController: UISearchController!
+  private var searchResultsController: SearchResultsController!
+  
+  func install() {
     let rc = SearchResultsController()
     
     let sc = UISearchController(searchResultsController: rc)
@@ -38,30 +44,28 @@ final class SearchControllerProxy: NSObject {
     if #available(iOS 13.0, *) {
       // NOP
     } else {
-      vc.definesPresentationContext = true
+      targetController.definesPresentationContext = true
     }
 
-    vc.navigationItem.searchController = sc
+    targetController.navigationItem.searchController = sc
     
-    self.targetController = vc
     self.searchController = sc
     self.searchResultsController = rc
-  }
-
-  var navigationDelegate: ViewControllers?
-
-  func install() {
-    searchController.delegate = self
-    searchController.searchResultsUpdater = self
-    searchController.searchBar.delegate = self
-    searchResultsController.delegate = self
+    
+    searchController?.delegate = self
+    searchController?.searchResultsUpdater = self
+    searchController?.searchBar.delegate = self
+    searchResultsController?.delegate = self
   }
 
   func uninstall() {
-    searchController.delegate = nil
-    searchController.searchResultsUpdater = nil
-    searchController.searchBar.delegate = nil
-    searchResultsController.delegate = nil
+    searchController?.delegate = nil
+    searchController?.searchResultsUpdater = nil
+    searchController?.searchBar.delegate = nil
+    searchResultsController?.delegate = nil
+    
+    searchController = nil
+    searchResultsController = nil
 
     navigationDelegate = nil
   }
@@ -95,7 +99,7 @@ final class SearchControllerProxy: NSObject {
   }
 
   func deselect(_ animated: Bool) {
-    searchResultsController.deselect(animated)
+    searchResultsController?.deselect(animated)
   }
 
   private var searchBar: UISearchBar {
@@ -112,12 +116,12 @@ final class SearchControllerProxy: NSObject {
         return
 
       case .search(let term):
-        src.search(term)
+        src?.search(term)
 
         state = .searching(term)
 
       case .suggest(let term):
-        src.suggest(term)
+        src?.suggest(term)
 
         state = .suggesting(term)
       }
@@ -125,12 +129,12 @@ final class SearchControllerProxy: NSObject {
     case .suggesting(let oldTerm):
       switch e {
       case .dismiss:
-        src.reset()
+        src?.reset()
 
         state = .dismissed
 
       case .search(let term):
-        src.search(term)
+        src?.search(term)
 
         state = .searching(term)
 
@@ -150,7 +154,7 @@ final class SearchControllerProxy: NSObject {
           return
         }
 
-        src.suggest(term)
+        src?.suggest(term)
 
         state = .suggesting(term)
 
@@ -163,7 +167,7 @@ final class SearchControllerProxy: NSObject {
     case .searching(let oldTerm):
       switch e {
       case .dismiss:
-        src.reset()
+        src?.reset()
 
         state = .dismissed
 
@@ -173,12 +177,12 @@ final class SearchControllerProxy: NSObject {
           return
         }
         
-        src.search(term)
+        src?.search(term)
 
         state = .searching(term)
 
       case .suggest(let term):
-        src.suggest(term)
+        src?.suggest(term)
 
         state = .suggesting(term)
       }
