@@ -193,20 +193,21 @@ extension ListViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
-    refreshControl = UIRefreshControl()
-    installRefreshControl()
-
+    
     navigationItem.largeTitleDisplayMode = .never
 
-    ListDataSource.registerCells(with: tableView!)
-
+    tableView?.refreshControl = UIRefreshControl()
+    tableView.rowHeight = UITableView.automaticDimension
+    tableView.estimatedRowHeight = 104
     tableView.dataSource = dataSource
-
+    
     // Leaving off the last separator.
     tableView.tableFooterView = UIView(frame:
       CGRect(origin: .zero, size: CGSize(width: 0, height: 1))
     )
+    
+    installRefreshControl()
+    ListDataSource.registerCells(with: tableView!)
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -314,6 +315,11 @@ extension ListViewController {
 
   override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
     refreshControlTimer = nil
+  }
+  
+  override func scrollViewShouldScrollToTop(
+    _ scrollView: UIScrollView) -> Bool {
+    return !(scrollView.refreshControl?.isRefreshing ?? false)
   }
 
   override func scrollViewDidEndDragging(
