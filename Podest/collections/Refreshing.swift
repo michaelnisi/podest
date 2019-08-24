@@ -18,7 +18,7 @@ protocol Refreshing {
   func reload()
 }
 
-/// Coordinates refreshing the table view contents coordinating it with table view states.
+/// Coordinates refreshing of collections.
 ///
 /// For example, batch updates should not interfere with scrolling-to-top animations. Or, say, the collection 
 /// view is off-screen then reloading must be deferred. Coordination with `UIRefreshControl` is tricky.
@@ -26,7 +26,7 @@ class RefreshingFSM {
   
   enum State {
     
-    /// Table view contents is currently refreshing.
+    /// Collection view is currently refreshing its contents.
     case refreshing
     
     /// Ready to go.
