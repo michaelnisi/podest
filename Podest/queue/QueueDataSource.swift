@@ -19,8 +19,14 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
   /// Enumerates queue data source item types.
   enum Item: Hashable {
+    
+    /// An enqueued entry and wether it has been played.
     case entry(Entry, Bool)
+    
+    /// A subscribed feed. However, not in use at the moment.
     case feed(Feed)
+    
+    /// A (single) message to display.
     case message(NSAttributedString)
   }
 
@@ -207,9 +213,10 @@ final class QueueDataSource: NSObject, SectionedDataSource {
       }
 
       for entry in entries {
-        let fresh = self?.isUnplayed(url: entry.enclosure?.url) ?? false
-        
-        acc.append(.entry(entry, fresh))
+        acc.append(.entry(
+          entry, 
+          self?.isUnplayed(url: entry.enclosure?.url) ?? false)
+        )
       }
 
       DispatchQueue.main.async {
@@ -424,6 +431,40 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
 }
 
+// MARK: - Image Loading
+
+extension QueueDataSource {
+  
+  /// Loads image into `cell` if cell is not already configured to load said
+  /// image.
+  private func prepareImage(cell: SubtitleTableViewCell, displaying entry: Entry) {
+    guard cell.tag != entry.hashValue else {
+      return
+    }
+    
+    images.cancel(displaying: cell.imageView)
+    cell.invalidate(image: UIImage(named: "Oval"))
+
+    cell.tag = entry.hashValue
+    
+    cell.layoutSubviewsBlock = { [weak self] imageView in
+      guard cell.tag == entry.hashValue else {
+        return
+      }
+      
+      self?.images.loadImage(
+        representing: entry,
+        into: imageView,
+        options: FKImageLoadingOptions(
+          fallbackImage: UIImage(named: "Oval"),
+          quality: .medium,
+          isDirect: true
+        )
+      )
+    }
+  }
+}
+
 // MARK: - UITableViewDataSource
 
 extension QueueDataSource: UITableViewDataSource {
@@ -447,30 +488,6 @@ extension QueueDataSource: UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int
   ) -> Int {
     return sections[section].count
-  }
-
-  /// Loads image into `cell` if cell is not already configured to load said
-  /// image.
-  private func prepareImage(cell: SubtitleTableViewCell, displaying entry: Entry) {
-    guard cell.tag != entry.hashValue else {
-      return os_log("** already loading", log: log, type: .debug)
-    }
-
-    images.cancel(displaying: cell.imageView)
-    cell.invalidate(image: UIImage(named: "Oval"))
-    
-    cell.tag = entry.hashValue
-    cell.layoutSubviewsBlock = { [weak self] imageView in
-      self?.images.loadImage(
-        representing: entry,
-        into: imageView,
-        options: FKImageLoadingOptions(
-          fallbackImage: UIImage(named: "Oval"),
-          quality: .medium,
-          isDirect: true
-        )
-      )
-    }
   }
   
   private static func makeAccessory() -> UIView {
@@ -586,19 +603,17 @@ extension QueueDataSource: EntryIndexPathMapping {
 extension QueueDataSource {
 
   /// Returns a fresh contextual action handler for the row at `indexPath`,
-  /// dequeueing its episode, when submitted.
+  /// dequeueing its episode when submitted.
   func makeDequeueHandler(
-    forRowAt indexPath: IndexPath,
-    of tableView: UITableView) -> UIContextualAction.Handler {
-    func handler(
-      action: UIContextualAction,
-      sourceView: UIView,
-      completionHandler: @escaping (Bool) -> Void) {
-      guard let entry = self.entry(at: indexPath) else {
-        return
+    indexPath: IndexPath, 
+    tableView: UITableView
+  ) -> UIContextualAction.Handler {
+    return { [weak self] action, sourceView, completionHandler in
+      guard let entry = self?.entry(at: indexPath) else {
+        return completionHandler(false)
       }
 
-      userQueue.dequeue(entry: entry) { guids, error in
+      self?.userQueue.dequeue(entry: entry) { guids, error in
         guard error == nil else {
           os_log("dequeue error: %{public}@", type: .error, error! as CVarArg)
 
@@ -608,12 +623,12 @@ extension QueueDataSource {
         }
 
         DispatchQueue.main.async {
+          self?.sections[0].remove(at: indexPath.row)
+          tableView.deleteRows(at: [indexPath], with: .fade)
           completionHandler(true)
         }
       }
     }
-
-    return handler
   }
 }
 

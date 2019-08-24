@@ -104,6 +104,10 @@
             argument = "-ink.codes.podest.allButUpsideDown"
             isEnabled = "NO">
          </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-UITraitCollectionChangeLoggingEnabled"
+            isEnabled = "YES">
+         </CommandLineArgument>
       </CommandLineArguments>
       <EnvironmentVariables>
          <EnvironmentVariable

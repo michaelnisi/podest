@@ -16,17 +16,12 @@ import Ola
 /// the global search.
 final class QueueViewController: UITableViewController, Navigator {
 
-  let log = OSLog.disabled
+  let log = OSLog(subsystem: "ink.codes.podest", category: "queue")
 
   /// A state machine handling events from the search controller.
   private var searchProxy: SearchControllerProxy!
-
-  /// Saving the refresh control hiding animation.
-  private var refreshControlTimer: DispatchSourceTimer? {
-    willSet {
-      refreshControlTimer?.cancel()
-    }
-  }
+  
+  var fsm = RefreshingFSM()
 
   // MARK: - Navigator
 
@@ -115,16 +110,24 @@ final class QueueViewController: UITableViewController, Navigator {
 
 extension QueueViewController {
 
-  @objc func refreshControlValueChanged(_ sender: UIRefreshControl) {
-    guard sender.isRefreshing, refreshControlTimer == nil else {
-      return
+  @objc func refreshControlValueChanged(target: UIRefreshControl) {
+    guard target.isRefreshing else {
+      return 
     }
-
-    dataSource.update(minding: 60)
+    
+    dataSource.update(minding: 60) { [weak self] newData, error in 
+      guard newData else { 
+        return DispatchQueue.main.async { 
+          target.endRefreshing()
+        }
+      }
+      
+      self?.reload()
+    }
   }
 
   private func installRefreshControl() {
-    refreshControl?.addTarget(
+    tableView?.refreshControl?.addTarget(
       self,
       action: #selector(refreshControlValueChanged),
       for: .valueChanged
@@ -136,30 +139,19 @@ extension QueueViewController {
 
 extension QueueViewController {
 
-  override func scrollViewDidEndDragging(
-    _ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-    guard let rc = refreshControl, rc.isRefreshing else {
-      return
-    }
-
-    DispatchQueue.main.async {
-      rc.endRefreshing()
-    }
-
-    refreshControlTimer = setTimeout(
-      delay: .milliseconds(600), queue: .main) { [weak self] in
-      self?.refreshControlTimer = nil
-
-      guard let rc = self?.refreshControl, !rc.isRefreshing else {
-        return
-      }
-
-      self?.reload()
-    }
-  }
-
   override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
     Podest.store.cancelReview()
+  }
+  
+  override 
+  func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
+    fsm.handle(event: .wait)
+    
+    return !(scrollView.refreshControl?.isRefreshing ?? false)
+  }
+  
+  override func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
+    fsm.handle(event: .go)
   }
 }
 
@@ -171,29 +163,28 @@ extension QueueViewController {
     super.viewDidLoad()
     
     navigationItem.title = "Queue"
-    
-    refreshControl = UIRefreshControl()
-    searchProxy = SearchControllerProxy(viewController: self)
     clearsSelectionOnViewWillAppear = true
-        
+    
+    searchProxy = SearchControllerProxy(viewController: self)
+    fsm.delegate = self
+    
+    tableView?.refreshControl = UIRefreshControl()
     tableView.rowHeight = UITableView.automaticDimension
     tableView.estimatedRowHeight = 104
-    
     var separatorInset = tableView.separatorInset
     separatorInset.left = UITableView.automaticDimension
     tableView.separatorInset = separatorInset
-    
     tableView.dataSource = dataSource
     tableView.prefetchDataSource = dataSource
     
     Podest.store.subscriberDelegate = self
     
-    installRefreshControl()
     searchProxy.install()
     QueueDataSource.registerCells(with: tableView)
     Podest.store.resume()
+    installRefreshControl()
   }
-
+  
   private func updateStoreButton() {
     guard viewIfLoaded != nil, isStoreAccessibleChanged else {
       return
@@ -231,45 +222,38 @@ extension QueueViewController {
     if searchProxy.isSearchDismissed {
       Podest.store.considerReview()
     }
-
-    searchProxy.deselect(animated)
-
+    
     if Podest.store.isExpired() {
       os_log("free trial expired", log: log)
     }
-    
-    super.viewDidAppear(animated)
-    
-    reload()
-  }
 
-  override func viewDidDisappear(_ animated: Bool) {
+    searchProxy.deselect(animated)
     updateStoreButton()
+    reload()
 
-    super.viewDidDisappear(animated)
+    super.viewDidAppear(animated)
   }
 
   override func viewWillDisappear(_ animated: Bool) {
-    refreshControlTimer = nil
-    
     Podest.store.cancelReview()
 
     super.viewWillDisappear(animated)
   }
 }
 
-// MARK: - UI Enviroment Changes
+// MARK: - Extending Safe Area
 
 extension QueueViewController {
 
-  override func viewLayoutMarginsDidChange() {    
-    navigationItem.searchController?.searchResultsController?
-      .viewLayoutMarginsDidChange()
-
-    additionalSafeAreaInsets = navigationDelegate?.miniPlayerEdgeInsets ?? .zero
-    
-    super.viewLayoutMarginsDidChange()
+  override var additionalSafeAreaInsets: UIEdgeInsets {
+    get { navigationDelegate?.miniPlayerEdgeInsets ?? .zero }
+    set {}
   }
+}
+
+// MARK: - UI Enviroment Changes
+
+extension QueueViewController {
 
   override func traitCollectionDidChange(
     _ previousTraitCollection: UITraitCollection?) {

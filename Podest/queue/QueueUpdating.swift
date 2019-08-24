@@ -9,30 +9,52 @@
 import Foundation
 import UIKit
 
-extension QueueViewController {
+extension QueueViewController: Refreshing {
   
-  /// Reloads the table view.
+  /// Refresh the contents of the table view.
   ///
   /// - Parameters:
   ///   - animated: A flag to disable animations.
   ///   - completionBlock: Submitted to the main queue when the table view has
   /// has been reloaded.
   ///
-  /// NOP if the table view is in editing mode.
-  func reload(_ animated: Bool = true, completionBlock: ((Error?) -> Void)? = nil) {
-    guard tableView.window != nil, !tableView.isEditing else {
+  /// NOP if the table view is in editing mode or if the view has not yet been 
+  /// added to a window.
+  func reload(
+    _ animated: Bool = true, 
+    completionBlock: ((Error?) -> Void)? = nil
+  ) {
+    dispatchPrecondition(condition: .onQueue(.main))
+    
+    fsm.handle(event: .refresh)
+    
+    guard 
+      tableView.window != nil, 
+      !tableView.isEditing, 
+      case .refreshing = fsm.state else {
       completionBlock?(nil)
       return
     }
-    
+      
+    tableView?.refreshControl?.beginRefreshing()
+
     dataSource.reload { [weak self] changes, error in
-      func done() {
-        self?.updateSelection(animated)
+      guard 
+        let tv = self?.tableView, 
+        self?.tableView.window != nil, 
+        !changes.isEmpty, 
+        case .refreshing = self?.fsm.state else {
+        self?.tableView.refreshControl?.endRefreshing()
         completionBlock?(error)
+          
+        return
       }
       
-      guard let tv = self?.tableView else {
-        return done()
+      func done() {
+        self?.updateSelection(animated)
+        self?.tableView.refreshControl?.endRefreshing()
+        self?.fsm.handle(event: .refreshed)
+        completionBlock?(error)
       }
       
       guard animated else {
@@ -49,6 +71,10 @@ extension QueueViewController {
     }
   }
   
+  func reload() {
+    reload(true, completionBlock: nil)
+  }
+  
   /// Updates the queue, fetching new episodes, accessing the remote service.
   ///
   /// - Parameters:
@@ -60,7 +86,9 @@ extension QueueViewController {
   func update(
     considering error: Error? = nil,
     completionHandler: ((Bool, Error?) -> Void)? = nil
-    ) {
+  ) {
+    dispatchPrecondition(condition: .onQueue(.main))
+    
     let isInitial = dataSource.isEmpty || dataSource.isMessage
     
     guard isInitial || dataSource.isReady else {
@@ -69,8 +97,9 @@ extension QueueViewController {
     }
     
     let animated = !isInitial
-    
-    // Reloading first, attaining a state to update from.
+            
+    // Reloading first for initially putting something on the screen. Assuming,
+    // reloads are cheap without actual changes.
     
     reload(animated) { [weak self] initialReloadError in
       self?.dataSource.update(considering: error) { newData, updateError in
@@ -80,5 +109,4 @@ extension QueueViewController {
       }
     }
   }
-
 }
