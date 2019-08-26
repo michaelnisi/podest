@@ -26,7 +26,7 @@ extension QueueViewController: Refreshing {
   ) {
     dispatchPrecondition(condition: .onQueue(.main))
     
-    fsm.handle(event: .refresh)
+    fsm.refresh()
     
     guard 
       tableView.window != nil, 
@@ -53,7 +53,7 @@ extension QueueViewController: Refreshing {
       func done() {
         self?.updateSelection(animated)
         self?.tableView.refreshControl?.endRefreshing()
-        self?.fsm.handle(event: .refreshed)
+        self?.fsm.refreshed()
         completionBlock?(error)
       }
       
