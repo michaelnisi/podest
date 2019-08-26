@@ -271,29 +271,6 @@ extension RootViewController: ViewControllers {
     return vc.locator
   }
 
-  private func initiateEpisodeViewController() -> EpisodeViewController {
-    let storyboard = UIStoryboard(name: "Episode", bundle: Bundle.main)
-    return storyboard.instantiateViewController(withIdentifier: "EpisodeID")
-      as! EpisodeViewController
-  }
-
-  private func makeEpisodeViewController(entry: Entry) -> EpisodeViewController {
-    let evc = initiateEpisodeViewController()
-    evc.navigationDelegate = self
-    evc.entry = entry
-    
-    return evc
-  }
-
-  private func makeEpisodeViewController(
-    locator: EntryLocator) -> EpisodeViewController {
-    let evc = initiateEpisodeViewController()
-    evc.navigationDelegate = self
-    evc.locator = locator
-    
-    return evc
-  }
-
   func show(entry: Entry) {
     os_log("showing entry: %{public}@", log: log, type: .debug, entry.description)
 
@@ -301,8 +278,8 @@ extension RootViewController: ViewControllers {
       guard entry != self.entry else {
         return
       }
-
-      let evc = self.makeEpisodeViewController(entry: entry)
+      
+      let evc = MakeEpisode.viewController(item: entry)
 
       if isCollapsed {
         os_log("pushing view controller: %{public}@",
@@ -582,7 +559,7 @@ extension RootViewController: UISplitViewControllerDelegate {
     os_log("search dismissed: %i", log: log, type: .debug, qvc.isSearchDismissed)
 
     if let entry = self.entry ?? self.selectedEntry {
-      let evc = makeEpisodeViewController(entry: entry)
+      let evc = MakeEpisode.viewController(item: entry)
       
       pnc.setViewControllers(vcs + [evc], animated: false)
     } else if let locator = self.locator { // restoring state
@@ -625,10 +602,10 @@ extension RootViewController: UISplitViewControllerDelegate {
   /// current entry or locator if we got one.
   private func makeEpisodeViewController() -> EpisodeViewController? {
     if let entry = self.selectedEntry {
-      return makeEpisodeViewController(entry: entry)
+      return MakeEpisode.viewController(item: entry)
     } else if let locator = self.locator {
       os_log("probably restoring state", log: log, type: .debug)
-      return makeEpisodeViewController(locator: locator)
+      return MakeEpisode.viewController(item: locator)
     } else {
       return nil
     }

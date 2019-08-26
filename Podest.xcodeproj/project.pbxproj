@@ -124,6 +124,7 @@
 		4CB64B6E223E28FC006DB19B /* settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9EBDFA223D58A8009F2B6F /* settings.swift */; };
 		4CB64B6F223E295A006DB19B /* time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED2D6BE1F98E7FF000DA71B /* time.swift */; };
 		4CB6CF3C22BE7F91002452BF /* TopLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB6CF3B22BE7F91002452BF /* TopLine.swift */; };
+		4CBA99552312DDA700AEFF34 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA99542312DDA700AEFF34 /* Context.swift */; };
 		4CBB836620D667AF008330E2 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4CBB836520D667AF008330E2 /* Settings.bundle */; };
 		4CCBF20A20805C6500A7359F /* store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCBF20920805C6500A7359F /* store.swift */; };
 		4CCBF20C20805F5C00A7359F /* products.json in Resources */ = {isa = PBXBuildFile; fileRef = 4CCBF20B20805F5C00A7359F /* products.json */; };
@@ -373,6 +374,7 @@
 		4C9EBDFA223D58A8009F2B6F /* settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = settings.swift; sourceTree = "<group>"; };
 		4CA9C291226CDA5C002BCCB5 /* ListOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListOperation.swift; sourceTree = "<group>"; };
 		4CB6CF3B22BE7F91002452BF /* TopLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopLine.swift; sourceTree = "<group>"; };
+		4CBA99542312DDA700AEFF34 /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		4CBB836520D667AF008330E2 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		4CCBF20920805C6500A7359F /* store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = store.swift; sourceTree = "<group>"; };
 		4CCBF20B20805F5C00A7359F /* products.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = products.json; sourceTree = "<group>"; };
@@ -758,6 +760,7 @@
 				4E684D4B1C5F3201004699A1 /* EpisodeViewController.swift */,
 				4EFEEBDB1E7465EA00169153 /* MessageView.xib */,
 				4EFEEBDD1E75493900169153 /* MessageView.swift */,
+				4CBA99542312DDA700AEFF34 /* Context.swift */,
 			);
 			path = episode;
 			sourceTree = "<group>";
@@ -1343,6 +1346,7 @@
 				4EF1A3511EB837D100E41F84 /* PlaySwitch.swift in Sources */,
 				4C8B375C22A0ED280004FD89 /* SingleRowLayout.swift in Sources */,
 				4C1F57A92081C0690067AB7C /* ProductsDataSource.swift in Sources */,
+				4CBA99552312DDA700AEFF34 /* Context.swift in Sources */,
 				4CF21CF22063B0D100169E43 /* PlayerTransitionDelegate.swift in Sources */,
 				4C776B2920847D0900A055CD /* ProductCell.swift in Sources */,
 				4E7D10B31F6644DA0048CB43 /* QueueDataSource.swift in Sources */,
