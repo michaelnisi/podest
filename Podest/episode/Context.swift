@@ -156,9 +156,7 @@ extension Episode {
     
     return UIContextMenuConfiguration(
       identifier: Episode.ID(entry: entry), 
-      previewProvider: { 
-        MakeEpisode.viewController(item: entry) 
-      }, 
+      previewProvider: { MakeEpisode.viewController(item: entry) }, 
       actionProvider: actionProvider
     )
   }
