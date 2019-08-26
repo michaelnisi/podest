@@ -54,9 +54,11 @@ class RefreshingFSM {
   weak var delegate: Refreshing?
 }
 
+// MARK: - Internals
+
 extension RefreshingFSM {
   
-  func handle(event: Event) {
+  private func handle(event: Event) {
     os_log("handling event: %@,", log: log, type: .debug, 
            String(describing: event))
     
@@ -69,7 +71,9 @@ extension RefreshingFSM {
       case .go:
         state = .ready
         
-        delegate?.reload()
+        DispatchQueue.main.async { [weak self] in
+          self?.delegate?.reload()
+        }
       
       case .wait:
         state = .waiting(true)
@@ -102,12 +106,39 @@ extension RefreshingFSM {
         state = .ready
         
         if staged {
-          delegate?.reload()
+          DispatchQueue.main.async { [weak self] in
+            self?.delegate?.reload()
+          }
         }
         
       case .refreshed:
         state = .ready
       }
     }
+  }
+}
+
+// MARK: - API
+
+extension RefreshingFSM {
+  
+  /// Defer incoming updates (because animations or editing might be in progress).
+  func wait() {
+    handle(event: .wait)
+  }
+  
+  /// Requests reloading of the `Refreshing` collection.
+  func go() {
+    handle(event: .go)
+  }
+  
+  /// Signals that refreshing of collection contents has started.
+  func refresh() {
+    handle(event: .refresh)
+  }
+  
+  /// Signals that collection contents has been refreshed.
+  func refreshed() {
+    handle(event: .refreshed)
   }
 }
