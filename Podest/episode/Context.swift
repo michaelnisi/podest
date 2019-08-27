@@ -90,7 +90,7 @@ extension Episode {
     
     return UIAction(
       title: "Delete from Queue", 
-      image: UIImage(systemName: "trash.circle")
+      image: UIImage(systemName: "trash")
     ) { action in 
       queue.dequeue(entry: entry) { dequeued, error in
         //
@@ -132,18 +132,18 @@ extension Episode {
         ) { action in 
           navigationDelegate?.play(entry)
         },
-        UIAction(
-          title: "Copy", 
-          image: UIImage(systemName: "doc.on.doc")
-        ) { action in 
-          print("copy") 
-        },
-        UIAction(
-          title: "Share", 
-          image: UIImage(systemName: "square.and.arrow.up")
-        ) { action in 
-          print("share") 
-        },
+//        UIAction(
+//          title: "Copy", 
+//          image: UIImage(systemName: "doc.on.doc")
+//        ) { action in 
+//          print("copy") 
+//        },
+//        UIAction(
+//          title: "Share", 
+//          image: UIImage(systemName: "square.and.arrow.up")
+//        ) { action in 
+//          print("share") 
+//        },
         makeQueueAction(entry: entry, queue: queue)
       ]
       
