@@ -134,9 +134,7 @@ extension RefreshingFSM {
         state = .ready
 
         if staged {
-          DispatchQueue.main.async { [weak self] in
-            self?.delegate?.reload()
-          }
+          delegate?.reload()
         }
 
       case .refreshed:
