@@ -98,16 +98,6 @@ extension SearchResultsController {
   }
 }
 
-// MARK: - Extending Safe Area
-
-extension SearchResultsController {
-
-  override var additionalSafeAreaInsets: UIEdgeInsets {
-    get { delegate?.navigationDelegate?.miniPlayerEdgeInsets ?? .zero }
-    set {}
-  }
-}
-
 // MARK: - UI Enviroment Changes
 
 extension SearchResultsController {
