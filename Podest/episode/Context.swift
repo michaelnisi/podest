@@ -53,22 +53,7 @@ extension MakeEpisode where Item == EntryLocator {
   }
 }
 
-// MARK: Identifying Episodes
-
-enum Episode {
-  
-  class ID: NSObject, NSCopying {
-    let entry: Entry 
-    
-    init(entry: Entry) {
-      self.entry = entry
-    }
-    
-    func copy(with zone: NSZone? = nil) -> Any {
-      return self
-    }
-  }
-}
+enum Episode {}
 
 // MARK: - Contextual Menu
 
@@ -155,7 +140,7 @@ extension Episode {
     }
     
     return UIContextMenuConfiguration(
-      identifier: Episode.ID(entry: entry), 
+      identifier: entry.guid as NSCopying, 
       previewProvider: { MakeEpisode.viewController(item: entry) }, 
       actionProvider: actionProvider
     )
