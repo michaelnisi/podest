@@ -12,7 +12,7 @@ import os.log
 
 extension QueueViewController: Refreshing {
   
-  /// Refreshes the contents of the table view and updates refresh control.
+  /// Refreshes table view contents and keeping refresh control posted.
   ///
   /// - Parameters:
   ///   - animated: A flag to disable animations.
@@ -31,9 +31,8 @@ extension QueueViewController: Refreshing {
     
     guard tableView.window != nil, choreographer.isRefreshing else {
       return DispatchQueue.main.async { [weak self] in
-        completionBlock?(nil)
-        
         self?.refreshControl?.endRefreshing()
+        completionBlock?(nil)
       }
     }
     
@@ -44,18 +43,16 @@ extension QueueViewController: Refreshing {
         let tv = self?.tableView, 
         self?.tableView.window != nil, 
         self?.choreographer.isRefreshing ?? false else {
-        completionBlock?(error)
-          
         self?.refreshControl?.endRefreshing()
+        completionBlock?(error)
         return
       }
       
       func done() {
         self?.updateSelection(animated)
         self?.choreographer.refreshed()
-        completionBlock?(error)
-        
         self?.refreshControl?.endRefreshing()
+        completionBlock?(error)
       }
       
       guard animated else {
@@ -76,7 +73,8 @@ extension QueueViewController: Refreshing {
     reload(true, completionBlock: nil)
   }
   
-  /// Updates the queue, fetching new episodes from the remote service and refreshing the table view.
+  /// Updates the queue, fetching new episodes from the remote service, before refreshing table view 
+  /// contents.
   ///
   /// - Parameters:
   ///   - error: An upstream error to consider while updating.
