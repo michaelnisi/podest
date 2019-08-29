@@ -110,61 +110,6 @@ extension QueueViewController {
   }
 }
 
-// MARK: - Menus and Shortcuts
-
-@available(iOS 13.0, *)
-extension QueueViewController {
-    
-  override func tableView(
-    _ tableView: UITableView, 
-    contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint
-  ) -> UIContextMenuConfiguration? {
-    guard let entry = dataSource.entry(at: indexPath) else {
-      return nil
-    }
-    
-    return Episode.makeContextConfiguration(
-      entry: entry, 
-      navigationDelegate: navigationDelegate,
-      queue: Podest.userQueue,
-      library: Podest.userLibrary
-    )
-  }
-  
-  override func tableView(
-    _ tableView: UITableView, 
-    previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration
-  ) -> UITargetedPreview? {
-    fsm.wait()
-    
-    return nil
-  }
-  
-  override func tableView(
-    _ tableView: UITableView, 
-    previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration
-  ) -> UITargetedPreview? {
-    fsm.go()
-    
-    return nil
-  }
-  
-  override func tableView(
-    _ tableView: UITableView, 
-    willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, 
-    animator: UIContextMenuInteractionCommitAnimating
-  ) {
-    animator.addCompletion { [weak self] in
-      guard let entry = (configuration.identifier as? Episode.ID)?.entry else {
-        fatalError("unexpected identifier")
-      }
-      
-      self?.fsm.go()
-      self?.navigationDelegate?.show(entry: entry)
-    }
-  }
-}
-
 // MARK: - Leading Swipe Actions
 
 extension QueueViewController {

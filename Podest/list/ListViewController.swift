@@ -440,39 +440,3 @@ extension ListViewController {
     navigationItem.setRightBarButtonItems(items, animated: true)
   }
 }
-
-// MARK: - Menus and Shortcuts
-
-@available(iOS 13.0, *)
-extension ListViewController {
-    
-  override func tableView(
-    _ tableView: UITableView, 
-    contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint
-  ) -> UIContextMenuConfiguration? {
-    guard let entry = dataSource.entry(at: indexPath) else {
-      return nil
-    }
-    
-    return Episode.makeContextConfiguration(
-      entry: entry, 
-      navigationDelegate: navigationDelegate,
-      queue: Podest.userQueue,
-      library: Podest.userLibrary
-    )
-  }
-  
-  override func tableView(
-    _ tableView: UITableView, 
-    willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, 
-    animator: UIContextMenuInteractionCommitAnimating
-  ) {
-    animator.addCompletion { [weak self] in
-      guard let entry = (configuration.identifier as? Episode.ID)?.entry else {
-        fatalError("unexpected identifier")
-      }
-      
-      self?.navigationDelegate?.show(entry: entry)
-    }
-  }
-}
