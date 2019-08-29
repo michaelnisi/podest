@@ -79,10 +79,8 @@ extension RootViewController {
   override func viewDidLayoutSubviews() { 
     super.viewDidLayoutSubviews()
     
-    os_log("invalidating container layouts", log: log)
-    for vc in [pnc, snc] {
-      vc?.view.setNeedsLayout()
-    }
+    pnc.additionalSafeAreaInsets = miniPlayerEdgeInsets
+    snc.additionalSafeAreaInsets = miniPlayerEdgeInsets
   }
   
   override func viewDidLoad() {
