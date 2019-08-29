@@ -43,7 +43,7 @@ final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
         return
       }
 
-      loadImage()
+      loadImageIfNeeded()
       updateIsEnqueued()
       configureView()
 
@@ -121,7 +121,7 @@ extension EpisodeViewController {
     }
 
     if entryChanged {
-      loadImage()
+      loadImageIfNeeded()
       configureView()
       updateIsEnqueued()
       entryChanged = false
@@ -189,19 +189,8 @@ extension EpisodeViewController {
     // Passing animations to prevent redundant loading.
 
     DispatchQueue.main.async { [weak self] in
-      self?.loadImage()
+      self?.loadImageIfNeeded()
     }
-  }
-
-}
-
-// MARK: - Extending Safe Area
-
-extension EpisodeViewController {
-
-  override var additionalSafeAreaInsets: UIEdgeInsets {
-    get { navigationDelegate?.miniPlayerEdgeInsets ?? .zero }
-    set {}
   }
 }
 
@@ -302,7 +291,7 @@ extension EpisodeViewController {
   /// thus considered programming errors. To load the correct image though, we
   /// have to know its size, depending on the layout. For example, larger sizes
   /// on iPad.
-  private func loadImage() {
+  private func loadImageIfNeeded() {
     guard let entry = self.entry,
       let size = avatar.image?.size,
       (size.width > imageLoaded.width || size.height > imageLoaded.height) else {

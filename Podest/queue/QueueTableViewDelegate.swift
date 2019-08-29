@@ -11,6 +11,8 @@ import UIKit
 import FeedKit
 
 extension QueueViewController {
+  
+  // MARK: - Selecting
 
   override func tableView(
     _ tableView: UITableView,
@@ -33,9 +35,78 @@ extension QueueViewController {
     
     navigationDelegate?.show(entry: entry)
   }
+}
+
+// MARK: - Editing
+
+extension QueueViewController {
   
-  override func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
-    reload()
+  override func tableView(
+    _ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
+    choreographer.wait()
+  }
+  
+  
+  override func tableView(
+    _ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
+    choreographer.clear()
+  }
+}
+
+// MARK: - Menus and Shortcuts
+
+@available(iOS 13.0, *)
+extension QueueViewController {
+    
+  override func tableView(
+    _ tableView: UITableView, 
+    contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint
+  ) -> UIContextMenuConfiguration? {
+    guard let entry = dataSource.entry(at: indexPath) else {
+      return nil
+    }
+    
+    return Episode.makeContextConfiguration(
+      entry: entry, 
+      navigationDelegate: navigationDelegate,
+      queue: Podest.userQueue,
+      library: Podest.userLibrary
+    )
+  }
+  
+  override func tableView(
+    _ tableView: UITableView, 
+    previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration
+  ) -> UITargetedPreview? {
+    choreographer.wait()
+    
+    return nil
+  }
+  
+  override func tableView(
+    _ tableView: UITableView, 
+    previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration
+  ) -> UITargetedPreview? {
+    choreographer.clear()
+
+    return nil
+  }
+  
+  override func tableView(
+    _ tableView: UITableView, 
+    willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, 
+    animator: UIContextMenuInteractionCommitAnimating
+  ) {
+    guard 
+      let episode = animator.previewViewController as? EpisodeViewController, 
+      let entry = episode.entry else {
+      return
+    }
+    
+    animator.addCompletion { [weak self] in
+      self?.choreographer.clear()
+      self?.navigationDelegate?.show(entry: entry)
+    }
   }
 }
 

@@ -13,54 +13,15 @@ import BatchUpdates
 
 private let log = OSLog.disabled
 
-final class ListViewController: UITableViewController, Navigator, EntryRowSelectable {
+final class ListViewController: UITableViewController, 
+Navigator, EntryRowSelectable {
 
   /// The URL of the feed to display.
   var url: String?
 
-  private var isSubscribed: Bool = false {
+  var isSubscribed: Bool = false {
     didSet {
       configureNavigationItem(url: url!)
-    }
-  }
-
-  /// Updates the `isSubscribed` property using `urls` or the user library.
-  func updateIsSubscribed(using urls: Set<FeedURL>? = nil) {
-    if let subscribed = urls, let url = self.url {
-      isSubscribed = subscribed.contains(url)
-      return
-    }
-
-    if let feed = self.feed {
-      isSubscribed = Podest.userLibrary.has(subscription: feed.url)
-    } else {
-      // At launch, during state restoration, the user library might not be
-      // sufficiently synchronized yet, so we sync and wait before configuring
-      // the navigation item.
-
-      Podest.userLibrary.synchronize { [weak self] urls, _, error in
-        if let er = error {
-          switch er {
-          case QueueingError.outOfSync(let queue, let guids):
-            if queue == 0, guids != 0 {
-              os_log("queue not populated", log: log, type: .debug)
-            } else {
-              os_log("** out of sync: ( queue: %i, guids: %i )",
-                     log: log, type: .debug, queue, guids)
-            }
-          default:
-            fatalError("probably a database error: \(er)")
-          }
-        }
-
-        DispatchQueue.main.async { [weak self] in
-          guard let url = self?.url else {
-            return
-          }
-
-          self?.isSubscribed = urls?.contains(url) ?? false
-        }
-      }
     }
   }
 
@@ -93,7 +54,7 @@ final class ListViewController: UITableViewController, Navigator, EntryRowSelect
   )
 
   /// The current updating operation.
-  private weak var updating: Operation? {
+  weak var updating: Operation? {
     willSet {
       updating?.cancel()
     }
@@ -115,78 +76,18 @@ final class ListViewController: UITableViewController, Navigator, EntryRowSelect
 
   /// This flag is `true` after the collection has been updated it has finished
   /// its animations.
-  private var isReady = false
+  var isReady = false
 
   /// The previous trait collection influences if we should show or hide the
   /// the list header.
   private var previousTraitCollection: UITraitCollection?
 }
 
-// MARK: - Fetching Feed and Entries
-
-extension ListViewController {
-
-  private typealias Sections = [Array<ListDataSource.Item>]
-  private typealias Changes = [[Change<ListDataSource.Item>]]
-
-  private func makeUpdateOperation(
-    updatesBlock: ((Sections, Changes, Error?) -> Void)? = nil
-  ) -> ListOperation {
-    guard let url = self.url else {
-      fatalError("cannot refresh without URL")
-    }
-
-    let op = ListOperation(
-      url: url, originalFeed: feed, withoutImage: !isCompact)
-
-    op.feedBlock = { [weak self] feed, error in
-      DispatchQueue.main.async {
-        self?.feed = feed
-      }
-    }
-
-    op.updatesBlock = updatesBlock
-
-    return op
-  }
-
-  /// Reloads this list, executing `completionBlock` when done.
-  ///
-  /// The crux: feed and entries are separate, the feed object might not be
-  /// available yet or it might contain no summary—it must be fetched remotely.
-  private func update(completionBlock: (() -> Void)? = nil) {
-    os_log("** updating: %@", log: log, type: .debug, self)
-
-    let op = makeUpdateOperation { [weak self] sections, changes, error in
-      DispatchQueue.main.async {
-        guard let tv = self?.tableView else {
-          return
-        }
-
-        self?.isReady = false
-
-        self?.dataSource.commit(changes, performingWith: .table(tv)) { _ in
-          if let entry = self?.navigationDelegate?.entry {
-            self?.selectRow(representing: entry, animated: true)
-          }
-
-          self?.isReady = true
-
-          completionBlock?()
-        }
-      }
-    }
-
-    updating = dataSource.add(op)
-  }
-
-}
-
 // MARK: - Managing the View
 
 extension ListViewController {
 
-  private var isCompact: Bool {
+  var isCompact: Bool {
     return navigationDelegate?.isCollapsed ?? 
       (traitCollection.horizontalSizeClass == .compact)
   }
@@ -359,34 +260,6 @@ extension ListViewController {
         self?.changeBatches.removeAll()
       }
     }
-  }
-
-}
-
-// MARK: - UITableViewDelegate
-
-extension ListViewController {
-
-  override func tableView(
-    _ tableView: UITableView,
-    willSelectRowAt indexPath: IndexPath
-  ) -> IndexPath? {
-    guard case .entry? = dataSource.itemAt(indexPath: indexPath) else {
-      return nil
-    }
-
-    return indexPath
-  }
-
-  override func tableView(
-    _ tableView: UITableView,
-    didSelectRowAt indexPath: IndexPath
-  ) {
-    guard let entry = dataSource.entry(at: indexPath) else {
-      return
-    }
-
-    navigationDelegate?.show(entry: entry)
   }
 }
 

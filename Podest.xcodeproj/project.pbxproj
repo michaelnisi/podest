@@ -32,6 +32,7 @@
 		4C21F58021D8A56500ED5D26 /* SubtitleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C21F57E21D8A56500ED5D26 /* SubtitleTableViewCell.xib */; };
 		4C25AED51D578FA90056EE2F /* strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C25AED41D578FA90056EE2F /* strings.swift */; };
 		4C351CD11A7F5B7F00C5C88C /* SearchResultsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C351CD01A7F5B7E00C5C88C /* SearchResultsDataSource.swift */; };
+		4C377C8B2316D1D70038D9C8 /* ListTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C377C8A2316D1D70038D9C8 /* ListTableViewDelegate.swift */; };
 		4C3CDC282085A6C300BADBF8 /* StoreButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3CDC272085A6C300BADBF8 /* StoreButton.swift */; };
 		4C40A3F622C0818A00B353AD /* PlayerMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C40A3F522C0818A00B353AD /* PlayerMessage.swift */; };
 		4C42D9FB22E827A6007F80E2 /* PieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C42D9FA22E827A6007F80E2 /* PieView.swift */; };
@@ -120,6 +121,7 @@
 		4C94A3B71FF2591B0014742F /* UserClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C94A3B61FF2591B0014742F /* UserClient.swift */; };
 		4C9AF4CD223AC032000B1C2D /* HTMLAttributor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C9AF4CC223AC032000B1C2D /* HTMLAttributor.framework */; };
 		4C9EBDFB223D58A8009F2B6F /* settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9EBDFA223D58A8009F2B6F /* settings.swift */; };
+		4CA89794231794BD006E16A9 /* ListUpdating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA89793231794BD006E16A9 /* ListUpdating.swift */; };
 		4CA9C292226CDA5C002BCCB5 /* ListOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA9C291226CDA5C002BCCB5 /* ListOperation.swift */; };
 		4CB64B6E223E28FC006DB19B /* settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9EBDFA223D58A8009F2B6F /* settings.swift */; };
 		4CB64B6F223E295A006DB19B /* time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED2D6BE1F98E7FF000DA71B /* time.swift */; };
@@ -303,6 +305,7 @@
 		4C25AED41D578FA90056EE2F /* strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = strings.swift; sourceTree = "<group>"; };
 		4C2EDA4D2239699100528E99 /* HTMLAttributor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HTMLAttributor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C351CD01A7F5B7E00C5C88C /* SearchResultsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsDataSource.swift; sourceTree = "<group>"; };
+		4C377C8A2316D1D70038D9C8 /* ListTableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewDelegate.swift; sourceTree = "<group>"; };
 		4C3CDC272085A6C300BADBF8 /* StoreButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreButton.swift; sourceTree = "<group>"; };
 		4C40A3F522C0818A00B353AD /* PlayerMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerMessage.swift; sourceTree = "<group>"; };
 		4C42D9FA22E827A6007F80E2 /* PieView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PieView.swift; sourceTree = "<group>"; };
@@ -372,6 +375,7 @@
 		4C9AF4CC223AC032000B1C2D /* HTMLAttributor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HTMLAttributor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C9AF4CE223AC032000B1C2D /* Playback.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Playback.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C9EBDFA223D58A8009F2B6F /* settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = settings.swift; sourceTree = "<group>"; };
+		4CA89793231794BD006E16A9 /* ListUpdating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListUpdating.swift; sourceTree = "<group>"; };
 		4CA9C291226CDA5C002BCCB5 /* ListOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListOperation.swift; sourceTree = "<group>"; };
 		4CB6CF3B22BE7F91002452BF /* TopLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopLine.swift; sourceTree = "<group>"; };
 		4CBA99542312DDA700AEFF34 /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
@@ -714,6 +718,8 @@
 			children = (
 				4C8DCE061FFE75F800A6A61B /* List.storyboard */,
 				4E8CA70A1A126ADB004DE307 /* ListViewController.swift */,
+				4CA89793231794BD006E16A9 /* ListUpdating.swift */,
+				4C377C8A2316D1D70038D9C8 /* ListTableViewDelegate.swift */,
 				4EA2F7651FB2D58000A72195 /* ListDataSource.swift */,
 				4CA9C291226CDA5C002BCCB5 /* ListOperation.swift */,
 				4C1B32CA21E7046A00E57931 /* DisplayTableViewCell.swift */,
@@ -1367,6 +1373,7 @@
 				4E684D4C1C5F3201004699A1 /* EpisodeViewController.swift in Sources */,
 				4E7F291F1E7FC11300E12846 /* MiniPlayerController.swift in Sources */,
 				4E8CA70B1A126ADB004DE307 /* ListViewController.swift in Sources */,
+				4CA89794231794BD006E16A9 /* ListUpdating.swift in Sources */,
 				4EAAA73B1E71A83E0047D043 /* PlayerV1ViewController.swift in Sources */,
 				4C21F57F21D8A56500ED5D26 /* SubtitleTableViewCell.swift in Sources */,
 				4CF2DEA221DDD8E300A0F6EC /* ReusableNib.swift in Sources */,
@@ -1395,6 +1402,7 @@
 				4C8B375222A0ED280004FD89 /* UpNextCell.swift in Sources */,
 				4C8B376022A0ED280004FD89 /* CustomLayout.swift in Sources */,
 				4C3CDC282085A6C300BADBF8 /* StoreButton.swift in Sources */,
+				4C377C8B2316D1D70038D9C8 /* ListTableViewDelegate.swift in Sources */,
 				4EFEEBDE1E75493900169153 /* MessageView.swift in Sources */,
 				4ED4D4371EA470C90011C28C /* api.swift in Sources */,
 				4C1B32CC21E7046A00E57931 /* DisplayTableViewCell.swift in Sources */,

@@ -21,7 +21,8 @@ final class QueueViewController: UITableViewController, Navigator {
   /// A state machine handling events from the search controller.
   private var searchProxy: SearchControllerProxy!
   
-  var fsm = RefreshingFSM()
+  /// Coordinates refreshing animations with other table view animations.
+  private(set) var choreographer: Choreographing = RefreshingFSM()
 
   // MARK: - Navigator
 
@@ -43,9 +44,9 @@ final class QueueViewController: UITableViewController, Navigator {
   lazy var dataSource: QueueDataSource = {
     dispatchPrecondition(condition: .onQueue(.main))
 
-    // Explicit dependencies may be wordy but they are expressive, enabling
-    // controlled intialization in regards of timing and target thread. We want
-    // to initialize these core objects on the main thread.
+    // Explicit dependencies are wordy but expressive, enabling controlled 
+    // intialization in regards of timing and target thread. We want to 
+    // initialize these core objects on the main thread.
 
     let ds = QueueDataSource(
       userQueue: Podest.userQueue,
@@ -108,13 +109,20 @@ final class QueueViewController: UITableViewController, Navigator {
 
 // MARK: - UIRefreshControl
 
+extension UITableView {
+  open override var contentOffset: CGPoint {
+    set {
+      super.contentOffset = newValue
+    }
+    get {
+      super.contentOffset
+    }
+  }
+}
+
 extension QueueViewController {
 
   @objc func refreshControlValueChanged(target: UIRefreshControl) {
-    guard target.isRefreshing else {
-      return 
-    }
-    
     dataSource.update(minding: 60) { [weak self] newData, error in 
       guard newData else { 
         return DispatchQueue.main.async { 
@@ -127,7 +135,7 @@ extension QueueViewController {
   }
 
   private func installRefreshControl() {
-    tableView?.refreshControl?.addTarget(
+    refreshControl?.addTarget(
       self,
       action: #selector(refreshControlValueChanged),
       for: .valueChanged
@@ -145,13 +153,13 @@ extension QueueViewController {
   
   override 
   func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
-    fsm.wait()
+    choreographer.wait()
     
     return !(scrollView.refreshControl?.isRefreshing ?? false)
   }
   
   override func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
-    fsm.go()
+    choreographer.clear()
   }
 }
 
@@ -166,9 +174,9 @@ extension QueueViewController {
     clearsSelectionOnViewWillAppear = true
     
     searchProxy = SearchControllerProxy(viewController: self)
-    fsm.delegate = self
+    choreographer.delegate = self
     
-    tableView?.refreshControl = UIRefreshControl()
+    refreshControl = UIRefreshControl()
     tableView.rowHeight = UITableView.automaticDimension
     tableView.estimatedRowHeight = 104
     var separatorInset = tableView.separatorInset
@@ -238,16 +246,6 @@ extension QueueViewController {
     Podest.store.cancelReview()
 
     super.viewWillDisappear(animated)
-  }
-}
-
-// MARK: - Extending Safe Area
-
-extension QueueViewController {
-
-  override var additionalSafeAreaInsets: UIEdgeInsets {
-    get { navigationDelegate?.miniPlayerEdgeInsets ?? .zero }
-    set {}
   }
 }
 

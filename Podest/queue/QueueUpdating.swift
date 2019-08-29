@@ -8,53 +8,54 @@
 
 import Foundation
 import UIKit
+import os.log
 
 extension QueueViewController: Refreshing {
   
-  /// Refresh the contents of the table view.
+  /// Refreshes the contents of the table view and updates refresh control.
   ///
   /// - Parameters:
   ///   - animated: A flag to disable animations.
-  ///   - completionBlock: Submitted to the main queue when the table view has
-  /// has been reloaded.
+  ///   - completionBlock: Submitted to the main queue when the table view has been reloaded.
   ///
-  /// NOP if the table view is in editing mode or if the view has not yet been 
-  /// added to a window.
+  /// NOP if the view has not yet been added to a window or if performing batch updates would not be 
+  /// choreographically feasible at this moment.
   func reload(
     _ animated: Bool = true, 
     completionBlock: ((Error?) -> Void)? = nil
   ) {
+    os_log(#function, log: log, type: .debug)
     dispatchPrecondition(condition: .onQueue(.main))
     
-    fsm.refresh()
+    choreographer.refresh()
     
-    guard 
-      tableView.window != nil, 
-      !tableView.isEditing, 
-      case .refreshing = fsm.state else {
-      completionBlock?(nil)
-      return
+    guard tableView.window != nil, choreographer.isRefreshing else {
+      return DispatchQueue.main.async { [weak self] in
+        completionBlock?(nil)
+        
+        self?.refreshControl?.endRefreshing()
+      }
     }
-      
-    tableView?.refreshControl?.beginRefreshing()
-
+    
+    refreshControl?.beginRefreshing()
+ 
     dataSource.reload { [weak self] changes, error in
       guard 
         let tv = self?.tableView, 
         self?.tableView.window != nil, 
-        !changes.isEmpty, 
-        case .refreshing = self?.fsm.state else {
-        self?.tableView.refreshControl?.endRefreshing()
+        self?.choreographer.isRefreshing ?? false else {
         completionBlock?(error)
           
+        self?.refreshControl?.endRefreshing()
         return
       }
       
       func done() {
         self?.updateSelection(animated)
-        self?.tableView.refreshControl?.endRefreshing()
-        self?.fsm.refreshed()
+        self?.choreographer.refreshed()
         completionBlock?(error)
+        
+        self?.refreshControl?.endRefreshing()
       }
       
       guard animated else {
@@ -75,7 +76,7 @@ extension QueueViewController: Refreshing {
     reload(true, completionBlock: nil)
   }
   
-  /// Updates the queue, fetching new episodes, accessing the remote service.
+  /// Updates the queue, fetching new episodes from the remote service and refreshing the table view.
   ///
   /// - Parameters:
   ///   - error: An upstream error to consider while updating.
@@ -87,25 +88,17 @@ extension QueueViewController: Refreshing {
     considering error: Error? = nil,
     completionHandler: ((Bool, Error?) -> Void)? = nil
   ) {
+    os_log(#function, log: log, type: .debug)
     dispatchPrecondition(condition: .onQueue(.main))
     
-    let isInitial = dataSource.isEmpty || dataSource.isMessage
-    
-    guard isInitial || dataSource.isReady else {
+    guard dataSource.isReady else {
       completionHandler?(false, nil)
       return
     }
-    
-    let animated = !isInitial
-            
-    // Reloading first for initially putting something on the screen. Assuming,
-    // reloads are cheap without actual changes.
-    
-    reload(animated) { [weak self] initialReloadError in
-      self?.dataSource.update(considering: error) { newData, updateError in
-        self?.reload(animated) { error in
-          completionHandler?(newData, updateError ?? error)
-        }
+        
+    dataSource.update(considering: error) { [weak self] newData, updateError in
+      self?.reload { refreshError in 
+        completionHandler?(newData, refreshError ?? updateError ?? error)
       }
     }
   }
