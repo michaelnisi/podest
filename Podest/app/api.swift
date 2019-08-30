@@ -158,6 +158,7 @@ protocol UserProxy {
   /// [QA](https://developer.apple.com/library/content/qa/qa1693/_index.html)
   func update(
     considering error: Error?,
+    animated: Bool,
     completionHandler: @escaping ((_ newData: Bool, _ error: Error?) -> Void))
 
   /// Reloads queue, missing items might get fetched remotely, but saving time

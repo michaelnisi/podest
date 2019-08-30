@@ -297,7 +297,7 @@ extension AppDelegate {
 
     dispatchPrecondition(condition: .onQueue(.main))
 
-    root.update(considering: nil) { newData, error in
+    root.update(considering: nil, animated: false) { newData, error in
       let result = AppDelegate.makeBackgroundFetchResult(newData, error)
 
       // Submits completion block to the main queue, after which nothing must
@@ -473,7 +473,7 @@ extension AppDelegate {
 
     func updateQueue(considering syncError: Error? = nil) -> Void {
       DispatchQueue.main.async { [weak self] in
-        self?.root.update(considering: syncError) { _, error in
+        self?.root.update(considering: syncError, animated: true) { _, error in
           if let er = error {
             os_log("updating queue produced error: %{public}@",
                    log: log, er as CVarArg)

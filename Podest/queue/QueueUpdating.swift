@@ -84,6 +84,7 @@ extension QueueViewController: Refreshing {
   /// The frequency of subsequent updates is limited.
   func update(
     considering error: Error? = nil,
+    animated: Bool = true,
     completionHandler: ((Bool, Error?) -> Void)? = nil
   ) {
     os_log(#function, log: log, type: .debug)
@@ -95,7 +96,7 @@ extension QueueViewController: Refreshing {
     }
         
     dataSource.update(considering: error) { [weak self] newData, updateError in
-      self?.reload { refreshError in 
+      self?.reload(animated) { refreshError in 
         completionHandler?(newData, refreshError ?? updateError ?? error)
       }
     }

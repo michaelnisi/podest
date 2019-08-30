@@ -386,9 +386,10 @@ extension RootViewController: UserProxy {
 
   func update(
     considering error: Error? = nil,
+    animated: Bool = true,
     completionHandler: @escaping ((_ newData: Bool, _ error: Error?) -> Void)) {
     os_log("updating queue", log: log, type: .debug)
-    qvc.update(considering: error, completionHandler: completionHandler)
+    qvc.update(considering: error, animated: animated, completionHandler: completionHandler)
   }
 
   func reload(completionBlock: ((Error?) -> Void)? = nil) {
