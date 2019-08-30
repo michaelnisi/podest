@@ -2,13 +2,13 @@
 
 ### Doolittle
 
-- Episode
-- Player
+This version is optimized for iOS 13 and supports Dark Mode.
 
-- Support dark mode
-- Anticipate multiple windows
-- Review CloudKit usage
-- Review traits timing
+More improvements focus around the Queue:
+
+* Swipe right to play
+* Context menus for quick episode actions
+* Large title and improved pull-to-refresh
 
 ## 8.5 (2019-08-12)
 
