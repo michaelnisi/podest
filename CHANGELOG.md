@@ -1,10 +1,10 @@
-## 9.0 (planned)
+## 9.0 (2019-10-15)
 
 ### Doolittle
 
 This version is optimized for iOS 13 and supports Dark Mode.
 
-More improvements focus around the Queue:
+Additional improvements focus around the Queue:
 
 * Swipe right to play
 * Context menus for quick episode actions
