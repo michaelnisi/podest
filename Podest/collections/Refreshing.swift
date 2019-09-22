@@ -90,7 +90,7 @@ class RefreshingFSM: Choreographing {
 extension RefreshingFSM {
 
   private func handle(event: Event) {
-    os_log("handling event: %@,", log: log, type: .debug,
+    os_log("handling event: %@", log: log, type: .debug,
            String(describing: event))
 
     switch state {

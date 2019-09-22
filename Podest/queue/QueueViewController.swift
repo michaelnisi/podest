@@ -237,6 +237,7 @@ extension QueueViewController {
 
     searchProxy.deselect(animated)
     updateStoreButton()
+    choreographer.clear()
     reload()
 
     super.viewDidAppear(animated)
