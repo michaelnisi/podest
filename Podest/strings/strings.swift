@@ -346,10 +346,10 @@ extension StringRepository {
     ]
 
     guard let title = titled else {
-      return NSAttributedString(string: "This feed appears to be empty.")
+      return NSAttributedString(string: "Sorry, this feed does not validate.")
     }
     
-    let a = NSMutableAttributedString(string: "This feed – ")
+    let a = NSMutableAttributedString(string: "Sorry, this feed – ")
     let b = NSAttributedString(string: "\(title)", attributes: bold)
     let c = NSAttributedString(string: " – appears to be empty.")
     
