@@ -62,11 +62,11 @@ final class PlayerV1ViewController: UIViewController, EntryPlayer {
   private var isAllowedToLoadImage = false
 
   private func loadImage(_ entry: Entry, heroSnapshot: UIView? =  nil, isDirect: Bool = false) {
-    if heroSnapshot == nil {
-      guard isAllowedToLoadImage else {
-        return
-      }
-    }
+//    if heroSnapshot == nil {
+//      guard isAllowedToLoadImage else {
+//        return
+//      }
+//    }
 
     Podest.images.loadImage(
       representing: entry,
@@ -204,11 +204,11 @@ final class PlayerV1ViewController: UIViewController, EntryPlayer {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    swipeRight = addDismissingSwipe()
-    swipeRight.direction = .right
-
-    swipeDown = addDismissingSwipe()
-    swipeDown.direction = .down
+//    swipeRight = addDismissingSwipe()
+//    swipeRight.direction = .right
+//
+//    swipeDown = addDismissingSwipe()
+//    swipeDown.direction = .down
 
     titleButton.titleLabel?.numberOfLines = 2
     titleButton.titleLabel?.textAlignment = .center

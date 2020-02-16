@@ -233,6 +233,8 @@ extension RootViewController {
   /// Returns a matching transitioning delegate for `player`.
   private static func makePlayerTransition(
     player: EntryPlayer) -> UIViewControllerTransitioningDelegate? {
+    return nil
+    
     guard player is PlayerV1ViewController else {
       return nil
     }
