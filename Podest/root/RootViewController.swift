@@ -66,10 +66,6 @@ final class RootViewController: UIViewController, Routing {
 
   /// The width or height of the mini-player, taken from the storyboard.
   var miniPlayerConstant: CGFloat = 0
-
-  /// A reference to the current player transition delegate. Unfortunately, we
-  /// need a place to hold on to it.
-  var playerTransition: UIViewControllerTransitioningDelegate?
 }
 
 // MARK: - UIViewController
@@ -656,17 +652,3 @@ extension RootViewController: UISplitViewControllerDelegate {
     fatalError("unexpected delegation")
   }
 }
-
-// MARK: - HeroProviding
-
-extension RootViewController: HeroProviding {
-
-  var hero: UIView? {
-    guard !isMiniPlayerHidden else {
-      return nil
-    }
-    
-    return minivc.hero
-  }
-}
-

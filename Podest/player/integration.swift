@@ -230,20 +230,6 @@ extension RootViewController {
     }
   }
 
-  /// Returns a matching transitioning delegate for `player`.
-  private static func makePlayerTransition(
-    player: EntryPlayer) -> UIViewControllerTransitioningDelegate? {
-    return nil
-    
-    guard player is PlayerV1ViewController else {
-      return nil
-    }
-
-    player.modalPresentationStyle = .custom
-
-    return PlayerTransitionDelegate()
-  }
-
   func showNowPlaying(entry: Entry, animated: Bool, completion: (() -> Void)?) {
     os_log("showing now playing", log: log, type: .debug)
     dispatchPrecondition(condition: .onQueue(.main))
@@ -255,12 +241,7 @@ extension RootViewController {
 
     update(state: SimplePlaybackState(entry: entry, isPlaying: isPlaying))
 
-    playerTransition = RootViewController.makePlayerTransition(player: vc)
-    vc.transitioningDelegate = playerTransition
-
-    self.present(vc, animated: animated) { [weak self] in
-      self?.playerTransition = nil
-
+    self.present(vc, animated: animated) {
       completion?()
     }
   }
@@ -275,12 +256,7 @@ extension RootViewController {
       return
     }
 
-    playerTransition = PlayerTransitionDelegate()
-    presentedViewController?.transitioningDelegate = playerTransition
-
-    dismiss(animated: animated)  { [weak self] in
-      self?.playerTransition = nil
-
+    dismiss(animated: animated)  {
       completion?()
     }
   }

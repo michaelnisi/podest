@@ -62,12 +62,6 @@ final class PlayerV1ViewController: UIViewController, EntryPlayer {
   private var isAllowedToLoadImage = false
 
   private func loadImage(_ entry: Entry, heroSnapshot: UIView? =  nil, isDirect: Bool = false) {
-//    if heroSnapshot == nil {
-//      guard isAllowedToLoadImage else {
-//        return
-//      }
-//    }
-
     Podest.images.loadImage(
       representing: entry,
       into: heroImage,
@@ -204,12 +198,6 @@ final class PlayerV1ViewController: UIViewController, EntryPlayer {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-//    swipeRight = addDismissingSwipe()
-//    swipeRight.direction = .right
-//
-//    swipeDown = addDismissingSwipe()
-//    swipeDown.direction = .down
-
     titleButton.titleLabel?.numberOfLines = 2
     titleButton.titleLabel?.textAlignment = .center
 
@@ -255,15 +243,3 @@ extension PlayerV1ViewController: UIGestureRecognizerDelegate {
     return gestureRecognizer is UIScreenEdgePanGestureRecognizer
   }
 }
-
-// MARK: - HeroProviding
-
-extension PlayerV1ViewController: HeroProviding {
-  
-  var hero: UIView? {
-    return heroImage
-  }
-  
-}
-
-

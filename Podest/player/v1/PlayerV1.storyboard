@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14810.11" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Q8z-hD-NaL">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16085" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Q8z-hD-NaL">
     <device id="ipad9_7" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14766.13"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16078.1"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
-        <capability name="iOS 13.0 system colors" minToolsVersion="11.0"/>
     </dependencies>
     <scenes>
         <!--PlayerV1 View Controller-->
@@ -18,9 +18,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dwa-JC-5qY" userLabel="Done">
-                                <rect key="frame" x="0.0" y="0.0" width="112" height="112"/>
-                                <state key="normal" image="Done"/>
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dwa-JC-5qY" userLabel="Done">
+                                <rect key="frame" x="347" y="8" width="74" height="22"/>
+                                <color key="tintColor" systemColor="systemFillColor" red="0.47058823529999999" green="0.47058823529999999" blue="0.50196078430000002" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" image="Bar"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="systemName" value="chevron.compact.down"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="doneTouchUpInside:" destination="Q8z-hD-NaL" eventType="touchUpInside" id="oZe-fA-EDx"/>
                                 </connections>
@@ -61,8 +65,8 @@
                                                 <rect key="frame" x="95.5" y="227.5" width="256" height="219.5"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZGy-wR-5BF">
-                                                        <rect key="frame" x="0.0" y="28" width="85.5" height="164"/>
-                                                        <color key="tintColor" xcode11CocoaTouchSystemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                        <rect key="frame" x="0.0" y="69" width="85.5" height="82"/>
+                                                        <color key="tintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                                         <state key="normal" image="Backward"/>
                                                         <connections>
                                                             <action selector="backwardTouchUpInside:" destination="Q8z-hD-NaL" eventType="touchUpInside" id="m18-ot-Rw9"/>
@@ -70,8 +74,8 @@
                                                     </button>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mN4-la-neB" customClass="PlaySwitch" customModule="Podest" customModuleProvider="target">
                                                         <rect key="frame" x="85.5" y="67" width="85" height="85.5"/>
-                                                        <color key="backgroundColor" cocoaTouchSystemColor="secondarySystemGroupedBackgroundColor"/>
-                                                        <color key="tintColor" xcode11CocoaTouchSystemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                        <color key="backgroundColor" systemColor="secondarySystemGroupedBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <color key="tintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="mN4-la-neB" secondAttribute="height" multiplier="1:1" id="DJV-cQ-zsm"/>
                                                         </constraints>
@@ -85,8 +89,8 @@
                                                         </connections>
                                                     </view>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="62G-HD-gtd">
-                                                        <rect key="frame" x="170.5" y="28" width="85.5" height="164"/>
-                                                        <color key="tintColor" xcode11CocoaTouchSystemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                        <rect key="frame" x="170.5" y="69" width="85.5" height="82"/>
+                                                        <color key="tintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                                         <state key="normal" image="Forward"/>
                                                         <connections>
                                                             <action selector="forwardTouchUpInside:" destination="Q8z-hD-NaL" eventType="touchUpInside" id="lIH-1g-lgU"/>
@@ -106,19 +110,19 @@
                                 <variation key="heightClass=compact" axis="horizontal"/>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" cocoaTouchSystemColor="secondarySystemGroupedBackgroundColor"/>
+                        <color key="backgroundColor" systemColor="secondarySystemGroupedBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="exh-KU-zys" firstAttribute="bottom" secondItem="0Mu-oc-Qol" secondAttribute="bottom" constant="48" id="GyY-Wy-qwr">
                                 <variation key="heightClass=compact" constant="12"/>
                             </constraint>
-                            <constraint firstItem="Dwa-JC-5qY" firstAttribute="leading" secondItem="exh-KU-zys" secondAttribute="leading" id="Udm-de-yxI"/>
+                            <constraint firstItem="Dwa-JC-5qY" firstAttribute="centerX" secondItem="VBV-J7-OAZ" secondAttribute="centerX" id="UCa-UO-hZS"/>
                             <constraint firstItem="0Mu-oc-Qol" firstAttribute="top" secondItem="exh-KU-zys" secondAttribute="top" constant="64" id="dnV-hn-r3e">
                                 <variation key="heightClass=compact" constant="32"/>
                             </constraint>
                             <constraint firstItem="exh-KU-zys" firstAttribute="trailing" secondItem="0Mu-oc-Qol" secondAttribute="trailing" constant="32" id="hhV-d3-UR4">
                                 <variation key="widthClass=regular" constant="64"/>
                             </constraint>
-                            <constraint firstItem="Dwa-JC-5qY" firstAttribute="top" secondItem="exh-KU-zys" secondAttribute="top" id="j1e-Da-sSi"/>
+                            <constraint firstItem="Dwa-JC-5qY" firstAttribute="top" secondItem="exh-KU-zys" secondAttribute="top" constant="8" id="j1e-Da-sSi"/>
                             <constraint firstItem="0Mu-oc-Qol" firstAttribute="leading" secondItem="exh-KU-zys" secondAttribute="leading" constant="32" id="kVT-Mm-2iD">
                                 <variation key="widthClass=regular" constant="64"/>
                             </constraint>
@@ -140,12 +144,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="s3k-pw-JPb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="333.60000000000002" y="131.78410794602701"/>
+            <point key="canvasLocation" x="333.59375" y="131.25"/>
         </scene>
     </scenes>
     <resources>
         <image name="Backward" width="82" height="82"/>
-        <image name="Done" width="56" height="56"/>
+        <image name="Bar" width="74" height="6"/>
         <image name="Forward" width="81" height="82"/>
         <image name="Oval" width="82" height="82"/>
         <image name="Pause" width="82" height="82"/>
