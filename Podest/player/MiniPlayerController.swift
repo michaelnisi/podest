@@ -315,7 +315,7 @@ extension MiniPlayerController {
     let v = UIView(frame: fx.contentView.frame)
 
     if #available(iOS 13.0, *) {
-      v.backgroundColor = .quaternarySystemFill
+      v.backgroundColor = .systemFill
     } else {
       v.backgroundColor = .lightGray
     }
