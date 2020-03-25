@@ -104,15 +104,10 @@ struct EpisodeContext {
       
       if let view = view {
         children.append(makeQueueAction(entry: entry, queue: queue, view: view))
+        
         if let unsubscribe = makeLibraryAction(entry: entry, library: library, view: view) {
           children.append(unsubscribe)
         }
-      }
-
-
-      
-      if let link = makeLinkAction(entry: entry) {
-        children.append(link)
       }
       
       return UIMenu(title: entry.title, children: children)
