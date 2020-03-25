@@ -78,7 +78,7 @@ final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
     guard let url = entry?.feed else {
       fatalError("cannot select undefined feed")
     }
-    navigationDelegate?.openFeed(url: url)
+    navigationDelegate?.openFeed(url: url, animated: true)
   }
 
   /// The size of the currently loaded image.
@@ -89,8 +89,13 @@ final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
 
   /// Restore frame size from state preservation.
   private var restoredFrameSize: CGSize?
-
+  
+  private var listContext: AnyObject?
 }
+
+// MARK: - Unsubscribing
+
+extension EpisodeViewController: Unsubscribing {}
 
 // MARK: - UIViewController
 
@@ -114,6 +119,18 @@ extension EpisodeViewController {
 
     super.viewDidLoad()
   }
+  
+  @available(iOS 13.0, *)
+  private func installFeedLongPress() {
+    (listContext as? ListContextMenuInteraction)?.invalidate()
+    
+    guard let feedButton = feedButton, let entry = entry else {
+      return
+    }
+    
+    listContext = ListContextMenuInteraction(view: feedButton, entry: entry, viewController: self)
+    (listContext as? ListContextMenuInteraction)?.install()
+  }
 
   override func viewWillAppear(_ animated: Bool) {
     defer {
@@ -124,6 +141,11 @@ extension EpisodeViewController {
       loadImageIfNeeded()
       configureView()
       updateIsEnqueued()
+      
+      if #available(iOS 13.0, *) { 
+        installFeedLongPress()
+      }
+      
       entryChanged = false
     }
 
@@ -375,7 +397,7 @@ extension EpisodeViewController {
 
   private static func makeDequeueAction(
     entry: Entry, viewController: EpisodeViewController) -> UIAlertAction {
-    let t = NSLocalizedString("Remove Episode", comment: "Dequeue episode")
+    let t = NSLocalizedString("Delete", comment: "Delete episode from queue")
 
     return UIAlertAction(title: t, style: .destructive) {
       [weak viewController] action in

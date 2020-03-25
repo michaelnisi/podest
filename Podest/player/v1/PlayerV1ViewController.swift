@@ -99,6 +99,8 @@ final class PlayerV1ViewController: UIViewController, EntryPlayer {
     playSwitch.isOn = isPlaying
     forwardButton.isEnabled = Podest.userQueue.isForwardable
     backwardButton.isEnabled = Podest.userQueue.isBackwardable
+    
+    
   }
 
   private var needsUpdate = false

@@ -56,7 +56,7 @@ extension QueueViewController {
 // MARK: - Menus and Shortcuts
 
 @available(iOS 13.0, *)
-extension QueueViewController {
+extension QueueViewController: Unsubscribing, Dequeueing {
     
   override func tableView(
     _ tableView: UITableView, 
@@ -66,11 +66,12 @@ extension QueueViewController {
       return nil
     }
     
-    return Episode.makeContextConfiguration(
+    return EpisodeContext.makeContextConfiguration(
       entry: entry, 
       navigationDelegate: navigationDelegate,
-      queue: Podest.userQueue,
-      library: Podest.userLibrary
+      queue: self,
+      library: self,
+      view: tableView.cellForRow(at: indexPath)
     )
   }
   
@@ -114,7 +115,7 @@ extension QueueViewController {
 
 extension QueueViewController {
   
-  private static var play: UIImage {
+  private static var playGlyph: UIImage {
     if #available(iOS 13.0, *) {
       return UIImage(systemName: "play.fill")!
     } else {
@@ -122,18 +123,17 @@ extension QueueViewController {
     }
   }
   
-  private func makePlayAction(
-    indexPath: IndexPath, entry: Entry) -> UIContextualAction {
-    let a = UIContextualAction(style: .normal, title: nil) { 
+  private func makePlayAction(entry: Entry) -> UIContextualAction {
+    let action = UIContextualAction(style: .normal, title: nil) { 
       action, sourceView, completionHandler in
       let actionPerformed = Podest.playback.resume(entry: entry)
       
       completionHandler(actionPerformed)
     }
-    a.image = QueueViewController.play
-    a.backgroundColor = .systemGreen
+    action.image = QueueViewController.playGlyph
+    action.backgroundColor = .systemGreen
     
-    return a
+    return action
   }
   
   override func tableView(
@@ -145,7 +145,7 @@ extension QueueViewController {
       return nil
     }
 
-    let actions = [makePlayAction(indexPath: indexPath, entry: entry)]
+    let actions = [makePlayAction(entry: entry)]
     let conf = UISwipeActionsConfiguration(actions: actions)
     conf.performsFirstActionWithFullSwipe = true
     
@@ -168,10 +168,10 @@ extension QueueViewController {
    private func makeDequeueAction(indexPath: IndexPath) -> UIContextualAction {
      let h = dataSource.makeDequeueHandler(
       indexPath: indexPath, tableView: tableView)
-     let a = UIContextualAction(style: .destructive, title: nil, handler: h)
-     a.image = QueueViewController.trash
+     let action = UIContextualAction(style: .destructive, title: nil, handler: h)
+     action.image = QueueViewController.trash
      
-     return a
+     return action
    }
    
    override func tableView(

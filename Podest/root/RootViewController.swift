@@ -144,7 +144,7 @@ extension RootViewController {
     completion: (() -> Void)? = nil
   ) {
     switch viewControllerToPresent {
-    case var vc as Navigator:
+    case let vc as Navigator:
       vc.navigationDelegate = self
     default:
       break
@@ -184,6 +184,14 @@ extension RootViewController: ViewControllers {
       "StoreReferenceID") as! UINavigationController
     present(vc, animated: true)
   }
+  
+  func showQueue() {
+    pnc.popToRootViewController(animated: true)
+  }
+  
+  var isQueueVisible: Bool {
+    pnc.topViewController == qvc
+  }
 
   func viewController(_ viewController: UIViewController, error: Error) {
     os_log("error: %{public}@, from: %{public}@", log: log,
@@ -210,7 +218,7 @@ extension RootViewController: ViewControllers {
     return vc.feed
   }
 
-  func show(feed: Feed) {
+  func show(feed: Feed, animated: Bool) {
     guard feed != self.feed else {
       return
     }
@@ -221,7 +229,7 @@ extension RootViewController: ViewControllers {
       "EpisodesID") as! ListViewController
     vc.feed = feed
     
-    pnc.pushViewController(vc, animated: true)
+    pnc.pushViewController(vc, animated: animated)
   }
 
   /// The currently selected entry. **Note** the distinction between displayed
@@ -296,7 +304,7 @@ extension RootViewController: ViewControllers {
     }
   }
 
-  func openFeed(url: String) {
+  func openFeed(url: String, animated: Bool) {
     guard url != feed?.url else {
       return
     }
@@ -319,7 +327,7 @@ extension RootViewController: ViewControllers {
         return
       }
       DispatchQueue.main.async {
-        self?.show(feed: feed)
+        self?.show(feed: feed, animated: animated)
       }
     }
   }
@@ -343,7 +351,7 @@ extension RootViewController: ViewControllers {
         return false
       }
 
-      openFeed(url: url)
+      openFeed(url: url, animated: true)
 
       return true
     default:
@@ -449,7 +457,7 @@ extension RootViewController: UINavigationControllerDelegate {
 
     getDefaultEntry?.cancel()
 
-    if var vc = viewController as? Navigator {
+    if let vc = viewController as? Navigator {
       vc.navigationDelegate = self
     }
 

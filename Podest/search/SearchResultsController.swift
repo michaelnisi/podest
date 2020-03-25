@@ -31,7 +31,7 @@ protocol SearchResultsControllerDelegate: Navigator {
 
 final class SearchResultsController: UITableViewController {
 
-  private let dataSource = SearchResultsDataSource(
+  let dataSource = SearchResultsDataSource(
     repo: Podest.finder, 
     images: Podest.images
   )
@@ -167,3 +167,7 @@ extension SearchResultsController {
     tableView.deselectRow(at: indexPath, animated: animated)
   }
 }
+
+extension SearchResultsController: Unsubscribing {}
+
+

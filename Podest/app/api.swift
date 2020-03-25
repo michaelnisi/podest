@@ -2,7 +2,7 @@
 //  api.swift
 //  Podest
 //
-//  The core API of the Podest podcast app may be read as UI requirements.
+//  The core API of the Podest podcast app.
 //
 //  Created by Michael on 4/17/17.
 //  Copyright © 2017 Michael Nisi. All rights reserved.
@@ -73,11 +73,11 @@ protocol EntryIndexPathMapping {
   func indexPath(matching entry: Entry) -> IndexPath?
 }
 
-// MARK: - Navigating
+// MARK: - Navigation
 
 /// The global controller API, the **root** view controller. This is the **Truth**.
 /// Instead of reaching deep into the controller hierarchy, things that need
-/// to be accessed from the outside should be exposed here.
+/// to be accessed from  outside should be exposed here.
 protocol ViewControllers: Players {
 
   // MARK: Browsing
@@ -92,7 +92,13 @@ protocol ViewControllers: Players {
   func show(entry: Entry)
 
   /// Shows this feed listing its entries.
-  func show(feed: Feed)
+  func show(feed: Feed, animated: Bool)
+  
+  /// `true` if the Queue is currently visible.
+  var isQueueVisible: Bool { get }
+  
+  /// Shows the Queue if it’s not visible.
+  func showQueue()
 
   // MARK: Shopping
 
@@ -110,8 +116,8 @@ protocol ViewControllers: Players {
   func open(url: URL) -> Bool
 
   /// Show the feed matching the feed `url`.
-  func openFeed(url: String)
-
+  func openFeed(url: String, animated: Bool)
+  
   // MARK: UI
 
   /// An additional property to check wether the main split view controller, to
@@ -123,7 +129,7 @@ protocol ViewControllers: Players {
 }
 
 /// Adopt `Navigator` to receive access to the navigation delegate.
-protocol Navigator {
+protocol Navigator: class {
 
   /// Use this API for navigation.
   var navigationDelegate: ViewControllers? { get set }

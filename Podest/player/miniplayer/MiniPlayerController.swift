@@ -144,10 +144,22 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
     
     super.decodeRestorableState(with: coder)
   }
+  
+  // MARK: - ContextMenuInteraction
+  
+  private var miniPlayerContext: AnyObject?
 
   // MARK: - Navigator
 
-  var navigationDelegate: ViewControllers?
+  var navigationDelegate: ViewControllers? { 
+    didSet {
+      guard #available(iOS 13.0, *) else {
+        return
+      }
+      
+      (miniPlayerContext as? MiniPlayerContextMenuInteraction)?.navigationDelegate = navigationDelegate
+    }
+  }
 
   var swipe: UISwipeGestureRecognizer!
 
@@ -211,6 +223,20 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
   }
 
   // MARK: - UIViewController
+  
+  @available(iOS 13.0, *)
+  private func installMiniPlayerContextMenu() {
+    (miniPlayerContext as? MiniPlayerContextMenuInteraction)?.invalidate()
+    
+    guard let view = view, let entry = entry else {
+      return
+    }
+    
+    miniPlayerContext = MiniPlayerContextMenuInteraction(view: view, entry: entry)
+    (miniPlayerContext as? MiniPlayerContextMenuInteraction)?.navigationDelegate = navigationDelegate
+    
+    (miniPlayerContext as? MiniPlayerContextMenuInteraction)?.install()
+  }
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -227,6 +253,8 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
     touchDown.minimumPressDuration = 0
     touchDown.cancelsTouchesInView = false
     view.addGestureRecognizer(touchDown)
+    
+    // TODO: Tap UITapGestureRecognizer
 
     swipe = UISwipeGestureRecognizer(target: self, action: #selector(onSwipe))
     swipe.delegate = self
@@ -272,6 +300,10 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
     renderedGUID = entry.guid
 
     loadImage(representing: entry)
+    
+    if #available(iOS 13.0, *) {
+      installMiniPlayerContextMenu()
+    }
 
     needsUpdate = false
   }
@@ -343,11 +375,7 @@ extension MiniPlayerController {
 
     switch sender.state {
     case .began:
-      guard !isPlaySwitchHit() else {
-        return
-      }
-
-      showMatte()
+      break
 
     case .cancelled, .failed:
       hideMatte()

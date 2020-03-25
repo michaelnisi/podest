@@ -126,7 +126,15 @@
 		4CB64B6E223E28FC006DB19B /* settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9EBDFA223D58A8009F2B6F /* settings.swift */; };
 		4CB64B6F223E295A006DB19B /* time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED2D6BE1F98E7FF000DA71B /* time.swift */; };
 		4CB6CF3C22BE7F91002452BF /* TopLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB6CF3B22BE7F91002452BF /* TopLine.swift */; };
-		4CBA99552312DDA700AEFF34 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA99542312DDA700AEFF34 /* Context.swift */; };
+		4CB6EEC124252A48006F09B7 /* MiniPlayerContextMenuInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB6EEC024252A48006F09B7 /* MiniPlayerContextMenuInteraction.swift */; };
+		4CB6EEC424260F2A006F09B7 /* ListContextMenuInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB6EEC324260F2A006F09B7 /* ListContextMenuInteraction.swift */; };
+		4CB6EEC624266F81006F09B7 /* SearchResultsContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB6EEC524266F81006F09B7 /* SearchResultsContextMenu.swift */; };
+		4CB6EECA24268AE6006F09B7 /* Unsubscribing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB6EEC924268AE6006F09B7 /* Unsubscribing.swift */; };
+		4CB6EECB24274158006F09B7 /* ActionSheetPresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C72D4362270A5DA008F8B96 /* ActionSheetPresenting.swift */; };
+		4CB6EECF24274265006F09B7 /* Dequeueing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB6EECE24274265006F09B7 /* Dequeueing.swift */; };
+		4CB6EED1242771DB006F09B7 /* MakeEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB6EED0242771DB006F09B7 /* MakeEpisode.swift */; };
+		4CB6EED324278050006F09B7 /* MakeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB6EED224278050006F09B7 /* MakeList.swift */; };
+		4CB6EED52428B9FE006F09B7 /* EpisodeContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB6EED42428B9FE006F09B7 /* EpisodeContext.swift */; };
 		4CBB836620D667AF008330E2 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4CBB836520D667AF008330E2 /* Settings.bundle */; };
 		4CCBF20A20805C6500A7359F /* store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCBF20920805C6500A7359F /* store.swift */; };
 		4CCBF20C20805F5C00A7359F /* products.json in Resources */ = {isa = PBXBuildFile; fileRef = 4CCBF20B20805F5C00A7359F /* products.json */; };
@@ -374,7 +382,14 @@
 		4CA89793231794BD006E16A9 /* ListUpdating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListUpdating.swift; sourceTree = "<group>"; };
 		4CA9C291226CDA5C002BCCB5 /* ListOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListOperation.swift; sourceTree = "<group>"; };
 		4CB6CF3B22BE7F91002452BF /* TopLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopLine.swift; sourceTree = "<group>"; };
-		4CBA99542312DDA700AEFF34 /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
+		4CB6EEC024252A48006F09B7 /* MiniPlayerContextMenuInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerContextMenuInteraction.swift; sourceTree = "<group>"; };
+		4CB6EEC324260F2A006F09B7 /* ListContextMenuInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListContextMenuInteraction.swift; sourceTree = "<group>"; };
+		4CB6EEC524266F81006F09B7 /* SearchResultsContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsContextMenu.swift; sourceTree = "<group>"; };
+		4CB6EEC924268AE6006F09B7 /* Unsubscribing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unsubscribing.swift; sourceTree = "<group>"; };
+		4CB6EECE24274265006F09B7 /* Dequeueing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dequeueing.swift; sourceTree = "<group>"; };
+		4CB6EED0242771DB006F09B7 /* MakeEpisode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeEpisode.swift; sourceTree = "<group>"; };
+		4CB6EED224278050006F09B7 /* MakeList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeList.swift; sourceTree = "<group>"; };
+		4CB6EED42428B9FE006F09B7 /* EpisodeContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeContext.swift; sourceTree = "<group>"; };
 		4CBB836520D667AF008330E2 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		4CCBF20920805C6500A7359F /* store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = store.swift; sourceTree = "<group>"; };
 		4CCBF20B20805F5C00A7359F /* products.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = products.json; sourceTree = "<group>"; };
@@ -587,7 +602,6 @@
 				4E8CA7061A126ADB004DE307 /* AppDelegate.swift */,
 				4ED4D4361EA470C90011C28C /* api.swift */,
 				4ED2D6BE1F98E7FF000DA71B /* time.swift */,
-				4C72D4362270A5DA008F8B96 /* ActionSheetPresenting.swift */,
 			);
 			path = app;
 			sourceTree = "<group>";
@@ -684,6 +698,29 @@
 			path = init;
 			sourceTree = "<group>";
 		};
+		4CB6EEC224253D4B006F09B7 /* miniplayer */ = {
+			isa = PBXGroup;
+			children = (
+				4CB6EEC024252A48006F09B7 /* MiniPlayerContextMenuInteraction.swift */,
+				4E7F291E1E7FC11300E12846 /* MiniPlayerController.swift */,
+				4CB6CF3B22BE7F91002452BF /* TopLine.swift */,
+				4E7F29221E7FDE9E00E12846 /* MiniPlayer.storyboard */,
+			);
+			path = miniplayer;
+			sourceTree = "<group>";
+		};
+		4CB6EECC2427416B006F09B7 /* actions */ = {
+			isa = PBXGroup;
+			children = (
+				4C72D4362270A5DA008F8B96 /* ActionSheetPresenting.swift */,
+				4CB6EEC924268AE6006F09B7 /* Unsubscribing.swift */,
+				4CB6EECE24274265006F09B7 /* Dequeueing.swift */,
+				4CB6EED42428B9FE006F09B7 /* EpisodeContext.swift */,
+				4CB6EEC324260F2A006F09B7 /* ListContextMenuInteraction.swift */,
+			);
+			path = actions;
+			sourceTree = "<group>";
+		};
 		4CCBF20F20808C4500A7359F /* store */ = {
 			isa = PBXGroup;
 			children = (
@@ -715,6 +752,7 @@
 				4CA9C291226CDA5C002BCCB5 /* ListOperation.swift */,
 				4C1B32CA21E7046A00E57931 /* DisplayTableViewCell.swift */,
 				4C1B32CB21E7046A00E57931 /* DisplayTableViewCell.xib */,
+				4CB6EED224278050006F09B7 /* MakeList.swift */,
 			);
 			path = list;
 			sourceTree = "<group>";
@@ -724,9 +762,7 @@
 			children = (
 				4C571955229FC8CF000275B2 /* v1 */,
 				4C8B364F22A039FF0004FD89 /* v2 */,
-				4E7F291E1E7FC11300E12846 /* MiniPlayerController.swift */,
-				4CB6CF3B22BE7F91002452BF /* TopLine.swift */,
-				4E7F29221E7FDE9E00E12846 /* MiniPlayer.storyboard */,
+				4CB6EEC224253D4B006F09B7 /* miniplayer */,
 				4EF1A34F1EB837D100E41F84 /* PlaySwitch.swift */,
 				4C728DBF20623544005B739C /* PlaybackControlDelegate.swift */,
 				4CE8586C21A16B9D00D206FA /* integration.swift */,
@@ -757,7 +793,7 @@
 				4E684D4B1C5F3201004699A1 /* EpisodeViewController.swift */,
 				4EFEEBDB1E7465EA00169153 /* MessageView.xib */,
 				4EFEEBDD1E75493900169153 /* MessageView.swift */,
-				4CBA99542312DDA700AEFF34 /* Context.swift */,
+				4CB6EED0242771DB006F09B7 /* MakeEpisode.swift */,
 			);
 			path = episode;
 			sourceTree = "<group>";
@@ -768,6 +804,7 @@
 				4CFEE33721C7B101008B2EC0 /* SearchControllerProxy.swift */,
 				4C351CD01A7F5B7E00C5C88C /* SearchResultsDataSource.swift */,
 				4CE20ACB1A31C66C0052C360 /* SearchResultsController.swift */,
+				4CB6EEC524266F81006F09B7 /* SearchResultsContextMenu.swift */,
 				4CE20ACF1A31EAAD0052C360 /* SuggestionCell.xib */,
 				4ED4D4161E9D239A0011C28C /* SuggestionCell.swift */,
 				4C17C19C230723480051FE23 /* Home.storyboard */,
@@ -905,6 +942,7 @@
 				4E7E284C1EE1182E00058AB3 /* Podest.entitlements */,
 				4C9EBDFC223D58FE009F2B6F /* init */,
 				4C72D4332270A281008F8B96 /* app */,
+				4CB6EECC2427416B006F09B7 /* actions */,
 				4C72D43A2270AC73008F8B96 /* strings */,
 				4CE8586B21A14EB300D206FA /* root */,
 				4CD697041FEBC68600349580 /* queue */,
@@ -1320,6 +1358,7 @@
 				4C8B375122A0ED280004FD89 /* UpNextViewController.swift in Sources */,
 				4C8B376122A0ED280004FD89 /* CustomLayout.swift in Sources */,
 				4C8B368F22A0EAA60004FD89 /* ViewController.swift in Sources */,
+				4CB6EECB24274158006F09B7 /* ActionSheetPresenting.swift in Sources */,
 				4C8B376B22A0ED280004FD89 /* ChaptersViewController.swift in Sources */,
 				4C8B376522A0ED280004FD89 /* ChaptersDataSource.swift in Sources */,
 				4C8B374922A0ED280004FD89 /* ControlsCell.swift in Sources */,
@@ -1339,12 +1378,13 @@
 				4C07C97A21EBA69200ED8AB0 /* ArticleCollectionViewCell.swift in Sources */,
 				4CE20ACC1A31C66C0052C360 /* SearchResultsController.swift in Sources */,
 				4CED20D8226C2CFC0049B88D /* QueueTableViewDelegate.swift in Sources */,
+				4CB6EED324278050006F09B7 /* MakeList.swift in Sources */,
 				4CA9C292226CDA5C002BCCB5 /* ListOperation.swift in Sources */,
 				4C5F4E7C21CB79A300156D56 /* EntryRowSelectable.swift in Sources */,
+				4CB6EECA24268AE6006F09B7 /* Unsubscribing.swift in Sources */,
 				4EF1A3511EB837D100E41F84 /* PlaySwitch.swift in Sources */,
 				4C8B375C22A0ED280004FD89 /* SingleRowLayout.swift in Sources */,
 				4C1F57A92081C0690067AB7C /* ProductsDataSource.swift in Sources */,
-				4CBA99552312DDA700AEFF34 /* Context.swift in Sources */,
 				4C776B2920847D0900A055CD /* ProductCell.swift in Sources */,
 				4E7D10B31F6644DA0048CB43 /* QueueDataSource.swift in Sources */,
 				4C9EBDFB223D58A8009F2B6F /* settings.swift in Sources */,
@@ -1365,6 +1405,7 @@
 				4CA89794231794BD006E16A9 /* ListUpdating.swift in Sources */,
 				4EAAA73B1E71A83E0047D043 /* PlayerV1ViewController.swift in Sources */,
 				4C21F57F21D8A56500ED5D26 /* SubtitleTableViewCell.swift in Sources */,
+				4CB6EED52428B9FE006F09B7 /* EpisodeContext.swift in Sources */,
 				4CF2DEA221DDD8E300A0F6EC /* ReusableNib.swift in Sources */,
 				4C728DC020623544005B739C /* PlaybackControlDelegate.swift in Sources */,
 				4C8B376A22A0ED280004FD89 /* ChaptersViewController.swift in Sources */,
@@ -1374,6 +1415,7 @@
 				4C175AA6208AFA26003071CA /* StoreFSM.swift in Sources */,
 				4C8B374C22A0ED280004FD89 /* HeroCell.swift in Sources */,
 				4C8B375A22A0ED280004FD89 /* MoreCell.swift in Sources */,
+				4CB6EECF24274265006F09B7 /* Dequeueing.swift in Sources */,
 				4CE8586D21A16B9D00D206FA /* integration.swift in Sources */,
 				4C72D4372270A5DA008F8B96 /* ActionSheetPresenting.swift in Sources */,
 				4C8B375022A0ED280004FD89 /* UpNextViewController.swift in Sources */,
@@ -1395,10 +1437,14 @@
 				4EFEEBDE1E75493900169153 /* MessageView.swift in Sources */,
 				4ED4D4371EA470C90011C28C /* api.swift in Sources */,
 				4C1B32CC21E7046A00E57931 /* DisplayTableViewCell.swift in Sources */,
+				4CB6EEC624266F81006F09B7 /* SearchResultsContextMenu.swift in Sources */,
 				4E8CA7091A126ADB004DE307 /* QueueViewController.swift in Sources */,
 				4C6298E02310FC9800141103 /* Refreshing.swift in Sources */,
+				4CB6EED1242771DB006F09B7 /* MakeEpisode.swift in Sources */,
+				4CB6EEC424260F2A006F09B7 /* ListContextMenuInteraction.swift in Sources */,
 				4C25AED51D578FA90056EE2F /* strings.swift in Sources */,
 				4E7F291B1E7D799200E12846 /* RootViewController.swift in Sources */,
+				4CB6EEC124252A48006F09B7 /* MiniPlayerContextMenuInteraction.swift in Sources */,
 				4CCBF20A20805C6500A7359F /* store.swift in Sources */,
 				4CED20DA226C2E8D0049B88D /* QueueStoreAccessDelegate.swift in Sources */,
 				4E8CA7071A126ADB004DE307 /* AppDelegate.swift in Sources */,

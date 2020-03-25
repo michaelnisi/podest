@@ -277,7 +277,7 @@ extension ListViewController: EntryProvider {
 
 // MARK: - Action Sheets
 
-extension ListViewController: ActionSheetPresenting {}
+extension ListViewController: Unsubscribing {}
 
 // MARK: - Sharing Action Sheet
 
@@ -309,53 +309,6 @@ extension ListViewController {
     )
 
     let actions = ListViewController.makeSharingActionSheet(feed: feed)
-
-    for action in actions {
-      alert.addAction(action)
-    }
-
-    return alert
-  }
-}
-
-// MARK: - Unsubscribe Action Sheet
-
-extension ListViewController {
-
-  private static func makeUnsubscribeAction(feed: Feed) -> UIAlertAction {
-    let t = NSLocalizedString("Unsubscribe", comment: "Unsubscribe podcast")
-
-    return UIAlertAction(title: t, style: .destructive) { action in
-      Podest.userLibrary.unsubscribe(feed.url) { error in
-        if let er = error {
-          os_log("unsubscribing failed: %@", log: log, er as CVarArg)
-        }
-      }
-    }
-  }
-
-  private static func makeUnsubscribeActions(feed: Feed) -> [UIAlertAction] {
-    var actions =  [UIAlertAction]()
-
-    let unsubscribe = makeUnsubscribeAction(feed: feed)
-    let cancel = makeCancelAction()
-
-    actions.append(unsubscribe)
-    actions.append(cancel)
-
-    return actions
-  }
-
-  private func makeRemoveController() -> UIAlertController {
-    guard let feed = self.feed else {
-      fatalError("feed expected")
-    }
-
-    let alert = UIAlertController(
-      title: feed.title, message: nil, preferredStyle: .actionSheet
-    )
-
-    let actions = ListViewController.makeUnsubscribeActions(feed: feed)
 
     for action in actions {
       alert.addAction(action)
@@ -398,13 +351,11 @@ extension ListViewController {
   }
 
   @objc func onRemove(_ sender: UIBarButtonItem) {
-    let alert = makeRemoveController()
-
-    if let presenter = alert.popoverPresentationController {
-      presenter.barButtonItem = sender
+     guard let feed = self.feed else {
+      fatalError("feed expected")
     }
-
-    self.present(alert, animated: true, completion: nil)
+    
+    unsubscribe(title: feed.title, url: feed.url, barButtonItem: sender)
   }
 
   private func makeSubscribeButton(url: FeedURL) -> UIBarButtonItem {

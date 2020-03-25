@@ -328,6 +328,23 @@ extension SearchResultsDataSource {
       return nil
     }
   }
+  
+  func feed(matching indexPath: IndexPath) -> Feed? {
+    guard let find = findAt(indexPath: indexPath) else {
+      return nil
+    }
+    
+    switch find {
+    case .foundFeed(let feed), 
+         .recentSearch(let feed), 
+         .suggestedFeed(let feed):
+      
+      return feed
+      
+    case .suggestedEntry, .suggestedTerm:
+      return nil
+    }
+  }
 }
 
 // MARK: - Glyphs

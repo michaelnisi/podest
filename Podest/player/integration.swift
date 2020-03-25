@@ -234,7 +234,7 @@ extension RootViewController {
     os_log("showing now playing", log: log, type: .debug)
     dispatchPrecondition(condition: .onQueue(.main))
 
-    var vc = RootViewController.makeNowPlaying(version: .v1)
+    let vc = RootViewController.makeNowPlaying(version: .v1)
     vc.navigationDelegate = self
     playervc = vc
     let isPlaying = Podest.playback.isPlaying(guid: entry.guid)

@@ -264,7 +264,7 @@ extension SearchControllerProxy: SearchResultsControllerDelegate {
   }
 
   private func show(feed: Feed) {
-    navigationDelegate?.show(feed: feed)
+    navigationDelegate?.show(feed: feed, animated: true)
     
     searchController.isActive = false
   }
