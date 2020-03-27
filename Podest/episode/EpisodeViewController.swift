@@ -9,6 +9,7 @@
 import UIKit
 import FeedKit
 import os.log
+import Foundation
 
 private let log = OSLog.disabled
 

@@ -74,7 +74,6 @@ extension Unsubscribing where Self: UIViewController {
 
     if let presenter = alert.popoverPresentationController {
       presenter.sourceView = sourceView
-      presenter.sourceRect = sourceView.frame
     }
 
     self.present(alert, animated: true, completion: nil)

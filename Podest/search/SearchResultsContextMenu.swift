@@ -26,6 +26,7 @@ extension SearchResultsController: Dequeueing {
            .suggestedFeed(let feed):
         return MakeList.viewController(
           item: feed, 
+          shouldOverrideIsCompact: true,
           navigationDelegate: self?.delegate?.navigationDelegate
         )
         

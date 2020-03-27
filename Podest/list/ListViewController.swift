@@ -81,13 +81,23 @@ Navigator, EntryRowSelectable {
   /// The previous trait collection influences if we should show or hide the
   /// the list header.
   private var previousTraitCollection: UITraitCollection?
+  
+  /// Set to `true` `shouldOverrideIsCompact` overrides the `isCompact` computed property 
+  /// which folds the table view header when set to `false`.
+  var shouldOverrideIsCompact: Bool = false
 }
 
 // MARK: - Managing the View
 
 extension ListViewController {
 
+  /// On iPad, displaying the table view header would be redundant for the main use case: 
+  /// podcast primary, episode secondary.
   var isCompact: Bool {
+    guard !shouldOverrideIsCompact else {
+      return true
+    }
+    
     return navigationDelegate?.isCollapsed ?? 
       (traitCollection.horizontalSizeClass == .compact)
   }
@@ -113,19 +123,18 @@ extension ListViewController {
 
   override func viewWillAppear(_ animated: Bool) {
     let isDifferent = entry != navigationDelegate?.entry
-
     clearsSelectionOnViewWillAppear = isCompact || isDifferent
 
     updateIsSubscribed()
-   
     super.viewWillAppear(animated)
   }
 
   override func viewWillDisappear(_ animated: Bool) {
     updating?.cancel()
+    
     refreshControlTimer = nil
+    
     changeBatches.removeAll()
-
     super.viewWillDisappear(animated)
   }
 }

@@ -29,10 +29,12 @@ struct MakeList<Item> {
 extension MakeList where Item == Feed {
   static func viewController(
     item: Item, 
+    shouldOverrideIsCompact: Bool = false,
     navigationDelegate: ViewControllers? = nil
   ) -> ListViewController {  
     let vc = instantiateViewController(navigationDelegate: navigationDelegate)
     vc.feed = item
+    vc.shouldOverrideIsCompact = shouldOverrideIsCompact
 
     return vc
   }

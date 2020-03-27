@@ -73,17 +73,14 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
     }
   }
 
-  /// We don’t have to update while the main player is being used.
-  private var shouldUpdate: Bool {
-    return !(navigationDelegate?.isPlayerPresented ?? false)
-  }
-
   private var needsUpdate = false {
     didSet {
-      if shouldUpdate, needsUpdate {
-        DispatchQueue.main.async { [weak self] in
-          self?.viewIfLoaded?.setNeedsLayout()
-        }
+      guard needsUpdate else {
+        return
+      }
+      
+      DispatchQueue.main.async { [weak self] in
+        self?.viewIfLoaded?.setNeedsLayout()
       }
     }
   }
