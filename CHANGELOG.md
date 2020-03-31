@@ -1,3 +1,7 @@
+## 9.3 (planned)
+
+Smoother refreshing of the Queue when the playback status of an episode changes.
+
 ## 9.2 (2020-03-31)
 
 This new version brings context menus for accessing most functionality directly from onscreen items. Additionally, the player is presented in default iOS style now.
