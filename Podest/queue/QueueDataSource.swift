@@ -498,6 +498,21 @@ extension QueueDataSource: UITableViewDataSource {
 
     return view
   }
+  
+  @discardableResult
+  private static func updateIsUnplayed(
+    cell: UITableViewCell, isUnplayed: Bool) -> UITableViewCell {
+    if cell.accessoryView == nil {
+      cell.accessoryView =  QueueDataSource.makeAccessory()
+      cell.tintColor = UIColor(named: "Purple")
+    }
+    
+    if let pie = cell.accessoryView as? PieView {
+      pie.percentage = isUnplayed ? 1.0 : 0
+    }
+    
+    return cell
+  }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath
   ) -> UITableViewCell {
@@ -527,16 +542,8 @@ extension QueueDataSource: UITableViewDataSource {
       cell.textLabel?.text = entry.feedTitle ?? entry.title
       cell.detailTextLabel?.text = entry.title
       
-      if cell.accessoryView == nil {
-        cell.accessoryView =  QueueDataSource.makeAccessory()
-        cell.tintColor = UIColor(named: "Purple")
-      }
-      
-      if let pie = cell.accessoryView as? PieView {
-        pie.percentage = isUnplayed ? 1.0 : 0
-      }
-      
-      return cell
+      return QueueDataSource
+        .updateIsUnplayed(cell: cell, isUnplayed: isUnplayed)
       
     case .feed:
       // We might reuse the feed cell from search here.
@@ -676,5 +683,21 @@ extension QueueDataSource: UITableViewDataSourcePrefetching  {
     let size = estimateCellSize(tableView: tableView)
 
     images.cancelPrefetching(items, at: size, quality: .medium)
+  }
+}
+
+// MARK: - Updating Playback State
+
+extension QueueDataSource {
+  
+  func tableView(_ tableView: UITableView, updateCellMatching entry: Entry, isUnplayed: Bool) {
+    guard let indexPath = indexPath(matching: entry), 
+      let cell = tableView.cellForRow(at: indexPath) else {
+      return
+    }
+    
+    QueueDataSource.updateIsUnplayed(cell: cell, isUnplayed: isUnplayed)
+    
+    sections[indexPath.section][indexPath.row] = .entry(entry, isUnplayed)
   }
 }
