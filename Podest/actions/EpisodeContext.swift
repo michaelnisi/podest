@@ -94,13 +94,19 @@ struct EpisodeContext {
     navigationDelegate: ViewControllers?, 
     queue: Dequeueing, 
     library: Unsubscribing,
-    view: UIView?
+    view: UIView?,
+    isShowPodcastRequired: Bool = true
   ) -> UIContextMenuConfiguration {
     let actionProvider: ([UIMenuElement]) -> UIMenu? = { _ in    
       var children: [UIMenuElement] = [
-        makePlayAction(entry: entry, navigationDelegate: navigationDelegate),
-        makeShowPodcastAction(entry: entry, navigationDelegate: navigationDelegate)
+        makePlayAction(entry: entry, navigationDelegate: navigationDelegate)
       ]
+      
+      if isShowPodcastRequired {
+        children.append(makeShowPodcastAction(
+          entry: entry, navigationDelegate: navigationDelegate
+        ))
+      }
       
       if let view = view {
         children.append(makeQueueAction(entry: entry, queue: queue, view: view))

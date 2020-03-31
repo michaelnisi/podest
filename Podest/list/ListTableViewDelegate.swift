@@ -55,7 +55,8 @@ extension ListViewController: Dequeueing {
       navigationDelegate: navigationDelegate,
       queue: self,
       library: self,
-      view: tableView.cellForRow(at: indexPath)
+      view: tableView.cellForRow(at: indexPath), 
+      isShowPodcastRequired: false
     )
   }
   

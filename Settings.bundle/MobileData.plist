@@ -9,6 +9,10 @@
 		<dict>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Streaming</string>
+			<key>FooterText</key>
+			<string>Use mobile data for streaming podcast episodes.</string>
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
@@ -23,6 +27,10 @@
 		<dict>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Downloads</string>
+			<key>FooterText</key>
+			<string>Use mobile data for downloading podcast episodes.</string>
 		</dict>
 		<dict>
 			<key>DefaultValue</key>

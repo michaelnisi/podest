@@ -212,6 +212,7 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
     let vibrancy = UIVibrancyEffect(blurEffect: blur, style: .label)
     let vibrancyView = UIVisualEffectView(effect: vibrancy)
     vibrancyView.frame = view.frame
+    vibrancyView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
     blurView.contentView.addSubview(vibrancyView)
     view.insertSubview(blurView, belowSubview: sibling)

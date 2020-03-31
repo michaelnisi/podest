@@ -53,11 +53,17 @@ class MiniPlayerContextMenuInteraction: NSObject {
         children.append(link)
       }
       
-      children.append(EpisodeContext.makeShowEpisodeAction(
-        entry: entry, navigationDelegate: self?.navigationDelegate))
+      if entry != self?.navigationDelegate?.entry {
+        children.append(EpisodeContext.makeShowEpisodeAction(
+          entry: entry, navigationDelegate: self?.navigationDelegate
+        ))
+      }
       
-      children.append(EpisodeContext.makeShowPodcastAction(
-        entry: entry, navigationDelegate: self?.navigationDelegate))
+      if entry.feed != self?.navigationDelegate?.feed?.url {
+        children.append(EpisodeContext.makeShowPodcastAction(
+          entry: entry, navigationDelegate: self?.navigationDelegate
+        ))
+      }
 
       if !(self?.navigationDelegate?.isQueueVisible ?? false) {
         children.append(UIAction(
