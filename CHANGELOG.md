@@ -1,6 +1,12 @@
-## 9.0 (2019-10-15)
+## 9.2 (2020-03-31)
 
-### Doolittle
+This new version brings context menus for accessing most functionality directly from onscreen items. Additionally, the player is presented in default iOS style now.
+
+## 9.1 (2019-10-26)
+
+Resolves an issue where the Queue would not be updating reliably.
+
+## 9.0 (2019-10-15)
 
 This version is optimized for iOS 13 and supports Dark Mode.
 
@@ -36,8 +42,6 @@ Watching a video on your phone in landscape no longer affects the list header.
 
 ## 8.1 (2019-07-05)
 
-### Squirrel Pup
-
 In preparation for iOS 13 this fall, these changes adjust layout timing, improve performance, and install scaffolding for a new player user interface, which should also be dropping this fall.
 
 Improved multitasking on iPad: the list header adjusts according to layout and the player animation maintains the aspect ratio of the episode image.
@@ -62,8 +66,6 @@ Settings.app displays correct version and status.
 
 ## 8 (2019-04-25)
 
-### Egghead
-
 This version, the first using a new simplified version number, provides more information about Podest in the Settings app, namely version, subscription, and expiration date for free trials. On iPad, episode images are displayed in the correct size. Large titles are refrained. And while it’s springtime round these parts, it’s time for new icon colors.
 
 From now on versions will be counted in whole numbers, eight, nine, 10, etc., with a relative build number, for example, 8 (2) for version eight, build two. Patches are going to be counted after a dot, 8.1, say. Full-on Semantic Versioning didn’t prove itself practical for this app.
@@ -71,8 +73,6 @@ From now on versions will be counted in whole numbers, eight, nine, 10, etc., wi
 Thanks to ABI stability, app size is down to five megabytes. Good job, Swift team.
 
 ## 7.9.7 (2019-03-20)
-
-### Shrug Fixings
 
 Superfluous spaces in episode summaries have been removed.
 
@@ -84,15 +84,11 @@ The clipped search list regression is cleared.
 
 ## 7.9.6 (2019-02-27)
 
-### Finding Nemo
-
 Accompanying the previous release to compensate a regression in search, this patch groups search suggestions correctly again and reduces latency for a smoother search experience.
 
 Smarter placeholding and prefetching makes image loading almost seemless.
 
 ## 7.9.5 (2019-01-22)
-
-### Making a Diff
 
 Wishing you a very Happy New Year, it can only get better.
 
@@ -103,8 +99,6 @@ Background downloading has been further improved to work more reliably.
 I almost forgot, the in-app purchases store got a nicer layout, looking better on iPad. Also, the store button has been relabeled and moved from right to left.
 
 ## 7.9.4 (2018-12-19)
-
-### Files Fly
 
 100% open source, bug fixes, and small improvements. This is a packed update, here’s the rundown:
 
@@ -134,13 +128,9 @@ https://github.com/michaelnisi/podest
 
 ## 7.9.3 (2018-10-15)
 
-### Hey there!
-
 Improved image loading and new icon.
 
 ## 7.9.2 (2018-10-01)
-
-### Correct and Faster Queue Images
 
 I’m happy we were able to resolve an annoyingly hard to reproduce issue, where, under specific circumstances, the Queue was mismatching images. https://github.com/kean/Nuke/pull/190#event-1875458494
 
@@ -150,8 +140,6 @@ Update for even smoother scrolling.
 
 ## 7.9.1 (2018-09-23)
 
-### Better Layout and Hardened Playback
-
 On the occasion of new devices, layout has been revised, with the mini-player now better respecting the notch. While being at it, I’ve added some gestures. You can now swipe for bringing up or dismissing the player. Generally, interaction with the player has been improved.
 
 Apropos player, playback got more stable. Frantically tapping player buttons, while playing locally or streaming should cause no problems anymore. Let me know if you can crash the player.
@@ -159,8 +147,6 @@ Apropos player, playback got more stable. Frantically tapping player buttons, wh
 Another layout patch loads correct image sizes, relative to layout, especially apparent on iPad. Speaking of images, the image loading framework has been updated to Nuke 7.3.2 https://github.com/kean/Nuke
 
 ## 7.9.0 (2018-09-16)
-
-### AirPlay, Scrubbing, and iOS 12
 
 AirPlay for audio and video. Properly supporting both wasn’t clear-cut at first, but I found an OK compromise. Please provide feedback if you should run into any problems with AirPlay in your setup.
 
@@ -173,8 +159,6 @@ Two minor layout issues have been resolved, displaying the video player in lands
 Optimizing for iOS 12, all code has been updated to Swift 4.2 and CloudKit change token encoding has been adjusted.
 
 ## v7.8.0 (2018-09-05)
-
-### Feature & Plenty
 
 Automatic enqueuing and dequeuing, better syncing with iCloud and plenty improvements.
 
@@ -196,8 +180,6 @@ With a more granular logging setup, it’s now mostly disabled for releases.
 
 ## v7.7.0 (2018-08-02)
 
-### Department of Technical Debt
-
 These are some finer grained changes from the Dept. of Technical Debt, but minor new features as well, hence the version bump.
 
 Improves episode view with a translucent navigation bar and by clearing the text selection when the display mode changes. Also, requires confirmation before dequeueing episodes, prompting an action sheet.
@@ -214,8 +196,6 @@ Cultivates less chatty logging.
 
 ## v7.6.1 (2018-07-20):
 
-### Patching the Obvious
-
 The public launch surfaced some issues, here are the changes.
 
 In the in-app store, improved event handling, prettier colors, layout, and tighter wording.
@@ -226,13 +206,9 @@ A layout issue in list header for iPhone X has been resolved, applying a better 
 
 ## v7.6.0 (2018-07-11):
 
-### App Store
-
 Welcome to the App Store. The first version that has been has been approved for the App Store activated the store for in-app purchases, resolving a multitude of layout issues.
 
 ## v7.5.1 (2018-07-04):
-
-### Quality
 
 Retrying failed downloads when reachability of hosts has changed.
 
@@ -246,8 +222,6 @@ By more durable and effective caching, images load quicker now.
 
 ## v7.5.0:
 
-### Caching and Settings
-
 Regularly, but not too soon, remove unused media files.
 
 Expose settings for Automatic Downloads, and two Mobile Data properties: Downloads and Streaming. Users can now keep Mobile Data enabled, but opt out of downloading and streaming while being not on Wi-Fi.
@@ -259,8 +233,6 @@ Lesser requests through smarter, more dynamic, time-to-live negotiation and off-
 More aggressive pull-to-refresh, not only reloading, but replacing feeds and entries, enabling users to fix inconsistent cache state, like entry doublets for example.
 
 ## v7.4.0 (2018-06-14):
-
-### iPad and player
 
 Finally, the iPad version got some love. An issue with not resetting dynamic row insets while searching has been resolved. After some pushback, messaging while the Queue is empty has been improved. Also, to make it more actionable, the search bar is not longer hidden when the Queue is empty. Layouts have been improved to work better on iPhone X.
 
@@ -277,7 +249,5 @@ Sync, that complex beast of a commodity, has been reviewed and should be in a sa
 And finally, after seeing the network indicator sometimes getting stuck, it’s now reset when the app moves into the background.
 
 ## v7.3.3 (2018-05-28):
-
-### Comply with strict dispatch preconditions
 
 After introducing strict preconditions, making sure there’s no hidden networking or IO on the main queue, the app consequently trapped while pausing and resuming streamed playback. Also, file IO, while checking if enclosures are locally available, became apparent. These issues have been resolved by introducing a worker queue, in the Playback framework, and by moving reachability checks into the playback session, of said framework.
