@@ -10,20 +10,28 @@ import Foundation
 import UIKit
 import FeedKit
 
+protocol MiniPlayerContextMenuInteracting: AnyObject {
+  var navigationDelegate: ViewControllers? { get }
+  var view: UIView! { get }
+  var entry: Entry? { get }
+}
+
+extension MiniPlayerController: MiniPlayerContextMenuInteracting {}
+
 @available(iOS 13.0, *)
 class MiniPlayerContextMenuInteraction: NSObject { 
   
-  private let entry: Entry
-  private weak var view: UIView?
+  private weak var viewController: MiniPlayerContextMenuInteracting?
   
-  init(view: UIView, entry: Entry) {
-    self.view = view
-    self.entry = entry
+  init(viewController: MiniPlayerContextMenuInteracting) {
+    self.viewController = viewController
   }
   
   private var interaction: UIInteraction?
   
-  func install() {
+  private var view: UIView? { viewController?.view }
+  
+  func install() -> MiniPlayerContextMenuInteraction {
     precondition(!isInvalidated)
     
     let interaction = UIContextMenuInteraction(delegate: self)
@@ -31,6 +39,8 @@ class MiniPlayerContextMenuInteraction: NSObject {
     view?.addInteraction(interaction)
     
     self.interaction = interaction
+    
+    return self
   }
   
   private var isInvalidated = false
@@ -79,14 +89,8 @@ class MiniPlayerContextMenuInteraction: NSObject {
       )
     }
   }
-
-  func installContextMenuInteraction() {
-    let interaction = UIContextMenuInteraction(delegate: self)
-    
-    view?.addInteraction(interaction)
-  }
   
-  var navigationDelegate: ViewControllers?
+  var navigationDelegate: ViewControllers? { viewController?.navigationDelegate }
 }
 
 // MARK: - UIContextMenuInteractionDelegate
@@ -98,6 +102,10 @@ extension MiniPlayerContextMenuInteraction: UIContextMenuInteractionDelegate {
     _ interaction: UIContextMenuInteraction, 
     configurationForMenuAtLocation location: CGPoint
   ) -> UIContextMenuConfiguration? {
+    guard let entry = viewController?.entry else {
+      return nil
+    }
+    
     return UIContextMenuConfiguration(
       identifier: nil, 
       previewProvider: nil, 
@@ -110,7 +118,7 @@ extension MiniPlayerContextMenuInteraction: UIContextMenuInteractionDelegate {
     willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, 
     animator: UIContextMenuInteractionCommitAnimating) {
     animator.addCompletion { [weak self] in
-      guard let entry = self?.entry else {
+      guard let entry = self?.viewController?.entry else {
         return
       }
       

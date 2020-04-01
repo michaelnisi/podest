@@ -148,15 +148,7 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
 
   // MARK: - Navigator
 
-  var navigationDelegate: ViewControllers? { 
-    didSet {
-      guard #available(iOS 13.0, *) else {
-        return
-      }
-      
-      (miniPlayerContext as? MiniPlayerContextMenuInteraction)?.navigationDelegate = navigationDelegate
-    }
-  }
+  var navigationDelegate: ViewControllers?
 
   var swipe: UISwipeGestureRecognizer!
 
@@ -182,10 +174,17 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
       navigationDelegate?.pause()
     }
   }
+  
+  // MARK: - FX
 
-  var fx: UIVisualEffectView!
+  weak var fx: UIVisualEffectView!
 
-  fileprivate func insertEffect(below sibling: UIView) {
+  private func insertEffect() {
+    guard fx == nil, let sibling = titleLabel else {
+      os_log("** ignoring visual effect", log: log, type: .error)
+      return
+    }
+    
     guard #available(iOS 13.0, *) else {
       let blur = UIBlurEffect(style: .light)
       let blurView = UIVisualEffectView(effect: blur)
@@ -219,6 +218,10 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
 
     self.fx = blurView
   }
+  
+  private func removeEffect() {
+    fx.removeFromSuperview()
+  }
 
   // MARK: - UIViewController
   
@@ -226,14 +229,9 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
   private func installMiniPlayerContextMenu() {
     (miniPlayerContext as? MiniPlayerContextMenuInteraction)?.invalidate()
     
-    guard let view = view, let entry = entry else {
-      return
-    }
+    let context = MiniPlayerContextMenuInteraction(viewController: self)
     
-    miniPlayerContext = MiniPlayerContextMenuInteraction(view: view, entry: entry)
-    (miniPlayerContext as? MiniPlayerContextMenuInteraction)?.navigationDelegate = navigationDelegate
-    
-    (miniPlayerContext as? MiniPlayerContextMenuInteraction)?.install()
+    self.miniPlayerContext = context.install()
   }
 
   override func viewDidLoad() {
@@ -242,7 +240,7 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
     view.isHidden = true
 
     view.sendSubviewToBack(titleLabel)
-    insertEffect(below: titleLabel)
+    insertEffect()
 
     playSwitch.isExclusiveTouch = true
 
