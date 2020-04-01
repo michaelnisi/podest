@@ -152,7 +152,7 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
 
   var swipe: UISwipeGestureRecognizer!
 
-  // MARK: - More Members
+  // MARK: - Outlets and Actions
 
   @IBOutlet var titleLabel: UILabel!
 
