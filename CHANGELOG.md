@@ -1,6 +1,6 @@
-## 9.3 (planned)
+## 9.3 (2020-04-02)
 
-Smoother refreshing of the Queue when the playback status of an episode changes.
+Two slight adjustments: one improves queue refreshing for playback status changes, the other displays episode date and length in the context menu preview.
 
 ## 9.2 (2020-03-31)
 
