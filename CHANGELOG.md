@@ -1,3 +1,7 @@
+## 9.4 (2020-04-04)
+
+This version downloads new episodes immediately and exposes an option for the previous configuration, discretionary downloading scheduled by the system, via Settings app.
+
 ## 9.3 (2020-04-02)
 
 Two slight adjustments: one improves queue refreshing for playback status changes, the other displays episode date and length in the context menu preview.

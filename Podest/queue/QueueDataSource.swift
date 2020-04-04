@@ -262,6 +262,9 @@ final class QueueDataSource: NSObject, SectionedDataSource {
       }
     } else {
       os_log("should not update: %f < %f", log: log, type: .debug, diff, deadline)
+      DispatchQueue.global(qos: .utility).async {
+        Podest.files.preloadQueue(removingFiles: false, completionHandler: nil)
+      }
     }
 
     return yes

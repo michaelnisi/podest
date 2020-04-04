@@ -23,9 +23,7 @@ protocol Downloading: FileProxyDelegate {
   func remove(url: URL)
   
   /// Requests opportunistic background downloads of queued enclosures. It’s
-  /// safe to call this ignorantly, it doesn’t produce redundant downloads.
-  /// Furthermore, this method should keep the cache of downloaded files at a
-  /// reasonable size.
+  /// safe to call this ignorantly, it doesn’t saturate IO and manages the cache.
   ///
   /// - Parameters:
   ///   - removingFiles: Pass `true` to remove stale files.

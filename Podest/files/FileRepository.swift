@@ -12,7 +12,7 @@ import FeedKit
 import Ola
 import FileProxy
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "fs")
 
 final class FileRepository: NSObject {
 
@@ -35,6 +35,9 @@ final class FileRepository: NSObject {
     self.downloadMaximum = downloadMaximum
     self.removeMaximum = removeMaximum
   }
+
+  /// Reachability check target host.
+  private static var anywhere = URL(string: "https://1.1.1.1")!
   
   // MARK: Synchronized Access
   
@@ -129,6 +132,7 @@ final class FileRepository: NSObject {
     }
   }
 
+  var lastQueuePreloading: TimeInterval = 0
 }
 
 // MARK: - Respecting User Settings
@@ -208,6 +212,8 @@ extension FileRepository {
 // MARK: - Downloading
 
 extension FileRepository: Downloading {
+  
+  var isDiscretionary: Bool { UserDefaults.standard.discretionaryDownloads }
   
   func handleEventsForBackgroundURLSession(
     identifier: String,
@@ -301,15 +307,24 @@ extension FileRepository: Downloading {
     completionHandler: ((Error?) -> Void)? = nil
   ) {
     dispatchPrecondition(condition: .notOnQueue(.main))
+
+    let now = Date().timeIntervalSince1970
+
+    guard now - lastQueuePreloading > 60 else {
+      os_log("not preloading queue: wait a minute", log: log, type: .debug)
+      completionHandler?(nil)
+      return
+    }
     
     os_log("preloading queue", log: log, type: .debug)
+
+    lastQueuePreloading = now
 
     if probe != nil {
       flush()
     }
 
-    let anywhere = URL(string: "https://apple.com")!
-    let downloading = shouldDownload(url: anywhere)
+    let downloading = shouldDownload(url: FileRepository.anywhere)
     
     guard UserDefaults.standard.automaticDownloads, downloading else {
       os_log("settings or reachability sealed downloading",
@@ -335,7 +350,7 @@ extension FileRepository: Downloading {
           entriesBlockError = error
         }
       }
-      
+
       acc = acc + entries
     }) { completionError in
       var proxyError: Error?
@@ -350,7 +365,10 @@ extension FileRepository: Downloading {
       }
 
       var count = self.downloadMaximum
-      
+
+      os_log("checking: ( %{public}i, %{public}i )",
+             log: log, type: .debug, urls.count, count)
+
       for url in urls {
         guard count > 0 else {
           os_log("aborting queue preloading: too many files", log: log)
