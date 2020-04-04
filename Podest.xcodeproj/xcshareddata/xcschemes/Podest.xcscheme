@@ -113,7 +113,7 @@
          <EnvironmentVariable
             key = "DYLD_PRINT_STATISTICS"
             value = ""
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "CFNETWORK_DIAGNOSTICS"
