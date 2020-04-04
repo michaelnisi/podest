@@ -229,10 +229,12 @@ extension AppDelegate {
     switch application.applicationState {
     case .active, .inactive:
       os_log("moving to foreground", log: log, type: .debug)
+      
       return true
       
     case .background:
       os_log("moving to background", log: log, type: .debug)
+      
       return true
 
     @unknown default:
@@ -255,7 +257,7 @@ extension AppDelegate {
     _ application: UIApplication,
     shouldSaveApplicationState coder: NSCoder) -> Bool {
     return shouldSaveState
-  }
+  } 
 }
 
 // MARK: - Managing Interface Geometry
@@ -300,8 +302,8 @@ extension AppDelegate {
     root.update(considering: nil, animated: false) { newData, error in
       let result = AppDelegate.makeBackgroundFetchResult(newData, error)
 
-      // Submits completion block to the main queue, after which nothing must
-      // run. Done means done, or 0x8badf00d.
+      // Submits completion block to the main queue after which nothing must
+      // run. Done means done, otherwise 0x8badf00d!
       func done() {
         DispatchQueue.main.async {
           if application.applicationState != .active {
