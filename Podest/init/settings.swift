@@ -15,6 +15,7 @@ import Foundation
 extension UserDefaults {
 
   static var automaticDownloadsKey = "automaticDownloads"
+  static var discretionaryDownloads = "discretionaryDownloads"
   static var mobileDataStreamingKey = "mobileDataStreaming"
   static var mobileDataDownloadsKey = "mobileDataDownloads"
 
@@ -22,25 +23,28 @@ extension UserDefaults {
   static var lastVersionPromptedForReviewKey = "ink.codes.podest.lastVersionPromptedForReview"
 
   var automaticDownloads: Bool {
-    return bool(forKey: UserDefaults.automaticDownloadsKey)
+    bool(forKey: UserDefaults.automaticDownloadsKey)
+  }
+
+  var discretionaryDownloads: Bool {
+    bool(forKey: UserDefaults.discretionaryDownloads)
   }
 
   var mobileDataStreaming: Bool {
-    return bool(forKey: UserDefaults.mobileDataStreamingKey)
+    bool(forKey: UserDefaults.mobileDataStreamingKey)
   }
 
   var mobileDataDownloads: Bool {
-    return bool(forKey: UserDefaults.mobileDataDownloadsKey)
+    bool(forKey: UserDefaults.mobileDataDownloadsKey)
   }
 
   var lastUpdateTime: Double {
-    return double(forKey: UserDefaults.lastUpdateTimeKey)
+    double(forKey: UserDefaults.lastUpdateTimeKey)
   }
 
   var lastVersionPromptedForReview: String? {
-    return string(forKey: UserDefaults.lastVersionPromptedForReviewKey)
+    string(forKey: UserDefaults.lastVersionPromptedForReviewKey)
   }
-
 }
 
 extension UserDefaults {
@@ -80,5 +84,4 @@ struct Settings {
     allButUpsideDown = arguments.contains("-ink.codes.podest.allButUpsideDown")
     removeReceipts = arguments.contains("-ink.codes.podest.removeReceipts")
   }
-
 }

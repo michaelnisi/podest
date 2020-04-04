@@ -17,4 +17,4 @@ VERSION_NUMBER="$($PLISTBUDDY -c 'Print CFBundleShortVersionString' $INFO_PLIST)
 BUILD_NUMBER="$($PLISTBUDDY -c 'Print CFBundleVersion' $INFO_PLIST)"
 VERSION="$VERSION_NUMBER ($BUILD_NUMBER)"
 
-$PLISTBUDDY -c "Set :PreferenceSpecifiers:4:DefaultValue $VERSION" $SETTINGS_PLIST
+$PLISTBUDDY -c "Set :PreferenceSpecifiers:5:DefaultValue $VERSION" $SETTINGS_PLIST

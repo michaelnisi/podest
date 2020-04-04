@@ -14,7 +14,7 @@
 		</dict>
 		<dict>
 			<key>FooterText</key>
-			<string>Automatically download episodes when added to your Queue so you can play them offline.</string>
+			<string>Automatically download episodes when added to your Queue so you can play them offline. Discretionary downloads let the system decide when to most efficiently transfer data.</string>
 			<key>Title</key>
 			<string>Downloads</string>
 			<key>Type</key>
@@ -31,12 +31,22 @@
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
 		<dict>
+			<key>DefaultValue</key>
+			<false/>
+			<key>Key</key>
+			<string>discretionaryDownloads</string>
+			<key>Title</key>
+			<string>Discretionary Downloads</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+		</dict>
+		<dict>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
-			<string>9.3 (4)</string>
+			<string>9.4 (2)</string>
 			<key>Key</key>
 			<string>enabled_preference</string>
 			<key>Title</key>
