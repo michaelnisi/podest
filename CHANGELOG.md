@@ -1,6 +1,6 @@
 ## 9.4 (2020-04-04)
 
-This version downloads new episodes immediately and exposes an option for the previous configuration, discretionary downloading scheduled by the system, via Settings app.
+This version downloads new episodes immediately, while offering discretionary downloading (the previous configuration) in Settings.
 
 ## 9.3 (2020-04-02)
 

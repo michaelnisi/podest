@@ -1,1 +1,1 @@
-pod,podcast,offline,catcher,radio,podcatcher,player,audio,video,watch,listen,tv,queue,podcasts,app
+pod,podcast,offline,catcher,radio,podcatcher,player,audio,video,watch,broadcast,queue,podcasts,app
