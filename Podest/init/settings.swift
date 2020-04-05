@@ -27,7 +27,8 @@ extension UserDefaults {
   }
 
   var discretionaryDownloads: Bool {
-    bool(forKey: UserDefaults.discretionaryDownloads)
+    ProcessInfo.processInfo.isLowPowerModeEnabled ||
+      bool(forKey: UserDefaults.discretionaryDownloads)
   }
 
   var mobileDataStreaming: Bool {
