@@ -1,3 +1,7 @@
+## 9.5 (2020-04-06)
+
+Use discretionary downloading when Low Power Mode is enabled.
+
 ## 9.4 (2020-04-04)
 
 This version downloads new episodes immediately, while offering discretionary downloading (the previous configuration) in Settings.
