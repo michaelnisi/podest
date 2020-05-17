@@ -139,16 +139,6 @@ extension ListViewController {
   }
 }
 
-// MARK: - Extending Safe Area
-
-extension ListViewController {
-
-  override var additionalSafeAreaInsets: UIEdgeInsets {
-    get { navigationDelegate?.miniPlayerEdgeInsets ?? .zero }
-    set {}
-  }
-}
-
 // MARK: - Layout Hooks
 
 extension ListViewController {
