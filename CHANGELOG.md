@@ -1,3 +1,11 @@
+## 9.7 (2020-07-12)
+
+Fixes a long-standing bug in search.
+
+## 9.6 (2020-05-25)
+
+Two minor changes for iOS 13.5, adjusting bottom offset in the list and preventing a crash in certain circumstances during background downloading.
+
 ## 9.5 (2020-04-06)
 
 Use discretionary downloading when Low Power Mode is enabled.
