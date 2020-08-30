@@ -16,6 +16,7 @@
 		4C02C29B2247544C00C7D647 /* StoreState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C02C2992247544C00C7D647 /* StoreState.swift */; };
 		4C03FE2F22EAB96600A2C3B6 /* ReviewRequester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C03FE2E22EAB96600A2C3B6 /* ReviewRequester.swift */; };
 		4C03FE3022EAF16A00A2C3B6 /* ReviewRequester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C03FE2E22EAB96600A2C3B6 /* ReviewRequester.swift */; };
+		4C07264E24FABBAD00DA55B4 /* AppGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C07264D24FABBAD00DA55B4 /* AppGateway.swift */; };
 		4C07C97621EB0C9600ED8AB0 /* StoreLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C07C97521EB0C9600ED8AB0 /* StoreLayout.swift */; };
 		4C07C97721EB13BB00ED8AB0 /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C776B1F2084722C00A055CD /* MessageCollectionViewCell.swift */; };
 		4C07C97A21EBA69200ED8AB0 /* ArticleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C07C97821EBA69200ED8AB0 /* ArticleCollectionViewCell.swift */; };
@@ -294,6 +295,7 @@
 		4C010A2A2101DBB00006CB53 /* FeedKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FeedKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C02C2992247544C00C7D647 /* StoreState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreState.swift; sourceTree = "<group>"; };
 		4C03FE2E22EAB96600A2C3B6 /* ReviewRequester.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewRequester.swift; sourceTree = "<group>"; };
+		4C07264D24FABBAD00DA55B4 /* AppGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGateway.swift; sourceTree = "<group>"; };
 		4C07C97521EB0C9600ED8AB0 /* StoreLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreLayout.swift; sourceTree = "<group>"; };
 		4C07C97821EBA69200ED8AB0 /* ArticleCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCollectionViewCell.swift; sourceTree = "<group>"; };
 		4C07C97921EBA69200ED8AB0 /* ArticleCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArticleCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -600,6 +602,7 @@
 			isa = PBXGroup;
 			children = (
 				4E8CA7061A126ADB004DE307 /* AppDelegate.swift */,
+				4C07264D24FABBAD00DA55B4 /* AppGateway.swift */,
 				4ED4D4361EA470C90011C28C /* api.swift */,
 				4ED2D6BE1F98E7FF000DA71B /* time.swift */,
 			);
@@ -1381,6 +1384,7 @@
 				4CB6EECA24268AE6006F09B7 /* Unsubscribing.swift in Sources */,
 				4EF1A3511EB837D100E41F84 /* PlaySwitch.swift in Sources */,
 				4C8B375C22A0ED280004FD89 /* SingleRowLayout.swift in Sources */,
+				4C07264E24FABBAD00DA55B4 /* AppGateway.swift in Sources */,
 				4C1F57A92081C0690067AB7C /* ProductsDataSource.swift in Sources */,
 				4C776B2920847D0900A055CD /* ProductCell.swift in Sources */,
 				4E7D10B31F6644DA0048CB43 /* QueueDataSource.swift in Sources */,
@@ -1540,7 +1544,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PodKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				IPHONEOS_DEPLOYMENT_TARGET = $inherited;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.PodKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -1575,7 +1579,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PodKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				IPHONEOS_DEPLOYMENT_TARGET = $inherited;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.PodKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -1602,7 +1606,7 @@
 				DEVELOPMENT_TEAM = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PodKitTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				IPHONEOS_DEPLOYMENT_TARGET = $inherited;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.PodKitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1629,7 +1633,7 @@
 				DEVELOPMENT_TEAM = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PodKitTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				IPHONEOS_DEPLOYMENT_TARGET = $inherited;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.PodKitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1652,7 +1656,7 @@
 				DEVELOPMENT_TEAM = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PodestUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = $inherited;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1681,7 +1685,7 @@
 				DEVELOPMENT_TEAM = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PodestUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = $inherited;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.PodestUITests;
@@ -1707,7 +1711,7 @@
 				DEVELOPMENT_TEAM = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = Player/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = $inherited;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -1736,7 +1740,7 @@
 				DEVELOPMENT_TEAM = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = Player/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = $inherited;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Player;
@@ -1794,7 +1798,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1845,7 +1849,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -1868,7 +1872,7 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Podest/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = $inherited;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1893,7 +1897,7 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Podest/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = $inherited;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest;
 				PRODUCT_NAME = "$(TARGET_NAME)";

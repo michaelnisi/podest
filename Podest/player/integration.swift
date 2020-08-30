@@ -13,8 +13,9 @@ import Playback
 import AVKit
 import AVFoundation
 import Ola
+import FileProxy
 
-private let log = OSLog.disabled
+private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
 // MARK: - Players
 
@@ -367,9 +368,13 @@ extension RootViewController: PlaybackDelegate {
     do {
       return try Podest.files.url(for: url)
     } catch {
-      os_log("returning nil: caught file proxy error: %{public}@",
-             log: log, error as CVarArg)
-      return nil
+      switch error {
+      case FileProxyError.fileSizeRequired:
+        os_log("** missing file size", log: log, type: .debug)
+        return url
+      default:
+        return nil
+      }
     }
   }
 

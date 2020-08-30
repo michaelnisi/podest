@@ -174,3 +174,11 @@ protocol UserProxy {
   func reload(completionBlock: ((Error?) -> Void)?)
 }
 
+/// `Incoming` routes incoming actions.
+protocol Incoming: BackgroundFetching {}
+
+protocol BackgroundFetching {
+  func register()
+  func schedule()
+  func cancel()
+}

@@ -46,6 +46,16 @@ extension UserDefaults {
   var lastVersionPromptedForReview: String? {
     string(forKey: UserDefaults.lastVersionPromptedForReviewKey)
   }
+
+  static func registerPodestDefaults(_ user: UserDefaults = UserDefaults.standard) {
+    user.register(defaults: [
+      mobileDataDownloadsKey: false,
+      mobileDataStreamingKey: false,
+      automaticDownloadsKey: !Podest.settings.noDownloading,
+      lastUpdateTimeKey: 0,
+      lastVersionPromptedForReviewKey: "0"
+    ])
+  }
 }
 
 extension UserDefaults {

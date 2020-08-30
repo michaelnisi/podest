@@ -77,7 +77,7 @@ extension SearchResultsController {
     tableView.prefetchDataSource = dataSource
     
     tableView.keyboardDismissMode = .onDrag
-    tableView.backgroundColor = .groupTableViewBackground
+    tableView.backgroundColor = .systemGroupedBackground
     
     if #available(iOS 13.0, *) {
       // NOP

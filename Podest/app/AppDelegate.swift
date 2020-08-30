@@ -6,26 +6,13 @@
 //  Copyright (c) 2014 Michael Nisi. All rights reserved.
 //
 
-import CloudKit
-import FeedKit
 import UIKit
 import os.log
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "app")
 
-/// Combines two APIs into a navigational root, this `AppDelegate` requires, for
-/// routing app events into the system.
-///
-/// Keeping it flexible by not using a concrete type in an attempt to inspire
-/// experimentation with alternative user interfaces.
 protocol Routing: UserProxy, ViewControllers {}
 
-/// Receiving application events, AppDelegate is responsible for global things,
-/// namely triggering of background fetching, iCloud synchronization, and file
-/// downloading, providing a clear view over these central route entry points,
-/// close to their respective event sources.
-///
-/// Do not sync from anywhere else.
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
@@ -44,138 +31,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     
     return vc
   }
-
-  /// `true` while pulling iCloud.
-  private var isPulling = false {
-    didSet {
-      dispatchPrecondition(condition: .onQueue(.main))
-      isPulling ?
-        Podest.networkActivity.increase() :
-        Podest.networkActivity.decrease()
-    }
-  }
-
-  /// `true` while pushing to iCloud.
-  private var isPushing = false { 
-    willSet {
-      dispatchPrecondition(condition: .onQueue(.main))
-    }
-  }
-}
-
-// MARK: - Interpreting Background Fetch Results
-
-extension AppDelegate {
-
-  /// Produces a background fetch result and logs its interpretation.
-  ///
-  /// - Parameters:
-  ///   - newData: `true` if new data has been received.
-  ///   - error: The error to take into consideration.
-  ///
-  /// The `newData` flag takes precedence over `error`.
-  private static func makeBackgroundFetchResult(
-    _ newData: Bool, _ error: Error?) -> UIBackgroundFetchResult {
-    guard error == nil else {
-      if newData {
-        os_log("fetch completed with new data and error: %{public}@",
-               log: log, type: .error, error! as CVarArg)
-        return .newData
-      } else {
-        os_log("fetch failed: %{public}@",
-               log: log, type: .error, error! as CVarArg)
-        return .failed
-      }
-    }
-
-    if newData {
-      os_log("fetch completed with new data", log: log, type: .info)
-      return .newData
-    } else {
-      os_log("fetch completed with no data", log: log, type: .info)
-      return .noData
-    }
-  }
-}
-
-// MARK: - Syncing with iCloud
-
-extension AppDelegate {
-
-  /// Pulls iCloud, integrates new data, and reloads the queue locally to update
-  /// views for snapshotting.
-  ///
-  /// - Parameters:
-  ///   - completionBlock: The completion block executing on the main queue.
-  /// when done.
-  ///
-  /// Pulling has presedence over pushing.
-  private func pull(completionBlock: ((UIBackgroundFetchResult) -> Void)? = nil) {
-    dispatchPrecondition(condition: .onQueue(.main))
-
-    if isPushing {
-      os_log("** pulling iCloud while pushing", log: log)
-    } else {
-      os_log("pulling iCloud", log: log, type: .info)
-    }
-
-    isPulling = true
-
-    Podest.iCloud.pull { [weak self] newData, error in
-      let result = AppDelegate.makeBackgroundFetchResult(newData, error)
-
-      if case .newData = result {
-        os_log("reloading queue after merge", log: log, type: .info)
-
-        DispatchQueue.main.async {
-          self?.root.reload { error in
-            dispatchPrecondition(condition: .onQueue(.main))
-
-            if let er = error {
-              os_log("reloading queue failed: %{public}@",
-                     log: log, type: .error, er as CVarArg)
-            }
-
-            self?.isPulling = false
-
-            completionBlock?(result)
-          }
-        }
-      } else {
-        DispatchQueue.main.async {
-          self?.isPulling = false
-
-          completionBlock?(result)
-        }
-      }
-    }
-  }
-
-  /// Pushes user data to iCloud. **Must execute on the main queue.**
-  private func push(completionBlock: (() -> Void)? = nil) {
-    guard !isPulling, !isPushing else {
-      os_log("already syncing", log: log)
-      completionBlock?()
-      return
-    }
-
-    os_log("pushing to iCloud", log: log, type: .info)
-
-    isPushing = true
-
-    Podest.iCloud.push { [weak self] error in
-      if let er = error {
-        os_log("push failed: %{public}@",
-               log: log, type: .error, er as CVarArg)
-      }
-
-      DispatchQueue.main.async {
-        self?.isPushing = false
-      }
-
-      completionBlock?()
-    }
-  }
 }
 
 // MARK: - Initializing the App
@@ -186,16 +41,8 @@ extension AppDelegate {
     _ application: UIApplication,
     willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?
   ) -> Bool {
-    os_log("beginning launch process with options: %{public}@",
-           log: log, type: .info, String(describing: launchOptions))
-
     shouldRestoreState = launchOptions?[.url] == nil
-
     window?.tintColor = UIColor(named: "Purple")!
-
-    if !Podest.store.isExpired() {
-      application.setMinimumBackgroundFetchInterval(3600)
-    }
 
     if !Podest.settings.noSync {
       application.registerForRemoteNotifications()
@@ -204,42 +51,16 @@ extension AppDelegate {
     return true
   }
 
-  /// Registers standard user defaults.
-  private static func registerDefaults() {
-    UserDefaults.standard.register(defaults: [
-      UserDefaults.mobileDataDownloadsKey: false,
-      UserDefaults.mobileDataStreamingKey: false,
-      UserDefaults.automaticDownloadsKey: !Podest.settings.noDownloading,
-      UserDefaults.lastUpdateTimeKey: 0,
-      UserDefaults.lastVersionPromptedForReviewKey: "0"
-    ])
-  }
-
   func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?
   ) -> Bool {
-    os_log("finished launch process with options: %{public}@",
-           log: log, type: .info, String(describing: launchOptions))
-
-    AppDelegate.registerDefaults()
-
-    os_log("checking application state", log: log, type: .debug)
-
-    switch application.applicationState {
-    case .active, .inactive:
-      os_log("moving to foreground", log: log, type: .debug)
-      
-      return true
-      
-    case .background:
-      os_log("moving to background", log: log, type: .debug)
-      
-      return true
-
-    @unknown default:
-      fatalError("unknown case in switch: \(application.applicationState)")
+    UserDefaults.registerPodestDefaults()
+    if !Podest.store.isExpired() {
+      Podest.gateway.register()
     }
+
+    return true
   }
 }
 
@@ -253,11 +74,9 @@ extension AppDelegate {
     return shouldRestoreState
   }
 
-  func application(
-    _ application: UIApplication,
-    shouldSaveApplicationState coder: NSCoder) -> Bool {
+  func application(_ application: UIApplication, shouldSaveSecureApplicationState coder: NSCoder) -> Bool {
     return shouldSaveState
-  } 
+  }
 }
 
 // MARK: - Managing Interface Geometry
@@ -284,7 +103,7 @@ extension AppDelegate {
     _ app: UIApplication,
     open url: URL,
     options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-    return root.open(url: url)
+    root.open(url: url)
   }
 }
 
@@ -294,92 +113,18 @@ extension AppDelegate {
 
   func application(
     _ application: UIApplication,
-    performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-    os_log("beginning background fetch", log: log, type: .info)
-
-    dispatchPrecondition(condition: .onQueue(.main))
-
-    root.update(considering: nil, animated: false) { newData, error in
-      let result = AppDelegate.makeBackgroundFetchResult(newData, error)
-
-      // Submits completion block to the main queue after which nothing must
-      // run. Done means done, otherwise 0x8badf00d!
-      func done() {
-        DispatchQueue.main.async {
-          if application.applicationState != .active {
-            self.flush()
-            self.closeFiles()
-          }
-
-          completionHandler(result)
-        }
-      }
-
-      guard case .newData = result else {
-        return done()
-      }
-
-      // In non-active states, being uninstalled, not receiving queue or library
-      // changes, we must push manually.
-
-      switch application.applicationState {
-      case .active:
-        return done()
-        
-      case .background, .inactive:
-        self.push() {
-          done()
-        }
-        
-      @unknown default:
-         fatalError("unknown case in switch: \(application.applicationState)")
-      }
-    }
-  }
-
-  /// Passes the `completionHandler` to the file repo, including `identifier`,
-  /// but there˚s just one background session at this time.
-  func application(
-    _ application: UIApplication,
     handleEventsForBackgroundURLSession identifier: String,
-    completionHandler: @escaping () -> Void) {
-    os_log("handling events for background URL session: %@",
-           log: log, type: .info, identifier)
-
-    Podest.files.handleEventsForBackgroundURLSession(identifier: identifier) {
-      DispatchQueue.main.async {
-        completionHandler()
-      }
-    }
+    completionHandler: @escaping () -> Void
+  ) {
+    Podest.gateway.handleEventsForBackgroundURLSession(identifier: identifier, completionHandler: completionHandler)
   }
 
-  /// Pulls changes from iCloud.
   func application(
     _ application: UIApplication,
     didReceiveRemoteNotification userInfo: [AnyHashable : Any],
     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult
-    ) -> Void) {
-    os_log("received notification: %{public}@",
-           log: log, type: .info, String(describing: userInfo))
-
-    guard let notification = CKNotification(
-      fromRemoteNotificationDictionary: userInfo),
-      let subscriptionID = notification.subscriptionID else {
-      os_log("unhandled remote notification", log: log, type: .error)
-      return
-    }
-
-    // We receive a notification per zone. How can we optimize this?
-
-    switch subscriptionID {
-    case UserDB.subscriptionID:
-      pull(completionBlock: completionHandler)
-
-    default:
-      os_log("failing fetch completion: unidentified subscription: %{public}@",
-             log: log, type: .error, subscriptionID)
-      completionHandler(.failed)
-    }
+  ) -> Void) {
+    Podest.gateway.handleNotification(userInfo: userInfo, fetchCompletionHandler: completionHandler)
   }
 }
 
@@ -391,15 +136,7 @@ extension AppDelegate {
     _ application: UIApplication,
     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
   ) {
-    os_log("registered for remote notifications with device token: %@",
-           log: log, type: .info, deviceToken as CVarArg)
-
-    let nc = NotificationCenter.default
-
-    nc.addObserver(forName: .CKAccountChanged, object: nil, queue: .main) { [weak self] _ in
-      Podest.iCloud.resetAccountStatus()
-      self?.pull()
-    }
+    Podest.gateway.didRegisterForRemoteNotificationsWithDeviceToken(deviceToken)
   }
 
   func application(
@@ -414,22 +151,6 @@ extension AppDelegate {
 // MARK: - Responding to App State Changes and System Events
 
 extension AppDelegate {
-
-  /// Installs this object into the object tree of our domain.
-  private func install(_ application: UIApplication) {
-    os_log("installing", log: log, type: .info)
-
-    Podest.userQueue.queueDelegate = self
-    Podest.userLibrary.libraryDelegate = self
-  }
-
-  /// Uninstalls this object from the object tree.
-  private func uninstall() {
-    os_log("uninstalling", log: log, type: .info)
-
-    Podest.userQueue.queueDelegate = nil
-    Podest.userLibrary.libraryDelegate = nil
-  }
 
   private func closeFiles() {
     os_log("closing files", log: log, type: .info)
@@ -455,9 +176,7 @@ extension AppDelegate {
   }
 
   func applicationWillResignActive(_ application: UIApplication) {
-    os_log("will resign active", log: log, type: .info)
-    
-    uninstall()
+    Podest.gateway.uninstall()
     Podest.networkActivity.reset()
     Podest.store.cancelReview(resetting: true)
     flush()
@@ -465,51 +184,11 @@ extension AppDelegate {
   }
 
   func applicationDidBecomeActive(_ application: UIApplication) {
-    os_log("did become active", log: log, type: .info)
-
-    // During development, we might want to launch into the previous state,
-    // without syncing or updating.
-    guard !Podest.settings.noSync else {
-      return root.reload(completionBlock: nil)
-    }
-
-    func updateQueue(considering syncError: Error? = nil) -> Void {
-      DispatchQueue.main.async { [weak self] in
-        self?.root.update(considering: syncError, animated: true) { _, error in
-          if let er = error {
-            os_log("updating queue produced error: %{public}@",
-                   log: log, er as CVarArg)
-          }
-
-          self?.install(application)
-          self?.isPulling = false
-        }
-      }
-    }
-
-    guard Podest.iCloud.isAccountStatusKnown else {
-      os_log("accessing iCloud", log: log, type: .info)
-
-      self.isPulling = true
-
-      Podest.iCloud.pull { _, error in
-        if let er = error {
-          os_log("iCloud: %{public}@", log: log, String(describing: er))
-        }
-
-        // Withholding errors, iCloud is optional.
-        updateQueue()
-      }
-      return
-    }
-
-    updateQueue()
+    Podest.gateway.install(root: root)
   }
 
   func applicationDidEnterBackground(_ application: UIApplication) {
-    os_log("did enter background", log: log, type: .info)
-    // If we have been launched into the background, we are idly waiting for
-    // `application(application: performFetchWithCompletionHandler:)`.
+    Podest.gateway.schedule()
   }
 
   func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
@@ -517,53 +196,8 @@ extension AppDelegate {
   }
 
   func applicationWillTerminate(_ application: UIApplication) {
-    uninstall()
+    Podest.gateway.uninstall()
     flush()
     closeFiles()
-  }
-}
-
-/// Handling Library Changes
-
-extension AppDelegate: LibraryDelegate {
-
-  func library(_ library: Subscribing, changed urls: Set<FeedURL>) {
-    DispatchQueue.main.async { [weak self] in
-      self?.root.updateIsSubscribed(using: urls)
-
-      self?.push()
-    }
-  }
-}
-
-/// Handling Queue Changes
-
-extension AppDelegate: QueueDelegate {
-
-  func queue(_ queue: Queueing, changed guids: Set<EntryGUID>) {
-    DispatchQueue.main.async { [weak self] in
-      self?.root.updateIsEnqueued(using: guids)
-      self?.root.reload(completionBlock: nil)
-
-      self?.push()
-    }
-  }
-
-  func queue(_ queue: Queueing, enqueued: EntryGUID, enclosure: Enclosure?) {
-    guard let str = enclosure?.url, let url = URL(string: str) else {
-      os_log("missing enclosure: %{public}@", log: log, type: .error, enqueued)
-      return
-    }
-    
-    Podest.files.preload(url: url)
-  }
-
-  func queue(_ queue: Queueing, dequeued: EntryGUID, enclosure: Enclosure?) {
-    guard let str = enclosure?.url, let url = URL(string: str) else {
-      os_log("missing enclosure: %{public}@", log: log, type: .error, dequeued)
-      return
-    }
-
-    Podest.files.cancel(url: url)
   }
 }

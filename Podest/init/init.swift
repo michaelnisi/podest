@@ -367,7 +367,6 @@ private class NetworkIndicator: NetworkActivityIndicating {
 
 // MARK: - Shared State
 
-/// The static object graph of this application.
 final class Podest {
 
   static let domain = "ink.codes.podest"
@@ -382,51 +381,20 @@ final class Podest {
     return try! Config(url: url)
   }()
 
-  // MARK: Settings
-
   static let settings: Settings = conf.settings
-
-  // MARK: Contact
-
   static let contact: Contact = conf.contact
-
-  // MARK: Indicating Network Activity
-
   static let networkActivity: NetworkActivityIndicating = NetworkIndicator()
-
-  // MARK: Resources
-
   static let images: Images = try! conf.freshImageRepo()
-
-  // MARK: Discovering
-
   static let finder: Searching = try! conf.freshSearchRepo()
   static let browser: Browsing = conf.browser
-
-  // MARK: User Specific
-
   static var userLibrary: Subscribing = conf.user
   static var userQueue: Queueing = conf.user
-
-  // MARK: Caching
-
   static let userCaching: Caching = conf.userCache
   static let feedCaching: Caching = conf.feedCache
-
-  // MARK: Syncing
-
   static let iCloud: UserSyncing = conf.makeUserClient()
-
-  // MARK: Shopping
-
   static let store: Shopping = try! conf.makeStore()
-
-  // MARK: Downloading
-
   static let files: Downloading = conf.makeFileRepo()
-
-  // MARK: Playback
-
   static let playback: Playback = PlaybackSession(times: TimeRepository.shared)
-
+  
+  static let gateway = AppGateway()
 }
