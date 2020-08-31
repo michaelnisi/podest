@@ -17,7 +17,7 @@ private let log = OSLog(subsystem: "ink.codes.podest", category: "app")
 /// `AppGateway` routes actions between app modules. Its main responsibility is handling background launches and notifications.
 class AppGateway: Incoming {
 
-  private var root: Routing?
+  private var router: Routing?
 
   /// The `isPulling` property is `true` while we are pulling from iCloud.
   private var isPulling = false {
@@ -36,18 +36,18 @@ class AppGateway: Incoming {
     }
   }
 
-  func install(root: Routing) {
-    self.root = root
+  func install(router: Routing) {
+    self.router = router
 
     // During development, we might want to launch into the previous state,
     // without syncing or updating.
     guard !Podest.settings.noSync else {
-      return root.reload(completionBlock: nil)
+      return router.reload(completionBlock: nil)
     }
 
     func updateQueue(considering syncError: Error? = nil) -> Void {
       DispatchQueue.main.async {
-        self.root?.update(considering: syncError, animated: true) { _, error in
+        self.router?.update(considering: syncError, animated: true) { _, error in
           if let er = error {
             os_log("updating queue produced error: %{public}@",
                    log: log, er as CVarArg)
@@ -79,7 +79,6 @@ class AppGateway: Incoming {
   func uninstall() {
     Podest.userQueue.queueDelegate = nil
     Podest.userLibrary.libraryDelegate = nil
-    root = nil
   }
 }
 
@@ -124,7 +123,7 @@ extension AppGateway {
     }
 
     DispatchQueue.main.async {
-      self.root?.update(considering: nil, animated: false) { newData, error in
+      self.router?.update(considering: nil, animated: false) { newData, error in
         guard !isExpired else {
           task.setTaskCompleted(success: false)
 
@@ -229,7 +228,7 @@ extension AppGateway {
         os_log("reloading queue after merge", log: log, type: .info)
 
         DispatchQueue.main.async {
-          self?.root?.reload { error in
+          self?.router?.reload { error in
             dispatchPrecondition(condition: .onQueue(.main))
 
             if let er = error {
@@ -285,7 +284,7 @@ extension AppGateway: LibraryDelegate {
 
   func library(_ library: Subscribing, changed urls: Set<FeedURL>) {
     DispatchQueue.main.async { [weak self] in
-      self?.root?.updateIsSubscribed(using: urls)
+      self?.router?.updateIsSubscribed(using: urls)
 
       self?.push()
     }
@@ -298,8 +297,8 @@ extension AppGateway: QueueDelegate {
 
   func queue(_ queue: Queueing, changed guids: Set<EntryGUID>) {
     DispatchQueue.main.async { [weak self] in
-      self?.root?.updateIsEnqueued(using: guids)
-      self?.root?.reload(completionBlock: nil)
+      self?.router?.updateIsEnqueued(using: guids)
+      self?.router?.reload(completionBlock: nil)
 
       self?.push()
     }

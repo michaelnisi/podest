@@ -71,11 +71,11 @@ extension AppDelegate {
   func application(
     _ application: UIApplication,
     shouldRestoreApplicationState coder: NSCoder) -> Bool {
-    return shouldRestoreState
+    shouldRestoreState
   }
 
   func application(_ application: UIApplication, shouldSaveSecureApplicationState coder: NSCoder) -> Bool {
-    return shouldSaveState
+    shouldSaveState
   }
 }
 
@@ -116,7 +116,8 @@ extension AppDelegate {
     handleEventsForBackgroundURLSession identifier: String,
     completionHandler: @escaping () -> Void
   ) {
-    Podest.gateway.handleEventsForBackgroundURLSession(identifier: identifier, completionHandler: completionHandler)
+    Podest.gateway.handleEventsForBackgroundURLSession(
+      identifier: identifier, completionHandler: completionHandler)
   }
 
   func application(
@@ -184,7 +185,7 @@ extension AppDelegate {
   }
 
   func applicationDidBecomeActive(_ application: UIApplication) {
-    Podest.gateway.install(root: root)
+    Podest.gateway.install(router: root)
   }
 
   func applicationDidEnterBackground(_ application: UIApplication) {
