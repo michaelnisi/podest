@@ -14,6 +14,7 @@ import AVKit
 import AVFoundation
 import Ola
 import FileProxy
+import SwiftUI
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
@@ -56,7 +57,7 @@ extension RootViewController {
   }
 
   func hideMiniPlayer(animated: Bool, completion: (() -> Void)? = nil) {
-    os_log("hiding mini-player", log: log, type: .debug)
+    os_log("hiding mini-player", log: log, type: .info)
 
     func done() {
       minivc.locator = nil
@@ -117,13 +118,13 @@ extension RootViewController {
   }
 
   func showMiniPlayer(animated: Bool, completion: (() -> Void)? = nil) {
-    os_log("showing mini-player", log: log, type: .debug)
+    os_log("showing mini-player", log: log, type: .info)
     dispatchPrecondition(condition: .onQueue(.main))
 
     minivc.view.isHidden = false
 
     guard animated, !isPresentingVideo else {
-      os_log("applying constant: %f", log: log, type: .debug, miniPlayerConstant)
+      os_log("applying constant: %f", log: log, type: .info, miniPlayerConstant)
 
       miniPlayerLeading.constant = miniPlayerConstant - view.safeAreaInsets.right
       miniPlayerTop.constant = miniPlayerConstant
@@ -136,13 +137,13 @@ extension RootViewController {
     }
 
     if miniPlayerTop.isActive {
-      os_log("animating portrait", log: log, type: .debug)
+      os_log("animating portrait", log: log, type: .info)
 
       miniPlayerLeading.constant = miniPlayerConstant
       miniPlayerTop.constant = miniPlayerConstant
       miniPlayerBottom.constant = 0
     } else {
-      os_log("animating landscape", log: log, type: .debug)
+      os_log("animating landscape", log: log, type: .info)
 
       miniPlayerTop.constant = miniPlayerConstant
       miniPlayerBottom.constant = 0
@@ -166,7 +167,7 @@ extension RootViewController {
 extension RootViewController {
 
   func play(_ entry: Entry) {
-    os_log("playing: %@", log: log, type: .debug, entry.title)
+    os_log("playing: %@", log: log, type: .info, entry.title)
 
     Podest.userQueue.enqueue(entries: [entry], belonging: .user) { enqueued, er in
       if let error = er {
@@ -175,7 +176,7 @@ extension RootViewController {
       }
 
       if !enqueued.isEmpty {
-        os_log("enqueued to play: %@", log: log, type: .debug, enqueued)
+        os_log("enqueued to play: %@", log: log, type: .info, enqueued)
       }
 
       do {
@@ -208,7 +209,7 @@ protocol EntryPlayer: UIViewController, Navigator, PlaybackControlDelegate {}
 extension RootViewController {
 
   private enum PlayerVersion {
-    case v1, v2
+    case v1, v2, v3
   }
 
   /// Returns a new player view controller of `version`.
@@ -218,21 +219,21 @@ extension RootViewController {
   private static func makeNowPlaying(version: PlayerVersion) -> EntryPlayer {
     switch version {
     case .v1:
-      let sb = UIStoryboard(name: "PlayerV1", bundle: .main)
-
-      return sb.instantiateViewController(withIdentifier: "PlayerV1ID")
-        as! PlayerV1ViewController
+      return UIStoryboard(name: "PlayerV1", bundle: .main)
+        .instantiateViewController(withIdentifier: "PlayerV1ID") as! PlayerV1ViewController
 
     case .v2:
-      let sb = UIStoryboard(name: "PlayerV2", bundle: .main)
+      return UIStoryboard(name: "PlayerV2", bundle: .main)
+        .instantiateViewController(withIdentifier: "PlayerV2ID") as! PlayerV2ViewController
 
-      return sb.instantiateViewController(withIdentifier: "PlayerV2ID")
-        as! PlayerV2ViewController
+    case .v3:
+      return UIStoryboard(name: "PlayerV3", bundle: .main)
+        .instantiateViewController(withIdentifier: "PlayerV3ID") as! PlayerV3ViewController
     }
   }
 
   func showNowPlaying(entry: Entry, animated: Bool, completion: (() -> Void)?) {
-    os_log("showing now playing", log: log, type: .debug)
+    os_log("showing now playing", log: log, type: .info)
     dispatchPrecondition(condition: .onQueue(.main))
 
     let vc = RootViewController.makeNowPlaying(version: .v1)
@@ -248,7 +249,7 @@ extension RootViewController {
   }
 
   func hideNowPlaying(animated: Bool, completion: (() -> Void)?) {
-    os_log("hiding now playing", log: log, type: .debug)
+    os_log("hiding now playing", log: log, type: .info)
     dispatchPrecondition(condition: .onQueue(.main))
 
     guard presentedViewController is EntryPlayer else {
@@ -293,7 +294,7 @@ extension RootViewController {
       vc.player = player
 
       self?.present(vc, animated: animated) {
-        os_log("presented video player", log: log, type: .debug)
+        os_log("presented video player", log: log, type: .info)
         completion?()
       }
     }
@@ -309,7 +310,7 @@ extension RootViewController {
     }
 
     dismiss(animated: animated) { [weak self] in
-      os_log("dismissed video player", log: log, type: .debug)
+      os_log("dismissed video player", log: log, type: .info)
       self?.showMiniPlayer(animated: animated) {
         completion?()
       }
@@ -370,7 +371,7 @@ extension RootViewController: PlaybackDelegate {
     } catch {
       switch error {
       case FileProxyError.fileSizeRequired:
-        os_log("** missing file size", log: log, type: .debug)
+        os_log("** missing file size", log: log, type: .info)
         return url
       default:
         return nil
@@ -384,7 +385,7 @@ extension RootViewController: PlaybackDelegate {
 
   func playback(session: Playback, didChange state: PlaybackState) {
     os_log("playback state did change: %{public}@",
-           log: log, type: .debug, String(describing: state))
+           log: log, type: .info, String(describing: state))
 
     switch state {
     case .paused(let entry, let error):

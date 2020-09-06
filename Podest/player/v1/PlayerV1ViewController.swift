@@ -171,7 +171,7 @@ final class PlayerV1ViewController: UIViewController, EntryPlayer {
   var swipeDown: UISwipeGestureRecognizer!
 
   @objc func onSwipe(sender: UISwipeGestureRecognizer) {
-    os_log("swipe received", log: log, type: .debug)
+    os_log("swipe received", log: log, type: .info)
 
     switch sender.state {
     case .ended:
@@ -186,7 +186,7 @@ final class PlayerV1ViewController: UIViewController, EntryPlayer {
   }
 
   deinit {
-    os_log("** deinit", log: log, type: .debug)
+    os_log("** deinit", log: log, type: .info)
   }
 
   // MARK: - UIViewController

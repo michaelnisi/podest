@@ -24,7 +24,7 @@ extension QueueViewController: Refreshing {
     _ animated: Bool = true, 
     completionBlock: ((Error?) -> Void)? = nil
   ) {
-    os_log(#function, log: log, type: .debug)
+    os_log(#function, log: log, type: .info)
     dispatchPrecondition(condition: .onQueue(.main))
     
     choreographer.refresh()
@@ -87,7 +87,7 @@ extension QueueViewController: Refreshing {
     animated: Bool = true,
     completionHandler: ((Bool, Error?) -> Void)? = nil
   ) {
-    os_log(#function, log: log, type: .debug)
+    os_log(#function, log: log, type: .info)
     dispatchPrecondition(condition: .onQueue(.main))
     
     guard dataSource.isReady else {

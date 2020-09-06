@@ -55,7 +55,7 @@ private struct Summary<Item> {
     let html = HTMLAttributor()
 
     os_log("attributing: %@",
-           log: log, type: .debug, String(describing: summary))
+           log: log, type: .info, String(describing: summary))
 
     let str: String = {
       guard let s = summary, s != "" else {

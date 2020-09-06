@@ -106,7 +106,7 @@ extension ListDataSource {
       return operation
     }
 
-    os_log("updating: %@", log: log, type: .debug, operation)
+    os_log("updating: %@", log: log, type: .info, operation)
 
     let a = FetchFeedOperation(operation: operation)
 

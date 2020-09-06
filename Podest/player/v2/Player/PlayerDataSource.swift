@@ -53,7 +53,7 @@ class PlayerDataSource: NSObject {
 extension PlayerDataSource {
   
   @objc func trackSliderChange(slider: UISlider) {
-    os_log("track slider change: %f", log: log, type: .debug, slider.value)
+    os_log("track slider change: %f", log: log, type: .info, slider.value)
   }
 }
 

@@ -36,10 +36,10 @@ extension ListViewController {
           switch er {
           case QueueingError.outOfSync(let queue, let guids):
             if queue == 0, guids != 0 {
-              os_log("queue not populated", log: log, type: .debug)
+              os_log("queue not populated", log: log, type: .info)
             } else {
               os_log("** out of sync: ( queue: %i, guids: %i )",
-                     log: log, type: .debug, queue, guids)
+                     log: log, type: .info, queue, guids)
             }
           default:
             fatalError("probably a database error: \(er)")

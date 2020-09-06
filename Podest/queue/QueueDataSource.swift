@@ -196,10 +196,10 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
     var acc = [Item]()
 
-    os_log("reloading queue", log: log, type: .debug)
+    os_log("reloading queue", log: log, type: .info)
 
     reloading = userQueue.populate(entriesBlock: { [weak self] entries, error in
-      os_log("accumulating reloaded entries", log: log, type: .debug)
+      os_log("accumulating reloaded entries", log: log, type: .info)
 
       dispatchPrecondition(condition: .notOnQueue(.main))
 
@@ -223,7 +223,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
         self?.entriesBlock?(entries)
       }
     }) { error in
-      os_log("queue reloading complete", log: log, type: .debug)
+      os_log("queue reloading complete", log: log, type: .info)
 
       dispatchPrecondition(condition: .notOnQueue(.main))
 
@@ -261,7 +261,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
         UserDefaults.standard.set(now, forKey: k)
       }
     } else {
-      os_log("should not update: %f < %f", log: log, type: .debug, diff, deadline)
+      os_log("should not update: %f < %f", log: log, type: .info, diff, deadline)
       DispatchQueue.global(qos: .utility).async {
         Podest.files.preloadQueue(removingFiles: false, completionHandler: nil)
       }
@@ -348,17 +348,17 @@ final class QueueDataSource: NSObject, SectionedDataSource {
       shouldRemove(newData) { rm in
         dispatchPrecondition(condition: .onQueue(.main))
 
-        os_log("preloading and removing files: %i", log: log, type: .debug, rm)
+        os_log("preloading and removing files: %i", log: log, type: .info, rm)
 
         DispatchQueue.global(qos: .utility).async { [weak self] in
           self?.files.preloadQueue(removingFiles: rm) { error in
             if let er = error {
               os_log("queue preloading error: %{public}@",
-                     log: log, type: .debug, er as CVarArg)
+                     log: log, type: .info, er as CVarArg)
             }
 
             os_log("updating complete: %i",
-                   log: log, type: .debug, shouldUpdate)
+                   log: log, type: .info, shouldUpdate)
 
             DispatchQueue.main.async {
               completionHandler?(newData, updateError)
@@ -373,11 +373,11 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     func next() {
       guard shouldUpdate else {
         os_log("ignoring excessive queue update request",
-               log: log, type: .debug)
+               log: log, type: .info)
         return preload(forwarding: false, updateError: nil)
       }
 
-      os_log("updating queue", log: log, type: .debug)
+      os_log("updating queue", log: log, type: .info)
 
       userLibrary.update { newData, error in
         if let er = error {
@@ -386,7 +386,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
         }
 
         os_log("queue updating complete: %{public}i",
-               log: log, type: .debug, newData)
+               log: log, type: .info, newData)
 
         preload(forwarding: newData, updateError: error)
       }

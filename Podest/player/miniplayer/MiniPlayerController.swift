@@ -104,7 +104,7 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
       Podest.userQueue.enqueue(entries: [entry]) { enqueued, error in
         if let er = error {
           os_log("enqueue warning: %{public}@", 
-                 log: log, type: .debug, er as CVarArg)
+                 log: log, type: .info, er as CVarArg)
         }
       }
     }
@@ -411,7 +411,7 @@ extension MiniPlayerController {
 extension MiniPlayerController {
 
   @objc func onSwipe(sender: UISwipeGestureRecognizer) {
-    os_log("swipe received", log: log, type: .debug)
+    os_log("swipe received", log: log, type: .info)
 
     guard let entry = self.entry, !playSwitch.isTracking else {
       return
@@ -440,6 +440,6 @@ extension MiniPlayerController {
 extension MiniPlayerController {
 
   @objc func onEdgePan(sender: UIScreenEdgePanGestureRecognizer) {
-    os_log("edge pan received", log: log, type: .debug)
+    os_log("edge pan received", log: log, type: .info)
   }
 }

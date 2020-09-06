@@ -87,7 +87,7 @@ final class SearchControllerProxy: NSObject {
   private var state: State = .dismissed {
     didSet {
       os_log("queue: new state: %{public}@, old state: %{public}@",
-             log: log, type: .debug,
+             log: log, type: .info,
              String(describing: state), String(describing: oldValue)
       )
     }
@@ -139,18 +139,18 @@ final class SearchControllerProxy: NSObject {
         state = .searching(term)
 
         if searchBar.text != term {
-          os_log("resetting text", log: log, type: .debug)
+          os_log("resetting text", log: log, type: .info)
           searchBar.text = term
         }
 
         if searchBar.isFirstResponder {
-          os_log("resigning first responder", log: log, type: .debug)
+          os_log("resigning first responder", log: log, type: .info)
           searchBar.resignFirstResponder()
         }
 
       case .suggest(let term):
         guard oldTerm != term else {
-          os_log("aborting: same term", log: log, type: .debug)
+          os_log("aborting: same term", log: log, type: .info)
           return
         }
 
@@ -159,7 +159,7 @@ final class SearchControllerProxy: NSObject {
         state = .suggesting(term)
 
         if searchBar.text != term {
-          os_log("resetting text", log: log, type: .debug)
+          os_log("resetting text", log: log, type: .info)
           searchBar.text = term
         }
       }
@@ -173,7 +173,7 @@ final class SearchControllerProxy: NSObject {
 
       case .search(let term):
         guard oldTerm != term else {
-          os_log("aborting: same term", log: log, type: .debug)
+          os_log("aborting: same term", log: log, type: .info)
           return
         }
         
@@ -293,7 +293,7 @@ extension SearchControllerProxy: SearchResultsControllerDelegate {
 
   func searchResultsWillBeginDragging(
     _ searchResults: SearchResultsController) {
-    os_log("resigning first responder", log: log, type: .debug)
+    os_log("resigning first responder", log: log, type: .info)
     searchBar.resignFirstResponder()
   }
 }

@@ -10,8 +10,11 @@ import FeedKit
 import UIKit
 import os.log
 import AVKit
+import Ola
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "root")
+
+// TODO: Move global state from RootViewController into Bus
 
 /// The root container view controller of this app, composing a split view
 /// controller, with two navigation controllers, and a mini-player view 
@@ -117,6 +120,8 @@ extension RootViewController {
   override func viewDidAppear(_ animated: Bool) {
     let _ = installMiniPlayer
 
+
+
     super.viewDidAppear(animated)
   }
 
@@ -179,7 +184,7 @@ extension RootViewController: ViewControllers {
   }
 
   func showStore() {
-    os_log("showing store", log: log, type: .debug)
+    os_log("showing store", log: log, type: .info)
     let vc = svc.storyboard?.instantiateViewController(withIdentifier:
       "StoreReferenceID") as! UINavigationController
     present(vc, animated: true)
@@ -206,7 +211,7 @@ extension RootViewController: ViewControllers {
   }
 
   func resignSearch() {
-    os_log("resigning search", log: log, type: .debug)
+    os_log("resigning search", log: log, type: .info)
     qvc.resignFirstResponder()
   }
 
@@ -223,7 +228,7 @@ extension RootViewController: ViewControllers {
       return
     }
 
-    os_log("initiating ListViewController", log: log, type: .debug)
+    os_log("initiating ListViewController", log: log, type: .info)
     
     let vc = svc.storyboard?.instantiateViewController(withIdentifier:
       "EpisodesID") as! ListViewController
@@ -274,7 +279,7 @@ extension RootViewController: ViewControllers {
   }
 
   func show(entry: Entry) {
-    os_log("showing entry: %{public}@", log: log, type: .debug, entry.description)
+    os_log("showing entry: %{public}@", log: log, type: .info, entry.description)
 
     func go() {
       guard entry != self.entry else {
@@ -285,12 +290,12 @@ extension RootViewController: ViewControllers {
 
       if isCollapsed {
         os_log("pushing view controller: %{public}@",
-               log: log, type: .debug, evc)
+               log: log, type: .info, evc)
         self.pnc.pushViewController(evc, animated: true)
       } else {
         let vcs = [evc]
         os_log("setting view controllers: %{public}@",
-               log: log, type: .debug, vcs)
+               log: log, type: .info, vcs)
         self.snc.setViewControllers(vcs, animated: false)
       }
     }
@@ -340,7 +345,7 @@ extension RootViewController: ViewControllers {
   ///
   /// - Returns: Returns `true` if the URL has been successfully interpreted.
   func open(url: URL) -> Bool {
-    os_log("opening: %{public}@", log: log, type: .debug, url as CVarArg)
+    os_log("opening: %{public}@", log: log, type: .info, url as CVarArg)
 
     switch url.host {
     case "feed":
@@ -365,7 +370,7 @@ extension RootViewController: ViewControllers {
 extension RootViewController: UserProxy {
 
   func updateIsSubscribed(using urls: Set<FeedURL>) {
-    os_log("updating is subscribed", log: log, type: .debug)
+    os_log("updating is subscribed", log: log, type: .info)
 
     for child in pnc.children + snc.children {
       guard let vc = child as? ListViewController else {
@@ -377,7 +382,7 @@ extension RootViewController: UserProxy {
   }
 
   func updateIsEnqueued(using guids: Set<EntryGUID>) {
-    os_log("updating is enqueued", log: log, type: .debug)
+    os_log("updating is enqueued", log: log, type: .info)
 
     for child in pnc.children + snc.children {
       guard let vc = child as? EpisodeViewController else {
@@ -392,12 +397,12 @@ extension RootViewController: UserProxy {
     considering error: Error? = nil,
     animated: Bool = true,
     completionHandler: @escaping ((_ newData: Bool, _ error: Error?) -> Void)) {
-    os_log("updating queue", log: log, type: .debug)
+    os_log("updating queue", log: log, type: .info)
     qvc.update(considering: error, animated: animated, completionHandler: completionHandler)
   }
 
   func reload(completionBlock: ((Error?) -> Void)? = nil) {
-    os_log("reloading queue", log: log, type: .debug)
+    os_log("reloading queue", log: log, type: .info)
 
     qvc.reload { error in
       dispatchPrecondition(condition: .onQueue(.main))
@@ -407,7 +412,7 @@ extension RootViewController: UserProxy {
                log: log, er as CVarArg)
       }
 
-      os_log("updating views", log: log, type: .debug)
+      os_log("updating views", log: log, type: .info)
 
       self.playervc?.isForwardable = Podest.userQueue.isForwardable
       self.playervc?.isBackwardable = Podest.userQueue.isBackwardable
@@ -433,7 +438,7 @@ extension RootViewController: UINavigationControllerDelegate {
   private func configureDetails(showing viewController: UIViewController) {
     switch viewController {
     case let vc as EpisodeViewController:
-      os_log("setting left bar button item", log: log, type: .debug)
+      os_log("setting left bar button item", log: log, type: .info)
       vc.navigationItem.leftBarButtonItem = svc.displayModeButtonItem
 
       if vc.isEmpty {
@@ -453,7 +458,7 @@ extension RootViewController: UINavigationControllerDelegate {
     animated: Bool
   ) {
     os_log("navigationController: willShow: %{public}@",
-           log: log, type: .debug, viewController)
+           log: log, type: .info, viewController)
 
     getDefaultEntry?.cancel()
 
@@ -489,7 +494,7 @@ extension RootViewController: UISplitViewControllerDelegate {
 
   /// Resigns first responder on all view controllers in this tree.
   private func resignFirstResponders() {
-    os_log("resigning first responders", log: log, type: .debug)
+    os_log("resigning first responders", log: log, type: .info)
 
     for nc in svc.viewControllers {
       for vc in nc.children {
@@ -505,7 +510,7 @@ extension RootViewController: UISplitViewControllerDelegate {
     willChangeTo displayMode: UISplitViewController.DisplayMode
   ) {
     os_log("splitViewController: willChangeTo: %{public}@",
-           log: log, type: .debug, String(describing: displayMode))
+           log: log, type: .info, String(describing: displayMode))
 
     resignFirstResponders()
   }
@@ -522,7 +527,7 @@ extension RootViewController: UISplitViewControllerDelegate {
   private func viewControllersForPrimary(
     reducing source: [UIViewController])-> [UIViewController] {
     os_log("reducing for primary: %{public}@",
-           log: log, type: .debug, source)
+           log: log, type: .info, source)
 
     let (_, vcs) = source.reduce(("", [UIViewController]())) { acc, vc in
       let (url, vcs) = acc
@@ -541,7 +546,7 @@ extension RootViewController: UISplitViewControllerDelegate {
     }
 
     os_log("reduced for primary: %{public}@",
-           log: log, type: .debug, vcs)
+           log: log, type: .info, vcs)
 
     return vcs
   }
@@ -550,16 +555,16 @@ extension RootViewController: UISplitViewControllerDelegate {
     forCollapsing splitViewController: UISplitViewController
   ) -> UIViewController? {
     os_log("primaryViewController: forCollapsing: %{public}@",
-           log: log, type: .debug, splitViewController)
+           log: log, type: .info, splitViewController)
     
     guard traitCollection.userInterfaceIdiom != .phone else {
-      os_log("** choosing primary view controller on phone", log: log, type: .debug)
+      os_log("** choosing primary view controller on phone", log: log, type: .info)
       return nil
     }
 
     let vcs = viewControllersForPrimary(reducing: pnc.viewControllers)
 
-    os_log("search dismissed: %i", log: log, type: .debug, qvc.isSearchDismissed)
+    os_log("search dismissed: %i", log: log, type: .info, qvc.isSearchDismissed)
 
     if let entry = self.entry ?? self.selectedEntry {
       let evc = MakeEpisode.viewController(item: entry)
@@ -567,7 +572,7 @@ extension RootViewController: UISplitViewControllerDelegate {
       pnc.setViewControllers(vcs + [evc], animated: false)
     } else if let locator = self.locator { // restoring state
       os_log("restoring: %{public}@",
-             log: log, type: .debug, String(describing: locator))
+             log: log, type: .info, String(describing: locator))
     } else {
       pnc.setViewControllers(vcs, animated: false)
     }
@@ -581,10 +586,10 @@ extension RootViewController: UISplitViewControllerDelegate {
     onto primaryViewController: UIViewController
   ) -> Bool {
     os_log("splitViewController: collapseSecondary: onto: %{public}@",
-           log: log, type: .debug, primaryViewController)
+           log: log, type: .info, primaryViewController)
     
     guard traitCollection.userInterfaceIdiom != .phone else {
-      os_log("** not collapsing on phone", log: log, type: .debug)
+      os_log("** not collapsing on phone", log: log, type: .info)
       return true
     }
 
@@ -607,7 +612,7 @@ extension RootViewController: UISplitViewControllerDelegate {
     if let entry = self.selectedEntry {
       return MakeEpisode.viewController(item: entry)
     } else if let locator = self.locator {
-      os_log("probably restoring state", log: log, type: .debug)
+      os_log("probably restoring state", log: log, type: .info)
       return MakeEpisode.viewController(item: locator)
     } else {
       return nil
@@ -619,10 +624,10 @@ extension RootViewController: UISplitViewControllerDelegate {
     separateSecondaryFrom primaryViewController: UIViewController
   ) -> UIViewController? {        
     os_log("splitViewController: separateSecondaryFrom: %{public}@",
-           log: log, type: .debug, primaryViewController)
+           log: log, type: .info, primaryViewController)
     
     guard traitCollection.userInterfaceIdiom != .phone else {
-      os_log("** not separating on phone", log: log, type: .debug)
+      os_log("** not separating on phone", log: log, type: .info)
       snc.setViewControllers([], animated: false)
       
       return snc

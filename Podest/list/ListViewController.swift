@@ -248,7 +248,7 @@ extension ListViewController {
       UIView.performWithoutAnimation {
         for batch in changes {
           self?.dataSource.commit(batch, performingWith: .table(tv)) { ok in
-            os_log("refreshed: %i", log: log, type: .debug, ok)
+            os_log("refreshed: %i", log: log, type: .info, ok)
           }
         }
 
@@ -383,7 +383,7 @@ extension ListViewController {
 
   private func configureNavigationItem(url: FeedURL) {
     os_log("** configuring navigation item: %@",
-           log: log, type: .debug, self)
+           log: log, type: .info, self)
 
     let items = makeRightBarButtonItems(url: url)
 

@@ -64,7 +64,7 @@ class PlayerV2ViewController: UICollectionViewController {
   var statusBarHidden = false
   
   deinit {
-    os_log("** deinit", log: log, type: .debug)
+    os_log("** deinit", log: log, type: .info)
   }
 }
 
@@ -85,10 +85,10 @@ extension PlayerV2ViewController {
         }
       }()
       
-      os_log("finding view controller", log: log, type: .debug)
+      os_log("finding view controller", log: log, type: .info)
       
       guard hosted.container == nil else {
-        os_log("returning cached view controller", log: log, type: .debug)
+        os_log("returning cached view controller", log: log, type: .info)
         return hosted.container
       }
       
@@ -97,7 +97,7 @@ extension PlayerV2ViewController {
         fatalError("missing view controller in storyboard")
       }
       
-      os_log("instantiated view controller", log: log, type: .debug)
+      os_log("instantiated view controller", log: log, type: .info)
       
       hosted.container = vc
       

@@ -96,7 +96,7 @@ final class FileRepository: NSObject {
 
       let ok = p.activate { [weak self] status in
         os_log("entering reachability callback block with status: %{public}@",
-               log: log, type: .debug, String(describing: status))
+               log: log, type: .info, String(describing: status))
         guard case .reachable = status else {
           return
         }
@@ -258,7 +258,7 @@ extension FileRepository: Downloading {
   func preload(url: URL) {
     DispatchQueue.global(qos: .utility).async {
       os_log("preloading: %{public}@",
-             log: log, type: .debug, url as CVarArg)
+             log: log, type: .info, url as CVarArg)
 
       do {
         let _ = try self.url(matching: url, streaming: false)
@@ -272,7 +272,7 @@ extension FileRepository: Downloading {
   func cancel(url: URL) {
     DispatchQueue.global(qos: .background).async {
       os_log("cancelling download: %{public}@",
-             log: log, type: .debug, url as CVarArg)
+             log: log, type: .info, url as CVarArg)
 
       self.fileProxy.cancelDownloads(matching: url)
     }
@@ -286,7 +286,7 @@ extension FileRepository: Downloading {
       }
 
       os_log("cancelling downloads: %{public}@",
-             log: log, type: .debug, url as CVarArg)
+             log: log, type: .info, url as CVarArg)
       
       self.fileProxy.cancelDownloads(matching: url)
     }
@@ -297,7 +297,7 @@ extension FileRepository: Downloading {
       return
     }
 
-    os_log("releasing probe", log: log, type: .debug)
+    os_log("releasing probe", log: log, type: .info)
     
     probe = nil
   }
@@ -311,12 +311,12 @@ extension FileRepository: Downloading {
     let now = Date().timeIntervalSince1970
 
     guard now - lastQueuePreloading > 60 else {
-      os_log("not preloading queue: wait a minute", log: log, type: .debug)
+      os_log("not preloading queue: wait a minute", log: log, type: .info)
       completionHandler?(nil)
       return
     }
     
-    os_log("preloading queue", log: log, type: .debug)
+    os_log("preloading queue", log: log, type: .info)
 
     lastQueuePreloading = now
 
@@ -367,7 +367,7 @@ extension FileRepository: Downloading {
       var count = self.downloadMaximum
 
       os_log("checking: ( %{public}i, %{public}i )",
-             log: log, type: .debug, urls.count, count)
+             log: log, type: .info, urls.count, count)
 
       for url in urls {
         guard count > 0 else {
@@ -401,7 +401,7 @@ extension FileRepository: Downloading {
       
       do {
         os_log("removing all but: %{public}i",
-               log: log, type: .debug, urls.count)
+               log: log, type: .info, urls.count)
         
         try self.fileProxy.removeAll(keeping: urls)
       } catch {
@@ -436,7 +436,7 @@ extension FileRepository: FileProxyDelegate {
       return false
     }
 
-    os_log("removing: %@", log: log, type: .debug, url as CVarArg)
+    os_log("removing: %@", log: log, type: .info, url as CVarArg)
     return true
   }
   

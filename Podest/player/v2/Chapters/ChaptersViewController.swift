@@ -16,7 +16,7 @@ class ChaptersViewController: UICollectionViewController {
   let dataSource = ChaptersDataSource()
   
   deinit {
-    os_log("** deinit", log: log, type: .debug)
+    os_log("** deinit", log: log, type: .info)
   }
 }
 

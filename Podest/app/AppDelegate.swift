@@ -17,14 +17,11 @@ protocol Routing: UserProxy, ViewControllers {}
 final class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
 
-  private var shouldRestoreState = true
-  private var shouldSaveState = true
+  private var state = (restore: true, save: true)
 
-  /// An object that adopts `Routing` for event funnelling.
-  ///
-  /// In the current design, the root view controller.
   private var root: Routing {
     dispatchPrecondition(condition: .onQueue(.main))
+
     guard let vc = window?.rootViewController as? Routing else {
       fatalError("unexpected root view controller")
     }
@@ -41,7 +38,7 @@ extension AppDelegate {
     _ application: UIApplication,
     willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?
   ) -> Bool {
-    shouldRestoreState = launchOptions?[.url] == nil
+    state.restore = launchOptions?[.url] == nil
     window?.tintColor = UIColor(named: "Purple")!
 
     if !Podest.settings.noSync {
@@ -71,11 +68,11 @@ extension AppDelegate {
   func application(
     _ application: UIApplication,
     shouldRestoreApplicationState coder: NSCoder) -> Bool {
-    shouldRestoreState
+    state.restore
   }
 
   func application(_ application: UIApplication, shouldSaveSecureApplicationState coder: NSCoder) -> Bool {
-    shouldSaveState
+    state.save
   }
 }
 
@@ -144,8 +141,7 @@ extension AppDelegate {
     _ application: UIApplication,
     didFailToRegisterForRemoteNotificationsWithError error: Error
   ) {
-    os_log("failed to register: %{public}@",
-           log: log, type: .error, error as CVarArg)
+    os_log("failed to register: %{public}@", log: log, type: .error, error as CVarArg)
   }
 }
 
@@ -155,14 +151,12 @@ extension AppDelegate {
 
   private func closeFiles() {
     os_log("closing files", log: log, type: .info)
-
     Podest.userCaching.closeDatabase()
     Podest.feedCaching.closeDatabase()
   }
 
   private func flush() {
     os_log("flushing caches", log: log, type: .info)
-
     StringRepository.purge()
     Podest.images.flush()
     Podest.files.flush()
@@ -171,14 +165,12 @@ extension AppDelegate {
       try Podest.userCaching.flush()
       try Podest.feedCaching.flush()
     } catch {
-      os_log("flushing failed: %{public}@",
-             log: log, type: .error, error as CVarArg)
+      os_log("flushing failed: %{public}@", log: log, type: .error, error as CVarArg)
     }
   }
 
   func applicationWillResignActive(_ application: UIApplication) {
     Podest.gateway.uninstall()
-    Podest.networkActivity.reset()
     Podest.store.cancelReview(resetting: true)
     flush()
     closeFiles()

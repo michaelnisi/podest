@@ -39,7 +39,7 @@ class ListOperation: Operation, Receiving {
     self.forcing = forcing
     self.withoutImage = withoutImage
     
-    os_log("initializing: ( %@, %@, %i, %i )", log: log, type: .debug,
+    os_log("initializing: ( %@, %@, %i, %i )", log: log, type: .info,
            url, String(describing: originalFeed), forcing, withoutImage)
     
     super.init()
@@ -210,7 +210,7 @@ final class FetchFeedOperation: ListOperation, Providing {
       return
     }
     
-    os_log("executing updates block", log: log, type: .debug)
+    os_log("executing updates block", log: log, type: .info)
     updatesBlock?(sections, updates, error)
     
     submitted = sections
@@ -219,7 +219,7 @@ final class FetchFeedOperation: ListOperation, Providing {
   var error: Error?
   
   override func main() {
-    os_log("fetching feed", log: log, type: .debug)
+    os_log("fetching feed", log: log, type: .info)
     
     guard !isCancelled else {
       return
@@ -237,7 +237,7 @@ final class FetchFeedOperation: ListOperation, Providing {
     // Providing error to dependents, namely to FetchEntries.
     self.error = error
     
-    os_log("executing feed block", log: log, type: .debug)
+    os_log("executing feed block", log: log, type: .info)
     feedBlock?(foundFeed, error)
     
     if let feed = foundFeed {
@@ -267,7 +267,7 @@ final class FetchEntriesOperation: ListOperation {
   }
   
   override func main() {
-    os_log("fetching entries", log: log, type: .debug)
+    os_log("fetching entries", log: log, type: .info)
     
     guard !isCancelled else {
       return
@@ -301,7 +301,7 @@ final class FetchEntriesOperation: ListOperation {
       return
     }
     
-    os_log("executing updates block", log: log, type: .debug)
+    os_log("executing updates block", log: log, type: .info)
     updatesBlock?(sections, updates, error)
   }
   

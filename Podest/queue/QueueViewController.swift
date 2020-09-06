@@ -293,11 +293,11 @@ extension QueueViewController: PlaybackResponding {
   }
 
   func playing(entry: Entry) {
-    os_log("playing: %s", log: log, type: .debug, entry.title)
+    os_log("playing: %s", log: log, type: .info, entry.title)
     dataSource.tableView(tableView, updateCellMatching: entry, isUnplayed: false)
   }
 
   func pausing(entry: Entry) {
-    os_log("pausing: %s", log: log, type: .debug, entry.title)
+    os_log("pausing: %s", log: log, type: .info, entry.title)
   }
 }

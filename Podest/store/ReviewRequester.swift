@@ -36,13 +36,13 @@ class ReviewRequester {
   private var rateIncentiveTimeout: DispatchSourceTimer? {
     willSet {
       os_log("setting rate incentive timeout: %@", 
-             log: log, type: .debug, String(describing: newValue))
+             log: log, type: .info, String(describing: newValue))
       rateIncentiveTimeout?.cancel()
     }
   }
   
   /// Counting down to zero before requesting a rating.
-  private static let rateIncentiveLength = 6
+  private static let rateIncentiveLength = 4
   
   /// Countdown to trigger ratings. Set to -1 to deactivate ratings.
   private var rateIncentiveCountdown = rateIncentiveLength {
@@ -52,7 +52,7 @@ class ReviewRequester {
       }
       
       os_log("rate incentive threshold: %{public}i",
-             log: log, type: .debug, rateIncentiveCountdown)
+             log: log, type: .info, rateIncentiveCountdown)
     }
   }
   
@@ -105,7 +105,7 @@ class ReviewRequester {
     
     rateIncentiveCountdown -= 1
     
-    os_log("countdown: %i", log: log, type: .debug, rateIncentiveCountdown)
+    os_log("countdown: %i", log: log, type: .info, rateIncentiveCountdown)
     
     guard rateIncentiveCountdown == 0 else {
       return false

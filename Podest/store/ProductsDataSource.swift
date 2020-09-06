@@ -269,7 +269,7 @@ extension ProductsDataSource: StoreDelegate {
   }
 
   func store(_ store: Shopping, offers products: [SKProduct], error: ShoppingError?) {
-    os_log("store: offers: %{public}@", log: log, type: .debug, products)
+    os_log("store: offers: %{public}@", log: log, type: .info, products)
 
     guard error == nil else {
       let er = error!
@@ -350,7 +350,7 @@ extension ProductsDataSource: StoreDelegate {
   
   func store(_ store: Shopping, purchasing productIdentifier: String) {
     os_log("store: purchasing: %{public}@",
-           log: log, type: .debug, productIdentifier)
+           log: log, type: .info, productIdentifier)
 
     DispatchQueue.main.async { [weak self] in
       guard let ip = self?.indexPath(matching: productIdentifier) else {
@@ -365,7 +365,7 @@ extension ProductsDataSource: StoreDelegate {
   
   func store(_ store: Shopping, purchased productIdentifier: String) {
     os_log("store: purchased: %{public}@",
-           log: log, type: .debug, productIdentifier)
+           log: log, type: .info, productIdentifier)
     submit([.thanks])
   }
 

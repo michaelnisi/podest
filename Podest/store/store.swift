@@ -124,6 +124,10 @@ enum ShoppingError: Error {
            .invalidOfferIdentifier,
            .invalidOfferPrice,
            .missingOfferParams,
+           .ineligibleForOffer,
+           .overlayTimeout,
+           .overlayCancelled,
+           .overlayInvalidConfiguration,
            .invalidSignature:
         self = .invalidProduct(productIdentifier)
         

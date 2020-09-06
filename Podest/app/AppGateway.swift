@@ -15,17 +15,15 @@ import FeedKit
 private let log = OSLog(subsystem: "ink.codes.podest", category: "app")
 
 /// `AppGateway` routes actions between app modules. Its main responsibility is handling background launches and notifications.
-class AppGateway: Incoming {
+class AppGateway {
 
   private var router: Routing?
+  private var kvStoreObserver: NSObjectProtocol?
 
   /// The `isPulling` property is `true` while we are pulling from iCloud.
   private var isPulling = false {
     didSet {
       dispatchPrecondition(condition: .onQueue(.main))
-      isPulling ?
-        Podest.networkActivity.increase() :
-        Podest.networkActivity.decrease()
     }
   }
 
@@ -60,8 +58,6 @@ class AppGateway: Incoming {
     }
 
     guard Podest.iCloud.isAccountStatusKnown else {
-      os_log("accessing iCloud", log: log, type: .info)
-
       Podest.iCloud.pull { _, error in
         if let er = error {
           os_log("iCloud: %{public}@", log: log, String(describing: er))
@@ -95,13 +91,11 @@ extension AppGateway {
     }
   }
 
-  func cancel() {
+  func cancelAlBGTaskRequests() {
     BGTaskScheduler.shared.cancelAllTaskRequests()
   }
 
   func schedule() {
-    os_log("scheduling app refresh", log: log, type: .info)
-
     let request = BGAppRefreshTaskRequest(identifier: "ink.codes.Podest.refresh")
     request.earliestBeginDate = Date(timeIntervalSinceNow: 1 * 60)
 
@@ -113,7 +107,6 @@ extension AppGateway {
   }
 
   private func handleAppRefresh(task: BGAppRefreshTask) {
-    os_log("handling app refresh %@", log: log, type: .info, task)
     schedule()
 
     var isExpired = false
@@ -143,9 +136,6 @@ extension AppGateway {
 extension AppGateway {
 
   func didRegisterForRemoteNotificationsWithDeviceToken(_ deviceToken: Data) {
-    os_log("registered for remote notifications with device token: %@",
-           log: log, type: .info, deviceToken as CVarArg)
-
     let nc = NotificationCenter.default
 
     nc.addObserver(forName: .CKAccountChanged, object: nil, queue: .main) { [weak self] _ in
@@ -158,14 +148,10 @@ extension AppGateway {
     userInfo: [AnyHashable : Any],
     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
   ) {
-    os_log("handling notification: %{public}@",
-           log: log, type: .info, String(describing: userInfo))
-
     guard let notification = CKNotification(
       fromRemoteNotificationDictionary: userInfo),
       let subscriptionID = notification.subscriptionID else {
-      os_log("unhandled remote notification", log: log, type: .error)
-      return
+      return os_log("unhandled remote notification", log: log, type: .error)
     }
 
     // We receive a notification per zone. How can we optimize this?
@@ -182,14 +168,11 @@ extension AppGateway {
   }
 }
 
-// MARK: - BackgroundURLSessions
+// MARK: - Background URL Session
 
 extension AppGateway {
 
   func handleEventsForBackgroundURLSession(identifier: String, completionHandler: @escaping () -> Void) {
-    os_log("handling events for background URL session: %@",
-           log: log, type: .info, identifier)
-
     Podest.files.handleEventsForBackgroundURLSession(identifier: identifier) {
       DispatchQueue.main.async {
         completionHandler()
@@ -214,9 +197,7 @@ extension AppGateway {
     dispatchPrecondition(condition: .onQueue(.main))
 
     if isPushing {
-      os_log("** pulling iCloud while pushing", log: log)
-    } else {
-      os_log("pulling iCloud", log: log, type: .info)
+      os_log("pulling while pushing", log: log)
     }
 
     isPulling = true
@@ -225,8 +206,6 @@ extension AppGateway {
       let result = AppGateway.makeBackgroundFetchResult(newData, error)
 
       if case .newData = result {
-        os_log("reloading queue after merge", log: log, type: .info)
-
         DispatchQueue.main.async {
           self?.router?.reload { error in
             dispatchPrecondition(condition: .onQueue(.main))
@@ -258,8 +237,6 @@ extension AppGateway {
       completionBlock?()
       return
     }
-
-    os_log("pushing to iCloud", log: log, type: .info)
 
     isPushing = true
 
@@ -306,8 +283,7 @@ extension AppGateway: QueueDelegate {
 
   func queue(_ queue: Queueing, enqueued: EntryGUID, enclosure: Enclosure?) {
     guard let str = enclosure?.url, let url = URL(string: str) else {
-      os_log("missing enclosure: %{public}@", log: log, type: .error, enqueued)
-      return
+      return os_log("missing enclosure: %{public}@", log: log, type: .error, enqueued)
     }
 
     Podest.files.preload(url: url)
@@ -315,8 +291,7 @@ extension AppGateway: QueueDelegate {
 
   func queue(_ queue: Queueing, dequeued: EntryGUID, enclosure: Enclosure?) {
     guard let str = enclosure?.url, let url = URL(string: str) else {
-      os_log("missing enclosure: %{public}@", log: log, type: .error, dequeued)
-      return
+      return os_log("missing enclosure: %{public}@", log: log, type: .error, dequeued)
     }
 
     Podest.files.cancel(url: url)

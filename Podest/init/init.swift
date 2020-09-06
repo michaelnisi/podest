@@ -20,20 +20,6 @@ import Playback
 
 private let log = OSLog.disabled
 
-// MARK: - Indicating Network Activity
-
-protocol NetworkActivityIndicating {
-  func increase()
-  func decrease()
-  func reset()
-}
-
-extension NetworkActivityIndicating {
-  func increase() {}
-  func decrease() {}
-  func reset() {}
-}
-
 // MARK: - Search Repository
 
 /// Returns additional HTTP headers for `service`.
@@ -352,19 +338,6 @@ final private class Config {
   }
 }
 
-/// Hides `Ola` from indirect dependents.
-private class NetworkIndicator: NetworkActivityIndicating {
-
-  func increase() {
-    NetworkActivityCounter.shared.increase()
-  }
-
-  func decrease() {
-    NetworkActivityCounter.shared.decrease()
-  }
-
-}
-
 // MARK: - Shared State
 
 final class Podest {
@@ -383,7 +356,6 @@ final class Podest {
 
   static let settings: Settings = conf.settings
   static let contact: Contact = conf.contact
-  static let networkActivity: NetworkActivityIndicating = NetworkIndicator()
   static let images: Images = try! conf.freshImageRepo()
   static let finder: Searching = try! conf.freshSearchRepo()
   static let browser: Browsing = conf.browser

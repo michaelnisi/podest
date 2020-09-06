@@ -173,12 +173,3 @@ protocol UserProxy {
   /// Use `update(completionHandler:)` to update, which includes reloading.
   func reload(completionBlock: ((Error?) -> Void)?)
 }
-
-/// `Incoming` routes incoming actions.
-protocol Incoming: BackgroundFetching {}
-
-protocol BackgroundFetching {
-  func register()
-  func schedule()
-  func cancel()
-}

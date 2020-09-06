@@ -52,7 +52,7 @@ public class UserClient {
     deleted recordIDs: [CKRecord.ID],
     from zoneID: CKRecordZone.ID
   ) throws {
-    os_log("merging: %@", log: log, type: .debug, zoneID)
+    os_log("merging: %@", log: log, type: .info, zoneID)
     
     guard !records.isEmpty || !recordIDs.isEmpty else {
       os_log("already up-to-date", log: log, type: .info)
@@ -78,7 +78,7 @@ public class UserClient {
   static func subtract(_ current: [Queued], from previous: [Queued]
   ) -> ([EntryGUID], [EntryGUID]) {
     os_log("subtracting lists counting: (%i, %i)",
-           log: log, type: .debug, current.count, previous.count)
+           log: log, type: .info, current.count, previous.count)
 
     // Inspecting the number of previously enqueued, I’m surprised how quickly
     // these go into the hundreds, even now, limited to one per feed. To check
@@ -87,7 +87,7 @@ public class UserClient {
     // specific field isn’t unique, which would be evidence in this case.
 
     guard !current.isEmpty else {
-      os_log("skipping loop: empty list", log: log, type: .debug)
+      os_log("skipping loop: empty list", log: log, type: .info)
       return ([], [])
     }
 
@@ -143,7 +143,7 @@ public class UserClient {
   /// Dequeues items that have been previously dequeued, but are still in the
   /// queue locally.
   private func dequeuePrevious() throws {
-    os_log("dequeuing previous", log: log, type: .debug)
+    os_log("dequeuing previous", log: log, type: .info)
 
     let prev = try cache.previous()
     let current = try cache.locallyQueued()
@@ -228,7 +228,7 @@ public class UserClient {
       return completionBlock(nil)
     }
 
-    os_log("fetching changes for zones: %@", log: log, type: .debug, zoneIDs)
+    os_log("fetching changes for zones: %@", log: log, type: .info, zoneIDs)
 
     let op = makeFetchRecordZoneChangesOperation(zoneIDs: zoneIDs)
 
@@ -301,13 +301,13 @@ public class UserClient {
         "serverChangeToken: \(String(describing: serverChangeToken))",
         "clientChangeToken: \(String(describing: clientChangeToken))"
       ]
-      os_log("zone fetch complete: %@", log: log, type: .debug, info)
+      os_log("zone fetch complete: %@", log: log, type: .info, info)
       
       if let previousClientChangeToken = UserClient.clientChangeToken(
         for: UserDB.privateClientChangeTokenKey) {
         if previousClientChangeToken == clientChangeToken {
           os_log("previous push succeeded for zone: %@",
-                 log: log, type: .debug, recordZoneID)
+                 log: log, type: .info, recordZoneID)
         } else {
           os_log("""
             previous push failed: differing client token for zone: {
@@ -340,7 +340,7 @@ public class UserClient {
     
     // finally
     op.fetchRecordZoneChangesCompletionBlock = { operationError in
-      os_log("fetching zone changes complete", log: log, type: .debug)
+      os_log("fetching zone changes complete", log: log, type: .info)
 
       guard operationError == nil, zoneErrors.isEmpty else {
         if let opErr = operationError {
@@ -423,13 +423,13 @@ public class UserClient {
     
     var changedZoneIDs = [CKRecordZone.ID]()
     op.recordZoneWithIDChangedBlock = { zoneID in
-      os_log("zone changed: %{public}@", log: log, type: .debug, zoneID)
+      os_log("zone changed: %{public}@", log: log, type: .info, zoneID)
       changedZoneIDs.append(zoneID)
     }
     
     var deletedZoneIDs = [CKRecordZone.ID]()
     op.recordZoneWithIDWasDeletedBlock = { zoneID in
-      os_log("zone was deleted: %{public}@", log: log, type: .debug, zoneID)
+      os_log("zone was deleted: %{public}@", log: log, type: .info, zoneID)
       deletedZoneIDs.append(zoneID)
     }
     
@@ -476,7 +476,7 @@ public class UserClient {
       completionHandler(changedZoneIDs, deletedZoneIDs, nil)
     }
     
-    os_log("fetching database changes: %@", log: log, type: .debug,
+    os_log("fetching database changes: %@", log: log, type: .info,
            String(describing: prev))
 
     db.add(op)
@@ -532,7 +532,7 @@ public class UserClient {
   ///   - cb: The callback, taking an optional error.
   private func checkAccount(
     assuming currentStatus: CKAccountStatus?, cb: @escaping (Error?) -> Void) {
-    os_log("checking account", log: log, type: .debug)
+    os_log("checking account", log: log, type: .info)
     
     self.accountStatus = currentStatus
     
@@ -553,19 +553,19 @@ public class UserClient {
       
       switch accountStatus {
       case .available:
-        os_log("account status: %@", log: log, type: .debug, "available")
+        os_log("account status: %@", log: log, type: .info, "available")
         cb(nil)
         
       case .couldNotDetermine:
-        os_log("account status: %@", log: log, type: .debug, "could not determine")
+        os_log("account status: %@", log: log, type: .info, "could not determine")
         cb(SyncError.notAvailable)
 
       case .noAccount:
-        os_log("account status: %@", log: log, type: .debug, "no account")
+        os_log("account status: %@", log: log, type: .info, "no account")
         cb(SyncError.notAvailable)
       
       case .restricted:
-        os_log("account status: %@", log: log, type: .debug, "restricted")
+        os_log("account status: %@", log: log, type: .info, "restricted")
         cb(SyncError.notAvailable)
 
       @unknown default:
@@ -855,7 +855,7 @@ extension UserClient {
       return cb(nil)
     }
 
-    os_log("saving modifications: %i", log: log, type: .debug, m.count)
+    os_log("saving modifications: %i", log: log, type: .info, m.count)
 
     if m.count > 400 {
       os_log("ink.codes.podest.sync: too many requests: %i", type: .error, m.count)
@@ -920,7 +920,7 @@ extension UserClient {
             return er.code == .userDeletedZone
           }) {
             do {
-              os_log("** deleting zombies", log: log, type: .debug)
+              os_log("** deleting zombies", log: log, type: .info)
               try self.cache.deleteZombies()
             } catch {
               os_log("could not delete zombies: %{public}@",
@@ -933,7 +933,7 @@ extension UserClient {
         }
         
         os_log("creating missing zones: %@",
-               log: log, type: .debug, missingZoneIDs)
+               log: log, type: .info, missingZoneIDs)
         
         return self.createZones(with: Array(missingZoneIDs)) { error in
           guard error == nil else {
@@ -954,7 +954,7 @@ extension UserClient {
       UserClient.save(token: clientChangeToken, for: UserDB.privateClientChangeTokenKey)
       
       if let sr = savedRecords {
-        os_log("saved records: %i", log: log, type: .debug, sr.count)
+        os_log("saved records: %i", log: log, type: .info, sr.count)
         do {
           let items = sr.compactMap { UserClient.synced(from: $0) }
           try self.cache.add(synced: items)
@@ -965,7 +965,7 @@ extension UserClient {
       
       if let dr = deletedRecordIDs {
         // Deleted records are including non-existent records.
-        os_log("deleted records: %i", log: log, type: .debug, dr.count)
+        os_log("deleted records: %i", log: log, type: .info, dr.count)
         do {
           let names = dr.map { $0.recordName }
           try self.cache.remove(recordNames: names )
@@ -978,13 +978,13 @@ extension UserClient {
       let deletedCount = deletedRecordIDs?.count ?? 0
       let diff = m.count - savedCount - deletedCount
       if  diff > 0 {
-        os_log("** %i modifications not saved", log: log, type: .debug, diff)
+        os_log("** %i modifications not saved", log: log, type: .info, diff)
       } else {
-        os_log("all modifications saved", log: log, type: .debug)
+        os_log("all modifications saved", log: log, type: .info)
       }
 
       do {
-        os_log("deleting zombies", log: log, type: .debug)
+        os_log("deleting zombies", log: log, type: .info)
         try self.cache.deleteZombies()
       } catch {
         cb(error)
@@ -1003,13 +1003,13 @@ extension UserClient {
 extension UserClient {
   
   private func delete(recordIDs: [CKRecord.ID]) throws {
-    os_log("deleting: %i", log: log, type: .debug, recordIDs.count)
+    os_log("deleting: %i", log: log, type: .info, recordIDs.count)
     
     try cache.remove(recordNames: recordIDs.map { $0.recordName })
   }
   
   private func update(records: [CKRecord]) throws {
-    os_log("updating: %i", log: log, type: .debug, records.count)
+    os_log("updating: %i", log: log, type: .info, records.count)
     
     let items = records.compactMap { UserClient.synced(from: $0) }
     
@@ -1055,7 +1055,7 @@ extension UserClient: UserSyncing {
         subscriptions: %@,
         zombies: %@
       )
-      """, log: log, type: .debug, queued, subscriptions, zombieRecords)
+      """, log: log, type: .info, queued, subscriptions, zombieRecords)
 
       let a = queued.compactMap { UserClient.record(from: $0) }
       let b = subscriptions.compactMap { UserClient.record(from: $0) }
@@ -1087,7 +1087,7 @@ extension UserClient: UserSyncing {
 
   func push(completionHandler: @escaping (_ error: Error?) -> Void) {
     queue.addOperation {
-      os_log("pushing to iCloud", log: log, type: .debug)
+      os_log("pushing to iCloud", log: log, type: .info)
       
       let status = self.reach()
       guard status == .reachable || status == .cellular else {
@@ -1100,7 +1100,7 @@ extension UserClient: UserSyncing {
         }
         
         do {
-          os_log("** removing stale previously queued", log: log, type: .debug)
+          os_log("** removing stale previously queued", log: log, type: .info)
           try self.cache.removeStalePrevious()
           
           let queued = try self.cache.locallyQueued()
@@ -1131,7 +1131,7 @@ extension UserClient: UserSyncing {
             subscriptions: locallySubscribed,
             zombieRecords: zombieRecords
           ) else {
-            os_log("everything up-to-date", log: log, type: .debug)
+            os_log("everything up-to-date", log: log, type: .info)
             return completionHandler(nil)
           }
 
@@ -1165,7 +1165,7 @@ extension UserClient: UserSyncing {
             if let er = error {
               os_log("fetching queued failed: %@", log: log, er as CVarArg)
             } else {
-              os_log("fetching queued succeeded", log: log, type: .debug)
+              os_log("fetching queued succeeded", log: log, type: .info)
             }
 
             completionBlock?()
@@ -1183,7 +1183,7 @@ extension UserClient: UserSyncing {
   func pull(completionHandler:
     @escaping (_ newData: Bool, _ error: Error?) -> Void) {
     queue.addOperation {
-      os_log("pulling from iCloud", log: log, type: .debug)
+      os_log("pulling from iCloud", log: log, type: .info)
       
       let status = self.reach()
       guard status == .reachable || status == .cellular else {
@@ -1318,15 +1318,15 @@ extension UserClient {
     switch token {
     case let t as CKServerChangeToken:
       os_log("saving server change token: ( %@, %@ )",
-             log: log, type: .debug, t, key)
+             log: log, type: .info, t, key)
       UserDefaults.standard.setServerChangeToken(t, using: key)
     case let uuid as UUID:
       os_log("saving UUID: ( %@, %@ )",
-             log: log, type: .debug, uuid as CVarArg, key)
+             log: log, type: .info, uuid as CVarArg, key)
       UserDefaults.standard.setUUID(uuid, using: key)
     case nil:
       os_log("** removing object: %@",
-             log: log, type: .debug, key)
+             log: log, type: .info, key)
       UserDefaults.standard.removeObject(forKey: key)
     default:
       fatalError("invalid type for change token")

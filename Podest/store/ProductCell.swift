@@ -88,7 +88,7 @@ class ProductCell: UICollectionViewCell {
     didSet {
       dataChanged = data != oldValue
       if let data = self.data {
-        os_log("ProductCell: data: %{public}@", log: log, type: .debug,
+        os_log("ProductCell: data: %{public}@", log: log, type: .info,
                String(describing: data))
       }
       

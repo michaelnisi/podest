@@ -252,7 +252,7 @@ extension EpisodeViewController {
 extension EpisodeViewController {
 
   private func showMessage(_ msg: NSAttributedString) {
-    os_log("episode: showing message", log: log, type: .debug)
+    os_log("episode: showing message", log: log, type: .info)
 
     let messageView = MessageView.make()
 
@@ -264,7 +264,7 @@ extension EpisodeViewController {
 
   /// Updates the `isEnqueued` property using `enqueued` or the user queue.
   func updateIsEnqueued(using enqueued: Set<EntryGUID>? = nil) -> Void {
-    os_log("updating is enqueued: %@", log: log, type: .debug, self)
+    os_log("updating is enqueued: %@", log: log, type: .info, self)
 
     guard let e = entry else {
       navigationItem.rightBarButtonItems = nil
@@ -282,10 +282,10 @@ extension EpisodeViewController {
             switch er {
             case QueueingError.outOfSync(let queue, let guids):
               if queue == 0, guids != 0 {
-                os_log("queue not populated", log: log, type: .debug)
+                os_log("queue not populated", log: log, type: .info)
               } else {
                 os_log("** out of sync: ( queue: %i, guids: %i )",
-                       log: log, type: .debug, queue, guids)
+                       log: log, type: .info, queue, guids)
               }
             default:
               fatalError("probably a database error: \(er)")

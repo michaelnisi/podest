@@ -25,6 +25,10 @@
 		4C175AA6208AFA26003071CA /* StoreFSM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C175AA5208AFA26003071CA /* StoreFSM.swift */; };
 		4C17C19D230723480051FE23 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C17C19C230723480051FE23 /* Home.storyboard */; };
 		4C17C19F2307F2400051FE23 /* HomePresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C17C19E2307F2400051FE23 /* HomePresenting.swift */; };
+		4C17E4792503F85E0022EF0F /* PlayerUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C17E4782503F85E0022EF0F /* PlayerUIView.swift */; };
+		4C17E47B2503F9440022EF0F /* PlayerV3ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C17E47A2503F9440022EF0F /* PlayerV3ViewController.swift */; };
+		4C17E47D2503FA9D0022EF0F /* PlayerV3.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C17E47C2503FA9D0022EF0F /* PlayerV3.storyboard */; };
+		4C17E4822504074D0022EF0F /* Bus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C17E4812504074D0022EF0F /* Bus.swift */; };
 		4C1B32CC21E7046A00E57931 /* DisplayTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1B32CA21E7046A00E57931 /* DisplayTableViewCell.swift */; };
 		4C1B32CD21E7046A00E57931 /* DisplayTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C1B32CB21E7046A00E57931 /* DisplayTableViewCell.xib */; };
 		4C1F57A720810D850067AB7C /* ProductsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F57A620810D850067AB7C /* ProductsViewController.swift */; };
@@ -176,8 +180,6 @@
 		4CF9AC7E21FAEA9D009F70BB /* StringRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF9AC7D21FAEA9D009F70BB /* StringRepositoryTests.swift */; };
 		4CF9AC8021FB1B7A009F70BB /* strings.json in Resources */ = {isa = PBXBuildFile; fileRef = 4CF9AC7F21FB1B7A009F70BB /* strings.json */; };
 		4CFEE33821C7B101008B2EC0 /* SearchControllerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFEE33721C7B101008B2EC0 /* SearchControllerProxy.swift */; };
-		4E180F9A1F8394CC00976A3A /* Nuke.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E180F9B1F8394CC00976A3A /* Nuke.framework */; };
-		4E180F9C1F8394D900976A3A /* Nuke.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E180F9B1F8394CC00976A3A /* Nuke.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4E180F9D1F83951A00976A3A /* FanboyKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E180FA41F83951A00976A3A /* FanboyKit.framework */; };
 		4E180F9E1F83951A00976A3A /* FeedKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E180FA51F83951A00976A3A /* FeedKit.framework */; };
 		4E180F9F1F83951A00976A3A /* MangerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E180FA61F83951A00976A3A /* MangerKit.framework */; };
@@ -278,7 +280,6 @@
 				4E180FAF1F83952300976A3A /* Patron.framework in Embed Frameworks */,
 				4E180FB01F83952300976A3A /* Playback.framework in Embed Frameworks */,
 				4E180FB11F83952300976A3A /* Skull.framework in Embed Frameworks */,
-				4E180F9C1F8394D900976A3A /* Nuke.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -303,6 +304,10 @@
 		4C175AA5208AFA26003071CA /* StoreFSM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreFSM.swift; sourceTree = "<group>"; };
 		4C17C19C230723480051FE23 /* Home.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		4C17C19E2307F2400051FE23 /* HomePresenting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePresenting.swift; sourceTree = "<group>"; };
+		4C17E4782503F85E0022EF0F /* PlayerUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerUIView.swift; sourceTree = "<group>"; };
+		4C17E47A2503F9440022EF0F /* PlayerV3ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerV3ViewController.swift; sourceTree = "<group>"; };
+		4C17E47C2503FA9D0022EF0F /* PlayerV3.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PlayerV3.storyboard; sourceTree = "<group>"; };
+		4C17E4812504074D0022EF0F /* Bus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bus.swift; sourceTree = "<group>"; };
 		4C1B32CA21E7046A00E57931 /* DisplayTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayTableViewCell.swift; sourceTree = "<group>"; };
 		4C1B32CB21E7046A00E57931 /* DisplayTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DisplayTableViewCell.xib; sourceTree = "<group>"; };
 		4C1F57A620810D850067AB7C /* ProductsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsViewController.swift; sourceTree = "<group>"; };
@@ -530,7 +535,6 @@
 				4E180FA21F83951A00976A3A /* Playback.framework in Frameworks */,
 				4CF5674C207F362300C77C1D /* StoreKit.framework in Frameworks */,
 				4E180FA31F83951A00976A3A /* Skull.framework in Frameworks */,
-				4E180F9A1F8394CC00976A3A /* Nuke.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -568,6 +572,16 @@
 				4C010A1E2101D6E90006CB53 /* Info.plist */,
 			);
 			path = PodKitTests;
+			sourceTree = "<group>";
+		};
+		4C17E47E2504034D0022EF0F /* v3 */ = {
+			isa = PBXGroup;
+			children = (
+				4C17E47A2503F9440022EF0F /* PlayerV3ViewController.swift */,
+				4C17E47C2503FA9D0022EF0F /* PlayerV3.storyboard */,
+				4C17E4782503F85E0022EF0F /* PlayerUIView.swift */,
+			);
+			path = v3;
 			sourceTree = "<group>";
 		};
 		4C571955229FC8CF000275B2 /* v1 */ = {
@@ -765,6 +779,7 @@
 			children = (
 				4C571955229FC8CF000275B2 /* v1 */,
 				4C8B364F22A039FF0004FD89 /* v2 */,
+				4C17E47E2504034D0022EF0F /* v3 */,
 				4CB6EEC224253D4B006F09B7 /* miniplayer */,
 				4EF1A34F1EB837D100E41F84 /* PlaySwitch.swift */,
 				4C728DBF20623544005B739C /* PlaybackControlDelegate.swift */,
@@ -840,6 +855,7 @@
 		4CE8586B21A14EB300D206FA /* root */ = {
 			isa = PBXGroup;
 			children = (
+				4C17E4812504074D0022EF0F /* Bus.swift */,
 				4E7F291A1E7D799200E12846 /* RootViewController.swift */,
 			);
 			path = root;
@@ -1094,6 +1110,8 @@
 			dependencies = (
 			);
 			name = Podest;
+			packageProductDependencies = (
+			);
 			productName = Podest;
 			productReference = 4E8CA7011A126ADB004DE307 /* Podest.app */;
 			productType = "com.apple.product-type.application";
@@ -1182,6 +1200,8 @@
 				Base,
 			);
 			mainGroup = 4E8CA6F81A126ADB004DE307;
+			packageReferences = (
+			);
 			productRefGroup = 4E8CA7021A126ADB004DE307 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1251,6 +1271,7 @@
 				4C8B374622A0ED280004FD89 /* ControlsCell.xib in Resources */,
 				4C8DCE071FFE75F800A6A61B /* List.storyboard in Resources */,
 				4C8B364C22A039E20004FD89 /* PlayerV2.storyboard in Resources */,
+				4C17E47D2503FA9D0022EF0F /* PlayerV3.storyboard in Resources */,
 				4CCBF21320809E4C00A7359F /* Store.storyboard in Resources */,
 				4C776B222084722C00A055CD /* MessageCollectionViewCell.xib in Resources */,
 				4C0BE2501A4C2162004E82BF /* config.json in Resources */,
@@ -1379,6 +1400,7 @@
 				4CE20ACC1A31C66C0052C360 /* SearchResultsController.swift in Sources */,
 				4CED20D8226C2CFC0049B88D /* QueueTableViewDelegate.swift in Sources */,
 				4CB6EED324278050006F09B7 /* MakeList.swift in Sources */,
+				4C17E4822504074D0022EF0F /* Bus.swift in Sources */,
 				4CA9C292226CDA5C002BCCB5 /* ListOperation.swift in Sources */,
 				4C5F4E7C21CB79A300156D56 /* EntryRowSelectable.swift in Sources */,
 				4CB6EECA24268AE6006F09B7 /* Unsubscribing.swift in Sources */,
@@ -1387,6 +1409,7 @@
 				4C07264E24FABBAD00DA55B4 /* AppGateway.swift in Sources */,
 				4C1F57A92081C0690067AB7C /* ProductsDataSource.swift in Sources */,
 				4C776B2920847D0900A055CD /* ProductCell.swift in Sources */,
+				4C17E47B2503F9440022EF0F /* PlayerV3ViewController.swift in Sources */,
 				4E7D10B31F6644DA0048CB43 /* QueueDataSource.swift in Sources */,
 				4C9EBDFB223D58A8009F2B6F /* settings.swift in Sources */,
 				4C8B374222A0ED280004FD89 /* PlayerDataSource.swift in Sources */,
@@ -1398,6 +1421,7 @@
 				4ED4D4171E9D239A0011C28C /* SuggestionCell.swift in Sources */,
 				4ED2D6BF1F98E7FF000DA71B /* time.swift in Sources */,
 				4C17C19F2307F2400051FE23 /* HomePresenting.swift in Sources */,
+				4C17E4792503F85E0022EF0F /* PlayerUIView.swift in Sources */,
 				4CB6CF3C22BE7F91002452BF /* TopLine.swift in Sources */,
 				4C40A3F622C0818A00B353AD /* PlayerMessage.swift in Sources */,
 				4E684D4C1C5F3201004699A1 /* EpisodeViewController.swift in Sources */,
