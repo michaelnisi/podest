@@ -20,6 +20,4 @@ struct PlayerUIView_Previews: PreviewProvider {
     static var previews: some View {
         PlayerUIView()
     }
-
-
 }

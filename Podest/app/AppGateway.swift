@@ -20,21 +20,10 @@ class AppGateway {
   private var router: Routing?
   private var kvStoreObserver: NSObjectProtocol?
 
-  /// The `isPulling` property is `true` while we are pulling from iCloud.
-  private var isPulling = false {
-    didSet {
-      dispatchPrecondition(condition: .onQueue(.main))
-    }
-  }
-
-  /// The `isPushing` property is `true` while we are pushisng to iCloud.
-  private var isPushing = false {
-    willSet {
-      dispatchPrecondition(condition: .onQueue(.main))
-    }
-  }
-
+  /// Installs this `AppGateway` as delegate and updates the queue after pulling from iCloud.
   func install(router: Routing) {
+    os_log("installing", log: log, type: .info)
+
     self.router = router
 
     // During development, we might want to launch into the previous state,
@@ -47,8 +36,7 @@ class AppGateway {
       DispatchQueue.main.async {
         self.router?.update(considering: syncError, animated: true) { _, error in
           if let er = error {
-            os_log("updating queue produced error: %{public}@",
-                   log: log, er as CVarArg)
+            os_log("updating queue produced error: %{public}@", log: log, er as CVarArg)
           }
 
           Podest.userQueue.queueDelegate = self
@@ -72,7 +60,9 @@ class AppGateway {
     updateQueue()
   }
 
+  /// Removes this `AppGateway`as delegate.
   func uninstall() {
+    os_log("uninstalling", log: log, type: .info)
     Podest.userQueue.queueDelegate = nil
     Podest.userLibrary.libraryDelegate = nil
   }
@@ -123,8 +113,14 @@ extension AppGateway {
           return os_log("app refresh task expired", log: log, type: .error)
         }
 
+        let success = error == nil
+
+        guard newData else {
+          return task.setTaskCompleted(success: success)
+        }
+
         self.push {
-          task.setTaskCompleted(success: error == nil && newData)
+          task.setTaskCompleted(success: success)
         }
       }
     }
@@ -161,8 +157,7 @@ extension AppGateway {
       pull(completionBlock: completionHandler)
 
     default:
-      os_log("failing fetch completion: unidentified subscription: %{public}@",
-             log: log, type: .error, subscriptionID)
+      os_log("unidentified subscription: %{public}@", log: log, type: .error, subscriptionID)
       completionHandler(.failed)
     }
   }
@@ -196,12 +191,6 @@ extension AppGateway {
   private func pull(completionBlock: ((UIBackgroundFetchResult) -> Void)? = nil) {
     dispatchPrecondition(condition: .onQueue(.main))
 
-    if isPushing {
-      os_log("pulling while pushing", log: log)
-    }
-
-    isPulling = true
-
     Podest.iCloud.pull { [weak self] newData, error in
       let result = AppGateway.makeBackgroundFetchResult(newData, error)
 
@@ -211,43 +200,24 @@ extension AppGateway {
             dispatchPrecondition(condition: .onQueue(.main))
 
             if let er = error {
-              os_log("reloading queue failed: %{public}@",
-                     log: log, type: .error, er as CVarArg)
+              os_log("reloading queue failed: %{public}@", log: log, type: .error, er as CVarArg)
             }
-
-            self?.isPulling = false
 
             completionBlock?(result)
           }
         }
       } else {
         DispatchQueue.main.async {
-          self?.isPulling = false
-
           completionBlock?(result)
         }
       }
     }
   }
 
-  /// Pushes user data to iCloud. **Must execute on the main queue.**
   private func push(completionBlock: (() -> Void)? = nil) {
-    guard !isPulling, !isPushing else {
-      os_log("already syncing", log: log)
-      completionBlock?()
-      return
-    }
-
-    isPushing = true
-
-    Podest.iCloud.push { [weak self] error in
+    Podest.iCloud.push { error in
       if let er = error {
-        os_log("push failed: %{public}@",
-               log: log, type: .error, er as CVarArg)
-      }
-
-      DispatchQueue.main.async {
-        self?.isPushing = false
+        os_log("push failed: %{public}@", log: log, type: .error, er as CVarArg)
       }
 
       completionBlock?()
@@ -262,7 +232,6 @@ extension AppGateway: LibraryDelegate {
   func library(_ library: Subscribing, changed urls: Set<FeedURL>) {
     DispatchQueue.main.async { [weak self] in
       self?.router?.updateIsSubscribed(using: urls)
-
       self?.push()
     }
   }
@@ -276,7 +245,6 @@ extension AppGateway: QueueDelegate {
     DispatchQueue.main.async { [weak self] in
       self?.router?.updateIsEnqueued(using: guids)
       self?.router?.reload(completionBlock: nil)
-
       self?.push()
     }
   }
@@ -298,11 +266,43 @@ extension AppGateway: QueueDelegate {
   }
 }
 
+// MARK: - Cleaning up
+
+extension AppGateway {
+
+  private func closeFiles() {
+    os_log("closing files", log: log, type: .info)
+    Podest.userCaching.closeDatabase()
+    Podest.feedCaching.closeDatabase()
+  }
+
+  func flush() {
+    os_log("flushing caches", log: log, type: .info)
+    StringRepository.purge()
+    Podest.images.flush()
+    Podest.files.flush()
+
+    do {
+      try Podest.userCaching.flush()
+      try Podest.feedCaching.flush()
+    } catch {
+      os_log("flushing failed: %{public}@", log: log, type: .error, error as CVarArg)
+    }
+  }
+
+  func resign() {
+    uninstall()
+    Podest.store.cancelReview(resetting: true)
+    flush()
+    closeFiles()
+  }
+}
+
 // MARK: - Factory
 
 extension AppGateway {
 
-  /// Produces a background fetch result and logs its interpretation.
+  /// Produces a background fetch result logging its interpretation.
   ///
   /// - Parameters:
   ///   - newData: `true` if new data has been received.

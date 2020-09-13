@@ -149,31 +149,8 @@ extension AppDelegate {
 
 extension AppDelegate {
 
-  private func closeFiles() {
-    os_log("closing files", log: log, type: .info)
-    Podest.userCaching.closeDatabase()
-    Podest.feedCaching.closeDatabase()
-  }
-
-  private func flush() {
-    os_log("flushing caches", log: log, type: .info)
-    StringRepository.purge()
-    Podest.images.flush()
-    Podest.files.flush()
-
-    do {
-      try Podest.userCaching.flush()
-      try Podest.feedCaching.flush()
-    } catch {
-      os_log("flushing failed: %{public}@", log: log, type: .error, error as CVarArg)
-    }
-  }
-
   func applicationWillResignActive(_ application: UIApplication) {
-    Podest.gateway.uninstall()
-    Podest.store.cancelReview(resetting: true)
-    flush()
-    closeFiles()
+    Podest.gateway.resign()
   }
 
   func applicationDidBecomeActive(_ application: UIApplication) {
@@ -185,12 +162,10 @@ extension AppDelegate {
   }
 
   func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
-    flush()
+    Podest.gateway.flush()
   }
 
   func applicationWillTerminate(_ application: UIApplication) {
-    Podest.gateway.uninstall()
-    flush()
-    closeFiles()
+    Podest.gateway.resign()
   }
 }
