@@ -12,7 +12,7 @@ class ViewController: UIViewController {
   
   @IBAction func tapped(_ sender: UITapGestureRecognizer) {
     guard let vc = storyboard?.instantiateViewController(
-      withIdentifier: "PlayerID") else {
+      withIdentifier: "PlayerV3ID") else {
       fatalError("missing view controller")
     }
   

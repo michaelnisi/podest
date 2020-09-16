@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="n7u-1m-VGr">
-    <device id="retina6_1" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="n7u-1m-VGr">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17124"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -31,12 +29,20 @@
         <!--PlayerV2-->
         <scene sceneID="Bn0-JM-REo">
             <objects>
-                <viewControllerPlaceholder storyboardIdentifier="PlayerID" storyboardName="PlayerV2" id="XFh-78-6gF" sceneMemberID="viewController">
+                <viewControllerPlaceholder storyboardIdentifier="PlayerV2ID" storyboardName="PlayerV2" id="XFh-78-6gF" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="LU4-GM-Up5"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BQW-2x-nvD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="420" y="76"/>
+        </scene>
+        <!--PlayerV3-->
+        <scene sceneID="ifH-vv-aOn">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="PlayerV3ID" storyboardName="PlayerV3" id="nX3-NK-nim" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9rX-st-Y02" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="476" y="119"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="VpU-re-IVj">
@@ -53,6 +59,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="Yyy-2f-PSe"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <gestureRecognizers/>
                         <constraints>
@@ -61,7 +68,6 @@
                             <constraint firstItem="f2f-CN-95u" firstAttribute="leading" secondItem="Yyy-2f-PSe" secondAttribute="leading" id="UY7-SD-RXT"/>
                             <constraint firstItem="f2f-CN-95u" firstAttribute="top" secondItem="gWP-Vs-3FN" secondAttribute="top" id="itz-qw-t01"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="Yyy-2f-PSe"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="faC-XL-oQx" appends="YES" id="dny-FO-4TA"/>
                         </connections>

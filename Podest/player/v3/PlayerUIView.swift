@@ -10,10 +10,17 @@ import SwiftUI
 
 struct PlayerUIView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+      VStack {
+        HStack {
+          Image(<#T##name: String##String#>)
+          PlayButton().frame(width: 120, height: 120)
+        }
+        HStack {
+          PlayButton().frame(width: 120, height: 120)
+        }
+      }
+
     }
-
-
 }
 
 struct PlayerUIView_Previews: PreviewProvider {
