@@ -209,7 +209,7 @@ protocol EntryPlayer: UIViewController, Navigator, PlaybackControlDelegate {}
 extension RootViewController {
 
   private enum PlayerVersion {
-    case v1, v2, v3
+    case v1, v3
   }
 
   /// Returns a new player view controller of `version`.
@@ -221,10 +221,6 @@ extension RootViewController {
     case .v1:
       return UIStoryboard(name: "PlayerV1", bundle: .main)
         .instantiateViewController(withIdentifier: "PlayerV1ID") as! PlayerV1ViewController
-
-    case .v2:
-      return UIStoryboard(name: "PlayerV2", bundle: .main)
-        .instantiateViewController(withIdentifier: "PlayerV2ID") as! PlayerV2ViewController
 
     case .v3:
       return UIStoryboard(name: "PlayerV3", bundle: .main)

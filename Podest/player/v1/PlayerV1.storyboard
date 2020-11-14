@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16095" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Q8z-hD-NaL">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17503.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Q8z-hD-NaL">
     <device id="ipad9_7" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16084.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17502"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -20,7 +21,7 @@
                         <subviews>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dwa-JC-5qY" userLabel="Done">
                                 <rect key="frame" x="347" y="8" width="74" height="22"/>
-                                <color key="tintColor" systemColor="systemFillColor" red="0.47058823529999999" green="0.47058823529999999" blue="0.50196078430000002" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="tintColor" systemColor="systemFillColor"/>
                                 <state key="normal" image="Bar"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="systemName" value="chevron.compact.down"/>
@@ -45,7 +46,7 @@
                                                 <rect key="frame" x="197" y="0.0" width="53" height="219.5"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z7d-Kf-Ps7">
-                                                        <rect key="frame" x="8.5" y="0.0" width="36" height="376.5"/>
+                                                        <rect key="frame" x="9" y="0.0" width="35" height="376.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                         <state key="normal" title="Title">
                                                             <color key="titleColor" name="Purple"/>
@@ -66,7 +67,7 @@
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZGy-wR-5BF">
                                                         <rect key="frame" x="0.0" y="69" width="85.5" height="82"/>
-                                                        <color key="tintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                        <color key="tintColor" systemColor="labelColor"/>
                                                         <state key="normal" image="Backward"/>
                                                         <connections>
                                                             <action selector="backwardTouchUpInside:" destination="Q8z-hD-NaL" eventType="touchUpInside" id="m18-ot-Rw9"/>
@@ -74,8 +75,8 @@
                                                     </button>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mN4-la-neB" customClass="PlaySwitch" customModule="Podest" customModuleProvider="target">
                                                         <rect key="frame" x="85.5" y="67" width="85" height="85.5"/>
-                                                        <color key="backgroundColor" systemColor="secondarySystemGroupedBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <color key="tintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                        <color key="backgroundColor" systemColor="secondarySystemGroupedBackgroundColor"/>
+                                                        <color key="tintColor" systemColor="labelColor"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="mN4-la-neB" secondAttribute="height" multiplier="1:1" id="DJV-cQ-zsm"/>
                                                         </constraints>
@@ -90,7 +91,7 @@
                                                     </view>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="62G-HD-gtd">
                                                         <rect key="frame" x="170.5" y="69" width="85.5" height="82"/>
-                                                        <color key="tintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                        <color key="tintColor" systemColor="labelColor"/>
                                                         <state key="normal" image="Forward"/>
                                                         <connections>
                                                             <action selector="forwardTouchUpInside:" destination="Q8z-hD-NaL" eventType="touchUpInside" id="lIH-1g-lgU"/>
@@ -110,7 +111,8 @@
                                 <variation key="heightClass=compact" axis="horizontal"/>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="secondarySystemGroupedBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="exh-KU-zys"/>
+                        <color key="backgroundColor" systemColor="secondarySystemGroupedBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="exh-KU-zys" firstAttribute="bottom" secondItem="0Mu-oc-Qol" secondAttribute="bottom" constant="48" id="GyY-Wy-qwr">
                                 <variation key="heightClass=compact" constant="12"/>
@@ -127,7 +129,6 @@
                                 <variation key="widthClass=regular" constant="64"/>
                             </constraint>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="exh-KU-zys"/>
                     </view>
                     <navigationItem key="navigationItem" id="WsD-sF-ULb"/>
                     <connections>
@@ -157,5 +158,14 @@
         <namedColor name="Purple">
             <color red="0.68599998950958252" green="0.32199999690055847" blue="0.87099999189376831" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="secondarySystemGroupedBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemFillColor">
+            <color red="0.47058823529411764" green="0.47058823529411764" blue="0.50196078431372548" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
     </resources>
 </document>

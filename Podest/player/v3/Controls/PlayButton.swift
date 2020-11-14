@@ -19,9 +19,35 @@ struct ImageButtonStyle: ButtonStyle {
 }
 
 struct PlayButton: View {
+  @State var action: () -> Void
+  
+  var body: some View {
+    Button(action: action) {}.buttonStyle(ImageButtonStyle(systemName: "play.circle"))
+  }
+}
+
+struct VolumeButton: View {
   var body: some View {
     Button(action: {
       print("Button action")
-    }) {}.buttonStyle(ImageButtonStyle(systemName: "play.fill"))
+    }) {}.buttonStyle(ImageButtonStyle(systemName: "speaker.fill"))
   }
 }
+
+struct TimelineButton: View {
+  var body: some View {
+    Button(action: {
+      print("Button action")
+    }) {}.buttonStyle(ImageButtonStyle(systemName: "goforward.30"))
+  }
+}
+
+struct SkipButton: View {
+  var body: some View {
+    Button(action: {
+      print("Button action")
+    }) {}.buttonStyle(ImageButtonStyle(systemName: "shuffle"))
+  }
+}
+
+
