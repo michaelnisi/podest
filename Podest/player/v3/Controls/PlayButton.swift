@@ -23,29 +23,30 @@ struct ImageButtonStyle: ButtonStyle {
 struct PlayButton: View {
   
   let action: ArgHandler<Bool>
-  @EnvironmentObject var model: PlayerView.Model
+  @EnvironmentObject private var model: PlayerView.Model
   
   init(action: @escaping ArgHandler<Bool>) {
     self.action = action
   }
+  
+  var isPlaying: Bool {
+    model.isPlaying
+  }
+  
+  var style: ImageButtonStyle {
+    ImageButtonStyle(systemName: isPlaying ? "pause.fill" : "play.fill")
+  }
+  
+  var insets: EdgeInsets {
+    EdgeInsets(top: 0, leading: isPlaying ? 0 : 8, bottom: 0, trailing: 0)
+  }
 
   var body: some View {
     Button(action: {
-      action(!model.isPlaying)
+      action(!isPlaying)
     }) {}
-    .buttonStyle(makeButtonStyle(isPlaying: model.isPlaying))
-    .padding(makeEdgeInsets(isPlaying: model.isPlaying))
-  }
-}
-
-extension PlayButton {
-
-  private func makeButtonStyle(isPlaying: Bool) -> ImageButtonStyle {
-    ImageButtonStyle(systemName: model.isPlaying ? "pause.fill" : "play.fill")
-  }
-  
-  private func makeEdgeInsets(isPlaying: Bool) -> EdgeInsets {
-    EdgeInsets(top: 0, leading: isPlaying ? 0 : 8, bottom: 0, trailing: 0)
+    .buttonStyle(style)
+    .padding(insets)
   }
 }
 

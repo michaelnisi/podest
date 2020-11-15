@@ -7,6 +7,10 @@ struct ControlsView: View {
   let forward: VoidHandler
   let backward: VoidHandler
   
+  var insets: EdgeInsets {
+    EdgeInsets(top: 20, leading: 20, bottom: 64, trailing: 20)
+  }
+
   var body: some View {
     HStack(spacing: 32) {
       BackwardButton(action: backward)
@@ -17,15 +21,6 @@ struct ControlsView: View {
         .frame(width: 48, height: 64)
     }
     .foregroundColor(Color(UIColor.label))
-    .padding(makeInsets())
-  }
-}
-
-// MARK: - Factory
-
-extension ControlsView {
-  
-  private func makeInsets() -> EdgeInsets {
-    EdgeInsets(top: 20, leading: 20, bottom: 64, trailing: 20)
+    .padding(insets)
   }
 }

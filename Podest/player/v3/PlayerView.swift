@@ -27,6 +27,21 @@ struct PlayerView: View {
   
   @State var scale: CGFloat = 0
   
+  private var padding: CGFloat {
+    horizontalSizeClass == .compact ? 64 : 128
+  }
+  
+  private var closeTap: some Gesture {
+    TapGesture()
+      .onEnded { _ in
+        close()
+      }
+  }
+  
+  private var imageAnimation: Animation {
+    .interpolatingSpring(stiffness: 350, damping: 15, initialVelocity: 10)
+  }
+  
   var body: some View {
     VStack {
       CloseBarButton()
@@ -108,25 +123,5 @@ extension PlayerView {
   var isPlaying: Bool {
     get { model.isPlaying }
     set { model.isPlaying = newValue }
-  }
-}
-
-// MARK: - Factory
-
-extension PlayerView {
-  
-  private var padding: CGFloat {
-    horizontalSizeClass == .compact ? 64 : 128
-  }
-  
-  private var closeTap: some Gesture {
-    TapGesture()
-      .onEnded { _ in
-        close()
-      }
-  }
-  
-  private var imageAnimation: Animation {
-    .interpolatingSpring(stiffness: 350, damping: 15, initialVelocity: 10)
   }
 }
