@@ -1,5 +1,5 @@
 //
-//  PlayerUIView.swift
+//  PlayerView.swift
 //  Podest
 //
 //  Created by Michael Nisi on 05.09.20.
@@ -12,31 +12,18 @@ import FeedKit
 struct PlayerView: View {
   
   class Model: ObservableObject {
-    @Published var item: Entry!
+    @Published var item: Entry?
+    @Published var isPlaying: Bool = false
   }
   
-  var playHandler: VoidHandler?
+  var playHandler: ArgHandler<Entry?>?
   var forwardHandler: VoidHandler?
   var backwardHandler: VoidHandler?
   var closeHandler: VoidHandler?
+  var pauseHandler: VoidHandler?
   
   @ObservedObject private var model = Model()
   @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-  
-  private var padding: CGFloat {
-    horizontalSizeClass == .compact ? 64 : 128
-  }
-  
-  private var closeTap: some Gesture {
-    TapGesture()
-      .onEnded { _ in
-        close()
-      }
-  }
-  
-  private var imageAnimation: Animation {
-    .interpolatingSpring(stiffness: 350, damping: 15, initialVelocity: 10)
-  }
   
   @State var scale: CGFloat = 0
   
@@ -55,11 +42,18 @@ struct PlayerView: View {
             }
           }
       }
+ 
       TitlesView()
-      ControlsView(play: play, pause: play, forward: forward, backward: backward)
-      .padding(padding)
-    }.environmentObject(model)
+      ControlsView(play: play, pause: pause, forward: forward, backward: backward)
+      Spacer()
+    }
+    .environmentObject(model)
   }
+}
+
+// MARK: - Infrastructure
+
+extension PlayerView {
   
   private func forward() {
     forwardHandler?()
@@ -70,23 +64,29 @@ struct PlayerView: View {
   }
   
   private func play() {
-    playHandler?()
+    playHandler?(model.item)
   }
   
   private func close() {
     closeHandler?()
   }
   
+  private func pause() {
+    pauseHandler?()
+  }
+  
   mutating func install(
-    playHandler: VoidHandler? = nil,
+    playHandler: ArgHandler<Entry?>? = nil,
     forwardHandler: VoidHandler? = nil,
     backwardHandler: VoidHandler? = nil,
-    closeHandler: VoidHandler? = nil
+    closeHandler: VoidHandler? = nil,
+    pauseHandler: VoidHandler? = nil
   ) {
     self.playHandler = playHandler
     self.forwardHandler = forwardHandler
     self.backwardHandler = backwardHandler
     self.closeHandler = closeHandler
+    self.pauseHandler = pauseHandler
   }
   
   mutating func uninstall() {
@@ -94,6 +94,7 @@ struct PlayerView: View {
     self.forwardHandler = nil
     self.backwardHandler = nil
     self.closeHandler = nil
+    self.pauseHandler = nil
   }
   
   func configure(with entry: Entry?) {
@@ -102,5 +103,30 @@ struct PlayerView: View {
     }
     
     model.item = entry
+  }
+  
+  var isPlaying: Bool {
+    get { model.isPlaying }
+    set { model.isPlaying = newValue }
+  }
+}
+
+// MARK: - Factory
+
+extension PlayerView {
+  
+  private var padding: CGFloat {
+    horizontalSizeClass == .compact ? 64 : 128
+  }
+  
+  private var closeTap: some Gesture {
+    TapGesture()
+      .onEnded { _ in
+        close()
+      }
+  }
+  
+  private var imageAnimation: Animation {
+    .interpolatingSpring(stiffness: 350, damping: 15, initialVelocity: 10)
   }
 }

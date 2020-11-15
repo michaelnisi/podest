@@ -10,25 +10,34 @@ import UIKit
 import SwiftUI
 import FeedKit
 
-class PlayerV3ViewController: UIHostingController<PlayerUIView>, EntryPlayer {
+class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer {
 
-  override init?(coder aDecoder: NSCoder, rootView: PlayerUIView) {
+  override init?(coder aDecoder: NSCoder, rootView: PlayerView) {
     super.init(coder: aDecoder, rootView: rootView)
   }
     
   @objc required dynamic init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder, rootView: PlayerUIView())
+    super.init(coder: aDecoder, rootView: PlayerView())
   }
     
   // MARK: - UIViewController
   
   override func viewWillAppear(_ animated: Bool) {
     rootView.install(
-      nextHandler: {
+      playHandler: { entry in
+        Podest.playback.resume(entry: entry)
+      },
+      forwardHandler: {
         Podest.playback.forward()
+      },
+      backwardHandler: {
+        Podest.playback.backward()
       },
       closeHandler: { [weak self] in
         self?.navigationDelegate?.hideNowPlaying(animated: true, completion: nil)
+      },
+      pauseHandler: {
+        Podest.playback.pause(entry: nil)
       }
     )
   }
@@ -46,10 +55,12 @@ class PlayerV3ViewController: UIHostingController<PlayerUIView>, EntryPlayer {
       rootView.configure(with: entry)
     }
   }
+
+  var isPlaying: Bool {
+    get { rootView.isPlaying }
+    set { rootView.isPlaying = newValue }
+  }
   
-  // TODO: -
-  
-  var isPlaying = false
   var isForwardable = false
   var isBackwardable = false
 }
