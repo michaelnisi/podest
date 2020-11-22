@@ -16,7 +16,7 @@ To setup for development, cloning repos of dependencies to `../`, do.
 ./tools/setup
 ```
 
-Then, some app configuration files need to be generated. Check the script to see the variables it expects.
+Some private app configuration must be generated. Check the script to see the variables it expects.
 
 ```
 ./tools/configure
