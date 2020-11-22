@@ -214,7 +214,7 @@ final class StoreFSM: NSObject {
   }
 
   private func fetchProducts() {
-    os_log("fetching products", log: log, type: .debug)
+    os_log("fetching products: %@", log: log, type: .debug, self.productIdentifiers)
     request?.cancel()
 
     let req = SKProductsRequest(productIdentifiers: self.productIdentifiers)

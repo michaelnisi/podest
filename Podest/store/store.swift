@@ -107,7 +107,8 @@ enum ShoppingError: Error {
            .paymentInvalid,
            .paymentNotAllowed,
            .privacyAcknowledgementRequired,
-           .unauthorizedRequestData:
+           .unauthorizedRequestData,
+           .unsupportedPlatform:
         self = .failed
         
       case .cloudServicePermissionDenied,

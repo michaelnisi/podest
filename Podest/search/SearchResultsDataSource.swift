@@ -9,6 +9,8 @@
 import Foundation
 import FeedKit
 import BatchUpdates
+import UIKit
+import Playback
 
 /// A table view data source for searching.
 ///

@@ -81,12 +81,23 @@ extension RootViewController {
     pnc.additionalSafeAreaInsets = miniPlayerEdgeInsets
     snc.additionalSafeAreaInsets = miniPlayerEdgeInsets
   }
+    
+  fileprivate func configureMiniPlayer() {
+    minivc = (children.last as! MiniPlayerController)
+    minivc.navigationDelegate = self
+    miniPlayerConstant = miniPlayerTop.constant
+  }
+  
+  fileprivate func configureSplitViewController() {
+    svc = (children.first as! UISplitViewController)
+    svc.delegate = self
+    svc.preferredDisplayMode = .oneBesideSecondary
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    svc = (children.first as! UISplitViewController)
-    svc.delegate = self
+    configureSplitViewController()
 
     let ncs = svc.viewControllers as! [UINavigationController]
 
@@ -105,22 +116,14 @@ extension RootViewController {
     
     snc = ncs.last
 
-    minivc = (children.last as! MiniPlayerController)
-    minivc.navigationDelegate = self
-    miniPlayerConstant = miniPlayerTop.constant
+    configureMiniPlayer()
 
     qvc.navigationDelegate = self
-
     Podest.playback.delegate = self
-    
-    // Setting this last for a reason.
-    svc.preferredDisplayMode = .allVisible
   }
 
   override func viewDidAppear(_ animated: Bool) {
     let _ = installMiniPlayer
-
-
 
     super.viewDidAppear(animated)
   }
@@ -438,11 +441,15 @@ extension RootViewController: UINavigationControllerDelegate {
   private func configureDetails(showing viewController: UIViewController) {
     switch viewController {
     case let vc as EpisodeViewController:
-      os_log("setting left bar button item", log: log, type: .info)
-      vc.navigationItem.leftBarButtonItem = svc.displayModeButtonItem
+      if #available(iOS 14.0, *) {
+        // NOP
+      } else {
+        os_log("setting left bar button item", log: log, type: .info)
+        vc.navigationItem.leftBarButtonItem = svc.displayModeButtonItem
 
-      if vc.isEmpty {
-        os_log("no episode selected", log: log)
+        if vc.isEmpty {
+          os_log("no episode selected", log: log)
+        }
       }
     default:
       fatalError("\(viewController): restricted to episodes")
@@ -663,5 +670,33 @@ extension RootViewController: UISplitViewControllerDelegate {
     sender: Any?
   ) -> Bool {
     fatalError("unexpected delegation")
+  }
+}
+
+@available(iOS 14.0, *)
+extension RootViewController {
+  
+  func splitViewController(_ svc: UISplitViewController, topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {
+    guard traitCollection.userInterfaceIdiom != .phone else {
+      os_log("** choosing primary view controller on phone", log: log, type: .info)
+      return .primary
+    }
+
+    let vcs = viewControllersForPrimary(reducing: pnc.viewControllers)
+
+    os_log("search dismissed: %i", log: log, type: .info, qvc.isSearchDismissed)
+
+    if let entry = self.entry ?? self.selectedEntry {
+      let evc = MakeEpisode.viewController(item: entry)
+
+      pnc.setViewControllers(vcs + [evc], animated: false)
+    } else if let locator = self.locator { // restoring state
+      os_log("restoring: %{public}@",
+             log: log, type: .info, String(describing: locator))
+    } else {
+      pnc.setViewControllers(vcs, animated: false)
+    }
+
+    return .compact
   }
 }

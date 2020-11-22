@@ -1,0 +1,43 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "BatchUpdates",
+        "repositoryURL": "/users/michael/swift/BatchUpdates",
+        "state": {
+          "branch": "master",
+          "revision": "6a8c232a3c3f5792d120762a295e8ce7b7b13dbc",
+          "version": null
+        }
+      },
+      {
+        "package": "FileProxy",
+        "repositoryURL": "/users/michael/swift/fileproxy",
+        "state": {
+          "branch": "master",
+          "revision": "b3f42aa67cfe38d888ab373b0f0a83f516675084",
+          "version": null
+        }
+      },
+      {
+        "package": "HTMLAttributor",
+        "repositoryURL": "/users/michael/swift/hattr",
+        "state": {
+          "branch": "master",
+          "revision": "1f48a6c665e0465478b2b84e4cb4dcc41e60b657",
+          "version": null
+        }
+      },
+      {
+        "package": "Playback",
+        "repositoryURL": "/users/michael/swift/playback",
+        "state": {
+          "branch": "pkg",
+          "revision": "2b8755052f54db988aab68185099c1fbcaebcd70",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

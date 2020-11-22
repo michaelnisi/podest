@@ -9,6 +9,7 @@
 import UIKit
 import os.log
 import FeedKit
+import Playback
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 

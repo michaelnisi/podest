@@ -20,6 +20,9 @@ import Playback
 
 private let log = OSLog.disabled
 
+typealias VoidHandler = () -> Void
+typealias ArgHandler<T> = (T) -> Void
+
 // MARK: - Search Repository
 
 /// Returns additional HTTP headers for `service`.
@@ -143,8 +146,6 @@ private func removeFile(at url: URL) {
 private func makeCache(_ conf: Config) -> FeedCache {
   dispatchPrecondition(condition: .onQueue(.main))
 
-  let bundle = Bundle(for: FeedCache.self)
-  let schema = bundle.path(forResource: "cache", ofType: "sql")!
   let name = Bundle.main.bundleIdentifier!
 
   let dir = try! FileManager.default.url(
@@ -166,17 +167,15 @@ private func makeCache(_ conf: Config) -> FeedCache {
   os_log("cache database at: %@",
          log: log, type: .info, url.path)
 
-  return try! FeedCache(schema: schema, url: url)
+  return try! FeedCache(schema: cacheURL.path, url: url)
 }
 
 private func makeUserCache(_ conf: Config) -> UserCache {
   dispatchPrecondition(condition: .onQueue(.main))
-  
-  let bundle = Bundle(for: UserCache.self)
-  let schema = bundle.path(forResource: "user", ofType: "sql")!
+
   let name = Bundle.main.bundleIdentifier!
 
-  let dir = try!  FileManager.default.url(
+  let dir = try! FileManager.default.url(
     for: .applicationSupportDirectory,
     in: .userDomainMask,
     appropriateFor: nil,
@@ -196,7 +195,7 @@ private func makeUserCache(_ conf: Config) -> UserCache {
 
   createDirectory(dir)
   os_log("user database at: %@", log: log, type: .info, url.path)
-  let cache = try! UserCache(schema: schema, url: url)
+  let cache = try! UserCache(schema: userURL.path, url: url)
 
   return cache
 }

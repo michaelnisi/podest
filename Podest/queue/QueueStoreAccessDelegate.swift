@@ -15,9 +15,8 @@ extension QueueViewController: StoreAccessDelegate {
   
   func reach() -> Bool {
     let host = "https://itunes.apple.com"
-    // "https://sandbox.itunes.apple.com"
-    let log = OSLog.disabled
-    
+//    let host = "https://sandbox.itunes.apple.com"
+    let log = OSLog(subsystem: "ink.codes.podest", category: "store")
     guard let probe = self.probe ?? Ola(host: host, log: log) else {
       os_log("creating reachability probe failed", log: log, type: .error)
       return true
