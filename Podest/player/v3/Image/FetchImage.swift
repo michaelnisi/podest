@@ -1,19 +1,27 @@
 import SwiftUI
-import Playback
+
+typealias LoadImage = ((CGSize, ((UIImage) -> Void)?) -> Void)
 
 public final class FetchImage: ObservableObject, Identifiable {
   
   @Published public private(set) var view: SwiftUI.Image?
   
-  private let item: Imaginable
+  private var loadImage: LoadImage?
+  private var size: CGSize?
   
-  init(item: Imaginable) {
-    self.item = item
+  init(loadImage: LoadImage?) {
+    self.loadImage = loadImage
   }
   
   func fetch(fitting size: CGSize) -> Self {
-    Podest.images.loadImage(representing: item, at: size) { uiImage in
-      self.view = Image(uiImage: uiImage!)
+    guard view == nil else {
+      return self
+    }
+
+    print("** loading image")
+    
+    loadImage?(size) { uiImage in
+      self.view = Image(uiImage: uiImage)
     }
     
     return self

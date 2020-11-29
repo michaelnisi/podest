@@ -9,9 +9,19 @@
 import UIKit
 import SwiftUI
 import FeedKit
+import Playback
 
-class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer {
+protocol PlayerDelegate {
+  func forward()
+  func backward()
+  func resumePlayback(entry: Entry?)
+  func pausePlayback()
+}
 
+class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, ObservableObject {
+
+  var delegate: PlayerDelegate?
+  
   override init?(coder aDecoder: NSCoder, rootView: PlayerView) {
     super.init(coder: aDecoder, rootView: rootView)
   }
@@ -21,29 +31,34 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer {
   }
     
   // MARK: - UIViewController
-  
+
   override func viewWillAppear(_ animated: Bool) {
     rootView.install(
-      playHandler: { entry in
-        Podest.playback.resume(entry: entry)
+      playHandler: { [weak self] in
+        self?.delegate?.resumePlayback(entry: self?.entry)
       },
-      forwardHandler: {
-        Podest.playback.forward()
+      forwardHandler: { [weak self] in
+        self?.delegate?.forward()
       },
-      backwardHandler: {
-        Podest.playback.backward()
+      backwardHandler: { [weak self] in
+        self?.delegate?.backward()
       },
       closeHandler: { [weak self] in
         self?.navigationDelegate?.hideNowPlaying(animated: true, completion: nil)
       },
-      pauseHandler: {
-        Podest.playback.pause(entry: nil)
+      pauseHandler: { [weak self] in
+        self?.delegate?.pausePlayback()
+      },
+      loadImage: { [weak self] size, complete in
+        guard let imaginable = self?.entry ?? self?.imaginable else {
+          return
+        }
+        
+        ImageRepository.shared.loadImage(representing: imaginable, at: size) { image in
+          complete?(image!)
+        }
       }
     )
-  }
-  
-  override func viewWillDisappear(_ animated: Bool) {
-    rootView.uninstall()
   }
   
   // MARK: - EntryPlayer
@@ -52,13 +67,33 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer {
   
   var entry: Entry? {
     didSet {
-      rootView.configure(with: entry)
+      guard oldValue != entry else {
+        return
+      }
+      
+      configure(
+        title: entry?.title ?? "",
+        subtitle: entry?.feedTitle ?? ""
+      )
     }
   }
+  
+  var imaginable: Imaginable?
+  
+  func configure(title: String, subtitle: String, imaginable: Imaginable? = nil) {
+    self.imaginable = imaginable
+    
+    rootView.configure(title: title, subtitle: subtitle)
+  }
 
-  var isPlaying: Bool {
-    get { rootView.isPlaying }
-    set { rootView.isPlaying = newValue }
+  var isPlaying: Bool = false {
+    didSet {
+      guard oldValue != isPlaying else {
+        return
+      }
+      
+      rootView.configure(isPlaying: isPlaying)
+    }
   }
   
   var isForwardable = false

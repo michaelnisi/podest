@@ -199,11 +199,6 @@ extension RootViewController {
   }
 }
 
-/// Player view controllers must adopt this protocol. It specifies a view
-/// controller that knows how to navigate this app, is able to control playback,
-/// and forwards its entry.
-protocol EntryPlayer: UIViewController, Navigator, PlaybackControlDelegate {}
-
 // MARK: - Presenting the Audio Player
 
 extension RootViewController {
@@ -212,27 +207,34 @@ extension RootViewController {
     case v1, v3
   }
 
+  private func makeV3Player() -> EntryPlayer {
+    let player = UIStoryboard(name: "PlayerV3", bundle: .main)
+      .instantiateViewController(withIdentifier: "PlayerV3ID") as! PlayerV3ViewController
+    player.delegate = self
+  
+    return player
+  }
+
   /// Returns a new player view controller of `version`.
   ///
   /// Within this factory function is the only place where concrete player view
   /// controller types (and identifiers) are allowed.
-  private static func makeNowPlaying(version: PlayerVersion) -> EntryPlayer {
+  private func makeNowPlaying(version: PlayerVersion) -> EntryPlayer {
     switch version {
     case .v1:
       return UIStoryboard(name: "PlayerV1", bundle: .main)
         .instantiateViewController(withIdentifier: "PlayerV1ID") as! PlayerV1ViewController
 
     case .v3:
-      return UIStoryboard(name: "PlayerV3", bundle: .main)
-        .instantiateViewController(withIdentifier: "PlayerV3ID") as! PlayerV3ViewController
+      return makeV3Player()
     }
   }
-
+  
   func showNowPlaying(entry: Entry, animated: Bool, completion: (() -> Void)?) {
     os_log("showing now playing", log: log, type: .info)
     dispatchPrecondition(condition: .onQueue(.main))
 
-    let vc = RootViewController.makeNowPlaying(version: .v3)
+    let vc = makeNowPlaying(version: .v3)
     vc.navigationDelegate = self
     playervc = vc
     let isPlaying = Podest.playback.isPlaying(guid: entry.guid)
@@ -465,5 +467,26 @@ extension RootViewController: PlaybackDelegate {
 
   func previousItem() -> Entry? {
     return Podest.userQueue.previous()
+  }
+}
+
+// MARK: - PlayerDelegate
+
+extension RootViewController: PlayerDelegate {
+
+  func forward() {
+    Podest.playback.forward()
+  }
+  
+  func backward() {
+    Podest.playback.backward()
+  }
+  
+  func resumePlayback(entry: Entry?) {
+    Podest.playback.resume(entry: entry)
+  }
+  
+  func pausePlayback() {
+    Podest.playback.pause(entry: nil)
   }
 }

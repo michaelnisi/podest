@@ -1,5 +1,4 @@
 import SwiftUI
-import FeedKit
 
 public struct ImageView: View {
   
@@ -11,9 +10,9 @@ public struct ImageView: View {
       let size = CGSize(width: sideLength, height: sideLength)
       
       image.fetch(fitting: size).view?
-        .frame(width: sideLength, height: sideLength)
-        .cornerRadius(8)
-        .shadow(radius: 16)
+        .onDisappear {
+          print("** image view: disappear")
+        }
     }
   }
   

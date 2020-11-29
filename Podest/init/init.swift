@@ -20,9 +20,6 @@ import Playback
 
 private let log = OSLog.disabled
 
-typealias VoidHandler = () -> Void
-typealias ArgHandler<T> = (T) -> Void
-
 // MARK: - Search Repository
 
 /// Returns additional HTTP headers for `service`.

@@ -8,6 +8,7 @@
 
 import Foundation
 import FeedKit
+import UIKit
 
 /// Receives callbacks for playback status changes.
 protocol PlaybackResponding: class {
@@ -52,3 +53,9 @@ extension PlaybackControlDelegate {
     }
   }
 }
+
+/// Player view controllers must adopt this protocol. It specifies a view
+/// controller that knows how to navigate this app, is able to control playback,
+/// and forwards its entry.
+protocol EntryPlayer: UIViewController, Navigator, PlaybackControlDelegate {}
+

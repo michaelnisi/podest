@@ -2,7 +2,8 @@ import SwiftUI
 
 struct TitlesView: View {
   
-  @EnvironmentObject var model: PlayerView.Model
+  var title: String
+  var subtitle: String
   
   var insets: EdgeInsets {
     EdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20)
@@ -10,9 +11,9 @@ struct TitlesView: View {
   
   var body: some View {
     VStack(spacing: 12) {
-      Text(model.item?.title ?? "")
-        .font(.title)
-      Text(model.item?.feedTitle ?? "")
+      Text(title)
+        .font(.headline)
+      Text(subtitle)
         .font(.subheadline)
     }
     .multilineTextAlignment(.center)

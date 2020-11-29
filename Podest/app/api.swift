@@ -13,6 +13,9 @@ import FeedKit
 import AVFoundation.AVPlayer
 import UIKit
 
+typealias VoidHandler = () -> Void
+typealias ArgHandler<T> = (T) -> Void
+
 // MARK: - Audio and Video Playback
 
 /// Playback section of the `ViewControllers` protocol.

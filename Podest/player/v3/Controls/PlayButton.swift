@@ -22,16 +22,7 @@ struct ImageButtonStyle: ButtonStyle {
 
 struct PlayButton: View {
   
-  let action: ArgHandler<Bool>
-  @EnvironmentObject private var model: PlayerView.Model
-  
-  init(action: @escaping ArgHandler<Bool>) {
-    self.action = action
-  }
-  
-  var isPlaying: Bool {
-    model.isPlaying
-  }
+  @Binding var isPlaying: Bool
   
   var style: ImageButtonStyle {
     ImageButtonStyle(systemName: isPlaying ? "pause.fill" : "play.fill")
@@ -43,7 +34,7 @@ struct PlayButton: View {
 
   var body: some View {
     Button(action: {
-      action(!isPlaying)
+      self.isPlaying.toggle()
     }) {}
     .buttonStyle(style)
     .padding(insets)

@@ -11,21 +11,22 @@ import FeedKit
 
 struct PlayerView: View {
   
-  class Model: ObservableObject {
-    @Published var item: Entry?
+  private class Model: ObservableObject {
+    @Published var title: String = ""
+    @Published var subtitle: String = ""
     @Published var isPlaying: Bool = false
   }
-  
-  var playHandler: ArgHandler<Entry?>?
-  var forwardHandler: VoidHandler?
-  var backwardHandler: VoidHandler?
-  var closeHandler: VoidHandler?
-  var pauseHandler: VoidHandler?
-  
+    
   @ObservedObject private var model = Model()
   @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+  @State private var scale: CGFloat = 0
   
-  @State var scale: CGFloat = 0
+  private var playHandler: VoidHandler?
+  private var forwardHandler: VoidHandler?
+  private var backwardHandler: VoidHandler?
+  private var closeHandler: VoidHandler?
+  private var pauseHandler: VoidHandler?
+  private var loadImage: LoadImage?
   
   private var padding: CGFloat {
     horizontalSizeClass == .compact ? 64 : 128
@@ -38,35 +39,32 @@ struct PlayerView: View {
       }
   }
   
-  private var imageAnimation: Animation {
-    .interpolatingSpring(stiffness: 350, damping: 15, initialVelocity: 10)
-  }
-  
   var body: some View {
     VStack {
       CloseBarButton()
         .padding(8)
         .gesture(closeTap)
-      if let item = model.item {
-        ImageView(image: FetchImage(item: item))
-          .padding(padding)
-          .scaleEffect(scale)
-          .onAppear {
-            withAnimation(imageAnimation) {
-              self.scale = 1
-            }
-          }
-      }
- 
-      TitlesView()
-      ControlsView(play: play, pause: pause, forward: forward, backward: backward)
+      
+      ImageView(image: FetchImage(loadImage: loadImage))
+        .padding(padding)
+        .shadow(radius: 16)
+      
+      TitlesView(title: model.title, subtitle: model.subtitle)
+      
+      ControlsView(
+        play: play,
+        pause: pause,
+        forward: forward,
+        backward: backward,
+        isPlaying: model.isPlaying
+      )
+      
       Spacer()
     }
-    .environmentObject(model)
   }
 }
 
-// MARK: - Infrastructure
+// MARK: - API
 
 extension PlayerView {
   
@@ -79,7 +77,7 @@ extension PlayerView {
   }
   
   private func play() {
-    playHandler?(model.item)
+    playHandler?()
   }
   
   private func close() {
@@ -91,37 +89,27 @@ extension PlayerView {
   }
   
   mutating func install(
-    playHandler: ArgHandler<Entry?>? = nil,
+    playHandler: VoidHandler? = nil,
     forwardHandler: VoidHandler? = nil,
     backwardHandler: VoidHandler? = nil,
     closeHandler: VoidHandler? = nil,
-    pauseHandler: VoidHandler? = nil
+    pauseHandler: VoidHandler? = nil,
+    loadImage: ((CGSize, ((UIImage) -> Void)?) -> Void)? = nil
   ) {
     self.playHandler = playHandler
     self.forwardHandler = forwardHandler
     self.backwardHandler = backwardHandler
     self.closeHandler = closeHandler
     self.pauseHandler = pauseHandler
+    self.loadImage = loadImage
   }
   
-  mutating func uninstall() {
-    self.playHandler = nil
-    self.forwardHandler = nil
-    self.backwardHandler = nil
-    self.closeHandler = nil
-    self.pauseHandler = nil
+  func configure(title: String, subtitle: String) {
+    model.title = title
+    model.subtitle = subtitle
   }
   
-  func configure(with entry: Entry?) {
-    guard let entry = entry else {
-      return
-    }
-    
-    model.item = entry
-  }
-  
-  var isPlaying: Bool {
-    get { model.isPlaying }
-    set { model.isPlaying = newValue }
+  func configure(isPlaying: Bool) {
+    model.isPlaying = isPlaying
   }
 }
