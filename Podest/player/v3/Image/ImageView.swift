@@ -1,8 +1,8 @@
 import SwiftUI
 
 public struct ImageView: View {
-  
-  @ObservedObject private var image: FetchImage
+
+  @ObservedObject var image: FetchImage
   
   public var body: some View {
     GeometryReader { proxy in
@@ -14,9 +14,5 @@ public struct ImageView: View {
           print("** image view: disappear")
         }
     }
-  }
-  
-  init(image: FetchImage) {
-    self.image = image
   }
 }

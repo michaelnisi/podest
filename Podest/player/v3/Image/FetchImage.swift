@@ -14,12 +14,6 @@ public final class FetchImage: ObservableObject, Identifiable {
   }
   
   func fetch(fitting size: CGSize) -> Self {
-    guard view == nil else {
-      return self
-    }
-
-    print("** loading image")
-    
     loadImage?(size) { uiImage in
       self.view = Image(uiImage: uiImage)
     }

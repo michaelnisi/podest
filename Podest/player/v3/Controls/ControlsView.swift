@@ -11,7 +11,7 @@ struct ControlsView: View {
     EdgeInsets(top: 20, leading: 20, bottom: 64, trailing: 20)
   }
   
-  @State var isPlaying: Bool
+  @Binding var isPlaying: Bool
   
   private func isPlayingChange(value: Bool) {
     value ? play() : pause()

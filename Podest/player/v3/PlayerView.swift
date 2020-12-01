@@ -56,7 +56,7 @@ struct PlayerView: View {
         pause: pause,
         forward: forward,
         backward: backward,
-        isPlaying: model.isPlaying
+        isPlaying: $model.isPlaying
       )
       
       Spacer()
