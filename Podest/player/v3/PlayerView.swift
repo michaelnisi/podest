@@ -15,6 +15,7 @@ struct PlayerView: View {
     @Published var title: String = ""
     @Published var subtitle: String = ""
     @Published var isPlaying: Bool = false
+    @Published var image: UIImage = UIImage(systemName: "paperplane.fill")!
   }
     
   @ObservedObject private var model = Model()
@@ -26,7 +27,6 @@ struct PlayerView: View {
   private var backwardHandler: VoidHandler?
   private var closeHandler: VoidHandler?
   private var pauseHandler: VoidHandler?
-  private var loadImage: LoadImage?
   
   private var padding: CGFloat {
     horizontalSizeClass == .compact ? 64 : 128
@@ -45,10 +45,13 @@ struct PlayerView: View {
         .padding(8)
         .gesture(closeTap)
       
-      ImageView(image: FetchImage(loadImage: loadImage))
+      Image(uiImage: model.image)
+        .resizable()
+        .cornerRadius(8)
+        .aspectRatio(contentMode: .fit)
         .padding(padding)
         .shadow(radius: 16)
-      
+    
       TitlesView(title: model.title, subtitle: model.subtitle)
       
       ControlsView(
@@ -93,20 +96,19 @@ extension PlayerView {
     forwardHandler: VoidHandler? = nil,
     backwardHandler: VoidHandler? = nil,
     closeHandler: VoidHandler? = nil,
-    pauseHandler: VoidHandler? = nil,
-    loadImage: ((CGSize, ((UIImage) -> Void)?) -> Void)? = nil
+    pauseHandler: VoidHandler? = nil
   ) {
     self.playHandler = playHandler
     self.forwardHandler = forwardHandler
     self.backwardHandler = backwardHandler
     self.closeHandler = closeHandler
     self.pauseHandler = pauseHandler
-    self.loadImage = loadImage
   }
   
-  func configure(title: String, subtitle: String) {
+  func configure(title: String, subtitle: String, image: UIImage) {
     model.title = title
     model.subtitle = subtitle
+    model.image = image
   }
   
   func configure(isPlaying: Bool) {

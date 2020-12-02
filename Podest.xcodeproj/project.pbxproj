@@ -124,8 +124,6 @@
 		4CCBF20A20805C6500A7359F /* store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCBF20920805C6500A7359F /* store.swift */; };
 		4CCBF20C20805F5C00A7359F /* products.json in Resources */ = {isa = PBXBuildFile; fileRef = 4CCBF20B20805F5C00A7359F /* products.json */; };
 		4CCBF21320809E4C00A7359F /* Store.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CCBF21220809E4C00A7359F /* Store.storyboard */; };
-		4CCC3D19255732D800C6AB32 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC3D18255732D800C6AB32 /* ImageView.swift */; };
-		4CCC3D2D255BB62000C6AB32 /* FetchImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC3D2C255BB62000C6AB32 /* FetchImage.swift */; };
 		4CCC3D43255FE3F000C6AB32 /* CloseBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC3D42255FE3F000C6AB32 /* CloseBarButton.swift */; };
 		4CCC3D4D256035CE00C6AB32 /* TitlesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC3D4C256035CE00C6AB32 /* TitlesView.swift */; };
 		4CCC3D682560406500C6AB32 /* ControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC3D672560406500C6AB32 /* ControlsView.swift */; };
@@ -157,8 +155,6 @@
 		4CF9AC8021FB1B7A009F70BB /* strings.json in Resources */ = {isa = PBXBuildFile; fileRef = 4CF9AC7F21FB1B7A009F70BB /* strings.json */; };
 		4CFEA4F22572B982006157A1 /* PlaybackControlDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C728DBF20623544005B739C /* PlaybackControlDelegate.swift */; };
 		4CFEA4F72572B9A9006157A1 /* api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED4D4361EA470C90011C28C /* api.swift */; };
-		4CFEA4FC2572B9E6006157A1 /* FetchImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC3D2C255BB62000C6AB32 /* FetchImage.swift */; };
-		4CFEA5012572B9EA006157A1 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC3D18255732D800C6AB32 /* ImageView.swift */; };
 		4CFEA5062572B9EC006157A1 /* TitlesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC3D4C256035CE00C6AB32 /* TitlesView.swift */; };
 		4CFEA50B2572B9F2006157A1 /* CloseBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC3D42255FE3F000C6AB32 /* CloseBarButton.swift */; };
 		4CFEA5102572B9F4006157A1 /* ControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC3D672560406500C6AB32 /* ControlsView.swift */; };
@@ -359,8 +355,6 @@
 		4CCBF20920805C6500A7359F /* store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = store.swift; sourceTree = "<group>"; };
 		4CCBF20B20805F5C00A7359F /* products.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = products.json; sourceTree = "<group>"; };
 		4CCBF21220809E4C00A7359F /* Store.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Store.storyboard; sourceTree = "<group>"; };
-		4CCC3D18255732D800C6AB32 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
-		4CCC3D2C255BB62000C6AB32 /* FetchImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchImage.swift; sourceTree = "<group>"; };
 		4CCC3D42255FE3F000C6AB32 /* CloseBarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseBarButton.swift; sourceTree = "<group>"; };
 		4CCC3D4C256035CE00C6AB32 /* TitlesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitlesView.swift; sourceTree = "<group>"; };
 		4CCC3D672560406500C6AB32 /* ControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlsView.swift; sourceTree = "<group>"; };
@@ -530,7 +524,6 @@
 				4C17E4782503F85E0022EF0F /* PlayerView.swift */,
 				4CFEA5312574020B006157A1 /* Binding.swift */,
 				4CCC3D232557EC2600C6AB32 /* Hosting */,
-				4CCC3D1E2557433D00C6AB32 /* Image */,
 				4CCC3D52256035D500C6AB32 /* Titles */,
 				4C6E0AAB250E926800A87977 /* Controls */,
 			);
@@ -719,15 +712,6 @@
 				4C776B2820847D0900A055CD /* ProductCell.xib */,
 			);
 			path = store;
-			sourceTree = "<group>";
-		};
-		4CCC3D1E2557433D00C6AB32 /* Image */ = {
-			isa = PBXGroup;
-			children = (
-				4CCC3D2C255BB62000C6AB32 /* FetchImage.swift */,
-				4CCC3D18255732D800C6AB32 /* ImageView.swift */,
-			);
-			path = Image;
 			sourceTree = "<group>";
 		};
 		4CCC3D232557EC2600C6AB32 /* Hosting */ = {
@@ -1378,12 +1362,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				4CFEA5102572B9F4006157A1 /* ControlsView.swift in Sources */,
-				4CFEA5012572B9EA006157A1 /* ImageView.swift in Sources */,
 				4C6E0AAA250E916E00A87977 /* PlayerV3ViewController.swift in Sources */,
 				4CFEA5372574100F006157A1 /* Binding.swift in Sources */,
 				4C6E0AA9250E916E00A87977 /* PlayButton.swift in Sources */,
 				4CFEA50B2572B9F2006157A1 /* CloseBarButton.swift in Sources */,
-				4CFEA4FC2572B9E6006157A1 /* FetchImage.swift in Sources */,
 				4C8B368F22A0EAA60004FD89 /* ViewController.swift in Sources */,
 				4CB6EECB24274158006F09B7 /* ActionSheetPresenting.swift in Sources */,
 				4C6E0AA8250E916E00A87977 /* PlayerView.swift in Sources */,
@@ -1434,7 +1416,6 @@
 				4CA89794231794BD006E16A9 /* ListUpdating.swift in Sources */,
 				4EAAA73B1E71A83E0047D043 /* PlayerV1ViewController.swift in Sources */,
 				4C21F57F21D8A56500ED5D26 /* SubtitleTableViewCell.swift in Sources */,
-				4CCC3D2D255BB62000C6AB32 /* FetchImage.swift in Sources */,
 				4CB6EED52428B9FE006F09B7 /* EpisodeContext.swift in Sources */,
 				4CF2DEA221DDD8E300A0F6EC /* ReusableNib.swift in Sources */,
 				4C728DC020623544005B739C /* PlaybackControlDelegate.swift in Sources */,
@@ -1449,7 +1430,6 @@
 				4CE8586D21A16B9D00D206FA /* integration.swift in Sources */,
 				4CFEA5322574020B006157A1 /* Binding.swift in Sources */,
 				4C72D4372270A5DA008F8B96 /* ActionSheetPresenting.swift in Sources */,
-				4CCC3D19255732D800C6AB32 /* ImageView.swift in Sources */,
 				4C8B375022A0ED280004FD89 /* UpNextViewController.swift in Sources */,
 				4CFEE33821C7B101008B2EC0 /* SearchControllerProxy.swift in Sources */,
 				4C8B375E22A0ED280004FD89 /* TwoPlusLayout.swift in Sources */,
@@ -1933,7 +1913,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = X23V32HT8X;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Podest/Info.plist;
@@ -1961,7 +1941,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = X23V32HT8X;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Podest/Info.plist;

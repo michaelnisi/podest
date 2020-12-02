@@ -13,8 +13,10 @@ struct TitlesView: View {
     VStack(spacing: 12) {
       Text(title)
         .font(.headline)
+        .lineLimit(1)
       Text(subtitle)
         .font(.subheadline)
+        .lineLimit(1)
     }
     .multilineTextAlignment(.center)
     .padding(insets)

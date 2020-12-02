@@ -48,15 +48,6 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
       },
       pauseHandler: { [weak self] in
         self?.delegate?.pausePlayback()
-      },
-      loadImage: { [weak self] size, complete in
-        guard let imaginable = self?.entry ?? self?.imaginable else {
-          return
-        }
-        
-        ImageRepository.shared.loadImage(representing: imaginable, at: size) { image in
-          complete?(image!)
-        }
       }
     )
   }
@@ -83,7 +74,17 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
   func configure(title: String, subtitle: String, imaginable: Imaginable? = nil) {
     self.imaginable = imaginable
     
-    rootView.configure(title: title, subtitle: subtitle)
+    guard let imaginable = self.entry ?? self.imaginable else {
+      return
+    }
+    
+    let size = CGSize(width: 600, height: 600)
+    
+    ImageRepository.shared
+      .loadImage(representing: imaginable, at: size) { image in
+        self.rootView.configure(title: title, subtitle: subtitle, image: image!)
+      }
+
   }
 
   var isPlaying: Bool = false {
