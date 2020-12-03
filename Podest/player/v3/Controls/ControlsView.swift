@@ -19,11 +19,11 @@ struct ControlsView: View {
 
   var body: some View {
       HStack(spacing: 32) {
-        BackwardButton(action: backward)
+        PlayerButton(action: backward, style: .backward)
           .frame(width: 48, height: 48)
         PlayButton(isPlaying: $isPlaying.onChange(isPlayingChange))
           .frame(width: 48, height: 48)
-        ForwardButton(action: forward)
+        PlayerButton(action: forward, style: .forward)
           .frame(width: 48, height: 64)
       }
       .foregroundColor(Color(UIColor.label))

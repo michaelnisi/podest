@@ -12,10 +12,14 @@ import FeedKit
 struct PlayerView: View {
   
   private class Model: ObservableObject {
-    @Published var title: String = ""
-    @Published var subtitle: String = ""
-    @Published var isPlaying: Bool = false
-    @Published var image: UIImage = UIImage(systemName: "paperplane.fill")!
+    @Published var title = ""
+    @Published var subtitle = ""
+    @Published var isPlaying = false
+    @Published var image = UIImage(named: "Oval")!
+    @Published var padding: CGFloat = 64
+    @Published var shadow: CGFloat = 16
+    @Published var animation: Animation = .easeOut
+    @Published var trackTime: CGFloat = 0.5
   }
     
   @ObservedObject private var model = Model()
@@ -28,8 +32,8 @@ struct PlayerView: View {
   private var closeHandler: VoidHandler?
   private var pauseHandler: VoidHandler?
   
-  private var padding: CGFloat {
-    horizontalSizeClass == .compact ? 64 : 128
+  private var paddingMultiplier: CGFloat {
+    horizontalSizeClass == .compact ? 1 : 1.5
   }
   
   private var closeTap: some Gesture {
@@ -37,6 +41,10 @@ struct PlayerView: View {
       .onEnded { _ in
         close()
       }
+  }
+  
+  private var springAnimation: Animation {
+    .interpolatingSpring(stiffness: 200, damping: 15, initialVelocity: 10)
   }
   
   var body: some View {
@@ -49,10 +57,14 @@ struct PlayerView: View {
         .resizable()
         .cornerRadius(8)
         .aspectRatio(contentMode: .fit)
-        .padding(padding)
-        .shadow(radius: 16)
-    
+        .padding(model.padding)
+        .shadow(radius: model.shadow)
+        .animation(model.animation)
+
       TitlesView(title: model.title, subtitle: model.subtitle)
+      
+      Slider(value: $model.trackTime)
+        .padding(paddingMultiplier * 32)
       
       ControlsView(
         play: play,
@@ -62,7 +74,10 @@ struct PlayerView: View {
         isPlaying: $model.isPlaying
       )
       
-      Spacer()
+      HStack {
+        PlayerButton(action: {}, style: .airplay)
+          .frame(width: 30, height: 30)
+      }.padding(paddingMultiplier * 12)
     }
   }
 }
@@ -113,5 +128,8 @@ extension PlayerView {
   
   func configure(isPlaying: Bool) {
     model.isPlaying = isPlaying
+    model.padding = isPlaying ? paddingMultiplier * 16 : paddingMultiplier * 32
+    model.shadow = isPlaying ? paddingMultiplier * 16 : paddingMultiplier * 8
+    model.animation = isPlaying ? springAnimation : .easeOut
   }
 }

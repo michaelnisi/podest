@@ -41,23 +41,21 @@ struct PlayButton: View {
   }
 }
 
-struct ForwardButton: View {
+struct PlayerButton: View {
+  
+  enum Style: String {
+    case airplay = "airplayaudio"
+    case backward = "backward.fill"
+    case forward = "forward.fill"
+  }
   
   let action: VoidHandler
+  let style: Style
   
   var body: some View {
     Button(action: action) {}
-      .buttonStyle(ImageButtonStyle(systemName: "forward.fill"))
+      .buttonStyle(ImageButtonStyle(systemName: style.rawValue))
   }
 }
 
-struct BackwardButton: View {
-  
-  let action: VoidHandler
-  
-  var body: some View {
-    Button(action: action) {}
-      .buttonStyle(ImageButtonStyle(systemName: "backward.fill"))
-  }
-}
 
