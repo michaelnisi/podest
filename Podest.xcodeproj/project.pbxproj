@@ -45,6 +45,8 @@
 		4C4EDBFE22789D4700444B94 /* products.json in Resources */ = {isa = PBXBuildFile; fileRef = 4C4EDBFD22789D4600444B94 /* products.json */; };
 		4C5F4E7C21CB79A300156D56 /* EntryRowSelectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5F4E7B21CB79A300156D56 /* EntryRowSelectable.swift */; };
 		4C6298E02310FC9800141103 /* Refreshing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6298DF2310FC9800141103 /* Refreshing.swift */; };
+		4C64CFE9257AA9CF00374A56 /* MarqueeText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C64CFE8257AA9CF00374A56 /* MarqueeText.swift */; };
+		4C64CFEF257B973800374A56 /* AirPlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C64CFEE257B973800374A56 /* AirPlayButton.swift */; };
 		4C6AE30A21CFFB7900476E7E /* PodestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6AE30921CFFB7900476E7E /* PodestUITests.swift */; };
 		4C6AE31221CFFCB900476E7E /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6AE31121CFFCB900476E7E /* SnapshotHelper.swift */; };
 		4C6E0AA6250E909700A87977 /* PlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6E0AA5250E909700A87977 /* PlayButton.swift */; };
@@ -125,7 +127,6 @@
 		4CCBF20C20805F5C00A7359F /* products.json in Resources */ = {isa = PBXBuildFile; fileRef = 4CCBF20B20805F5C00A7359F /* products.json */; };
 		4CCBF21320809E4C00A7359F /* Store.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CCBF21220809E4C00A7359F /* Store.storyboard */; };
 		4CCC3D43255FE3F000C6AB32 /* CloseBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC3D42255FE3F000C6AB32 /* CloseBarButton.swift */; };
-		4CCC3D4D256035CE00C6AB32 /* TitlesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC3D4C256035CE00C6AB32 /* TitlesView.swift */; };
 		4CCC3D682560406500C6AB32 /* ControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC3D672560406500C6AB32 /* ControlsView.swift */; };
 		4CD7414D1CCD203A00BA33CE /* init.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD7414C1CCD203A00BA33CE /* init.swift */; };
 		4CDB9F2F21F7680F00E0679D /* DisplayTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1B32CA21E7046A00E57931 /* DisplayTableViewCell.swift */; };
@@ -155,7 +156,6 @@
 		4CF9AC8021FB1B7A009F70BB /* strings.json in Resources */ = {isa = PBXBuildFile; fileRef = 4CF9AC7F21FB1B7A009F70BB /* strings.json */; };
 		4CFEA4F22572B982006157A1 /* PlaybackControlDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C728DBF20623544005B739C /* PlaybackControlDelegate.swift */; };
 		4CFEA4F72572B9A9006157A1 /* api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED4D4361EA470C90011C28C /* api.swift */; };
-		4CFEA5062572B9EC006157A1 /* TitlesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC3D4C256035CE00C6AB32 /* TitlesView.swift */; };
 		4CFEA50B2572B9F2006157A1 /* CloseBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC3D42255FE3F000C6AB32 /* CloseBarButton.swift */; };
 		4CFEA5102572B9F4006157A1 /* ControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC3D672560406500C6AB32 /* ControlsView.swift */; };
 		4CFEA5162572BC3A006157A1 /* Playback in Frameworks */ = {isa = PBXBuildFile; productRef = 4CFEA5152572BC3A006157A1 /* Playback */; };
@@ -281,6 +281,8 @@
 		4C5C9E542239715B006DF298 /* FileProxy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FileProxy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C5F4E7B21CB79A300156D56 /* EntryRowSelectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryRowSelectable.swift; sourceTree = "<group>"; };
 		4C6298DF2310FC9800141103 /* Refreshing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Refreshing.swift; sourceTree = "<group>"; };
+		4C64CFE8257AA9CF00374A56 /* MarqueeText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarqueeText.swift; sourceTree = "<group>"; };
+		4C64CFEE257B973800374A56 /* AirPlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayButton.swift; sourceTree = "<group>"; };
 		4C6AE30721CFFB7900476E7E /* PodestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PodestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C6AE30921CFFB7900476E7E /* PodestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodestUITests.swift; sourceTree = "<group>"; };
 		4C6AE30B21CFFB7900476E7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -356,7 +358,6 @@
 		4CCBF20B20805F5C00A7359F /* products.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = products.json; sourceTree = "<group>"; };
 		4CCBF21220809E4C00A7359F /* Store.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Store.storyboard; sourceTree = "<group>"; };
 		4CCC3D42255FE3F000C6AB32 /* CloseBarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseBarButton.swift; sourceTree = "<group>"; };
-		4CCC3D4C256035CE00C6AB32 /* TitlesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitlesView.swift; sourceTree = "<group>"; };
 		4CCC3D672560406500C6AB32 /* ControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlsView.swift; sourceTree = "<group>"; };
 		4CD7414C1CCD203A00BA33CE /* init.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = init.swift; sourceTree = "<group>"; };
 		4CDB9F3321F76E0900E0679D /* feeds.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = feeds.json; sourceTree = "<group>"; };
@@ -553,6 +554,7 @@
 			isa = PBXGroup;
 			children = (
 				4C6E0AA5250E909700A87977 /* PlayButton.swift */,
+				4C64CFEE257B973800374A56 /* AirPlayButton.swift */,
 				4CCC3D42255FE3F000C6AB32 /* CloseBarButton.swift */,
 				4CCC3D672560406500C6AB32 /* ControlsView.swift */,
 			);
@@ -726,7 +728,7 @@
 		4CCC3D52256035D500C6AB32 /* Titles */ = {
 			isa = PBXGroup;
 			children = (
-				4CCC3D4C256035CE00C6AB32 /* TitlesView.swift */,
+				4C64CFE8257AA9CF00374A56 /* MarqueeText.swift */,
 			);
 			path = Titles;
 			sourceTree = "<group>";
@@ -1369,7 +1371,6 @@
 				4C8B368F22A0EAA60004FD89 /* ViewController.swift in Sources */,
 				4CB6EECB24274158006F09B7 /* ActionSheetPresenting.swift in Sources */,
 				4C6E0AA8250E916E00A87977 /* PlayerView.swift in Sources */,
-				4CFEA5062572B9EC006157A1 /* TitlesView.swift in Sources */,
 				4CFEA4F72572B9A9006157A1 /* api.swift in Sources */,
 				4C8B368D22A0EAA60004FD89 /* AppDelegate.swift in Sources */,
 				4CFEA4F22572B982006157A1 /* PlaybackControlDelegate.swift in Sources */,
@@ -1396,12 +1397,14 @@
 				4C776B2920847D0900A055CD /* ProductCell.swift in Sources */,
 				4C17E47B2503F9440022EF0F /* PlayerV3ViewController.swift in Sources */,
 				4E7D10B31F6644DA0048CB43 /* QueueDataSource.swift in Sources */,
+				4C64CFEF257B973800374A56 /* AirPlayButton.swift in Sources */,
 				4C9EBDFB223D58A8009F2B6F /* settings.swift in Sources */,
 				4C8B374222A0ED280004FD89 /* PlayerDataSource.swift in Sources */,
 				4C8B376622A0ED280004FD89 /* ChapterCell.swift in Sources */,
 				4C02C29A2247544C00C7D647 /* StoreState.swift in Sources */,
 				4E2EF3161E8D0C39008FE123 /* EpisodeAnimator.swift in Sources */,
 				4C8B375422A0ED280004FD89 /* EpisodeCell.swift in Sources */,
+				4C64CFE9257AA9CF00374A56 /* MarqueeText.swift in Sources */,
 				4C8B374422A0ED280004FD89 /* PlayerV2ViewController.swift in Sources */,
 				4ED4D4171E9D239A0011C28C /* SuggestionCell.swift in Sources */,
 				4ED2D6BF1F98E7FF000DA71B /* time.swift in Sources */,
@@ -1438,7 +1441,6 @@
 				4C03FE2F22EAB96600A2C3B6 /* ReviewRequester.swift in Sources */,
 				4E65BB2E1F138BA500C7F1A3 /* UserSyncing.swift in Sources */,
 				4CEC436521D68BD50097FFA7 /* MessageTableViewCell.swift in Sources */,
-				4CCC3D4D256035CE00C6AB32 /* TitlesView.swift in Sources */,
 				4C776B212084722C00A055CD /* MessageCollectionViewCell.swift in Sources */,
 				4C42D9FB22E827A6007F80E2 /* PieView.swift in Sources */,
 				4C8B376422A0ED280004FD89 /* ChaptersDataSource.swift in Sources */,

@@ -40,6 +40,7 @@ final class SearchControllerProxy: NSObject {
     let sc = UISearchController(searchResultsController: rc)
     sc.searchBar.autocorrectionType = .no
     sc.searchBar.autocapitalizationType = .none
+
     
     if #available(iOS 13.0, *) {
       // NOP

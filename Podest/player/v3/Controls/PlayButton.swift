@@ -47,6 +47,14 @@ struct PlayerButton: View {
     case airplay = "airplayaudio"
     case backward = "backward.fill"
     case forward = "forward.fill"
+    case goforward15 = "goforward.15"
+    case gobackward15 = "gobackward.15"
+    case speaker = "speaker.fill"
+    case speaker1 = "speaker.1.fill"
+    case speaker2 = "speaker.2.fill"
+    case speaker3 = "speaker.3.fill"
+    case moon = "moon.fill"
+    case moonzzz = "moon.zzz.fill"
   }
   
   let action: VoidHandler

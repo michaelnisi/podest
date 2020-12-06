@@ -21,10 +21,11 @@ struct PlayerView: View {
     @Published var animation: Animation = .easeOut
     @Published var trackTime: CGFloat = 0.5
   }
-    
+  
   @ObservedObject private var model = Model()
   @Environment(\.horizontalSizeClass) private var horizontalSizeClass
   @State private var scale: CGFloat = 0
+  @State private var showDetail = false
   
   private var playHandler: VoidHandler?
   private var forwardHandler: VoidHandler?
@@ -33,7 +34,7 @@ struct PlayerView: View {
   private var pauseHandler: VoidHandler?
   
   private var paddingMultiplier: CGFloat {
-    horizontalSizeClass == .compact ? 1 : 1.5
+    horizontalSizeClass == .compact ? 1 : 1
   }
   
   private var closeTap: some Gesture {
@@ -48,43 +49,65 @@ struct PlayerView: View {
   }
   
   var body: some View {
-    VStack {
-      CloseBarButton()
-        .padding(8)
-        .gesture(closeTap)
-      
-      Image(uiImage: model.image)
-        .resizable()
-        .cornerRadius(8)
-        .aspectRatio(contentMode: .fit)
-        .padding(model.padding)
-        .shadow(radius: model.shadow)
-        .animation(model.animation)
-
-      TitlesView(title: model.title, subtitle: model.subtitle)
-      
-      Slider(value: $model.trackTime)
-        .padding(paddingMultiplier * 32)
-      
-      ControlsView(
-        play: play,
-        pause: pause,
-        forward: forward,
-        backward: backward,
-        isPlaying: $model.isPlaying
-      )
-      
-      HStack {
-        PlayerButton(action: {}, style: .airplay)
-          .frame(width: 30, height: 30)
-      }.padding(paddingMultiplier * 12)
-    }
+    VStack(spacing: 24) {
+        CloseBarButton()
+          .gesture(closeTap)
+        
+        Image(uiImage: model.image)
+          .resizable()
+          .cornerRadius(8)
+          .aspectRatio(contentMode: .fit)
+          .padding(model.padding)
+          .shadow(radius: model.shadow)
+          .animation(model.animation)
+          .frame(maxHeight: .infinity)
+        
+        VStack(spacing: 12) {
+          MarqueeText(string: $model.title)
+          Text(model.subtitle)
+            .font(.subheadline)
+            .lineLimit(1)
+        }
+        .frame(maxWidth: 286)
+        .clipped()
+        .animation(nil)
+        
+        HStack(spacing: 16) {
+          Text("00:00").font(.caption)
+          Slider(value: $model.trackTime)
+          Text("67:10").font(.caption)
+        }
+        
+        ControlsView(
+          play: play,
+          pause: pause,
+          forward: forward,
+          backward: backward,
+          isPlaying: $model.isPlaying
+        )
+    
+        HStack(spacing: 48) {
+          PlayerButton(action: nop, style: .moon)
+            .frame(width: 20, height: 20 )
+          AirPlayButton()
+            .frame(width: 48, height: 48)
+          PlayerButton(action: nop, style: .speaker)
+            .frame(width: 20, height: 20 )
+        }.foregroundColor(Color(.secondaryLabel))
+      }
+      .padding(EdgeInsets(top: 12, leading: 12, bottom: 0, trailing: 12))
+      .foregroundColor(Color(.label))
+    .animation(.easeInOut)
   }
 }
 
 // MARK: - API
 
 extension PlayerView {
+  
+  private func nop() {
+    
+  }
   
   private func forward() {
     forwardHandler?()
@@ -131,5 +154,24 @@ extension PlayerView {
     model.padding = isPlaying ? paddingMultiplier * 16 : paddingMultiplier * 32
     model.shadow = isPlaying ? paddingMultiplier * 16 : paddingMultiplier * 8
     model.animation = isPlaying ? springAnimation : .easeOut
+  }
+}
+
+struct PlayerView_Previews: PreviewProvider {
+  
+  private static func makePlayer() -> PlayerView {
+    let player = PlayerView()
+    
+    player.configure(
+      title: "#86 Man of the People but longer, much longer title",
+      subtitle: "Reply All",
+      image: UIImage(named: "Sample")!
+    )
+    
+    return player
+  }
+  
+  static var previews: some View {
+    makePlayer()
   }
 }

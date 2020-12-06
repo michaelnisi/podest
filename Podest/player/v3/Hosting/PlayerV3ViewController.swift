@@ -10,6 +10,8 @@ import UIKit
 import SwiftUI
 import FeedKit
 import Playback
+import CoreImage.CIFilterBuiltins
+import AVKit
 
 protocol PlayerDelegate {
   func forward()

@@ -35,7 +35,11 @@ class ViewController: UIViewController {
   
     present(vc, animated: true)
     
-    vc.configure(title: "Hello", subtitle: "Wow", imaginable: SomeImage())
+    vc.configure(
+      title: "#86 Man of the People",
+      subtitle: "Reply All",
+      imaginable: SomeImage()
+    )
   }
 }
 
