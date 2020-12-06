@@ -63,7 +63,7 @@ struct PlayerView: View {
           .frame(maxHeight: .infinity)
         
         VStack(spacing: 12) {
-          MarqueeText(string: $model.title)
+          MarqueeText(model.title, maxWidth: 286)
           Text(model.subtitle)
             .font(.subheadline)
             .lineLimit(1)
