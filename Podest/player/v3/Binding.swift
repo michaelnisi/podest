@@ -1,3 +1,11 @@
+//
+//  Binding.swift
+//  Podest
+//
+//  Created by Michael Nisi on 05.09.20.
+//  Copyright © 2020 Michael Nisi. All rights reserved.
+//
+
 import SwiftUI
 
 extension Binding {

@@ -16,26 +16,23 @@ struct PlayerView: View {
     @Published var subtitle = ""
     @Published var isPlaying = false
     @Published var image = UIImage(named: "Oval")!
-    @Published var padding: CGFloat = 64
-    @Published var shadow: CGFloat = 16
-    @Published var animation: Animation = .easeOut
     @Published var trackTime: CGFloat = 0.5
   }
   
   @ObservedObject private var model = Model()
-  @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-  @State private var scale: CGFloat = 0
-  @State private var showDetail = false
+  @State var padding: CGFloat = 16
+  @State var shadow: CGFloat = 16
+  @Environment(\.horizontalSizeClass) private var horizontalSizeClass: UserInterfaceSizeClass?
+  
+  private var paddingMultiplier: CGFloat {
+    horizontalSizeClass == .compact ? 1 : 2
+  }
   
   private var playHandler: VoidHandler?
   private var forwardHandler: VoidHandler?
   private var backwardHandler: VoidHandler?
   private var closeHandler: VoidHandler?
   private var pauseHandler: VoidHandler?
-  
-  private var paddingMultiplier: CGFloat {
-    horizontalSizeClass == .compact ? 1 : 1
-  }
   
   private var closeTap: some Gesture {
     TapGesture()
@@ -44,12 +41,22 @@ struct PlayerView: View {
       }
   }
   
-  private var springAnimation: Animation {
-    .interpolatingSpring(stiffness: 200, damping: 15, initialVelocity: 10)
+  private var imageAnimation: Animation {
+    model.isPlaying ?
+      .interpolatingSpring(stiffness: 200, damping: 15, initialVelocity: 10) :
+      .default
+  }
+  
+  private func updateForIsPlaying(_ isPlaying: Bool) {
+    padding = (isPlaying ? 16 : 64) * paddingMultiplier
+    shadow = (isPlaying ? 16 : 8) * paddingMultiplier
   }
   
   var body: some View {
-    VStack(spacing: 24) {
+    ZStack {
+      Background(image: $model.image)
+      
+      VStack(spacing: 24) {
         CloseBarButton()
           .gesture(closeTap)
         
@@ -57,10 +64,12 @@ struct PlayerView: View {
           .resizable()
           .cornerRadius(8)
           .aspectRatio(contentMode: .fit)
-          .padding(model.padding)
-          .shadow(radius: model.shadow)
-          .animation(model.animation)
+          .padding(padding)
+          .shadow(radius: shadow)
           .frame(maxHeight: .infinity)
+          .onAppear {
+            updateForIsPlaying(model.isPlaying)
+          }
         
         VStack(spacing: 12) {
           MarqueeText(model.title, maxWidth: 286)
@@ -70,7 +79,6 @@ struct PlayerView: View {
         }
         .frame(maxWidth: 286)
         .clipped()
-        .animation(nil)
         
         HStack(spacing: 16) {
           Text("00:00").font(.caption)
@@ -83,9 +91,13 @@ struct PlayerView: View {
           pause: pause,
           forward: forward,
           backward: backward,
-          isPlaying: $model.isPlaying
+          isPlaying: $model.isPlaying.onChange { isPlaying in
+            withAnimation(imageAnimation) {
+              updateForIsPlaying(isPlaying)
+            }
+          }
         )
-    
+        
         HStack(spacing: 48) {
           PlayerButton(action: nop, style: .moon)
             .frame(width: 20, height: 20 )
@@ -95,9 +107,9 @@ struct PlayerView: View {
             .frame(width: 20, height: 20 )
         }.foregroundColor(Color(.secondaryLabel))
       }
-      .padding(EdgeInsets(top: 12, leading: 12, bottom: 0, trailing: 12))
+      .padding(12)
       .foregroundColor(Color(.label))
-    .animation(.easeInOut)
+    }
   }
 }
 
@@ -105,9 +117,7 @@ struct PlayerView: View {
 
 extension PlayerView {
   
-  private func nop() {
-    
-  }
+  private func nop() {}
   
   private func forward() {
     forwardHandler?()
@@ -151,9 +161,6 @@ extension PlayerView {
   
   func configure(isPlaying: Bool) {
     model.isPlaying = isPlaying
-    model.padding = isPlaying ? paddingMultiplier * 16 : paddingMultiplier * 32
-    model.shadow = isPlaying ? paddingMultiplier * 16 : paddingMultiplier * 8
-    model.animation = isPlaying ? springAnimation : .easeOut
   }
 }
 

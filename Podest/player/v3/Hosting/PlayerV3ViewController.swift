@@ -23,7 +23,7 @@ protocol PlayerDelegate {
 class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, ObservableObject {
 
   var delegate: PlayerDelegate?
-  
+
   override init?(coder aDecoder: NSCoder, rootView: PlayerView) {
     super.init(coder: aDecoder, rootView: rootView)
   }
@@ -33,6 +33,12 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
   }
     
   // MARK: - UIViewController
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    modalPresentationStyle = .fullScreen
+  }
 
   override func viewWillAppear(_ animated: Bool) {
     rootView.install(
@@ -83,10 +89,9 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
     let size = CGSize(width: 600, height: 600)
     
     ImageRepository.shared
-      .loadImage(representing: imaginable, at: size) { image in
-        self.rootView.configure(title: title, subtitle: subtitle, image: image!)
+      .loadImage(representing: imaginable, at: size) { [weak self] image in
+        self?.rootView.configure(title: title, subtitle: subtitle, image: image!)
       }
-
   }
 
   var isPlaying: Bool = false {
