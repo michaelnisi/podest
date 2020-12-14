@@ -14,50 +14,48 @@ struct Background: View {
   @Environment(\.colorScheme) var colorScheme: ColorScheme
   @Binding var image: UIImage
   
+  private let delta: CGFloat = 0.3
+  
   var body: some View {
     Color(
       colorScheme == .dark ?
-        image.averageColor.darker(componentDelta: 0.3) :
-        image.averageColor.lighter()
+        image.averageColor.darker(delta) :
+        image.averageColor.lighter(delta)
     )
     .edgesIgnoringSafeArea(.all)
     .animation(.default)
   }
 }
 
+/// Robert Pieta, https://www.robertpieta.com/lighter-and-darker-uicolor-swift/
 private extension UIColor {
   
-  private func makeColor(componentDelta: CGFloat) -> UIColor {
+  private func makeColor(delta: CGFloat) -> UIColor {
     var red: CGFloat = 0
     var blue: CGFloat = 0
     var green: CGFloat = 0
     var alpha: CGFloat = 0
     
-    getRed(
-      &red,
-      green: &green,
-      blue: &blue,
-      alpha: &alpha
-    )
+    getRed(&red, green: &green, blue: &blue, alpha: &alpha)
     
     return UIColor(
-      red: add(componentDelta, toComponent: red),
-      green: add(componentDelta, toComponent: green),
-      blue: add(componentDelta, toComponent: blue),
+      red: add(delta, to: red),
+      green: add(delta, to: green),
+      blue: add(delta, to: blue),
       alpha: alpha
     )
   }
   
-  private func add(_ value: CGFloat, toComponent: CGFloat) -> CGFloat {
-    max(0, min(1, toComponent + value))
+  private func add(_ value: CGFloat, to component: CGFloat) -> CGFloat {
+    max(0, min(1, component + value))
   }
   
-  func lighter(componentDelta: CGFloat = 0.1) -> UIColor {
-    makeColor(componentDelta: componentDelta)
+  func lighter(_ delta: CGFloat = 0.1) -> UIColor {
+    makeColor(delta: delta)
   }
   
-  func darker(componentDelta: CGFloat = 0.1) -> UIColor {
-    makeColor(componentDelta: -1*componentDelta)
+  func darker(_ delta: CGFloat = 0.1) -> UIColor {
+    makeColor(delta: -1 * delta)
   }
 }
 

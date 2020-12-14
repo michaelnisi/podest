@@ -23,6 +23,10 @@ protocol PlayerDelegate {
 class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, ObservableObject {
 
   var delegate: PlayerDelegate?
+  
+  var nowPlaying: NowPlaying {
+    rootView.model
+  }
 
   override init?(coder aDecoder: NSCoder, rootView: PlayerView) {
     super.init(coder: aDecoder, rootView: rootView)
@@ -66,41 +70,32 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
   
   var entry: Entry? {
     didSet {
-      guard oldValue != entry else {
+      guard entry != oldValue, let entry = entry else {
         return
       }
       
-      configure(
-        title: entry?.title ?? "",
-        subtitle: entry?.feedTitle ?? ""
-      )
+      nowPlaying.title = entry.title
+      nowPlaying.subtitle = entry.feedTitle ?? ""
+      loadImage(entry)
     }
   }
   
-  var imaginable: Imaginable?
-  
-  func configure(title: String, subtitle: String, imaginable: Imaginable? = nil) {
-    self.imaginable = imaginable
-    
-    guard let imaginable = self.entry ?? self.imaginable else {
-      return
-    }
-    
+  private func loadImage(_ imaginable: Imaginable) {
     let size = CGSize(width: 600, height: 600)
     
     ImageRepository.shared
       .loadImage(representing: imaginable, at: size) { [weak self] image in
-        self?.rootView.configure(title: title, subtitle: subtitle, image: image!)
+        self?.nowPlaying.image = image!
       }
   }
 
   var isPlaying: Bool = false {
     didSet {
-      guard oldValue != isPlaying else {
+      guard isPlaying != oldValue else {
         return
       }
       
-      rootView.configure(isPlaying: isPlaying)
+      rootView.info.isPlaying = isPlaying
     }
   }
   

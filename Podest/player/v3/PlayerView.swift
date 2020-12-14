@@ -9,20 +9,43 @@
 import SwiftUI
 import FeedKit
 
+class NowPlaying: ObservableObject {
+  
+  @Published var title: String
+  @Published var subtitle: String
+  @Published var image: UIImage
+  
+  init(title: String, subtitle: String, image: UIImage) {
+    self.title = title
+    self.subtitle = subtitle
+    self.image = image
+  }
+}
+
+class PlaybackInfo: ObservableObject {
+  
+  @Published var isPlaying: Bool
+  
+  init(isPlaying: Bool) {
+    self.isPlaying = isPlaying
+  }
+}
+
 struct PlayerView: View {
   
-  private class Model: ObservableObject {
-    @Published var title = ""
-    @Published var subtitle = ""
-    @Published var isPlaying = false
-    @Published var image = UIImage(named: "Oval")!
-    @Published var trackTime: CGFloat = 0.5
-  }
+  @ObservedObject var model = NowPlaying(
+    title: "",
+    subtitle: "",
+    image: UIImage(named: "Oval")!
+  )
   
-  @ObservedObject private var model = Model()
+  @ObservedObject var info = PlaybackInfo(isPlaying: false)
+  
   @State var padding: CGFloat = 16
   @State var shadow: CGFloat = 16
   @Environment(\.horizontalSizeClass) private var horizontalSizeClass: UserInterfaceSizeClass?
+  @State var cornerRadius: CGFloat = 8
+  @State var trackTime: CGFloat = 0.5
   
   private var paddingMultiplier: CGFloat {
     horizontalSizeClass == .compact ? 1 : 2
@@ -42,14 +65,16 @@ struct PlayerView: View {
   }
   
   private var imageAnimation: Animation {
-    model.isPlaying ?
+    info.isPlaying ?
       .interpolatingSpring(stiffness: 200, damping: 15, initialVelocity: 10) :
       .default
   }
   
-  private func updateForIsPlaying(_ isPlaying: Bool) {
+ private func updateState() {
+    let isPlaying = info.isPlaying
     padding = (isPlaying ? 16 : 64) * paddingMultiplier
     shadow = (isPlaying ? 16 : 8) * paddingMultiplier
+    cornerRadius = isPlaying ? 16 : 8
   }
   
   var body: some View {
@@ -62,13 +87,20 @@ struct PlayerView: View {
         
         Image(uiImage: model.image)
           .resizable()
-          .cornerRadius(8)
+          .cornerRadius(cornerRadius)
           .aspectRatio(contentMode: .fit)
           .padding(padding)
           .shadow(radius: shadow)
           .frame(maxHeight: .infinity)
           .onAppear {
-            updateForIsPlaying(model.isPlaying)
+            DispatchQueue.main.async {
+              updateState()
+            }
+          }
+          .onDisappear {
+            DispatchQueue.main.async {
+              updateState()
+            }
           }
         
         VStack(spacing: 12) {
@@ -82,7 +114,7 @@ struct PlayerView: View {
         
         HStack(spacing: 16) {
           Text("00:00").font(.caption)
-          Slider(value: $model.trackTime)
+          Slider(value: $trackTime)
           Text("67:10").font(.caption)
         }
         
@@ -91,9 +123,11 @@ struct PlayerView: View {
           pause: pause,
           forward: forward,
           backward: backward,
-          isPlaying: $model.isPlaying.onChange { isPlaying in
-            withAnimation(imageAnimation) {
-              updateForIsPlaying(isPlaying)
+          isPlaying: $info.isPlaying.onChange { _ in
+            DispatchQueue.main.async {
+              withAnimation(imageAnimation) {
+                updateState()
+              }
             }
           }
         )
@@ -105,7 +139,8 @@ struct PlayerView: View {
             .frame(width: 48, height: 48)
           PlayerButton(action: nop, style: .speaker)
             .frame(width: 20, height: 20 )
-        }.foregroundColor(Color(.secondaryLabel))
+        }
+        .foregroundColor(Color(.secondaryLabel))
       }
       .padding(12)
       .foregroundColor(Color(.label))
@@ -152,33 +187,5 @@ extension PlayerView {
     self.closeHandler = closeHandler
     self.pauseHandler = pauseHandler
   }
-  
-  func configure(title: String, subtitle: String, image: UIImage) {
-    model.title = title
-    model.subtitle = subtitle
-    model.image = image
-  }
-  
-  func configure(isPlaying: Bool) {
-    model.isPlaying = isPlaying
-  }
 }
 
-struct PlayerView_Previews: PreviewProvider {
-  
-  private static func makePlayer() -> PlayerView {
-    let player = PlayerView()
-    
-    player.configure(
-      title: "#86 Man of the People but longer, much longer title",
-      subtitle: "Reply All",
-      image: UIImage(named: "Sample")!
-    )
-    
-    return player
-  }
-  
-  static var previews: some View {
-    makePlayer()
-  }
-}
