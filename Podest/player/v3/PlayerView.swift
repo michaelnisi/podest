@@ -33,6 +33,8 @@ class PlaybackInfo: ObservableObject {
 
 struct PlayerView: View {
   
+  @Environment(\.horizontalSizeClass) private var horizontalSizeClass: UserInterfaceSizeClass?
+  
   @ObservedObject var model = NowPlaying(
     title: "",
     subtitle: "",
@@ -43,9 +45,9 @@ struct PlayerView: View {
   
   @State var padding: CGFloat = 16
   @State var shadow: CGFloat = 16
-  @Environment(\.horizontalSizeClass) private var horizontalSizeClass: UserInterfaceSizeClass?
   @State var cornerRadius: CGFloat = 8
   @State var trackTime: CGFloat = 0.5
+  @State var imageAnimation: Animation?
   
   private var paddingMultiplier: CGFloat {
     horizontalSizeClass == .compact ? 1 : 2
@@ -64,17 +66,15 @@ struct PlayerView: View {
       }
   }
   
-  private var imageAnimation: Animation {
-    info.isPlaying ?
-      .interpolatingSpring(stiffness: 200, damping: 15, initialVelocity: 10) :
-      .default
+  private func makeImageAnimation(isPlaying: Bool) -> Animation {
+    isPlaying ? .default : .interpolatingSpring(stiffness: 200, damping: 15, initialVelocity: 10)
   }
   
- private func updateState() {
-    let isPlaying = info.isPlaying
+  private func updateState(_ isPlaying: Bool) {
     padding = (isPlaying ? 16 : 64) * paddingMultiplier
     shadow = (isPlaying ? 16 : 8) * paddingMultiplier
     cornerRadius = isPlaying ? 16 : 8
+    imageAnimation = makeImageAnimation(isPlaying: isPlaying)
   }
   
   var body: some View {
@@ -92,16 +92,7 @@ struct PlayerView: View {
           .padding(padding)
           .shadow(radius: shadow)
           .frame(maxHeight: .infinity)
-          .onAppear {
-            DispatchQueue.main.async {
-              updateState()
-            }
-          }
-          .onDisappear {
-            DispatchQueue.main.async {
-              updateState()
-            }
-          }
+          .foregroundColor(Color(.quaternaryLabel))
         
         VStack(spacing: 12) {
           MarqueeText(model.title, maxWidth: 286)
@@ -123,13 +114,7 @@ struct PlayerView: View {
           pause: pause,
           forward: forward,
           backward: backward,
-          isPlaying: $info.isPlaying.onChange { _ in
-            DispatchQueue.main.async {
-              withAnimation(imageAnimation) {
-                updateState()
-              }
-            }
-          }
+          isPlaying: $info.isPlaying
         )
         
         HStack(spacing: 48) {
@@ -144,6 +129,16 @@ struct PlayerView: View {
       }
       .padding(12)
       .foregroundColor(Color(.label))
+      .onDisappear {
+        imageAnimation = nil
+      }
+      .onReceive(info.$isPlaying) { isPlaying in
+        DispatchQueue.main.async {
+          withAnimation(imageAnimation) {
+            updateState(isPlaying)
+          }
+        }
+      }
     }
   }
 }

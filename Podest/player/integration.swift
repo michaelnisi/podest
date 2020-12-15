@@ -240,8 +240,7 @@ extension RootViewController {
     let isPlaying = Podest.playback.isPlaying(guid: entry.guid)
 
     update(state: SimplePlaybackState(entry: entry, isPlaying: isPlaying))
-
-    self.present(vc, animated: animated) {
+    present(vc, animated: animated) {
       completion?()
     }
   }

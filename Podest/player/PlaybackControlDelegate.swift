@@ -31,7 +31,7 @@ protocol PlaybackControlDelegate: PlaybackResponding {
 
 /// The default implementation is trivial.
 extension PlaybackControlDelegate {
-
+  
   func playing(entry: Entry) {
     DispatchQueue.main.async { [weak self] in
       self?.entry = entry
