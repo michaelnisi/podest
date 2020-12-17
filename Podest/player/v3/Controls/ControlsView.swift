@@ -18,21 +18,28 @@ struct ControlsView: View {
   @Binding var isPlaying: Bool
   
   private func isPlayingChange(value: Bool) {
+    guard value != isPlaying else {
+      return
+    }
+    
     value ? play() : pause()
   }
 
   var body: some View {
       HStack(spacing: 32) {
         PlayerButton(action: forward, style: .gobackward15)
-          .frame(width: 24, height: 24 ).foregroundColor(Color(.secondaryLabel))
+          .frame(width: 24, height: 24 )
+          .foregroundColor(Color(.secondaryLabel))
         PlayerButton(action: backward, style: .backward)
           .frame(width: 48, height: 48)
-        PlayButton(isPlaying: $isPlaying.onChange(isPlayingChange))
+        PlayButton(isPlaying: $isPlaying)
           .frame(width: 48, height: 48)
         PlayerButton(action: forward, style: .forward)
           .frame(width: 48, height: 64)
         PlayerButton(action: forward, style: .goforward15)
-          .frame(width: 24, height: 24 ).foregroundColor(Color(.secondaryLabel))
+          .frame(width: 24, height: 24 )
+          .foregroundColor(Color(.secondaryLabel))
       }
+      .onChange(of: isPlaying, perform: isPlayingChange)
   }
 }

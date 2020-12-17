@@ -48,6 +48,7 @@ struct PlayerView: View {
   @State var cornerRadius: CGFloat = 8
   @State var trackTime: CGFloat = 0.5
   @State var imageAnimation: Animation?
+  @State var imageWidth: CGFloat = 0
   
   private var paddingMultiplier: CGFloat {
     horizontalSizeClass == .compact ? 1 : 1
@@ -94,15 +95,19 @@ struct PlayerView: View {
             .shadow(radius: shadow)
             .frame(maxHeight: .infinity)
             .foregroundColor(Color(.quaternaryLabel))
+            .background(GeometryReader { geometry in
+              Color.clear.preference(key: SizePrefKey.self, value: geometry.size)
+            })
+            .onPreferenceChange(SizePrefKey.self) { size in
+              imageWidth = size.width
+            }
           
           VStack(spacing: 12) {
-            MarqueeText(model.title, maxWidth: 286)
+            MarqueeText(string: $model.title, width: $imageWidth)
             Text(model.subtitle)
               .font(.subheadline)
               .lineLimit(1)
           }
-          .frame(maxWidth: 286)
-          .clipped()
           
           HStack(spacing: 16) {
             Text("00:00").font(.caption)

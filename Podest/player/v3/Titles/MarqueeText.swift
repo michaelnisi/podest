@@ -7,78 +7,95 @@
 //
 
 import SwiftUI
-import Combine
+
+/// A view that displays a single line text pendulum.
+struct MarqueeText : View {
+  
+  @Binding var string: String
+  @Binding var width: CGFloat
+  
+  @State var offset: CGFloat = .zero
+  @State var multiplier: CGFloat = 1
+
+  private var stringWidth: CGFloat {
+    string.size(usingFont: .preferredFont(forTextStyle: .headline)).width + 24
+  }
+  
+  private func updateOffset() {
+    guard stringWidth > width else {
+      offset = 0
+      return
+    }
+    
+    offset = (stringWidth - width) / 2 * multiplier
+  }
+  
+  private func flipDirection() {
+    multiplier *= -1
+  }
+  
+  private var duration: Double {
+    min(16, max(6, Double(stringWidth) * 0.03))
+  }
+  
+  private func update() {
+    guard width > 0 else {
+      return
+    }
+    
+    guard stringWidth > width else {
+      return updateOffset()
+    }
+    
+    var transaction = Transaction(animation: .linear(duration: duration))
+    transaction.disablesAnimations = true
+
+    withTransaction(transaction) {
+      updateOffset()
+    }
+  }
+  
+  private func start() {
+    multiplier = 1
+    update()
+  }
+  
+  var body: some View {
+    ZStack {
+      Text(string)
+        .lineLimit(1)
+        .font(.headline)
+        .fixedSize()
+        .frame(width: width)
+        .offset(x: offset)
+        .clipped()
+        .onAnimationComplete(for: offset) {
+          flipDirection()
+          update()
+        }
+    }.onChange(of: string) { _ in
+      start()
+    }.onChange(of: width) { _ in
+      start()
+    }.onAppear {
+      start()
+    }
+  }
+}
+
+struct SizePrefKey: PreferenceKey {
+  
+  static var defaultValue: CGSize = .zero
+  
+  static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+    value = nextValue()
+  }
+}
 
 private extension String {
   
   func size(usingFont font: UIFont) -> CGSize {
     size(withAttributes: [NSAttributedString.Key.font: font])
-  }
-}
-
-/// One-line Text compensating insufficient space through animation.
-struct MarqueeText : View {
-  
-  private final class Model: ObservableObject {
-    
-    var string: String = ""
-    var width: CGFloat = .zero
-    
-    @Published var animation: Animation?
-    @Published var x: CGFloat = 0
-    private var multiplier: CGFloat = 1
-    private var timer: Cancellable?
-    
-    private var shouldAnimate: Bool {
-      stringWidth > width
-    }
-    
-    func configure(string: String, width: CGFloat) {
-      self.string = string
-      self.width = width
-      
-      guard shouldAnimate else {
-        x = 0
-        animation = nil
-        timer?.cancel()
-        return
-      }
-      
-      timer = Timer.publish(every: 9, on: .main, in: .common)
-        .autoconnect()
-        .sink { [weak self] _ in
-          self?.animate()
-        }
-    }
-    
-    func animate() {
-      multiplier *= -1
-      x = (stringWidth - width) / 2 * multiplier
-      animation = makeAnimation()
-    }
-        
-    private func makeAnimation() -> Animation {
-      Animation.easeInOut(duration: 6)
-    }
-    
-    private var stringWidth: CGFloat {
-      string.size(usingFont: .preferredFont(forTextStyle: .headline)).width
-    }
-  }
-  
-  @ObservedObject private var model = Model()
-  
-  init(_ string: String, maxWidth: CGFloat) {
-    model.configure(string: string, width: maxWidth)
-  }
-  
-  var body : some View {
-    Text(model.string)
-      .lineLimit(1)
-      .font(.headline)
-      .fixedSize()
-      .offset(x: model.x, y: 0)
-      .animation(model.animation)
   }
 }
 
