@@ -35,14 +35,7 @@ struct MarqueeText : View {
   }
   
   private var duration: Double {
-    min(16, max(6, Double(stringWidth) * 0.03))
-  }
-  
-  private var transaction: Transaction {
-    var transaction = Transaction(animation: .linear(duration: duration))
-    transaction.disablesAnimations = true
-    
-    return transaction
+    stringWidth > width ? min(24, max(6, Double(stringWidth) * 0.03)) : 0
   }
   
   private func update() {
@@ -50,11 +43,7 @@ struct MarqueeText : View {
       return
     }
     
-    guard stringWidth > width else {
-      return updateOffset()
-    }
-    
-    withTransaction(transaction) {
+    withAnimation(.linear(duration: duration)) {
       updateOffset()
     }
   }

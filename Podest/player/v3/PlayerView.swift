@@ -51,7 +51,7 @@ struct PlayerView: View {
   @State var imageWidth: CGFloat = 0
   
   private var paddingMultiplier: CGFloat {
-    horizontalSizeClass == .compact ? 0.5 : 1
+    horizontalSizeClass == .compact ? 2 / 3 : 1
   }
   
   private var playHandler: VoidHandler?
@@ -66,6 +66,87 @@ struct PlayerView: View {
         close()
       }
   }
+    
+  private var outerPadding: EdgeInsets {
+    EdgeInsets(top: 12, leading: 0, bottom: 0, trailing: 0)
+  }
+  
+  private var innerPadding: EdgeInsets {
+    EdgeInsets(top: 0, leading: 12, bottom: 12, trailing: 12)
+  }
+  
+  var body: some View {
+    HStack {
+      ZStack {
+        Background(image: $model.image)
+        VStack {
+          CloseBarButton()
+            .gesture(closeTap)
+          
+          VStack(spacing: 24) {
+            Image(uiImage: model.image)
+              .resizable()
+              .cornerRadius(cornerRadius)
+              .aspectRatio(contentMode: .fit)
+              .padding(padding)
+              .shadow(radius: shadow)
+              .frame(maxHeight: .infinity)
+              .foregroundColor(Color(.quaternaryLabel))
+              .background(GeometryReader { geometry in
+                Color.clear.preference(key: SizePrefKey.self, value: geometry.size)
+              })
+              .onPreferenceChange(SizePrefKey.self) { size in
+                imageWidth = size.width
+              }
+            
+            VStack(spacing: 6) {
+              MarqueeText(string: $model.title, width: $imageWidth)
+              Text(model.subtitle)
+                .font(.subheadline)
+                .lineLimit(1)
+            }
+            
+            HStack(spacing: 16) {
+              Text("00:00").font(.caption)
+              Slider(value: $trackTime)
+              Text("67:10").font(.caption)
+            }
+            
+            ControlsView(
+              play: play,
+              pause: pause,
+              forward: forward,
+              backward: backward,
+              isPlaying: $info.isPlaying
+            )
+            
+            HStack(spacing: 48) {
+              PlayerButton(action: nop, style: .moon)
+                .frame(width: 20, height: 20 )
+              AirPlayButton()
+                .frame(width: 48, height: 48)
+              PlayerButton(action: nop, style: .speaker)
+                .frame(width: 20, height: 20 )
+            }
+            .foregroundColor(Color(.secondaryLabel))
+          }
+          .padding(innerPadding)
+          .foregroundColor(Color(.label))
+          .frame(maxWidth: 600)
+          .onAppear {
+            imageAnimation = nil
+          }
+          .onReceive(info.$isPlaying) { isPlaying in
+            DispatchQueue.main.async {
+              withAnimation(imageAnimation) {
+                updateState(isPlaying)
+              }
+            }
+          }
+        }.padding(outerPadding)
+      }
+    }
+  }
   
   private func makeImageAnimation(isPlaying: Bool) -> Animation {
     isPlaying ? .default : .interpolatingSpring(stiffness: 200, damping: 15, initialVelocity: 10)
@@ -77,81 +158,9 @@ struct PlayerView: View {
     cornerRadius = isPlaying ? 16 : 8
     imageAnimation = makeImageAnimation(isPlaying: isPlaying)
   }
-  
-  var body: some View {
-    HStack {
-      ZStack {
-        Background(image: $model.image)
-        
-        VStack(spacing: 24) {
-          CloseBarButton()
-            .gesture(closeTap)
-          
-          Image(uiImage: model.image)
-            .resizable()
-            .cornerRadius(cornerRadius)
-            .aspectRatio(contentMode: .fit)
-            .padding(padding)
-            .shadow(radius: shadow)
-            .frame(maxHeight: .infinity)
-            .foregroundColor(Color(.quaternaryLabel))
-            .background(GeometryReader { geometry in
-              Color.clear.preference(key: SizePrefKey.self, value: geometry.size)
-            })
-            .onPreferenceChange(SizePrefKey.self) { size in
-              imageWidth = size.width
-            }
-          
-          VStack(spacing: 12) {
-            MarqueeText(string: $model.title, width: $imageWidth)
-            Text(model.subtitle)
-              .font(.subheadline)
-              .lineLimit(1)
-          }
-          
-          HStack(spacing: 16) {
-            Text("00:00").font(.caption)
-            Slider(value: $trackTime)
-            Text("67:10").font(.caption)
-          }
-  
-          ControlsView(
-            play: play,
-            pause: pause,
-            forward: forward,
-            backward: backward,
-            isPlaying: $info.isPlaying
-          )
-          
-          HStack(spacing: 48) {
-            PlayerButton(action: nop, style: .moon)
-              .frame(width: 20, height: 20 )
-            AirPlayButton()
-              .frame(width: 48, height: 48)
-            PlayerButton(action: nop, style: .speaker)
-              .frame(width: 20, height: 20 )
-          }
-          .foregroundColor(Color(.secondaryLabel))
-        }
-        .padding(12)
-        .foregroundColor(Color(.label))
-        .frame(maxWidth: 600)
-        .onAppear {
-          imageAnimation = nil
-        }
-        .onReceive(info.$isPlaying) { isPlaying in
-          DispatchQueue.main.async {
-            withAnimation(imageAnimation) {
-              updateState(isPlaying)
-            }
-          }
-        }
-      }
-    }
-  }
 }
 
-// MARK: - API
+// MARK: - Actions
 
 extension PlayerView {
   
