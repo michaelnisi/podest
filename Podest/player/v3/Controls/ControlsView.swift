@@ -18,10 +18,6 @@ struct ControlsView: View {
   @Binding var isPlaying: Bool
   
   private func isPlayingChange(value: Bool) {
-    guard value != isPlaying else {
-      return
-    }
-    
     value ? play() : pause()
   }
 

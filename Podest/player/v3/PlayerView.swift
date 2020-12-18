@@ -51,7 +51,7 @@ struct PlayerView: View {
   @State var imageWidth: CGFloat = 0
   
   private var paddingMultiplier: CGFloat {
-    horizontalSizeClass == .compact ? 1 : 1
+    horizontalSizeClass == .compact ? 0.5 : 1
   }
   
   private var playHandler: VoidHandler?
