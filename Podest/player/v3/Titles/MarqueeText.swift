@@ -16,13 +16,19 @@ struct MarqueeText : View {
   
   @State var offset: CGFloat = .zero
   @State var multiplier: CGFloat = 1
+  
+  private let space: CGFloat = 24
 
   private var stringWidth: CGFloat {
-    string.size(usingFont: .preferredFont(forTextStyle: .headline)).width + 24
+    string.size(usingFont: .preferredFont(forTextStyle: .headline)).width + space
+  }
+  
+  private var shouldAnimate: Bool {
+    stringWidth - space > width
   }
   
   private func updateOffset() {
-    guard stringWidth > width else {
+    guard shouldAnimate else {
       offset = 0
       return
     }
@@ -35,7 +41,7 @@ struct MarqueeText : View {
   }
   
   private var duration: Double {
-    stringWidth > width ? min(24, max(6, Double(stringWidth) * 0.03)) : 0
+    shouldAnimate ? min(18, max(9, Double(stringWidth) * 0.03)) : 0
   }
   
   private func update() {

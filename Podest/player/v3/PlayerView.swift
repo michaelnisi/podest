@@ -149,7 +149,7 @@ struct PlayerView: View {
   }
   
   private func makeImageAnimation(isPlaying: Bool) -> Animation {
-    isPlaying ? .default : .interpolatingSpring(stiffness: 200, damping: 15, initialVelocity: 10)
+    isPlaying ? .default : .interpolatingSpring(mass: 1, stiffness: 70, damping: 10, initialVelocity: 1)
   }
   
   private func updateState(_ isPlaying: Bool) {
