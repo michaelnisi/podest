@@ -148,8 +148,12 @@ struct PlayerView: View {
     }
   }
   
+  private var spring: Animation {
+    .interpolatingSpring(mass: 1, stiffness: 250, damping: 15, initialVelocity: -5)
+  }
+  
   private func makeImageAnimation(isPlaying: Bool) -> Animation {
-    isPlaying ? .default : .interpolatingSpring(mass: 1, stiffness: 70, damping: 10, initialVelocity: 1)
+    isPlaying ? .default : spring
   }
   
   private func updateState(_ isPlaying: Bool) {
