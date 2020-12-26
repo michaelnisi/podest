@@ -7,23 +7,7 @@
 //
 
 import UIKit
-import Playback
 import FeedKit
-
-struct SomeImage: Imaginable {
-  var image: String? = nil
-  
-  var title: String = ""
-  
-  var  iTunes: ITunesItem? = ITunesItem(
-    url: "http://feeds.feedburner.com/RoderickOnTheLine",
-    iTunesID: 471418144,
-    img100: "https://is2-ssl.mzstatic.com/image/thumb/Podcasts114/v4/30/fe/c5/30fec595-c772-f80e-289b-4974844224b4/mza_4773085836270850850.jpg/100x100bb.jp",
-    img30: "https://is2-ssl.mzstatic.com/image/thumb/Podcasts114/v4/30/fe/c5/30fec595-c772-f80e-289b-4974844224b4/mza_4773085836270850850.jpg/30x30bb.jpg",
-    img60: "https://is2-ssl.mzstatic.com/image/thumb/Podcasts114/v4/30/fe/c5/30fec595-c772-f80e-289b-4974844224b4/mza_4773085836270850850.jpg/60x60bb.jpg",
-    img600: "https://is2-ssl.mzstatic.com/image/thumb/Podcasts114/v4/30/fe/c5/30fec595-c772-f80e-289b-4974844224b4/mza_4773085836270850850.jpg/600x600bb.jpg"
-  )
-}
 
 class ViewController: UIViewController {
   
@@ -32,14 +16,20 @@ class ViewController: UIViewController {
       withIdentifier: "PlayerV3ID") as? PlayerV3ViewController else {
       fatalError("missing view controller")
     }
-  
-    present(vc, animated: true)
+
+    vc.entry = entry
     
-    vc.configure(
-      title: "#86 Man of the People",
-      subtitle: "Reply All",
-      imaginable: SomeImage()
-    )
+    present(vc, animated: true)
+  }
+  
+  private var entry: Entry {
+    guard let url = Bundle.main.url(forResource: "entry", withExtension: "json") else {
+      fatalError("data not found")
+    }
+    
+    let data = try! Data(contentsOf: url)
+    
+    return try! JSONDecoder().decode(Entry.self, from: data)
   }
 }
 

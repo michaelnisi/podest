@@ -39,6 +39,12 @@
 		4C377C8B2316D1D70038D9C8 /* ListTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C377C8A2316D1D70038D9C8 /* ListTableViewDelegate.swift */; };
 		4C3CDC282085A6C300BADBF8 /* StoreButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3CDC272085A6C300BADBF8 /* StoreButton.swift */; };
 		4C3D86D525925E4B00B93DF4 /* Epic in Frameworks */ = {isa = PBXBuildFile; productRef = 4C3D86D425925E4B00B93DF4 /* Epic */; };
+		4C3D86EF2597475700B93DF4 /* ImageColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3D86EE2597475600B93DF4 /* ImageColor.swift */; };
+		4C3D86F925979C4100B93DF4 /* AirPlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3D86F825979C4100B93DF4 /* AirPlayButton.swift */; };
+		4C3D87022597A93100B93DF4 /* AirPlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3D86F825979C4100B93DF4 /* AirPlayButton.swift */; };
+		4C3D87072597A93400B93DF4 /* ImageColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3D86EE2597475600B93DF4 /* ImageColor.swift */; };
+		4C3D870D2597BE5600B93DF4 /* entry.json in Resources */ = {isa = PBXBuildFile; fileRef = 4C3D870C2597BE5600B93DF4 /* entry.json */; };
+		4C3D87132597C08A00B93DF4 /* Epic in Frameworks */ = {isa = PBXBuildFile; productRef = 4C3D87122597C08A00B93DF4 /* Epic */; };
 		4C40A3F622C0818A00B353AD /* PlayerMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C40A3F522C0818A00B353AD /* PlayerMessage.swift */; };
 		4C42D9FB22E827A6007F80E2 /* PieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C42D9FA22E827A6007F80E2 /* PieView.swift */; };
 		4C471523210F4F6F008D9E32 /* ReceiptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C471522210F4F6F008D9E32 /* ReceiptTests.swift */; };
@@ -261,6 +267,9 @@
 		4C351CD01A7F5B7E00C5C88C /* SearchResultsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsDataSource.swift; sourceTree = "<group>"; };
 		4C377C8A2316D1D70038D9C8 /* ListTableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewDelegate.swift; sourceTree = "<group>"; };
 		4C3CDC272085A6C300BADBF8 /* StoreButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreButton.swift; sourceTree = "<group>"; };
+		4C3D86EE2597475600B93DF4 /* ImageColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageColor.swift; sourceTree = "<group>"; };
+		4C3D86F825979C4100B93DF4 /* AirPlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayButton.swift; sourceTree = "<group>"; };
+		4C3D870C2597BE5600B93DF4 /* entry.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = entry.json; sourceTree = "<group>"; };
 		4C40A3F522C0818A00B353AD /* PlayerMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerMessage.swift; sourceTree = "<group>"; };
 		4C42D9FA22E827A6007F80E2 /* PieView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PieView.swift; sourceTree = "<group>"; };
 		4C471522210F4F6F008D9E32 /* ReceiptTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptTests.swift; sourceTree = "<group>"; };
@@ -449,6 +458,7 @@
 			files = (
 				4CFEA5162572BC3A006157A1 /* Playback in Frameworks */,
 				4CFEA5182572BC3A006157A1 /* FeedKit in Frameworks */,
+				4C3D87132597C08A00B93DF4 /* Epic in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -505,6 +515,8 @@
 		4C17E47E2504034D0022EF0F /* v3 */ = {
 			isa = PBXGroup;
 			children = (
+				4C3D86EE2597475600B93DF4 /* ImageColor.swift */,
+				4C3D86F825979C4100B93DF4 /* AirPlayButton.swift */,
 				4CCC3D232557EC2600C6AB32 /* Hosting */,
 			);
 			path = v3;
@@ -578,6 +590,7 @@
 				4C8B369522A0EAA70004FD89 /* LaunchScreen.storyboard */,
 				4C8B369822A0EAA70004FD89 /* Info.plist */,
 				4C8B376C22A0F0C10004FD89 /* README.md */,
+				4C3D870C2597BE5600B93DF4 /* entry.json */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -1031,6 +1044,7 @@
 			packageProductDependencies = (
 				4CFEA5152572BC3A006157A1 /* Playback */,
 				4CFEA5172572BC3A006157A1 /* FeedKit */,
+				4C3D87122597C08A00B93DF4 /* Epic */,
 			);
 			productName = Player;
 			productReference = 4C8B368A22A0EAA50004FD89 /* Player.app */;
@@ -1199,6 +1213,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C3D870D2597BE5600B93DF4 /* entry.json in Resources */,
 				4C8B36B622A0EB650004FD89 /* PlayerV2.storyboard in Resources */,
 				4C8B36BD22A0EB650004FD89 /* Media.xcassets in Resources */,
 				4C8B374B22A0ED280004FD89 /* HeroCell.xib in Resources */,
@@ -1325,10 +1340,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C3D87022597A93100B93DF4 /* AirPlayButton.swift in Sources */,
 				4C6E0AAA250E916E00A87977 /* PlayerV3ViewController.swift in Sources */,
 				4C8B368F22A0EAA60004FD89 /* ViewController.swift in Sources */,
 				4CB6EECB24274158006F09B7 /* ActionSheetPresenting.swift in Sources */,
 				4CFEA4F72572B9A9006157A1 /* api.swift in Sources */,
+				4C3D87072597A93400B93DF4 /* ImageColor.swift in Sources */,
 				4C8B368D22A0EAA60004FD89 /* AppDelegate.swift in Sources */,
 				4CFEA4F22572B982006157A1 /* PlaybackControlDelegate.swift in Sources */,
 			);
@@ -1366,6 +1383,7 @@
 				4CB6CF3C22BE7F91002452BF /* TopLine.swift in Sources */,
 				4C40A3F622C0818A00B353AD /* PlayerMessage.swift in Sources */,
 				4E684D4C1C5F3201004699A1 /* EpisodeViewController.swift in Sources */,
+				4C3D86F925979C4100B93DF4 /* AirPlayButton.swift in Sources */,
 				4E7F291F1E7FC11300E12846 /* MiniPlayerController.swift in Sources */,
 				4E8CA70B1A126ADB004DE307 /* ListViewController.swift in Sources */,
 				4CA89794231794BD006E16A9 /* ListUpdating.swift in Sources */,
@@ -1381,6 +1399,7 @@
 				4C175AA6208AFA26003071CA /* StoreFSM.swift in Sources */,
 				4C8B374C22A0ED280004FD89 /* HeroCell.swift in Sources */,
 				4C8B375A22A0ED280004FD89 /* MoreCell.swift in Sources */,
+				4C3D86EF2597475700B93DF4 /* ImageColor.swift in Sources */,
 				4CB6EECF24274265006F09B7 /* Dequeueing.swift in Sources */,
 				4CE8586D21A16B9D00D206FA /* integration.swift in Sources */,
 				4C72D4372270A5DA008F8B96 /* ActionSheetPresenting.swift in Sources */,
@@ -1865,7 +1884,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X23V32HT8X;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Podest/Info.plist;
@@ -1893,7 +1912,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X23V32HT8X;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Podest/Info.plist;
@@ -2075,6 +2094,10 @@
 		4C3D86D425925E4B00B93DF4 /* Epic */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4C3D86D325925E4B00B93DF4 /* XCRemoteSwiftPackageReference "epic" */;
+			productName = Epic;
+		};
+		4C3D87122597C08A00B93DF4 /* Epic */ = {
+			isa = XCSwiftPackageProductDependency;
 			productName = Epic;
 		};
 		4C937B78256AD840001B406D /* Playback */ = {

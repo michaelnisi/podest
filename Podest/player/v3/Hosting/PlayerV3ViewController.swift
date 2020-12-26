@@ -41,7 +41,7 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
   
   private var isTransitionAnimating = false {
     didSet {
-      setRootView(displaying: rootView.image)
+      rootView = rootView.copy(isTransitionAnimating: isTransitionAnimating)
     }
   }
   
@@ -72,12 +72,20 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
     }
   }
   
-  private func setRootView(displaying image: UIImage?) {
-    guard let view = makeView(image: image) else {
+  private func setRootView(displaying image: Image, colors: PlayerView.Colors) {
+    guard let view = makeView(image: image, colors: colors) else {
       return
     }
     
     rootView = view
+  }
+  
+  private func handleImage(_ image: UIImage?) {
+    guard let image = image else {
+      return
+    }
+   
+    setRootView(displaying: Image(uiImage: image), colors: makeColors(image: image))
   }
   
   private func loadImage(_ imaginable: Imaginable) {
@@ -85,7 +93,7 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
     
     ImageRepository.shared
       .loadImage(representing: imaginable, at: size) { [weak self] image in
-        self?.setRootView(displaying: image)
+        self?.handleImage(image)
       }
   }
 
@@ -95,7 +103,7 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
         return
       }
       
-      setRootView(displaying: rootView.image)
+      rootView = rootView.copy(isPlaying: isPlaying)
     }
   }
   
@@ -132,37 +140,60 @@ extension PlayerV3ViewController: PlayerHosting {
 
 extension PlayerV3ViewController {
   
-  private func makeViewModel(entry: Entry, image: UIImage) -> PlayerView.Model {
-    PlayerView.Model(
+  private func makePlayerItem(entry: Entry, image: Image, colors: PlayerView.Colors) -> PlayerItem {
+    PlayerItem(
       title: entry.title,
       subtitle: entry.feedTitle ?? "Some Podcast",
-      image: image,
-      isPlaying: isPlaying,
-      isTransitionAnimating: isTransitionAnimating
+      isPlaying: isPlaying
     )
   }
   
-  private func makeView(image: UIImage?) -> PlayerView? {
-    guard let entry = entry, let image = image else {
+  private func makeView(image: Image, colors: PlayerView.Colors) -> PlayerView? {
+    guard let entry = entry else {
       return nil
     }
     
-    let model = makeViewModel(entry: entry, image: image)
-
-    return PlayerView(model: model, delegate: self)
+    let item = makePlayerItem(entry: entry, image: image, colors: colors)
+  
+    return PlayerView(
+      item: item,
+      isTransitionAnimating: isTransitionAnimating,
+      colors: colors,
+      image: image,
+      airPlayButton: AnyView(AirPlayButton()),
+      delegate: self
+    )
   }
   
-  private static var emptyViewModel: PlayerView.Model {
-    PlayerView.Model(
+  private func makeColors(image: UIImage) -> PlayerView.Colors {
+    let base = image.averageColor
+    
+    return PlayerView.Colors(
+      base: Color(base),
+      dark: Color(base.darker(0.3)),
+      light: Color(base.lighter(0.3))
+    )
+  }
+  
+  private static var emptyColors: PlayerView.Colors {
+    PlayerView.Colors(base: .red, dark: .green, light: .blue)
+  }
+  
+  private static var emptyPlayerItem: PlayerItem {
+    PlayerItem(
       title: "",
       subtitle: "",
-      image: UIImage(named: "Oval")!,
-      isPlaying: false,
-      isTransitionAnimating: false
+      isPlaying: false
     )
   }
   
   private static var emptyView: PlayerView {
-    PlayerView(model: emptyViewModel)
+    PlayerView(
+      item: emptyPlayerItem,
+      isTransitionAnimating: false,
+      colors: emptyColors,
+      image: Image("Oval"),
+      airPlayButton: AnyView(AirPlayButton())
+    )
   }
 }
