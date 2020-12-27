@@ -9,6 +9,9 @@
 import Foundation
 import FeedKit
 import UIKit
+import os.log
+
+private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
 /// Receives callbacks for playback status changes.
 protocol PlaybackResponding: class {
@@ -29,13 +32,20 @@ protocol PlaybackControlDelegate: PlaybackResponding {
   var isBackwardable: Bool { get set }
 }
 
-/// The default implementation is trivial.
 extension PlaybackControlDelegate {
   
   func playing(entry: Entry) {
+    do {
+      try Podest.userQueue.skip(to: entry)
+    } catch {
+      os_log("queue error: %{public}@", log: log, type: .error, error as CVarArg)
+    }
+    
     DispatchQueue.main.async { [weak self] in
       self?.entry = entry
       self?.isPlaying = true
+      self?.isForwardable = Podest.userQueue.isForwardable
+      self?.isBackwardable = Podest.userQueue.isBackwardable
     }
   }
   
@@ -43,6 +53,8 @@ extension PlaybackControlDelegate {
     DispatchQueue.main.async { [weak self] in
       self?.entry = entry
       self?.isPlaying = false
+      self?.isForwardable = Podest.userQueue.isForwardable
+      self?.isBackwardable = Podest.userQueue.isBackwardable
     }
   }
   
@@ -57,5 +69,8 @@ extension PlaybackControlDelegate {
 /// Player view controllers must adopt this protocol. It specifies a view
 /// controller that knows how to navigate this app, is able to control playback,
 /// and forwards its entry.
-protocol EntryPlayer: UIViewController, Navigator, PlaybackControlDelegate {}
+protocol EntryPlayer: UIViewController, Navigator, PlaybackControlDelegate {
+  
+  var readyForPresentation: (() -> Void)? { get set }
+}
 

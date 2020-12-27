@@ -22,6 +22,7 @@ protocol PlayerDelegate {
 class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, ObservableObject {
 
   var delegate: PlayerDelegate?
+  var readyForPresentation: (() -> Void)?
   
   override init?(coder aDecoder: NSCoder, rootView: PlayerView) {
     super.init(coder: aDecoder, rootView: rootView)
@@ -86,6 +87,7 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
     }
    
     setRootView(displaying: Image(uiImage: image), colors: makeColors(image: image))
+    readyForPresentation?()
   }
   
   private func loadImage(_ imaginable: Imaginable) {
@@ -107,8 +109,25 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
     }
   }
   
-  var isForwardable = false
-  var isBackwardable = false
+  var isBackwardable: Bool = true {
+    didSet {
+      guard isBackwardable != rootView.isBackwardable else {
+        return
+      }
+      
+      rootView = rootView.copy(isBackwardable: isBackwardable)
+    }
+  }
+  
+  var isForwardable: Bool = true {
+    didSet {
+      guard isForwardable != rootView.isForwardable else {
+        return
+      }
+      
+      rootView = rootView.copy(isForwardable: isForwardable)
+    }
+  }
 }
 
 // MARK: - PlayerHosting
@@ -144,7 +163,9 @@ extension PlayerV3ViewController {
     PlayerItem(
       title: entry.title,
       subtitle: entry.feedTitle ?? "Some Podcast",
-      isPlaying: isPlaying
+      isPlaying: isPlaying,
+      isBackwardable: isBackwardable,
+      isForwardable: isForwardable
     )
   }
   
@@ -183,7 +204,9 @@ extension PlayerV3ViewController {
     PlayerItem(
       title: "",
       subtitle: "",
-      isPlaying: false
+      isPlaying: false,
+      isBackwardable: false,
+      isForwardable: false
     )
   }
   

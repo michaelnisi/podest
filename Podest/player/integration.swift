@@ -236,12 +236,18 @@ extension RootViewController {
 
     let vc = makeNowPlaying(version: .v3)
     vc.navigationDelegate = self
+
     playervc = vc
     let isPlaying = Podest.playback.isPlaying(guid: entry.guid)
 
     update(state: SimplePlaybackState(entry: entry, isPlaying: isPlaying))
-    present(vc, animated: animated) {
-      completion?()
+    
+    vc.readyForPresentation = { [weak self] in
+      vc.readyForPresentation = nil
+      
+      self?.present(vc, animated: animated) {
+        completion?()
+      }
     }
   }
 

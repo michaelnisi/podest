@@ -14,6 +14,8 @@ import Playback
 private let log = OSLog.disabled
 
 final class PlayerV1ViewController: UIViewController, EntryPlayer {
+  
+  var readyForPresentation: (() -> Void)? 
 
   // MARK: Outlets
 
