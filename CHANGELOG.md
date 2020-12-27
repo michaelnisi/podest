@@ -1,3 +1,17 @@
+## 10 (planned)
+
+More immersive player user interface adding some features:
+
+- Scrubbing
+- Jump forward and backward
+- Sleep
+- AirPlay Routing Selection
+- Volume
+
+## 9.8 (2020-09-19)
+
+Basic adjustments for iOS 14, especially an updated background mode fetching all your latest episodes more efficiently.
+
 ## 9.7 (2020-07-12)
 
 Fixes a long-standing bug in search.
