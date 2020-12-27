@@ -99,7 +99,7 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
 
   var isPlaying: Bool = false {
     didSet {
-      guard isPlaying != oldValue else {
+      guard isPlaying != rootView.isPlaying else {
         return
       }
       

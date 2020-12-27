@@ -38,13 +38,13 @@
 		4C351CD11A7F5B7F00C5C88C /* SearchResultsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C351CD01A7F5B7E00C5C88C /* SearchResultsDataSource.swift */; };
 		4C377C8B2316D1D70038D9C8 /* ListTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C377C8A2316D1D70038D9C8 /* ListTableViewDelegate.swift */; };
 		4C3CDC282085A6C300BADBF8 /* StoreButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3CDC272085A6C300BADBF8 /* StoreButton.swift */; };
-		4C3D86D525925E4B00B93DF4 /* Epic in Frameworks */ = {isa = PBXBuildFile; productRef = 4C3D86D425925E4B00B93DF4 /* Epic */; };
 		4C3D86EF2597475700B93DF4 /* ImageColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3D86EE2597475600B93DF4 /* ImageColor.swift */; };
 		4C3D86F925979C4100B93DF4 /* AirPlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3D86F825979C4100B93DF4 /* AirPlayButton.swift */; };
 		4C3D87022597A93100B93DF4 /* AirPlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3D86F825979C4100B93DF4 /* AirPlayButton.swift */; };
 		4C3D87072597A93400B93DF4 /* ImageColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3D86EE2597475600B93DF4 /* ImageColor.swift */; };
 		4C3D870D2597BE5600B93DF4 /* entry.json in Resources */ = {isa = PBXBuildFile; fileRef = 4C3D870C2597BE5600B93DF4 /* entry.json */; };
 		4C3D87132597C08A00B93DF4 /* Epic in Frameworks */ = {isa = PBXBuildFile; productRef = 4C3D87122597C08A00B93DF4 /* Epic */; };
+		4C3D872A25987D0400B93DF4 /* Epic in Frameworks */ = {isa = PBXBuildFile; productRef = 4C3D872925987D0400B93DF4 /* Epic */; };
 		4C40A3F622C0818A00B353AD /* PlayerMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C40A3F522C0818A00B353AD /* PlayerMessage.swift */; };
 		4C42D9FB22E827A6007F80E2 /* PieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C42D9FA22E827A6007F80E2 /* PieView.swift */; };
 		4C471523210F4F6F008D9E32 /* ReceiptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C471522210F4F6F008D9E32 /* ReceiptTests.swift */; };
@@ -471,7 +471,7 @@
 				4C937B8F256AD8D2001B406D /* FileProxy in Frameworks */,
 				4E765EFE1FA1895100FD6D73 /* CloudKit.framework in Frameworks */,
 				4CF5674C207F362300C77C1D /* StoreKit.framework in Frameworks */,
-				4C3D86D525925E4B00B93DF4 /* Epic in Frameworks */,
+				4C3D872A25987D0400B93DF4 /* Epic in Frameworks */,
 				4C937B84256AD8B2001B406D /* HTMLAttributor in Frameworks */,
 				4C937BA1256AD910001B406D /* FeedKit in Frameworks */,
 			);
@@ -1071,7 +1071,7 @@
 				4C937B8E256AD8D2001B406D /* FileProxy */,
 				4C937B99256AD8F1001B406D /* BatchUpdates */,
 				4C937BA0256AD910001B406D /* FeedKit */,
-				4C3D86D425925E4B00B93DF4 /* Epic */,
+				4C3D872925987D0400B93DF4 /* Epic */,
 			);
 			productName = Podest;
 			productReference = 4E8CA7011A126ADB004DE307 /* Podest.app */;
@@ -1167,7 +1167,7 @@
 				4C937B8D256AD8D2001B406D /* XCRemoteSwiftPackageReference "fileproxy" */,
 				4C937B98256AD8F1001B406D /* XCRemoteSwiftPackageReference "batchupdates" */,
 				4C937B9F256AD910001B406D /* XCRemoteSwiftPackageReference "feedkit" */,
-				4C3D86D325925E4B00B93DF4 /* XCRemoteSwiftPackageReference "epic" */,
+				4C3D872825987D0400B93DF4 /* XCRemoteSwiftPackageReference "epic" */,
 			);
 			productRefGroup = 4E8CA7021A126ADB004DE307 /* Products */;
 			projectDirPath = "";
@@ -2040,12 +2040,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		4C3D86D325925E4B00B93DF4 /* XCRemoteSwiftPackageReference "epic" */ = {
+		4C3D872825987D0400B93DF4 /* XCRemoteSwiftPackageReference "epic" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "file:///Users/michael/swift/epic";
+			repositoryURL = "https://github.com/michaelnisi/epic";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
 			};
 		};
 		4C937B77256AD840001B406D /* XCRemoteSwiftPackageReference "playback" */ = {
@@ -2091,13 +2091,13 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4C3D86D425925E4B00B93DF4 /* Epic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4C3D86D325925E4B00B93DF4 /* XCRemoteSwiftPackageReference "epic" */;
-			productName = Epic;
-		};
 		4C3D87122597C08A00B93DF4 /* Epic */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = Epic;
+		};
+		4C3D872925987D0400B93DF4 /* Epic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4C3D872825987D0400B93DF4 /* XCRemoteSwiftPackageReference "epic" */;
 			productName = Epic;
 		};
 		4C937B78256AD840001B406D /* Playback */ = {
