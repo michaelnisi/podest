@@ -1,6 +1,6 @@
 # Podest
 
-## Download fine podcasts
+### Enjoy fine podcasts
 
 Podest is a podcast player app for iOS. Here’s my lengthy [motivation](https://troubled.pro/2018/10/podest.html). 
 
