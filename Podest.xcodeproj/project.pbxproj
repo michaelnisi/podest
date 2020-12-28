@@ -517,7 +517,8 @@
 			children = (
 				4C3D86EE2597475600B93DF4 /* ImageColor.swift */,
 				4C3D86F825979C4100B93DF4 /* AirPlayButton.swift */,
-				4CCC3D232557EC2600C6AB32 /* Hosting */,
+				4C17E47A2503F9440022EF0F /* PlayerV3ViewController.swift */,
+				4C17E47C2503FA9D0022EF0F /* PlayerV3.storyboard */,
 			);
 			path = v3;
 			sourceTree = "<group>";
@@ -695,15 +696,6 @@
 				4C776B2820847D0900A055CD /* ProductCell.xib */,
 			);
 			path = store;
-			sourceTree = "<group>";
-		};
-		4CCC3D232557EC2600C6AB32 /* Hosting */ = {
-			isa = PBXGroup;
-			children = (
-				4C17E47A2503F9440022EF0F /* PlayerV3ViewController.swift */,
-				4C17E47C2503FA9D0022EF0F /* PlayerV3.storyboard */,
-			);
-			path = Hosting;
 			sourceTree = "<group>";
 		};
 		4CD697011FEBC60500349580 /* list */ = {

@@ -11,14 +11,22 @@ import AVKit
 
 struct AirPlayButton: UIViewRepresentable {
   
-    func makeUIView(context: Context) -> AVRoutePickerView {
-      let view = AVRoutePickerView()
-      view.tintColor = .secondaryLabel
-      
-      return view
+  func makeUIView(context: Context) -> AVRoutePickerView {
+    AVRoutePickerView()
+  }
+  
+  func updateUIView(_ uiView: AVRoutePickerView, context: Context) {
+    uiView.tintColor = makeTintColor(environment: context.environment)
+  }
+  
+  func makeTintColor(environment: EnvironmentValues) -> UIColor? {
+    let colors = environment.colors
+    let color = environment.colorScheme == .dark ? colors.light : colors.dark
+    guard let cgColor = color.cgColor else {
+      return nil
     }
-
-    func updateUIView(_ uiView: AVRoutePickerView, context: Context) {
-        //
-    }
+    
+    return UIColor(cgColor: cgColor)
+  }
 }
+ 

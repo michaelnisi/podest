@@ -19,6 +19,16 @@ protocol PlayerDelegate {
   func pausePlayback()
 }
 
+struct NowPlaying {
+  let entry: Entry
+  let isPlaying: Bool
+  let isForwardable: Bool
+  let isBackwardable: Bool
+  let currentTime: Double
+  let length: Double
+}
+
+/// A UIKit View Controller that manages the player user interface.
 class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, ObservableObject {
 
   var delegate: PlayerDelegate?
@@ -73,7 +83,7 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
     }
   }
   
-  private func setRootView(displaying image: Image, colors: PlayerView.Colors) {
+  private func setRootView(displaying image: Image, colors: Colors) {
     guard let view = makeView(image: image, colors: colors) else {
       return
     }
@@ -159,7 +169,7 @@ extension PlayerV3ViewController: PlayerHosting {
 
 extension PlayerV3ViewController {
   
-  private func makePlayerItem(entry: Entry, image: Image, colors: PlayerView.Colors) -> PlayerItem {
+  private func makePlayerItem(entry: Entry, image: Image, colors: Colors) -> PlayerItem {
     PlayerItem(
       title: entry.title,
       subtitle: entry.feedTitle ?? "Some Podcast",
@@ -169,7 +179,7 @@ extension PlayerV3ViewController {
     )
   }
   
-  private func makeView(image: Image, colors: PlayerView.Colors) -> PlayerView? {
+  private func makeView(image: Image, colors: Colors) -> PlayerView? {
     guard let entry = entry else {
       return nil
     }
@@ -186,18 +196,18 @@ extension PlayerV3ViewController {
     )
   }
   
-  private func makeColors(image: UIImage) -> PlayerView.Colors {
+  private func makeColors(image: UIImage) -> Colors {
     let base = image.averageColor
     
-    return PlayerView.Colors(
+    return Colors(
       base: Color(base),
       dark: Color(base.darker(0.3)),
       light: Color(base.lighter(0.3))
     )
   }
   
-  private static var emptyColors: PlayerView.Colors {
-    PlayerView.Colors(base: .red, dark: .green, light: .blue)
+  private static var emptyColors: Colors {
+    Colors(base: .red, dark: .green, light: .blue)
   }
   
   private static var emptyPlayerItem: PlayerItem {
