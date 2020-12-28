@@ -142,7 +142,7 @@ extension PlayerV3ViewController: PlayerHosting {
     delegate?.forward()
   }
   
-  func backgward() {
+  func backward() {
     delegate?.backward()
   }
   
