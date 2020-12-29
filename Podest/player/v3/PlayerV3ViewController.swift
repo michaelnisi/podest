@@ -19,20 +19,13 @@ protocol PlayerDelegate {
   func pausePlayback()
 }
 
-struct NowPlaying {
-  let entry: Entry
-  let isPlaying: Bool
-  let isForwardable: Bool
-  let isBackwardable: Bool
-  let currentTime: Double
-  let length: Double
-}
-
 /// A UIKit View Controller that manages the player user interface.
 class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, ObservableObject {
 
   var delegate: PlayerDelegate?
   var readyForPresentation: (() -> Void)?
+  
+  @ObservedObject var model = PlayerV3ViewController.emptyModel
   
   override init?(coder aDecoder: NSCoder, rootView: PlayerView) {
     super.init(coder: aDecoder, rootView: rootView)
@@ -48,25 +41,7 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
     super.viewDidLoad()
     
     modalPresentationStyle = .fullScreen
-  }
-  
-  private var isTransitionAnimating = false {
-    didSet {
-      rootView = rootView.copy(isTransitionAnimating: isTransitionAnimating)
-    }
-  }
-  
-  override func viewWillTransition(
-    to size: CGSize,
-    with coordinator: UIViewControllerTransitionCoordinator
-  ) {
-    super.viewWillTransition(to: size, with: coordinator)
-    
-    isTransitionAnimating = true
-    
-    coordinator.animate { [weak self] _ in
-      self?.isTransitionAnimating = false
-    }
+    rootView = PlayerView(model: model, delegate: self)
   }
 
   // MARK: - EntryPlayer
@@ -83,20 +58,16 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
     }
   }
   
-  private func setRootView(displaying image: Image, colors: Colors) {
-    guard let view = makeView(image: image, colors: colors) else {
+  private func update(with image: UIImage?) {
+    guard let entry = entry, let image = image else {
       return
     }
     
-    rootView = view
-  }
-  
-  private func handleImage(_ image: UIImage?) {
-    guard let image = image else {
-      return
-    }
-   
-    setRootView(displaying: Image(uiImage: image), colors: makeColors(image: image))
+    model.title = entry.title
+    model.subtitle = entry.feedTitle ?? "Some Podcast"
+    model.image = Image(uiImage: image)
+    model.colors = makeColors(image: image)
+
     readyForPresentation?()
   }
   
@@ -105,38 +76,20 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
     
     ImageRepository.shared
       .loadImage(representing: imaginable, at: size) { [weak self] image in
-        self?.handleImage(image)
+        self?.update(with: image)
       }
   }
 
   var isPlaying: Bool = false {
-    didSet {
-      guard isPlaying != rootView.isPlaying else {
-        return
-      }
-      
-      rootView = rootView.copy(isPlaying: isPlaying)
-    }
+    didSet { model.isPlaying = isPlaying }
   }
   
   var isBackwardable: Bool = true {
-    didSet {
-      guard isBackwardable != rootView.isBackwardable else {
-        return
-      }
-      
-      rootView = rootView.copy(isBackwardable: isBackwardable)
-    }
+    didSet { model.isBackwardable = isBackwardable }
   }
   
   var isForwardable: Bool = true {
-    didSet {
-      guard isForwardable != rootView.isForwardable else {
-        return
-      }
-      
-      rootView = rootView.copy(isForwardable: isForwardable)
-    }
+    didSet { model.isForwardable = isForwardable }
   }
 }
 
@@ -169,33 +122,6 @@ extension PlayerV3ViewController: PlayerHosting {
 
 extension PlayerV3ViewController {
   
-  private func makePlayerItem(entry: Entry, image: Image, colors: Colors) -> PlayerItem {
-    PlayerItem(
-      title: entry.title,
-      subtitle: entry.feedTitle ?? "Some Podcast",
-      isPlaying: isPlaying,
-      isBackwardable: isBackwardable,
-      isForwardable: isForwardable
-    )
-  }
-  
-  private func makeView(image: Image, colors: Colors) -> PlayerView? {
-    guard let entry = entry else {
-      return nil
-    }
-    
-    let item = makePlayerItem(entry: entry, image: image, colors: colors)
-  
-    return PlayerView(
-      item: item,
-      isTransitionAnimating: isTransitionAnimating,
-      colors: colors,
-      image: image,
-      airPlayButton: AnyView(AirPlayButton()),
-      delegate: self
-    )
-  }
-  
   private func makeColors(image: UIImage) -> Colors {
     let base = image.averageColor
     
@@ -206,27 +132,20 @@ extension PlayerV3ViewController {
     )
   }
   
-  private static var emptyColors: Colors {
-    Colors(base: .red, dark: .green, light: .blue)
+  private static var emptyView: PlayerView {
+    PlayerView(model: emptyModel)
   }
   
-  private static var emptyPlayerItem: PlayerItem {
-    PlayerItem(
+  private static var emptyModel: PlayerView.Model {
+    PlayerView.Model(
       title: "",
       subtitle: "",
-      isPlaying: false,
-      isBackwardable: false,
-      isForwardable: false
-    )
-  }
-  
-  private static var emptyView: PlayerView {
-    PlayerView(
-      item: emptyPlayerItem,
-      isTransitionAnimating: false,
-      colors: emptyColors,
+      colors: Colors(base: .red, dark: .green, light: .blue),
       image: Image("Oval"),
-      airPlayButton: AnyView(AirPlayButton())
+      airPlayButton: AnyView(AirPlayButton()),
+      isPlaying: false,
+      isForwardable: false,
+      isBackwardable: false
     )
   }
 }
