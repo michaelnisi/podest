@@ -25,7 +25,7 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
   var delegate: PlayerDelegate?
   var readyForPresentation: (() -> Void)?
   
-  @ObservedObject var model = PlayerV3ViewController.emptyModel
+  @ObservedObject private var model = PlayerV3ViewController.emptyModel
   
   override init?(coder aDecoder: NSCoder, rootView: PlayerView) {
     super.init(coder: aDecoder, rootView: rootView)
@@ -41,7 +41,11 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
     super.viewDidLoad()
     
     modalPresentationStyle = .fullScreen
-    rootView = PlayerView(model: model, delegate: self)
+    rootView = PlayerView(
+      model: model,
+      airPlayButton: PlayerV3ViewController.airPlayButton,
+      delegate: self
+    )
   }
 
   // MARK: - EntryPlayer
@@ -133,7 +137,11 @@ extension PlayerV3ViewController {
   }
   
   private static var emptyView: PlayerView {
-    PlayerView(model: emptyModel)
+    PlayerView(model: emptyModel, airPlayButton: airPlayButton)
+  }
+  
+  private static var airPlayButton: AnyView {
+    AnyView(AirPlayButton())
   }
   
   private static var emptyModel: PlayerView.Model {
@@ -142,7 +150,6 @@ extension PlayerV3ViewController {
       subtitle: "",
       colors: Colors(base: .red, dark: .green, light: .blue),
       image: Image("Oval"),
-      airPlayButton: AnyView(AirPlayButton()),
       isPlaying: false,
       isForwardable: false,
       isBackwardable: false
