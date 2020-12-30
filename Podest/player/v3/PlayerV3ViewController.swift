@@ -25,7 +25,7 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
   var delegate: PlayerDelegate?
   var readyForPresentation: (() -> Void)?
   
-  @ObservedObject private var model = PlayerV3ViewController.emptyModel
+  private var model = PlayerV3ViewController.emptyModel
   
   override init?(coder aDecoder: NSCoder, rootView: PlayerView) {
     super.init(coder: aDecoder, rootView: rootView)
