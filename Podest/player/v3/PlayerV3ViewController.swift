@@ -66,12 +66,14 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
     guard let entry = entry, let image = image else {
       return
     }
-    
-    model.title = entry.title
-    model.subtitle = entry.feedTitle ?? "Some Podcast"
-    model.image = Image(uiImage: image)
-    model.colors = makeColors(image: image)
 
+    model.item = PlayerItem(
+      title: entry.title,
+      subtitle: entry.feedTitle ?? "Some Podcast",
+      colors: makeColors(image: image),
+      image: Image(uiImage: image)
+    )
+    
     readyForPresentation?()
   }
   
@@ -144,12 +146,18 @@ extension PlayerV3ViewController {
     AnyView(AirPlayButton())
   }
   
-  private static var emptyModel: PlayerView.Model {
-    PlayerView.Model(
+  private static var emptyItem: PlayerItem {
+    PlayerItem(
       title: "",
       subtitle: "",
       colors: Colors(base: .red, dark: .green, light: .blue),
-      image: Image("Oval"),
+      image: Image("Oval")
+    )
+  }
+  
+  private static var emptyModel: PlayerView.Model {
+    PlayerView.Model(
+      item: emptyItem,
       isPlaying: false,
       isForwardable: false,
       isBackwardable: false
