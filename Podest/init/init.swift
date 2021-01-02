@@ -362,7 +362,7 @@ final class Podest {
   static let iCloud: UserSyncing = conf.makeUserClient()
   static let store: Shopping = try! conf.makeStore()
   static let files: Downloading = conf.makeFileRepo()
-  static let playback: Playback = PlaybackSession(times: TimeRepository.shared)
+  static let playback = PlaybackSession<Entry>(times: TimeRepository.shared)
   
   static let gateway = AppGateway()
 }

@@ -29,7 +29,7 @@ extension RootViewController: Players {
 extension RootViewController {
 
   var isMiniPlayerHidden: Bool {
-    return minivc.viewIfLoaded?.isHidden ?? true
+    minivc.viewIfLoaded?.isHidden ?? true
   }
 
   private var miniLayout: NSLayoutConstraint {
@@ -186,16 +186,16 @@ extension RootViewController {
                log: log, type: .error, error as CVarArg)
       }
 
-      Podest.playback.resume(entry: entry)
+      Podest.playback.resume(entry, from: nil)
     }
   }
 
   func pause() {
-    guard Podest.playback.currentEntry != nil else {
+    guard Podest.playback.currentItem != nil else {
       return
     }
 
-    Podest.playback.pause(entry: nil)
+    Podest.playback.pause(nil, at: nil)
   }
 }
 
@@ -204,7 +204,7 @@ extension RootViewController {
 extension RootViewController {
 
   private enum PlayerVersion {
-    case v1, v3
+    case v3
   }
 
   private func makeV3Player() -> EntryPlayer {
@@ -221,10 +221,6 @@ extension RootViewController {
   /// controller types (and identifiers) are allowed.
   private func makeNowPlaying(version: PlayerVersion) -> EntryPlayer {
     switch version {
-    case .v1:
-      return UIStoryboard(name: "PlayerV1", bundle: .main)
-        .instantiateViewController(withIdentifier: "PlayerV1ID") as! PlayerV1ViewController
-
     case .v3:
       return makeV3Player()
     }
@@ -277,7 +273,7 @@ extension RootViewController {
   }
 
   var isPresentingVideo: Bool {
-    return videoPlayer != nil
+    videoPlayer != nil
   }
 
   func showVideo(player: AVPlayer, animated: Bool, completion: (() -> Void)? = nil) {
@@ -321,7 +317,7 @@ extension RootViewController {
   }
 
   var isPlayerPresented: Bool {
-    return isPresentingVideo || presentedViewController is EntryPlayer
+    isPresentingVideo || presentedViewController is EntryPlayer
   }
 }
 
@@ -329,8 +325,7 @@ extension RootViewController {
 extension AVPlayerViewController {
 
   override open var prefersStatusBarHidden: Bool {
-    let c = UITraitCollection(horizontalSizeClass: .compact)
-    return !traitCollection.containsTraits(in: c)
+    !traitCollection.containsTraits(in: UITraitCollection(horizontalSizeClass: .compact))
   }
 }
 
@@ -364,11 +359,11 @@ extension RootViewController {
   }
 }
 
-// MARK: - PlaybackDelegate
+// MARK: - Playback Handlers
 
-extension RootViewController: PlaybackDelegate {
-
-  func proxy(url: URL) -> URL? {
+extension RootViewController {
+  
+  func makeURL(url: URL) -> URL? {
     do {
       return try Podest.files.url(for: url)
     } catch {
@@ -383,10 +378,10 @@ extension RootViewController: PlaybackDelegate {
   }
 
   var isPresentingNowPlaying: Bool {
-    return presentedViewController is EntryPlayer
+    presentedViewController is EntryPlayer
   }
 
-  func playback(session: Playback, didChange state: PlaybackState) {
+  func playbackDidChange(session: PlaybackSession<Entry>, state: PlaybackState<Entry>) {
     os_log("playback state did change: %{public}@",
            log: log, type: .info, String(describing: state))
 
@@ -395,6 +390,7 @@ extension RootViewController: PlaybackDelegate {
       DispatchQueue.main.async {
         defer {
           let s = SimplePlaybackState(entry: entry, isPlaying: false)
+          
           self.update(state: s)
         }
 
@@ -428,7 +424,7 @@ extension RootViewController: PlaybackDelegate {
         let s = SimplePlaybackState(entry: entry, isPlaying: true)
 
         self.update(state: s)
-
+        
         self.hideVideoPlayer(animated: true) {
           self.showMiniPlayer(animated: true)
         }
@@ -467,11 +463,25 @@ extension RootViewController: PlaybackDelegate {
   }
 
   func nextItem() -> Entry? {
-    return Podest.userQueue.next()
+    Podest.userQueue.next()
   }
 
-  func previousItem() -> Entry? {
-    return Podest.userQueue.previous()
+  func previousItem() -> Entry?  {
+    Podest.userQueue.previous()
+  }
+  
+  func installPlaybackHandlers() {
+    Podest.playback.makeURL = makeURL
+    Podest.playback.onChange = playbackDidChange
+    Podest.playback.nextItem = nextItem
+    Podest.playback.previousItem = previousItem
+  }
+  
+  func uninstallPlaybackHandlers() {
+    Podest.playback.makeURL = nil
+    Podest.playback.onChange = nil
+    Podest.playback.nextItem = nil
+    Podest.playback.previousItem = nil
   }
 }
 
@@ -488,10 +498,10 @@ extension RootViewController: PlayerDelegate {
   }
   
   func resumePlayback(entry: Entry?) {
-    Podest.playback.resume(entry: entry)
+    Podest.playback.resume(entry, from: nil)
   }
   
   func pausePlayback() {
-    Podest.playback.pause(entry: nil)
+    Podest.playback.pause(nil, at: nil)
   }
 }

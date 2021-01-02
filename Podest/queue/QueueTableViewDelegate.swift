@@ -126,7 +126,7 @@ extension QueueViewController {
   private func makePlayAction(entry: Entry) -> UIContextualAction {
     let action = UIContextualAction(style: .normal, title: nil) { 
       action, sourceView, completionHandler in
-      let actionPerformed = Podest.playback.resume(entry: entry)
+      let actionPerformed = Podest.playback.resume(entry, from: nil)
       
       completionHandler(actionPerformed)
     }

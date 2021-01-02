@@ -117,9 +117,9 @@ extension RootViewController {
     snc = ncs.last
 
     configureMiniPlayer()
+    installPlaybackHandlers()
 
     qvc.navigationDelegate = self
-    Podest.playback.delegate = self
   }
 
   override func viewDidAppear(_ animated: Bool) {

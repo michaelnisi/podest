@@ -1,5 +1,5 @@
 //
-//  api.swift
+//  Podest.swift
 //  Podest
 //
 //  The core API of the Podest podcast app.
@@ -12,9 +12,69 @@ import Foundation
 import FeedKit
 import AVFoundation.AVPlayer
 import UIKit
+import Playback
 
 typealias VoidHandler = () -> Void
 typealias ArgHandler<T> = (T) -> Void
+
+extension Entry: Playable {
+  
+  public func makePlaybackItem() -> PlaybackItem {
+    guard let enclosure = enclosure else {
+      fatalError("missing enclosure")
+    }
+    
+    return PlaybackItem(
+      id: guid,
+      url: enclosure.url,
+      title: title,
+      subtitle: feedTitle ?? "",
+      imageURLs: makeURLs(),
+      proclaimedMediaType: enclosure.type.isVideo ? .video : .audio
+    )
+  }
+}
+
+extension Entry: Imaginable {
+  
+  public func makeURLs() -> ImageURLs {
+    guard let iTunes = iTunes else {
+      print("** no iTunes: \(self)")
+      return ImageURLs(
+        id: feed.hash,
+        title: title,
+        small: feedImage!,
+        medium: feedImage!,
+        large: feedImage!
+      )
+    }
+    
+    return ImageURLs(
+      id: iTunes.iTunesID,
+      title: title,
+      small: iTunes.img60,
+      medium: iTunes.img100,
+      large: iTunes.img600
+    )
+  }
+}
+
+extension Feed: Imaginable {
+  
+  public func makeURLs() -> ImageURLs {
+    guard let iTunes = iTunes else {
+      fatalError("missing iTunes")
+    }
+    
+    return ImageURLs(
+      id: iTunes.iTunesID,
+      title: title,
+      small: iTunes.img60,
+      medium: iTunes.img100,
+      large: iTunes.img600
+    )
+  }
+}
 
 // MARK: - Audio and Video Playback
 

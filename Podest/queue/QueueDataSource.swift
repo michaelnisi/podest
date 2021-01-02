@@ -85,7 +85,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   let files: Downloading
   let userLibrary: Subscribing
   let images: Images
-  let playback: Playback
+  let playback: PlaybackSession<Entry>
   let iCloud: UserSyncing
 
   init(
@@ -94,7 +94,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     files: Downloading,
     userLibrary: Subscribing,
     images: Images,
-    playback: Playback,
+    playback: PlaybackSession<Entry>,
     iCloud: UserSyncing
   ) {
     os_log("initializing queue data source", log: log, type: .info)

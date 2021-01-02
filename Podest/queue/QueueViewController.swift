@@ -276,8 +276,7 @@ extension QueueViewController: EntryProvider {
   /// player, the first entry in the queue, or `nil`.
   var entry: Entry? {
     guard let indexPath = tableView.indexPathForSelectedRow else {
-      return Podest.playback.currentEntry ??
-        dataSource.entry(at: IndexPath(row: 0, section: 0))
+      return dataSource.entry(at: IndexPath(row: 0, section: 0))
     }
     
     return dataSource.entry(at: indexPath)
