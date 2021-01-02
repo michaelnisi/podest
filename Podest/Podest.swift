@@ -14,23 +14,21 @@ import AVFoundation.AVPlayer
 import UIKit
 import Playback
 
-typealias VoidHandler = () -> Void
-typealias ArgHandler<T> = (T) -> Void
+// MARK: - Imaginable
 
-extension Entry: Playable {
+extension Feed: Imaginable {
   
-  public func makePlaybackItem() -> PlaybackItem {
-    guard let enclosure = enclosure else {
-      fatalError("missing enclosure")
+  public func makeURLs() -> ImageURLs {
+    guard let iTunes = iTunes else {
+      fatalError("missing iTunes")
     }
     
-    return PlaybackItem(
-      id: guid,
-      url: enclosure.url,
+    return ImageURLs(
+      id: iTunes.iTunesID,
       title: title,
-      subtitle: feedTitle ?? "",
-      imageURLs: makeURLs(),
-      proclaimedMediaType: enclosure.type.isVideo ? .video : .audio
+      small: iTunes.img60,
+      medium: iTunes.img100,
+      large: iTunes.img600
     )
   }
 }
@@ -39,7 +37,6 @@ extension Entry: Imaginable {
   
   public func makeURLs() -> ImageURLs {
     guard let iTunes = iTunes else {
-      print("** no iTunes: \(self)")
       return ImageURLs(
         id: feed.hash,
         title: title,
@@ -59,19 +56,22 @@ extension Entry: Imaginable {
   }
 }
 
-extension Feed: Imaginable {
+// MARK: - Playable
+
+extension Entry: Playable {
   
-  public func makeURLs() -> ImageURLs {
-    guard let iTunes = iTunes else {
-      fatalError("missing iTunes")
+  public func makePlaybackItem() -> PlaybackItem {
+    guard let enclosure = enclosure else {
+      fatalError("missing enclosure")
     }
     
-    return ImageURLs(
-      id: iTunes.iTunesID,
+    return PlaybackItem(
+      id: guid,
+      url: enclosure.url,
       title: title,
-      small: iTunes.img60,
-      medium: iTunes.img100,
-      large: iTunes.img600
+      subtitle: feedTitle ?? "",
+      imageURLs: makeURLs(),
+      proclaimedMediaType: enclosure.type.isVideo ? .video : .audio
     )
   }
 }
