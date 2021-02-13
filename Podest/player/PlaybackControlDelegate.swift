@@ -10,6 +10,7 @@ import Foundation
 import FeedKit
 import UIKit
 import os.log
+import InsetPresentation
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
@@ -69,7 +70,7 @@ extension PlaybackControlDelegate {
 /// Player view controllers must adopt this protocol. It specifies a view
 /// controller that knows how to navigate this app, is able to control playback,
 /// and forwards its entry.
-protocol EntryPlayer: UIViewController, Navigator, PlaybackControlDelegate {
+protocol EntryPlayer: UIViewController, Navigator, PlaybackControlDelegate, InsetPresentable {
   
   var readyForPresentation: (() -> Void)? { get set }
 }

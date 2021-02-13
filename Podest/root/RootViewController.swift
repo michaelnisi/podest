@@ -35,7 +35,9 @@ final class RootViewController: UIViewController, Routing {
   var minivc: MiniPlayerController!
   
   /// The presented player view controller if any.
-  weak var playervc: PlaybackControlDelegate? 
+  weak var playervc: PlaybackControlDelegate?
+  
+  var playerTransitioningDelegate: PlayerTransitioningDelegate?
 
   private var pnc: UINavigationController!
   private var snc: UINavigationController!

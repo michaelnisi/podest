@@ -323,7 +323,7 @@ extension ProductsDataSource: StoreDelegate {
       questions.
       </p>
       """,
-      title: "100% Open Source",
+      title: "Open Source",
       author: "Michael Nisi",
       guid: UUID().uuidString
     )

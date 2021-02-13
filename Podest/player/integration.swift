@@ -239,9 +239,11 @@ extension RootViewController {
     update(state: SimplePlaybackState(entry: entry, isPlaying: isPlaying))
     
     vc.readyForPresentation = { [weak self] in
+      self?.playerTransitioningDelegate = PlayerTransitioningDelegate(from: self!, to: vc)
       vc.readyForPresentation = nil
+      vc.transitioningDelegate = self?.playerTransitioningDelegate
       
-      self?.present(vc, animated: animated) {
+      self?.present(vc, interactiveDismissalType: .standard) {
         completion?()
       }
     }
@@ -382,11 +384,11 @@ extension RootViewController {
   }
 
   func playbackDidChange(session: PlaybackSession<Entry>, state: PlaybackState<Entry>) {
-    os_log("playback state did change: %{public}@",
+    os_log("** playback state did change: %{public}@",
            log: log, type: .info, String(describing: state))
 
     switch state {
-    case .paused(let entry, let error):
+    case let .paused(entry, _, error):
       DispatchQueue.main.async {
         defer {
           let s = SimplePlaybackState(entry: entry, isPlaying: false)
@@ -419,7 +421,11 @@ extension RootViewController {
         p?.present(alert, animated: true, completion: nil)
       }
 
-    case .listening(let entry):
+    case let .listening(entry, asset):
+      os_log("** listening: %{public}@, %{public}@", log: log, type: .debug,
+             String(describing: entry), String(describing: asset)
+      )
+      
       DispatchQueue.main.async {
         let s = SimplePlaybackState(entry: entry, isPlaying: true)
 

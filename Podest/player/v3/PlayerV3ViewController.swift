@@ -11,6 +11,7 @@ import SwiftUI
 import FeedKit
 import Playback
 import Epic
+import InsetPresentation
 
 protocol PlayerDelegate {
   func forward()
@@ -20,7 +21,8 @@ protocol PlayerDelegate {
 }
 
 /// A UIKit View Controller that manages the player user interface.
-class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, ObservableObject {
+class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, ObservableObject, InsetPresentable {
+  var transitionController: UIViewControllerTransitioningDelegate?
 
   var delegate: PlayerDelegate?
   var readyForPresentation: (() -> Void)?
@@ -40,7 +42,6 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    modalPresentationStyle = .fullScreen
     rootView = PlayerView(
       model: model,
       airPlayButton: PlayerV3ViewController.airPlayButton,

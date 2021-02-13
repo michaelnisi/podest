@@ -33,6 +33,7 @@
 		4C1F57A92081C0690067AB7C /* ProductsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F57A82081C0690067AB7C /* ProductsDataSource.swift */; };
 		4C21F57F21D8A56500ED5D26 /* SubtitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21F57D21D8A56500ED5D26 /* SubtitleTableViewCell.swift */; };
 		4C21F58021D8A56500ED5D26 /* SubtitleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C21F57E21D8A56500ED5D26 /* SubtitleTableViewCell.xib */; };
+		4C233A1525D8617F001782AE /* InsetPresentation in Frameworks */ = {isa = PBXBuildFile; productRef = 4C233A1425D8617F001782AE /* InsetPresentation */; };
 		4C25AED51D578FA90056EE2F /* strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C25AED41D578FA90056EE2F /* strings.swift */; };
 		4C351CD11A7F5B7F00C5C88C /* SearchResultsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C351CD01A7F5B7E00C5C88C /* SearchResultsDataSource.swift */; };
 		4C377C8B2316D1D70038D9C8 /* ListTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C377C8A2316D1D70038D9C8 /* ListTableViewDelegate.swift */; };
@@ -120,6 +121,8 @@
 		4CED20DC226C30DE0049B88D /* QueueUpdating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CED20DB226C30DE0049B88D /* QueueUpdating.swift */; };
 		4CF2DEA221DDD8E300A0F6EC /* ReusableNib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF2DEA121DDD8E300A0F6EC /* ReusableNib.swift */; };
 		4CF5674C207F362300C77C1D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF5674B207F362300C77C1D /* StoreKit.framework */; };
+		4CF7CB4F25BDE65400356510 /* PlayerTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF7CB4E25BDE65400356510 /* PlayerTransitioningDelegate.swift */; };
+		4CF7CB5525BDE69200356510 /* PlayerPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF7CB5425BDE69200356510 /* PlayerPresentationController.swift */; };
 		4CF9AC7E21FAEA9D009F70BB /* StringRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF9AC7D21FAEA9D009F70BB /* StringRepositoryTests.swift */; };
 		4CF9AC8021FB1B7A009F70BB /* strings.json in Resources */ = {isa = PBXBuildFile; fileRef = 4CF9AC7F21FB1B7A009F70BB /* strings.json */; };
 		4CFEA4F22572B982006157A1 /* PlaybackControlDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C728DBF20623544005B739C /* PlaybackControlDelegate.swift */; };
@@ -322,6 +325,8 @@
 		4CED210F226C35980049B88D /* BatchUpdates.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BatchUpdates.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CF2DEA121DDD8E300A0F6EC /* ReusableNib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableNib.swift; sourceTree = "<group>"; };
 		4CF5674B207F362300C77C1D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		4CF7CB4E25BDE65400356510 /* PlayerTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTransitioningDelegate.swift; sourceTree = "<group>"; };
+		4CF7CB5425BDE69200356510 /* PlayerPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerPresentationController.swift; sourceTree = "<group>"; };
 		4CF9AC7D21FAEA9D009F70BB /* StringRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringRepositoryTests.swift; sourceTree = "<group>"; };
 		4CF9AC7F21FB1B7A009F70BB /* strings.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = strings.json; sourceTree = "<group>"; };
 		4CFEE33721C7B101008B2EC0 /* SearchControllerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchControllerProxy.swift; sourceTree = "<group>"; };
@@ -408,6 +413,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C233A1525D8617F001782AE /* InsetPresentation in Frameworks */,
 				4C937B9A256AD8F1001B406D /* BatchUpdates in Frameworks */,
 				4C937B79256AD840001B406D /* Playback in Frameworks */,
 				4C937B8F256AD8D2001B406D /* FileProxy in Frameworks */,
@@ -452,6 +458,13 @@
 				4C010A1E2101D6E90006CB53 /* Info.plist */,
 			);
 			path = PodKitTests;
+			sourceTree = "<group>";
+		};
+		4C014BF125D050DA00C753B0 /* presentation */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = presentation;
 			sourceTree = "<group>";
 		};
 		4C17E47E2504034D0022EF0F /* v3 */ = {
@@ -663,6 +676,8 @@
 		4CE8586B21A14EB300D206FA /* root */ = {
 			isa = PBXGroup;
 			children = (
+				4CF7CB4E25BDE65400356510 /* PlayerTransitioningDelegate.swift */,
+				4CF7CB5425BDE69200356510 /* PlayerPresentationController.swift */,
 				4E7F291A1E7D799200E12846 /* RootViewController.swift */,
 			);
 			path = root;
@@ -785,6 +800,7 @@
 				4CD697091FEBC8DB00349580 /* tables */,
 				4CD697071FEBC7E700349580 /* sync */,
 				4C6FB910204679C2005C559E /* files */,
+				4C014BF125D050DA00C753B0 /* presentation */,
 				4E8CA70C1A126ADB004DE307 /* Main.storyboard */,
 				4E8CA70F1A126ADB004DE307 /* Media.xcassets */,
 				4E8CA7111A126ADB004DE307 /* LaunchScreen.xib */,
@@ -933,6 +949,7 @@
 				4C937B99256AD8F1001B406D /* BatchUpdates */,
 				4C937BA0256AD910001B406D /* FeedKit */,
 				4C3D872925987D0400B93DF4 /* Epic */,
+				4C233A1425D8617F001782AE /* InsetPresentation */,
 			);
 			productName = Podest;
 			productReference = 4E8CA7011A126ADB004DE307 /* Podest.app */;
@@ -1029,6 +1046,7 @@
 				4C937B98256AD8F1001B406D /* XCRemoteSwiftPackageReference "batchupdates" */,
 				4C937B9F256AD910001B406D /* XCRemoteSwiftPackageReference "feedkit" */,
 				4C3D872825987D0400B93DF4 /* XCRemoteSwiftPackageReference "epic" */,
+				4C233A1325D8617F001782AE /* XCRemoteSwiftPackageReference "InsetPresentation" */,
 			);
 			productRefGroup = 4E8CA7021A126ADB004DE307 /* Products */;
 			projectDirPath = "";
@@ -1201,6 +1219,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C07C97A21EBA69200ED8AB0 /* ArticleCollectionViewCell.swift in Sources */,
+				4CF7CB5525BDE69200356510 /* PlayerPresentationController.swift in Sources */,
 				4CE20ACC1A31C66C0052C360 /* SearchResultsController.swift in Sources */,
 				4CED20D8226C2CFC0049B88D /* QueueTableViewDelegate.swift in Sources */,
 				4CB6EED324278050006F09B7 /* MakeList.swift in Sources */,
@@ -1267,6 +1286,7 @@
 				4C1F57A720810D850067AB7C /* ProductsViewController.swift in Sources */,
 				4CD7414D1CCD203A00BA33CE /* init.swift in Sources */,
 				4C6FB90F2045C3BB005C559E /* files.swift in Sources */,
+				4CF7CB4F25BDE65400356510 /* PlayerTransitioningDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1868,6 +1888,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		4C233A1325D8617F001782AE /* XCRemoteSwiftPackageReference "InsetPresentation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/michaelnisi/InsetPresentation";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		4C3D872825987D0400B93DF4 /* XCRemoteSwiftPackageReference "epic" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/michaelnisi/epic";
@@ -1881,7 +1909,7 @@
 			repositoryURL = "https://github.com/michaelnisi/playback";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 10.0.0;
+				minimumVersion = 11.0.0;
 			};
 		};
 		4C937B82256AD8B2001B406D /* XCRemoteSwiftPackageReference "hattr" */ = {
@@ -1919,6 +1947,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4C233A1425D8617F001782AE /* InsetPresentation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4C233A1325D8617F001782AE /* XCRemoteSwiftPackageReference "InsetPresentation" */;
+			productName = InsetPresentation;
+		};
 		4C3D87122597C08A00B93DF4 /* Epic */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Epic;
