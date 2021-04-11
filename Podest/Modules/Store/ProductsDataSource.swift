@@ -155,10 +155,7 @@ extension ProductsDataSource: UICollectionViewDataSource {
         withReuseIdentifier: ProductsDataSource.articleCellID,
         for: indexPath) as! ArticleCollectionViewCell
 
-      // TODO: Fix this dep problem
-      cell.textView.text = "FIXME"
-//      cell.textView.attributedText = StringRepository
-//        .makeSummaryWithHeadline(info: info)
+      cell.textView.attributedText = StringRepository.makeSummaryWithHeadline(info: info)
 
       return cell
     case .offline:
@@ -390,5 +387,14 @@ extension ProductsDataSource: StoreDelegate {
     os_log("store: error: %{public}@", log: log, error as CVarArg)
     submit(ProductsDataSource.makeItems(error: error))
   }
-  
+}
+
+extension StringRepository {
+  static func makeSummaryWithHeadline(info: ProductsDataSource.Info) -> NSAttributedString {
+    return Summary<ProductsDataSource.Info>(
+      item: info,
+      items: summaries,
+      attributes: summaryAttributes
+    ).attributedString
+  }
 }

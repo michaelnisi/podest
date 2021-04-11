@@ -300,14 +300,17 @@
 			path = v3;
 			sourceTree = "<group>";
 		};
-		4C72D4332270A281008F8B96 /* app */ = {
+		4C72D4332270A281008F8B96 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				4CF7CB4E25BDE65400356510 /* PlayerTransitioningDelegate.swift */,
+				4CF7CB5425BDE69200356510 /* PlayerPresentationController.swift */,
+				4E7F291A1E7D799200E12846 /* RootViewController.swift */,
 				4ED4D4361EA470C90011C28C /* Podest.swift */,
 				4CE1445626223FAD00B60130 /* Gateway.swift */,
 				4E8CA7061A126ADB004DE307 /* AppDelegate.swift */,
 			);
-			path = app;
+			path = App;
 			sourceTree = "<group>";
 		};
 		4CB6EEC224253D4B006F09B7 /* miniplayer */ = {
@@ -321,7 +324,7 @@
 			path = miniplayer;
 			sourceTree = "<group>";
 		};
-		4CB6EECC2427416B006F09B7 /* actions */ = {
+		4CB6EECC2427416B006F09B7 /* Actions */ = {
 			isa = PBXGroup;
 			children = (
 				4C72D4362270A5DA008F8B96 /* ActionSheetPresenting.swift */,
@@ -330,10 +333,10 @@
 				4CB6EED42428B9FE006F09B7 /* EpisodeContext.swift */,
 				4CB6EEC324260F2A006F09B7 /* ListContextMenuInteraction.swift */,
 			);
-			path = actions;
+			path = Actions;
 			sourceTree = "<group>";
 		};
-		4CCBF20F20808C4500A7359F /* store */ = {
+		4CCBF20F20808C4500A7359F /* Store */ = {
 			isa = PBXGroup;
 			children = (
 				4C1F57A620810D850067AB7C /* ProductsViewController.swift */,
@@ -346,10 +349,10 @@
 				4C776B2720847D0900A055CD /* ProductCell.swift */,
 				4C776B2820847D0900A055CD /* ProductCell.xib */,
 			);
-			path = store;
+			path = Store;
 			sourceTree = "<group>";
 		};
-		4CD697011FEBC60500349580 /* list */ = {
+		4CD697011FEBC60500349580 /* Podcast */ = {
 			isa = PBXGroup;
 			children = (
 				4C8DCE061FFE75F800A6A61B /* List.storyboard */,
@@ -362,10 +365,10 @@
 				4C1B32CB21E7046A00E57931 /* DisplayTableViewCell.xib */,
 				4CB6EED224278050006F09B7 /* MakeList.swift */,
 			);
-			path = list;
+			path = Podcast;
 			sourceTree = "<group>";
 		};
-		4CD697031FEBC66B00349580 /* player */ = {
+		4CD697031FEBC66B00349580 /* Player */ = {
 			isa = PBXGroup;
 			children = (
 				4C17E47E2504034D0022EF0F /* v3 */,
@@ -375,10 +378,10 @@
 				4CE8586C21A16B9D00D206FA /* integration.swift */,
 				4C40A3F522C0818A00B353AD /* PlayerMessage.swift */,
 			);
-			path = player;
+			path = Player;
 			sourceTree = "<group>";
 		};
-		4CD697041FEBC68600349580 /* queue */ = {
+		4CD697041FEBC68600349580 /* Queue */ = {
 			isa = PBXGroup;
 			children = (
 				4E8CA7081A126ADB004DE307 /* QueueViewController.swift */,
@@ -388,10 +391,10 @@
 				4E7D10B21F6644DA0048CB43 /* QueueDataSource.swift */,
 				4C42D9FA22E827A6007F80E2 /* PieView.swift */,
 			);
-			path = queue;
+			path = Queue;
 			sourceTree = "<group>";
 		};
-		4CD697051FEBC6DB00349580 /* episode */ = {
+		4CD697051FEBC6DB00349580 /* Episode */ = {
 			isa = PBXGroup;
 			children = (
 				4E7F29141E7AE1E100E12846 /* Episode.storyboard */,
@@ -401,10 +404,10 @@
 				4EFEEBDD1E75493900169153 /* MessageView.swift */,
 				4CB6EED0242771DB006F09B7 /* MakeEpisode.swift */,
 			);
-			path = episode;
+			path = Episode;
 			sourceTree = "<group>";
 		};
-		4CD697061FEBC72B00349580 /* search */ = {
+		4CD697061FEBC72B00349580 /* Search */ = {
 			isa = PBXGroup;
 			children = (
 				4CFEE33721C7B101008B2EC0 /* SearchControllerProxy.swift */,
@@ -416,10 +419,10 @@
 				4C17C19C230723480051FE23 /* Home.storyboard */,
 				4C17C19E2307F2400051FE23 /* HomePresenting.swift */,
 			);
-			path = search;
+			path = Search;
 			sourceTree = "<group>";
 		};
-		4CD697091FEBC8DB00349580 /* tables */ = {
+		4CD697091FEBC8DB00349580 /* Tables */ = {
 			isa = PBXGroup;
 			children = (
 				4C5F4E7B21CB79A300156D56 /* EntryRowSelectable.swift */,
@@ -428,20 +431,33 @@
 				4C21F57D21D8A56500ED5D26 /* SubtitleTableViewCell.swift */,
 				4C21F57E21D8A56500ED5D26 /* SubtitleTableViewCell.xib */,
 			);
-			path = tables;
+			path = Tables;
 			sourceTree = "<group>";
 		};
-		4CE8586B21A14EB300D206FA /* root */ = {
+		4CE144582622F03D00B60130 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				4CF7CB4E25BDE65400356510 /* PlayerTransitioningDelegate.swift */,
-				4CF7CB5425BDE69200356510 /* PlayerPresentationController.swift */,
-				4E7F291A1E7D799200E12846 /* RootViewController.swift */,
+				4CD697061FEBC72B00349580 /* Search */,
+				4CD697041FEBC68600349580 /* Queue */,
+				4CD697011FEBC60500349580 /* Podcast */,
+				4CD697051FEBC6DB00349580 /* Episode */,
+				4CD697031FEBC66B00349580 /* Player */,
+				4CCBF20F20808C4500A7359F /* Store */,
 			);
-			path = root;
+			path = Modules;
 			sourceTree = "<group>";
 		};
-		4CE9692521DF291D00AEF409 /* collections */ = {
+		4CE144592622F04A00B60130 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				4CB6EECC2427416B006F09B7 /* Actions */,
+				4CE9692521DF291D00AEF409 /* Collections */,
+				4CD697091FEBC8DB00349580 /* Tables */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		4CE9692521DF291D00AEF409 /* Collections */ = {
 			isa = PBXGroup;
 			children = (
 				4C6298DF2310FC9800141103 /* Refreshing.swift */,
@@ -449,7 +465,7 @@
 				4C776B1F2084722C00A055CD /* MessageCollectionViewCell.swift */,
 				4C776B202084722C00A055CD /* MessageCollectionViewCell.xib */,
 			);
-			path = collections;
+			path = Collections;
 			sourceTree = "<group>";
 		};
 		4E0CF69F1DCB353C005E01F9 /* Frameworks */ = {
@@ -534,17 +550,9 @@
 			isa = PBXGroup;
 			children = (
 				4E7E284C1EE1182E00058AB3 /* Podest.entitlements */,
-				4C72D4332270A281008F8B96 /* app */,
-				4CB6EECC2427416B006F09B7 /* actions */,
-				4CE8586B21A14EB300D206FA /* root */,
-				4CD697041FEBC68600349580 /* queue */,
-				4CD697061FEBC72B00349580 /* search */,
-				4CD697051FEBC6DB00349580 /* episode */,
-				4CD697031FEBC66B00349580 /* player */,
-				4CD697011FEBC60500349580 /* list */,
-				4CCBF20F20808C4500A7359F /* store */,
-				4CE9692521DF291D00AEF409 /* collections */,
-				4CD697091FEBC8DB00349580 /* tables */,
+				4C72D4332270A281008F8B96 /* App */,
+				4CE144592622F04A00B60130 /* Components */,
+				4CE144582622F03D00B60130 /* Modules */,
 				4E8CA70C1A126ADB004DE307 /* Main.storyboard */,
 				4E8CA70F1A126ADB004DE307 /* Media.xcassets */,
 				4E8CA7111A126ADB004DE307 /* LaunchScreen.xib */,

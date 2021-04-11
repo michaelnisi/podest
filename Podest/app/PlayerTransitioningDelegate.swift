@@ -18,7 +18,7 @@ final class PlayerTransitioningDelegate: NSObject, UIViewControllerTransitioning
 
   func animationController(
     forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-    return nil
+    nil
   }
   
   func presentationController(
@@ -35,6 +35,6 @@ final class PlayerTransitioningDelegate: NSObject, UIViewControllerTransitioning
   func interactionControllerForDismissal(
     using animator: UIViewControllerAnimatedTransitioning
   ) -> UIViewControllerInteractiveTransitioning? {
-    return nil
+    nil
   }
 }
