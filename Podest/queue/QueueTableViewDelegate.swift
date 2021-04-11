@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import FeedKit
+import Podcasts
 
 extension QueueViewController {
   
@@ -126,7 +127,7 @@ extension QueueViewController {
   private func makePlayAction(entry: Entry) -> UIContextualAction {
     let action = UIContextualAction(style: .normal, title: nil) { 
       action, sourceView, completionHandler in
-      let actionPerformed = Podest.playback.resume(entry, from: nil)
+      let actionPerformed = Podcasts.playback.resume(entry, from: nil)
       
       completionHandler(actionPerformed)
     }
@@ -141,7 +142,7 @@ extension QueueViewController {
     leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath
   ) -> UISwipeActionsConfiguration? {
     guard let entry = dataSource.entry(at: indexPath), 
-      !Podest.playback.isPlaying(guid: entry.guid) else {
+      !Podcasts.playback.isPlaying(guid: entry.guid) else {
       return nil
     }
 

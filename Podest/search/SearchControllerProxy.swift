@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import os.log
 import FeedKit
+import Podcasts
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "search")
 
@@ -245,7 +246,7 @@ extension SearchControllerProxy: UISearchResultsUpdating {
 extension SearchControllerProxy: UISearchControllerDelegate {
 
   func willPresentSearchController(_ searchController: UISearchController) {
-    Podest.store.cancelReview()
+    Podcasts.store.cancelReview()
     addHome()
     suggest("")
   }

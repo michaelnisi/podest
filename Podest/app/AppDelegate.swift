@@ -8,6 +8,7 @@
 
 import UIKit
 import os.log
+import Podcasts
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "app")
 
@@ -41,9 +42,11 @@ extension AppDelegate {
     state.restore = launchOptions?[.url] == nil
     window?.tintColor = UIColor(named: "Purple")!
 
-    if !Podest.settings.noSync {
+    if !Podcasts.settings.noSync {
       application.registerForRemoteNotifications()
     }
+    
+    print(Podcasts.player)
 
     return true
   }
@@ -53,7 +56,7 @@ extension AppDelegate {
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?
   ) -> Bool {
     UserDefaults.registerPodestDefaults()
-    if !Podest.store.isExpired() {
+    if !Podcasts.store.isExpired() {
       Podest.gateway.register()
     }
 

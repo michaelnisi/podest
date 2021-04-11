@@ -11,6 +11,7 @@ import FeedKit
 import os.log
 import Foundation
 import Playback
+import Podcasts
 
 private let log = OSLog.disabled
 
@@ -159,7 +160,7 @@ extension EpisodeViewController {
 
     var acc = [Entry]()
 
-    fetchingEntries = Podest.browser.entries(
+    fetchingEntries = Podcasts.browser.entries(
       [locator.including], entriesBlock: { error, entries in
         if let er = error {
           os_log("entry block error: %{public}@", log: log, type: .error,
@@ -273,12 +274,12 @@ extension EpisodeViewController {
     }
 
     guard let guids = enqueued else {
-      if Podest.userQueue.isEmpty, Podest.userLibrary.hasNoSubscriptions {
+      if Podcasts.userQueue.isEmpty, Podcasts.userLibrary.hasNoSubscriptions {
         // At launch, during state restoration, the user library might not be
         // completely synchronized yet, so we sync and wait before configuring
         // the navigation item. We are misusing isEmpty to check that.
 
-        Podest.userLibrary.synchronize { [weak self] _, guids, error in
+        Podcasts.userLibrary.synchronize { [weak self] _, guids, error in
           if let er = error {
             switch er {
             case QueueingError.outOfSync(let queue, let guids):
@@ -298,7 +299,7 @@ extension EpisodeViewController {
           }
         }
       } else {
-        isEnqueued = Podest.userQueue.contains(entry: e)
+        isEnqueued = Podcasts.userQueue.contains(entry: e)
       }
       return
     }
@@ -322,7 +323,7 @@ extension EpisodeViewController {
       return
     }
 
-    Podest.images.loadImage(
+    Podcasts.images.loadImage(
       representing: entry,
       into: avatar,
       options: FKImageLoadingOptions(quality: .high)
@@ -403,7 +404,7 @@ extension EpisodeViewController {
 
     return UIAlertAction(title: t, style: .destructive) {
       [weak viewController] action in
-      Podest.userQueue.dequeue(entry: entry) { dequeued, error in
+      Podcasts.userQueue.dequeue(entry: entry) { dequeued, error in
         if let er = error {
           os_log("dequeue error: %{public}@",
                  log: log, type: .error, er as CVarArg)
@@ -526,7 +527,7 @@ extension EpisodeViewController {
 
     sender.isEnabled = false
 
-    Podest.userQueue.enqueue(entries: [entry], belonging: .user) {
+    Podcasts.userQueue.enqueue(entries: [entry], belonging: .user) {
       [weak self] enqueued, error in
       if let er = error {
         os_log("enqueue error: %{public}@", type: .error, er as CVarArg)
@@ -594,7 +595,7 @@ extension EpisodeViewController: UITextViewDelegate {
     shouldInteractWith URL: URL,
     in characterRange: NSRange
   ) -> Bool {
-    guard URL.scheme == Podest.scheme else {
+    guard URL.scheme == "podest" else {
       return true
     }
     return !(navigationDelegate?.open(url: URL))!

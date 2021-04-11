@@ -10,6 +10,7 @@ import UIKit
 import FeedKit
 import os.log
 import BatchUpdates
+import Podcasts
 
 private let log = OSLog.disabled
 
@@ -48,9 +49,9 @@ Navigator, EntryRowSelectable {
   /// Exposing a data source for adopting a protocol, EntryRowSelectable in
   /// this case, is just gross.
   var dataSource = ListDataSource(
-    browser: Podest.browser,
-    images: Podest.images,
-    store: Podest.store
+    browser: Podcasts.browser,
+    images: Podcasts.images,
+    store: Podcasts.store
   )
 
   /// The current updating operation.
@@ -338,7 +339,7 @@ extension ListViewController {
   @objc func onAdd(_ sender: UIBarButtonItem) {
     sender.isEnabled = false
 
-    Podest.userLibrary.subscribe(feed!) { error in
+    Podcasts.userLibrary.subscribe(feed!) { error in
       if let er = error {
         os_log("subscribing failed: %@", log: log, er as CVarArg)
       }
@@ -389,4 +390,27 @@ extension ListViewController {
 
     navigationItem.setRightBarButtonItems(items, animated: true)
   }
+}
+
+/// Sets up a cancellable oneshot timer.
+///
+/// - Parameters:
+///   - delay: The delay before `handler` is submitted to `queue`.
+///   - queue: The target queue to which `handler` is submitted.
+///   - handler: The block to execute after `delay`.
+///
+/// - Returns: The resumed oneshot timer dispatch source.
+private func setTimeout(
+  delay: DispatchTimeInterval,
+  queue: DispatchQueue,
+  handler: @escaping () -> Void
+) -> DispatchSourceTimer {
+  let leeway: DispatchTimeInterval = .nanoseconds(100)
+  let timer = DispatchSource.makeTimerSource(queue: queue)
+
+  timer.setEventHandler(handler: handler)
+  timer.schedule(deadline: .now() + delay, leeway: leeway)
+  timer.resume()
+
+  return timer
 }

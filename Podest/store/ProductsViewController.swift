@@ -7,9 +7,10 @@
 //
 
 import UIKit
+import Podcasts
 
 final class ProductsViewController: UICollectionViewController {
-  
+
   @objc func onDone() {
     invalidate()
     dismiss(animated: true)
@@ -19,7 +20,7 @@ final class ProductsViewController: UICollectionViewController {
 
   // Returns a newly created and installed data source.
   private func install() -> ProductsDataSource {
-    dataSource = ProductsDataSource(store: Podest.store, contact: Podest.contact)
+    dataSource = ProductsDataSource(store: Podcasts.store, contact: Podcasts.contact)
 
     dataSource.sectionsChangeHandler = { [weak self] changes in
       guard let cv = self?.collectionView else {
@@ -42,7 +43,7 @@ final class ProductsViewController: UICollectionViewController {
       }
     }
 
-    Podest.store.delegate = dataSource
+    Podcasts.store.delegate = dataSource 
 
     return dataSource
   }
@@ -82,7 +83,7 @@ extension ProductsViewController {
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    Podest.store.update()
+    Podcasts.store.update()
   }
 
 }

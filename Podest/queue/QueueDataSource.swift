@@ -11,6 +11,7 @@ import FeedKit
 import os.log
 import BatchUpdates
 import Playback
+import Podcasts
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "queue")
 
@@ -263,7 +264,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     } else {
       os_log("should not update: %f < %f", log: log, type: .info, diff, deadline)
       DispatchQueue.global(qos: .utility).async {
-        Podest.files.preloadQueue(removingFiles: false, completionHandler: nil)
+        Podcasts.files.preloadQueue(removingFiles: false, completionHandler: nil)
       }
     }
 

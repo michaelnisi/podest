@@ -11,6 +11,7 @@ import FeedKit
 import BatchUpdates
 import UIKit
 import Playback
+import Podcasts
 
 /// A table view data source for searching.
 ///

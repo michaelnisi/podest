@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import FeedKit
+import Podcasts
 
 // MARK: - Selecting
 
@@ -105,7 +106,7 @@ extension ListViewController {
   private func makeAddAction(entry: Entry) -> UIContextualAction {
     let action = UIContextualAction(style: .normal, title: nil) { 
       action, sourceView, completionHandler in
-      Podest.userQueue.enqueue(entries: [entry], belonging: .user) { enqueued, error in
+      Podcasts.userQueue.enqueue(entries: [entry], belonging: .user) { enqueued, error in
         DispatchQueue.main.async {
           completionHandler(enqueued.contains(entry) && error == nil)
         }
@@ -127,11 +128,11 @@ extension ListViewController {
     
     var actions = Array<UIContextualAction>()
     
-    if !Podest.playback.isPlaying(guid: entry.guid) {
+    if !Podcasts.playback.isPlaying(guid: entry.guid) {
       actions.append(makePlayAction(entry: entry))
     }
 
-    if #available(iOS 13.0, *), !Podest.userQueue.contains(entry: entry) {
+    if !Podcasts.userQueue.contains(entry: entry) {
       actions.append(makeAddAction(entry: entry))
     }
     
@@ -157,7 +158,7 @@ extension ListViewController {
   private func makeDequeueAction(entry: Entry) -> UIContextualAction {
     let action = UIContextualAction(style: .destructive, title: nil) { 
       action, sourceView, completionHandler in
-      Podest.userQueue.dequeue(entry: entry) { dequeued, error in
+      Podcasts.userQueue.dequeue(entry: entry) { dequeued, error in
         DispatchQueue.main.async {
           completionHandler(!dequeued.isEmpty && error == nil)
         }
@@ -173,7 +174,7 @@ extension ListViewController {
     _ tableView: UITableView,
     trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
   ) -> UISwipeActionsConfiguration? {
-    guard let entry = dataSource.entry(at: indexPath), Podest.userQueue.contains(entry: entry) else {
+    guard let entry = dataSource.entry(at: indexPath), Podcasts.userQueue.contains(entry: entry) else {
       return nil
     }
     

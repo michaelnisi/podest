@@ -14,6 +14,7 @@ import UIKit
 import os.log
 import Playback
 import Ola
+import Podcasts
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
@@ -33,7 +34,7 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
     var result: FetchEntryResult?
     let animated = !isRestoring
 
-    Podest.browser.entries(locators, entriesBlock: {
+    Podcasts.browser.entries(locators, entriesBlock: {
       error, entries in
       result = FetchEntryResult(entry: entries.first, error: error)
     }) { [weak self] error in
@@ -101,7 +102,7 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
       locator = EntryLocator(entry: entry)
       view.isHidden = false
 
-      Podest.userQueue.enqueue(entries: [entry]) { enqueued, error in
+      Podcasts.userQueue.enqueue(entries: [entry]) { enqueued, error in
         if let er = error {
           os_log("enqueue warning: %{public}@", 
                  log: log, type: .info, er as CVarArg)
@@ -116,6 +117,8 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
       playSwitch.isOn = isPlaying
     }
   }
+  
+  var asset: AssetState?
 
   // MARK: - UIStateRestoring
 
@@ -277,7 +280,7 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
       isDirect: true
     )
 
-    Podest.images.loadImage(representing: entry, into: hero, options: opts)
+    Podcasts.images.loadImage(representing: entry, into: hero, options: opts)
   }
 
   override func viewWillLayoutSubviews() {

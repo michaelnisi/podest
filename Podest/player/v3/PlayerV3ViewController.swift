@@ -12,6 +12,7 @@ import FeedKit
 import Playback
 import Epic
 import InsetPresentation
+import Podcasts
 
 protocol PlayerDelegate {
   func forward()
@@ -98,6 +99,12 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
   var isForwardable: Bool = true {
     didSet { model.isForwardable = isForwardable }
   }
+  
+  var asset: AssetState? {
+    didSet {
+      model.trackTime = asset?.time ?? 0
+    }
+  }
 }
 
 // MARK: - PlayerHosting
@@ -161,7 +168,8 @@ extension PlayerV3ViewController {
       item: emptyItem,
       isPlaying: false,
       isForwardable: false,
-      isBackwardable: false
+      isBackwardable: false,
+      trackTime: 0
     )
   }
 }

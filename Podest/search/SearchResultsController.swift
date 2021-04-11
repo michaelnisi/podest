@@ -7,8 +7,8 @@
 //
 
 import FeedKit
-import Foundation
 import UIKit
+import Podcasts
 
 protocol SearchResultsControllerDelegate: Navigator {
 
@@ -32,8 +32,8 @@ protocol SearchResultsControllerDelegate: Navigator {
 final class SearchResultsController: UITableViewController {
 
   let dataSource = SearchResultsDataSource(
-    repo: Podest.finder, 
-    images: Podest.images
+    repo: Podcasts.finder, 
+    images: Podcasts.images
   )
 
   var delegate: SearchResultsControllerDelegate?

@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import os.log
 import Ola
+import Podcasts
 
 extension QueueViewController: StoreAccessDelegate {
   
@@ -30,7 +31,7 @@ extension QueueViewController: StoreAccessDelegate {
         switch status {
         case .cellular, .reachable:
           self?.probe = nil
-          Podest.store.online()
+          Podcasts.store.online()
         case .unknown:
           break
         }

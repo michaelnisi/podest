@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import FeedKit
+import Podcasts
 
 @available(iOS 13.0, *)
 extension SearchResultsController: Dequeueing {
@@ -49,7 +50,7 @@ extension SearchResultsController: Dequeueing {
           title: "Add", 
           image: UIImage(systemName: "plus")) { 
             action in
-            Podest.userQueue.enqueue(
+          Podcasts.userQueue.enqueue(
               entries: [entry], belonging: .user, enqueueCompletionBlock: nil)
           }
       }
@@ -71,12 +72,12 @@ extension SearchResultsController: Dequeueing {
   
   private func makeFeedMenu(feed: Feed, sourceView: UIView) -> UIMenu {
     func makeToggleSubscriptionAction() -> UIAction {
-      guard Podest.userLibrary.has(subscription: feed.url) else {
+      guard Podcasts.userLibrary.has(subscription: feed.url) else {
         return UIAction(
           title: "Subscribe", 
           image: UIImage(systemName: "text.badge.plus")) { 
             action in
-            Podest.userLibrary.subscribe(feed, completionHandler: nil)
+          Podcasts.userLibrary.subscribe(feed, completionHandler: nil)
           }
       }
       

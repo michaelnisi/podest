@@ -9,6 +9,7 @@
 import UIKit
 import FeedKit
 import os.log
+import Podcasts
 
 private let log = OSLog.disabled
 
@@ -25,7 +26,7 @@ extension Unsubscribing where Self: UIViewController {
     let t = NSLocalizedString("Unsubscribe", comment: "Unsubscribe podcast")
 
     return UIAlertAction(title: t, style: .destructive) { action in
-      Podest.userLibrary.unsubscribe(url) { error in
+      Podcasts.userLibrary.unsubscribe(url) { error in
         if let er = error {
           os_log("unsubscribing failed: %@", log: log, er as CVarArg)
         }
@@ -80,10 +81,10 @@ extension Unsubscribing where Self: UIViewController {
   }
   
   func has(url: FeedURL) -> Bool {
-    return Podest.userLibrary.has(subscription: url)
+    Podcasts.userLibrary.has(subscription: url)
   }
   
   func subscribe(feed: Feed) {
-    Podest.userLibrary.subscribe(feed, completionHandler: nil)
+    Podcasts.userLibrary.subscribe(feed, completionHandler: nil)
   }
 }

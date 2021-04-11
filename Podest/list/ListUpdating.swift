@@ -10,6 +10,7 @@ import Foundation
 import BatchUpdates
 import FeedKit
 import os.log
+import Podcasts
 
 private let log = OSLog.disabled
 
@@ -25,13 +26,13 @@ extension ListViewController {
     }
 
     if let feed = self.feed {
-      isSubscribed = Podest.userLibrary.has(subscription: feed.url)
+      isSubscribed = Podcasts.userLibrary.has(subscription: feed.url)
     } else {
       // At launch, during state restoration, the user library might not be
       // sufficiently synchronized yet, so we sync and wait before configuring
       // the navigation item.
 
-      Podest.userLibrary.synchronize { [weak self] urls, _, error in
+      Podcasts.userLibrary.synchronize { [weak self] urls, _, error in
         if let er = error {
           switch er {
           case QueueingError.outOfSync(let queue, let guids):

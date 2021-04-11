@@ -10,6 +10,8 @@ import FeedKit
 import UIKit
 import os.log
 import Ola
+import Playback
+import Podcasts
 
 /// The `QueueViewController` is the initial/main view controller of this app,
 /// it renders the user’s queued episodes and, in its navigation item, provides
@@ -49,18 +51,18 @@ final class QueueViewController: UITableViewController, Navigator {
     // initialize these core objects on the main thread.
 
     let ds = QueueDataSource(
-      userQueue: Podest.userQueue,
-      store: Podest.store,
-      files: Podest.files ,
-      userLibrary: Podest.userLibrary,
-      images: Podest.images,
-      playback: Podest.playback,
-      iCloud: Podest.iCloud
+      userQueue: Podcasts.userQueue,
+      store: Podcasts.store,
+      files: Podcasts.files ,
+      userLibrary: Podcasts.userLibrary,
+      images: Podcasts.images,
+      playback: Podcasts.playback,
+      iCloud: Podcasts.iCloud
     )
 
     ds.entriesBlock = { [weak self] entries in
       dispatchPrecondition(condition: .onQueue(.main))
-      Podest.images.preloadImages(
+      Podcasts.images.preloadImages(
         representing: entries, at: CGSize(width: 600, height: 600))
     }
 
@@ -148,7 +150,7 @@ extension QueueViewController {
 extension QueueViewController {
 
   override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-    Podest.store.cancelReview()
+    Podcasts.store.cancelReview()
   }
   
   override 
@@ -185,11 +187,11 @@ extension QueueViewController {
     tableView.dataSource = dataSource
     tableView.prefetchDataSource = dataSource
     
-    Podest.store.subscriberDelegate = self
+    Podcasts.store.subscriberDelegate = self
     
     searchProxy.install()
     QueueDataSource.registerCells(with: tableView)
-    Podest.store.resume()
+    Podcasts.store.resume()
     installRefreshControl()
   }
   
@@ -228,10 +230,10 @@ extension QueueViewController {
 
   override func viewDidAppear(_ animated: Bool) {
     if searchProxy.isSearchDismissed {
-      Podest.store.considerReview()
+      Podcasts.store.considerReview()
     }
     
-    if Podest.store.isExpired() {
+    if Podcasts.store.isExpired() {
       os_log("free trial expired", log: log)
     }
 
@@ -244,7 +246,7 @@ extension QueueViewController {
   }
 
   override func viewWillDisappear(_ animated: Bool) {
-    Podest.store.cancelReview()
+    Podcasts.store.cancelReview()
 
     super.viewWillDisappear(animated)
   }
@@ -291,12 +293,12 @@ extension QueueViewController: PlaybackResponding {
     os_log("ignoring dismiss", log: log)
   }
 
-  func playing(entry: Entry) {
+  func playing(entry: Entry, asset: AssetState?) {
     os_log("playing: %s", log: log, type: .info, entry.title)
     dataSource.tableView(tableView, updateCellMatching: entry, isUnplayed: false)
   }
 
-  func pausing(entry: Entry) {
+  func pausing(entry: Entry, asset: AssetState?) {
     os_log("pausing: %s", log: log, type: .info, entry.title)
   }
 }

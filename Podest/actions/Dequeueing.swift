@@ -9,6 +9,7 @@
 import UIKit
 import FeedKit
 import os.log
+import Podcasts
 
 private let log = OSLog.disabled
 
@@ -24,7 +25,7 @@ extension Dequeueing where Self: UIViewController {
     let t = NSLocalizedString("Delete", comment: "Delete episode from queue")
     
     return UIAlertAction(title: t, style: .destructive) { action in
-      Podest.userQueue.dequeue(entry: entry) { dequeued, error in
+      Podcasts.userQueue.dequeue(entry: entry) { dequeued, error in
         if let er = error {
           os_log("dequeueing failed: %@", log: log, er as CVarArg)
         }
@@ -61,11 +62,11 @@ extension Dequeueing where Self: UIViewController {
   }
   
   func enqueue(entry: Entry) {
-    Podest.userQueue.enqueue(
+    Podcasts.userQueue.enqueue(
       entries: [entry], belonging: .user, enqueueCompletionBlock: nil)
   }
   
   func isEnqueued(entry: Entry) -> Bool {
-    return Podest.userQueue.contains(entry: entry)
+    return Podcasts.userQueue.contains(entry: entry)
   }
 }

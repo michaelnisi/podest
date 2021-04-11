@@ -10,6 +10,7 @@ import UIKit
 import StoreKit
 import os.log
 import BatchUpdates
+import Podcasts
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "store")
 
@@ -154,8 +155,10 @@ extension ProductsDataSource: UICollectionViewDataSource {
         withReuseIdentifier: ProductsDataSource.articleCellID,
         for: indexPath) as! ArticleCollectionViewCell
 
-      cell.textView.attributedText = StringRepository
-        .makeSummaryWithHeadline(info: info)
+      // TODO: Fix this dep problem
+      cell.textView.text = "FIXME"
+//      cell.textView.attributedText = StringRepository
+//        .makeSummaryWithHeadline(info: info)
 
       return cell
     case .offline:

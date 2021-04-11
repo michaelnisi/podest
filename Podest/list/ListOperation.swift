@@ -10,6 +10,7 @@ import Foundation
 import FeedKit
 import os.log
 import BatchUpdates
+import Podcasts
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "list")
 

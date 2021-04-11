@@ -15,6 +15,7 @@ import AVFoundation
 import Ola
 import FileProxy
 import SwiftUI
+import Podcasts
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
@@ -169,7 +170,7 @@ extension RootViewController {
   func play(_ entry: Entry) {
     os_log("playing: %@", log: log, type: .info, entry.title)
 
-    Podest.userQueue.enqueue(entries: [entry], belonging: .user) { enqueued, er in
+    Podcasts.userQueue.enqueue(entries: [entry], belonging: .user) { enqueued, er in
       if let error = er {
         os_log("enqueue error: %{public}@",
                log: log, type: .error, error as CVarArg)
@@ -180,22 +181,22 @@ extension RootViewController {
       }
 
       do {
-        try Podest.userQueue.skip(to: entry)
+        try Podcasts.userQueue.skip(to: entry)
       } catch {
         os_log("skip error: %{public}@",
                log: log, type: .error, error as CVarArg)
       }
 
-      Podest.playback.resume(entry, from: nil)
+      Podcasts.playback.resume(entry, from: nil)
     }
   }
 
   func pause() {
-    guard Podest.playback.currentItem != nil else {
+    guard Podcasts.playback.currentItem != nil else {
       return
     }
 
-    Podest.playback.pause(nil, at: nil)
+    Podcasts.playback.pause(nil, at: nil)
   }
 }
 
@@ -234,16 +235,16 @@ extension RootViewController {
     vc.navigationDelegate = self
 
     playervc = vc
-    let isPlaying = Podest.playback.isPlaying(guid: entry.guid)
+    let isPlaying = Podcasts.playback.isPlaying(guid: entry.guid)
 
-    update(state: SimplePlaybackState(entry: entry, isPlaying: isPlaying))
+    update(state: SimplePlaybackState(entry: entry, isPlaying: isPlaying, assetState: nil))
     
     vc.readyForPresentation = { [weak self] in
       self?.playerTransitioningDelegate = PlayerTransitioningDelegate(from: self!, to: vc)
       vc.readyForPresentation = nil
       vc.transitioningDelegate = self?.playerTransitioningDelegate
       
-      self?.present(vc, interactiveDismissalType: .standard) {
+      self?.present(vc, interactiveDismissalType: .vertical) {
         completion?()
       }
     }
@@ -339,6 +340,7 @@ extension RootViewController {
   struct SimplePlaybackState {
     let entry: Entry
     let isPlaying: Bool
+    let assetState: AssetState?
   }
 
   /// Updates all playback responding participants (players) with `state`.
@@ -356,7 +358,7 @@ extension RootViewController {
     for t in targets {
       let entry = now.entry
 
-      now.isPlaying ? t.playing(entry: entry) : t.pausing(entry: entry)
+      now.isPlaying ? t.playing(entry: entry, asset: state?.assetState) : t.pausing(entry: entry, asset: state?.assetState)
     }
   }
 }
@@ -367,7 +369,7 @@ extension RootViewController {
   
   func makeURL(url: URL) -> URL? {
     do {
-      return try Podest.files.url(for: url)
+      return try Podcasts.files.url(for: url)
     } catch {
       switch error {
       case FileProxyError.fileSizeRequired:
@@ -388,10 +390,10 @@ extension RootViewController {
            log: log, type: .info, String(describing: state))
 
     switch state {
-    case let .paused(entry, _, error):
+    case let .paused(entry, asset, error):
       DispatchQueue.main.async {
         defer {
-          let s = SimplePlaybackState(entry: entry, isPlaying: false)
+          let s = SimplePlaybackState(entry: entry, isPlaying: false, assetState: asset)
           
           self.update(state: s)
         }
@@ -427,7 +429,7 @@ extension RootViewController {
       )
       
       DispatchQueue.main.async {
-        let s = SimplePlaybackState(entry: entry, isPlaying: true)
+        let s = SimplePlaybackState(entry: entry, isPlaying: true, assetState: asset)
 
         self.update(state: s)
         
@@ -438,7 +440,7 @@ extension RootViewController {
 
     case .preparing(let entry, let shouldPlay):
       DispatchQueue.main.async {
-        let s = SimplePlaybackState(entry: entry, isPlaying: shouldPlay)
+        let s = SimplePlaybackState(entry: entry, isPlaying: shouldPlay, assetState: nil)
 
         self.update(state: s)
 
@@ -451,7 +453,7 @@ extension RootViewController {
 
     case .viewing(let entry, let player):
       DispatchQueue.main.async {
-        let s = SimplePlaybackState(entry: entry, isPlaying: true)
+        let s = SimplePlaybackState(entry: entry, isPlaying: true, assetState: nil)
 
         self.update(state: s)
 
@@ -469,25 +471,25 @@ extension RootViewController {
   }
 
   func nextItem() -> Entry? {
-    Podest.userQueue.next()
+    Podcasts.userQueue.next()
   }
 
   func previousItem() -> Entry?  {
-    Podest.userQueue.previous()
+    Podcasts.userQueue.previous()
   }
   
   func installPlaybackHandlers() {
-    Podest.playback.makeURL = makeURL
-    Podest.playback.onChange = playbackDidChange
-    Podest.playback.nextItem = nextItem
-    Podest.playback.previousItem = previousItem
+    Podcasts.playback.makeURL = makeURL
+    Podcasts.playback.onChange = playbackDidChange
+    Podcasts.playback.nextItem = nextItem
+    Podcasts.playback.previousItem = previousItem
   }
   
   func uninstallPlaybackHandlers() {
-    Podest.playback.makeURL = nil
-    Podest.playback.onChange = nil
-    Podest.playback.nextItem = nil
-    Podest.playback.previousItem = nil
+    Podcasts.playback.makeURL = nil
+    Podcasts.playback.onChange = nil
+    Podcasts.playback.nextItem = nil
+    Podcasts.playback.previousItem = nil
   }
 }
 
@@ -496,18 +498,18 @@ extension RootViewController {
 extension RootViewController: PlayerDelegate {
 
   func forward() {
-    Podest.playback.forward()
+    Podcasts.playback.forward()
   }
   
   func backward() {
-    Podest.playback.backward()
+    Podcasts.playback.backward()
   }
   
   func resumePlayback(entry: Entry?) {
-    Podest.playback.resume(entry, from: nil)
+    Podcasts.playback.resume(entry, from: nil)
   }
   
   func pausePlayback() {
-    Podest.playback.pause(nil, at: nil)
+    Podcasts.playback.pause(nil, at: nil)
   }
 }

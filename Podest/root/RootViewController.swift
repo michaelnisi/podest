@@ -11,6 +11,7 @@ import UIKit
 import os.log
 import AVKit
 import Ola
+import Podcasts
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "root")
 
@@ -140,7 +141,7 @@ extension RootViewController {
   override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
     switch presentedViewController {
     case is AVPlayerViewController:
-      Podest.playback.reclaim()
+      Podcasts.playback.reclaim()
     default:
       break
     }
@@ -319,7 +320,7 @@ extension RootViewController: ViewControllers {
       return
     }
 
-    let browser = Podest.browser
+    let browser = Podcasts.browser
 
     var potentialFeed: Feed?
 
@@ -419,15 +420,15 @@ extension RootViewController: UserProxy {
 
       os_log("updating views", log: log, type: .info)
 
-      self.playervc?.isForwardable = Podest.userQueue.isForwardable
-      self.playervc?.isBackwardable = Podest.userQueue.isBackwardable
+      self.playervc?.isForwardable = Podcasts.userQueue.isForwardable
+      self.playervc?.isBackwardable = Podcasts.userQueue.isBackwardable
 
       guard let evc = self.episodeViewController, let entry = evc.entry else {
         completionBlock?(error)
         return
       }
 
-      evc.isEnqueued = Podest.userQueue.contains(entry: entry)
+      evc.isEnqueued = Podcasts.userQueue.contains(entry: entry)
       
       completionBlock?(error)
     }
