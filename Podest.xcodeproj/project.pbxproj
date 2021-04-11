@@ -300,7 +300,7 @@
 			path = v3;
 			sourceTree = "<group>";
 		};
-		4C72D4332270A281008F8B96 /* Application */ = {
+		4C72D4332270A281008F8B96 /* App */ = {
 			isa = PBXGroup;
 			children = (
 				4CF7CB4E25BDE65400356510 /* PlayerTransitioningDelegate.swift */,
@@ -310,7 +310,7 @@
 				4CE1445626223FAD00B60130 /* Gateway.swift */,
 				4E8CA7061A126ADB004DE307 /* AppDelegate.swift */,
 			);
-			path = Application;
+			path = App;
 			sourceTree = "<group>";
 		};
 		4CB6EEC224253D4B006F09B7 /* miniplayer */ = {
@@ -550,7 +550,7 @@
 			isa = PBXGroup;
 			children = (
 				4E7E284C1EE1182E00058AB3 /* Podest.entitlements */,
-				4C72D4332270A281008F8B96 /* Application */,
+				4C72D4332270A281008F8B96 /* App */,
 				4CE144592622F04A00B60130 /* Components */,
 				4CE144582622F03D00B60130 /* Modules */,
 				4E8CA70C1A126ADB004DE307 /* Main.storyboard */,
