@@ -1,5 +1,5 @@
 //
-//  PlayerV3ViewController.swift
+//  PlayerViewController.swift
 //  Podest
 //
 //  Created by Michael Nisi on 05.09.20.
@@ -13,6 +13,7 @@ import Playback
 import Epic
 import InsetPresentation
 import Podcasts
+import Combine
 
 protocol PlayerDelegate {
   func forward()
@@ -22,34 +23,28 @@ protocol PlayerDelegate {
 }
 
 /// A UIKit View Controller that manages the player user interface.
-class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, ObservableObject, InsetPresentable {
+class PlayerViewController: UIHostingController<PlayerView>, EntryPlayer, ObservableObject, InsetPresentable {
   var transitionController: UIViewControllerTransitioningDelegate?
 
   var delegate: PlayerDelegate?
   var readyForPresentation: (() -> Void)?
+  private var subscriptions = Set<AnyCancellable>()
   
-  private var model = PlayerV3ViewController.emptyModel
+  private var model = Epic.Player()
   
-  override init?(coder aDecoder: NSCoder, rootView: PlayerView) {
-    super.init(coder: aDecoder, rootView: rootView)
-  }
-    
-  @objc required dynamic init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder, rootView: PlayerV3ViewController.emptyView)
-  }
-    
-  // MARK: - UIViewController
-  
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    
-    rootView = PlayerView(
+  init() {
+    super.init(rootView: PlayerView(
       model: model,
-      airPlayButton: PlayerV3ViewController.airPlayButton,
-      delegate: self
-    )
+      airPlayButton: PlayerViewController.airPlayButton
+    ))
+    
+    rootView.delegate = self
   }
-
+  
+  @objc required dynamic init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   // MARK: - EntryPlayer
   
   var navigationDelegate: ViewControllers?
@@ -69,10 +64,10 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
       return
     }
 
-    model.item = PlayerItem(
+    model.item = Player.Item(
       title: entry.title,
       subtitle: entry.feedTitle ?? "Some Podcast",
-      colors: makeColors(image: image),
+      colors: Colors(image: image),
       image: Image(uiImage: image)
     )
     
@@ -83,9 +78,12 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
     let size = CGSize(width: 600, height: 600)
     
     ImageRepository.shared
-      .loadImage(representing: imaginable, at: size) { [weak self] image in
-        self?.update(with: image)
+      .loadImage(representing: imaginable, at: size)
+      .replaceError(with: UIImage())
+      .sink { [unowned self] image in
+        self.update(with: image)
       }
+      .store(in: &subscriptions)
   }
 
   var isPlaying: Bool = false {
@@ -102,14 +100,19 @@ class PlayerV3ViewController: UIHostingController<PlayerView>, EntryPlayer, Obse
   
   var asset: AssetState? {
     didSet {
-      model.trackTime = asset?.time ?? 0
+      guard let asset = asset else {
+        model.trackTime = 0
+        return
+      }
+      
+      model.trackTime = asset.time * 100 / asset.duration
     }
   }
 }
 
 // MARK: - PlayerHosting
 
-extension PlayerV3ViewController: PlayerHosting {
+extension PlayerViewController: PlayerHosting {
   
   func play() {
     delegate?.resumePlayback(entry: entry)
@@ -134,42 +137,12 @@ extension PlayerV3ViewController: PlayerHosting {
 
 // MARK: - Factory
 
-extension PlayerV3ViewController {
-  
-  private func makeColors(image: UIImage) -> Colors {
-    let base = image.averageColor
-    
-    return Colors(
-      base: Color(base),
-      dark: Color(base.darker(0.3)),
-      light: Color(base.lighter(0.3))
-    )
-  }
-  
+extension PlayerViewController {
   private static var emptyView: PlayerView {
-    PlayerView(model: emptyModel, airPlayButton: airPlayButton)
+    PlayerView(model: Epic.Player(), airPlayButton: airPlayButton)
   }
   
   private static var airPlayButton: AnyView {
     AnyView(AirPlayButton())
-  }
-  
-  private static var emptyItem: PlayerItem {
-    PlayerItem(
-      title: "",
-      subtitle: "",
-      colors: Colors(base: .red, dark: .green, light: .blue),
-      image: Image("Oval")
-    )
-  }
-  
-  private static var emptyModel: PlayerView.Model {
-    PlayerView.Model(
-      item: emptyItem,
-      isPlaying: false,
-      isForwardable: false,
-      isBackwardable: false,
-      trackTime: 0
-    )
   }
 }

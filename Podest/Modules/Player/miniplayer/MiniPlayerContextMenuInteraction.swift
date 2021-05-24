@@ -16,7 +16,7 @@ protocol MiniPlayerContext: AnyObject {
   var entry: Entry? { get }
 }
 
-extension MiniPlayerController: MiniPlayerContext {}
+extension MiniPlayerViewController: MiniPlayerContext {}
 
 @available(iOS 13.0, *)
 class MiniPlayerContextMenuInteraction: NSObject { 

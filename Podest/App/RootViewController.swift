@@ -33,7 +33,7 @@ final class RootViewController: UIViewController, Routing {
 
   private var svc: UISplitViewController!
 
-  var minivc: MiniPlayerController!
+  var minivc: MiniPlayerViewController!
   
   /// The presented player view controller if any.
   weak var playervc: PlaybackControlDelegate?
@@ -86,7 +86,7 @@ extension RootViewController {
   }
     
   fileprivate func configureMiniPlayer() {
-    minivc = (children.last as! MiniPlayerController)
+    minivc = (children.last as! MiniPlayerViewController)
     minivc.navigationDelegate = self
     miniPlayerConstant = miniPlayerTop.constant
   }

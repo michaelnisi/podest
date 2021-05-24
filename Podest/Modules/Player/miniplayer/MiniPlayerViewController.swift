@@ -1,5 +1,5 @@
 //
-//  MiniPlayerController.swift
+//  MiniPlayerViewController.swift
 //  Podest
 //
 //  Created by Michael on 3/20/17.
@@ -19,7 +19,7 @@ import Podcasts
 private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
 /// The minimized AV player.
-final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDelegate {
+final class MiniPlayerViewController: UIViewController, Navigator, PlaybackControlDelegate {
 
   var isForwardable: Bool = false
   var isBackwardable: Bool = false
@@ -310,7 +310,7 @@ final class MiniPlayerController: UIViewController, Navigator, PlaybackControlDe
 
 // MARK: - UIGestureRecognizerDelegate
 
-extension MiniPlayerController: UIGestureRecognizerDelegate {
+extension MiniPlayerViewController: UIGestureRecognizerDelegate {
 
   /// Returns `true` if we are vertically compact.
   var isLandscape: Bool {
@@ -340,7 +340,7 @@ extension MiniPlayerController: UIGestureRecognizerDelegate {
 
 // MARK: - UITapGestureRecognizer
 
-extension MiniPlayerController {
+extension MiniPlayerViewController {
 
   private func makeMatte() -> UIView {
     let v = UIView(frame: fx.contentView.frame)
@@ -411,7 +411,7 @@ extension MiniPlayerController {
 
 // MARK: - UISwipeGestureRecognizer
 
-extension MiniPlayerController {
+extension MiniPlayerViewController {
 
   @objc func onSwipe(sender: UISwipeGestureRecognizer) {
     os_log("swipe received", log: log, type: .info)
@@ -440,7 +440,7 @@ extension MiniPlayerController {
 
 // MARK: - UIScreenEdgePanGestureRecognizer
 
-extension MiniPlayerController {
+extension MiniPlayerViewController {
 
   @objc func onEdgePan(sender: UIScreenEdgePanGestureRecognizer) {
     os_log("edge pan received", log: log, type: .info)

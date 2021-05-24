@@ -1,6 +1,6 @@
 ## 10 (planned)
 
-More immersive player user interface adding some features:
+More immersive new player user interface adding some features:
 
 - Scrubbing
 - Jump forward and backward

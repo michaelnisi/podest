@@ -209,8 +209,7 @@ extension RootViewController {
   }
 
   private func makeV3Player() -> EntryPlayer {
-    let player = UIStoryboard(name: "PlayerV3", bundle: .main)
-      .instantiateViewController(withIdentifier: "PlayerV3ID") as! PlayerV3ViewController
+    let player = PlayerViewController()
     player.delegate = self
   
     return player
