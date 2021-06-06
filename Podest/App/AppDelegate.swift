@@ -46,8 +46,6 @@ extension AppDelegate {
       application.registerForRemoteNotifications()
     }
     
-    print(Podcasts.player)
-
     return true
   }
 

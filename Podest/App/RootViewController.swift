@@ -15,8 +15,6 @@ import Podcasts
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "root")
 
-// TODO: Move global state from RootViewController into Bus
-
 /// The root container view controller of this app, composing a split view
 /// controller, with two navigation controllers, and a mini-player view 
 /// controller, a custom toolbar. The `RootViewController` is mainly a proxy 
@@ -44,7 +42,7 @@ final class RootViewController: UIViewController, Routing {
   private var snc: UINavigationController!
   
   weak var getDefaultEntry: Operation?
-
+  
   /// The singular queue view controller.
   var qvc: QueueViewController {
     return pnc.viewControllers.first {
