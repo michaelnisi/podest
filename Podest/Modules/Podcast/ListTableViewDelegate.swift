@@ -82,21 +82,12 @@ extension ListViewController: Dequeueing {
 
 extension ListViewController {
   
-  private static var playGlyph: UIImage {
-    if #available(iOS 13.0, *) {
-      return UIImage(systemName: "play.fill")!
-    } else {
-      return UIImage(named: "Play")!
-    }
-  }
-  
   private func makePlayAction(entry: Entry) -> UIContextualAction {
-    let a = UIContextualAction(style: .normal, title: nil) {
-      [weak self] action, sourceView, completionHandler in
-      self?.navigationDelegate?.play(entry)
+    let a = UIContextualAction(style: .normal, title: nil) { action, sourceView, completionHandler in
+      Podcasts.player.setItem(matching: EntryLocator(entry: entry))
       completionHandler(true)
     }
-    a.image = ListViewController.playGlyph
+    a.image = UIImage(systemName: "play.fill")
     a.backgroundColor = .systemGreen
     
     return a

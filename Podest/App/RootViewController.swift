@@ -12,6 +12,7 @@ import os.log
 import AVKit
 import Ola
 import Podcasts
+import Combine
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "root")
 
@@ -40,6 +41,8 @@ final class RootViewController: UIViewController, Routing {
 
   private var pnc: UINavigationController!
   private var snc: UINavigationController!
+  
+  var subscriptions = Set<AnyCancellable>()
   
   weak var getDefaultEntry: Operation?
   
@@ -97,7 +100,7 @@ extension RootViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-
+    subscribe()
     configureSplitViewController()
 
     let ncs = svc.viewControllers as! [UINavigationController]

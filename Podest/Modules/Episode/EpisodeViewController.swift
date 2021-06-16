@@ -500,7 +500,7 @@ extension EpisodeViewController {
 extension EpisodeViewController {
 
   @objc func onPlay(_ sender: Any) {
-    navigationDelegate?.play(entry!)
+    Podcasts.player.setItem(matching: EntryLocator(entry: entry!))
   }
 
   private func makePlayButton(for entry: Entry) -> UIBarButtonItem {

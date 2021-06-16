@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import FeedKit
+import Podcasts
 
 @available(iOS 13.0, *)
 struct EpisodeContext {
@@ -73,7 +74,7 @@ struct EpisodeContext {
       title: "Play", 
       image: UIImage(systemName: "play.fill")
     ) { action in 
-      navigationDelegate?.play(entry)
+      Podcasts.player.setItem(matching: EntryLocator(entry: entry))
     }
   }
   

@@ -15,218 +15,40 @@ import os.log
 import Playback
 import Ola
 import Podcasts
+import Epic
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
 /// The minimized AV player.
-final class MiniPlayerViewController: UIViewController, Navigator, PlaybackControlDelegate {
-
-  var isForwardable: Bool = false
-  var isBackwardable: Bool = false
-
-  private struct FetchEntryResult {
-    let entry: Entry?
-    let error: Error?
-  }
-
-  private func fetchEntry(at locator: EntryLocator) {
-    let locators = [locator.including]
-    var result: FetchEntryResult?
-    let animated = !isRestoring
-
-    Podcasts.browser.entries(locators, entriesBlock: {
-      error, entries in
-      result = FetchEntryResult(entry: entries.first, error: error)
-    }) { [weak self] error in
-      guard error == nil, result?.error == nil, let entry = result?.entry else {
-        let er = result?.error ?? error ??
-          FeedKitError.missingEntries(locators: locators)
-
-        os_log("could not fetch entry: %{public}@",
-               log: log, type: .error, er as CVarArg)
-
-        // We are but a mini-player, we don’t know what to do.
-
-        return DispatchQueue.main.async { [weak self] in
-          if let me = self {
-            me.navigationDelegate?.viewController(me, error: er)
-          }
-        }
-      }
-
-      DispatchQueue.main.async { [weak self] in
-        self?.entry = entry
-
-        self?.navigationDelegate?
-          .showMiniPlayer(animated: animated, completion: nil)
-
-        self?.isRestoring = false
-      }
-    }
-  }
-
-  var locator: EntryLocator? {
-    didSet {
-      guard let loc = locator, loc != oldValue, loc.guid != entry?.guid else {
-        return
-      }
-      fetchEntry(at: loc)
-    }
-  }
-
-  private var needsUpdate = false {
-    didSet {
-      guard needsUpdate else {
-        return
-      }
-      
-      DispatchQueue.main.async { [weak self] in
-        self?.viewIfLoaded?.setNeedsLayout()
-      }
-    }
-  }
-
-  private var renderedGUID: EntryGUID?
-
-  /// The current playback entry, playing or paused. If we intend to set this
-  /// from different threads, this needs to be serialized. Setting this may also
-  /// enqueue the entry.
-  var entry: Entry? {
-    didSet {
-      needsUpdate = self.entry != oldValue || self.entry?.guid != renderedGUID
-
-      guard needsUpdate, let entry = self.entry else {
-        return
-      }
-
-      locator = EntryLocator(entry: entry)
-      view.isHidden = false
-
-      Podcasts.userQueue.enqueue(entries: [entry]) { enqueued, error in
-        if let er = error {
-          os_log("enqueue warning: %{public}@", 
-                 log: log, type: .info, er as CVarArg)
-        }
-      }
-    }
-  }
-
-  internal var isPlaying = false {
-    didSet {
-      // Doing this directly for simpler view updating.
-      playSwitch.isOn = isPlaying
-    }
-  }
+final class MiniPlayerViewController: UIViewController, Navigator {
   
-  var asset: AssetState?
-
-  // MARK: - UIStateRestoring
-
-  override func encodeRestorableState(with coder: NSCoder) {
-    super.encodeRestorableState(with: coder)
-
-    guard locator != nil else {
-      let keys = ["guid", "url", "since", "title"]
-      for key in keys {
-        coder.encode(nil, forKey: key)
-      }
-      return
-    }
-
-    locator?.encode(with: coder)
-  }
-
-  private var isRestoring = false
-
-  override func decodeRestorableState(with coder: NSCoder) {
-    isRestoring = true
-    locator = EntryLocator(coder: coder)
-    
-    super.decodeRestorableState(with: coder)
-  }
-  
-  // MARK: - ContextMenuInteraction
-  
+  private (set) var entry: Entry?
+  private var model: Epic.MiniPlayer?
   private var miniPlayerContext: AnyObject?
-
-  // MARK: - Navigator
-
+  private var needsUpdate = false
   var navigationDelegate: ViewControllers?
-
   var swipe: UISwipeGestureRecognizer!
-
-  // MARK: - Outlets and Actions
-
   @IBOutlet var titleLabel: UILabel!
-
   @IBOutlet var hero: UIImageView!
-
   @IBOutlet var playSwitch: PlaySwitch!
-
   /// A temporary touch down feedback view.
   var backdrop: UIView?
+  weak var fx: UIVisualEffectView!
+}
 
+extension MiniPlayerViewController {
+  
   @IBAction func onPlaySwitchValueChanged(_ sender: PlaySwitch) {
     guard let entry = self.entry else {
       return
     }
 
     if sender.isOn {
-      navigationDelegate?.play(entry)
+      Podcasts.player.setItem(matching: EntryLocator(entry: entry))
     } else {
-      navigationDelegate?.pause()
+      Podcasts.player.pause()
     }
   }
-  
-  // MARK: - FX
-
-  weak var fx: UIVisualEffectView!
-
-  private func insertEffect() {
-    guard fx == nil, let sibling = titleLabel else {
-      os_log("** ignoring visual effect", log: log, type: .error)
-      return
-    }
-    
-    guard #available(iOS 13.0, *) else {
-      let blur = UIBlurEffect(style: .light)
-      let blurView = UIVisualEffectView(effect: blur)
-      blurView.frame = view.frame
-      blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
-      let vibrancy = UIVibrancyEffect(blurEffect: blur)
-      let vibrancyView = UIVisualEffectView(effect: vibrancy)
-      vibrancyView.frame = view.frame
-
-      blurView.contentView.addSubview(vibrancyView)
-      view.insertSubview(blurView, belowSubview: sibling)
-
-      self.fx = blurView
-
-      return
-    }
-
-    let blur = UIBlurEffect(style: .systemChromeMaterial)
-    let blurView = UIVisualEffectView(effect: blur)
-    blurView.frame = view.frame
-    blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
-    let vibrancy = UIVibrancyEffect(blurEffect: blur, style: .label)
-    let vibrancyView = UIVisualEffectView(effect: vibrancy)
-    vibrancyView.frame = view.frame
-    vibrancyView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
-    blurView.contentView.addSubview(vibrancyView)
-    view.insertSubview(blurView, belowSubview: sibling)
-
-    self.fx = blurView
-  }
-  
-  private func removeEffect() {
-    fx.removeFromSuperview()
-  }
-
-  // MARK: - UIViewController
   
   @available(iOS 13.0, *)
   private func installMiniPlayerContextMenu() {
@@ -269,42 +91,66 @@ final class MiniPlayerViewController: UIViewController, Navigator, PlaybackContr
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     configureSwipe()
-
-    needsUpdate = true
+    installMiniPlayerContextMenu()
   }
+}
 
-  private func loadImage(representing entry: Entry) {
-    let opts = FKImageLoadingOptions(
-      fallbackImage: UIImage(named: "Oval"),
-      quality: .high,
-      isDirect: true
-    )
-
-    Podcasts.images.loadImage(representing: entry, into: hero, options: opts)
-  }
-
-  override func viewWillLayoutSubviews() {
-    defer {
-      super.viewWillLayoutSubviews()
+private extension MiniPlayerViewController {
+  
+  func insertEffect() {
+    guard fx == nil, let sibling = titleLabel else {
+      os_log("** ignoring visual effect", log: log, type: .error)
+      return
     }
+    
+    guard #available(iOS 13.0, *) else {
+      let blur = UIBlurEffect(style: .light)
+      let blurView = UIVisualEffectView(effect: blur)
+      blurView.frame = view.frame
+      blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-    configureSwipe()
+      let vibrancy = UIVibrancyEffect(blurEffect: blur)
+      let vibrancyView = UIVisualEffectView(effect: vibrancy)
+      vibrancyView.frame = view.frame
 
-    guard needsUpdate, let entry = self.entry else {
+      blurView.contentView.addSubview(vibrancyView)
+      view.insertSubview(blurView, belowSubview: sibling)
+
+      self.fx = blurView
+
       return
     }
 
-    titleLabel.text = entry.title
-    playSwitch.isOn = isPlaying
-    renderedGUID = entry.guid
+    let blur = UIBlurEffect(style: .systemChromeMaterial)
+    let blurView = UIVisualEffectView(effect: blur)
+    blurView.frame = view.frame
+    blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-    loadImage(representing: entry)
+    let vibrancy = UIVibrancyEffect(blurEffect: blur, style: .label)
+    let vibrancyView = UIVisualEffectView(effect: vibrancy)
+    vibrancyView.frame = view.frame
+    vibrancyView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+    blurView.contentView.addSubview(vibrancyView)
+    view.insertSubview(blurView, belowSubview: sibling)
+
+    self.fx = blurView
+  }
+  
+  func removeEffect() {
+    fx.removeFromSuperview()
+  }
+}
+
+extension MiniPlayerViewController {
+  
+  func configure(with model: Epic.MiniPlayer, entry: Entry) {
+    self.model = model
+    self.entry = entry
     
-    if #available(iOS 13.0, *) {
-      installMiniPlayerContextMenu()
-    }
-
-    needsUpdate = false
+    titleLabel.text = model.item.title
+    hero.image = model.item.image
+    playSwitch.isOn = model.isPlaying
   }
 }
 
@@ -340,21 +186,17 @@ extension MiniPlayerViewController: UIGestureRecognizerDelegate {
 
 // MARK: - UITapGestureRecognizer
 
-extension MiniPlayerViewController {
+private extension MiniPlayerViewController {
 
-  private func makeMatte() -> UIView {
+  func makeMatte() -> UIView {
     let v = UIView(frame: fx.contentView.frame)
 
-    if #available(iOS 13.0, *) {
-      v.backgroundColor = .systemFill
-    } else {
-      v.backgroundColor = .lightGray
-    }
+    v.backgroundColor = .systemFill
 
     return v
   }
 
-  private func showMatte() {
+  func showMatte() {
     let matte = makeMatte()
 
     fx.contentView.addSubview(matte)
@@ -362,7 +204,7 @@ extension MiniPlayerViewController {
     self.backdrop = matte
   }
 
-  private func hideMatte() {
+  func hideMatte() {
     backdrop?.removeFromSuperview()
   }
 
@@ -411,7 +253,7 @@ extension MiniPlayerViewController {
 
 // MARK: - UISwipeGestureRecognizer
 
-extension MiniPlayerViewController {
+private extension MiniPlayerViewController {
 
   @objc func onSwipe(sender: UISwipeGestureRecognizer) {
     os_log("swipe received", log: log, type: .info)
@@ -433,7 +275,7 @@ extension MiniPlayerViewController {
   }
 
   /// Configures swipe for device orientation.
-  private func configureSwipe() {
+  func configureSwipe() {
     swipe.direction = isLandscape ? .left : .up
   }
 }
@@ -441,7 +283,7 @@ extension MiniPlayerViewController {
 // MARK: - UIScreenEdgePanGestureRecognizer
 
 extension MiniPlayerViewController {
-
+  
   @objc func onEdgePan(sender: UIScreenEdgePanGestureRecognizer) {
     os_log("edge pan received", log: log, type: .info)
   }

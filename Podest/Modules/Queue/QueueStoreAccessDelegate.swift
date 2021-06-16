@@ -72,7 +72,7 @@ extension QueueViewController: StoreAccessDelegate {
       
       alert.addAction(ok)
       self?.present(alert, animated: true, completion: nil)
-      self?.navigationDelegate?.pause()
+      Podcasts.player.pause()
       Podest.gateway.cancelAlBGTaskRequests()
     }
   }

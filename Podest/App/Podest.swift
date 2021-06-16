@@ -19,14 +19,6 @@ import Playback
 /// Playback section of the `ViewControllers` protocol.
 protocol Players {
 
-  // MARK: Essentials
-
-  /// Starts playing `entry`.
-  func play(_ entry: Entry)
-
-  /// Pause playback.
-  func pause()
-
   // MARK: Mini Player
 
   /// The mini-player edge insets, updated for device orientation.

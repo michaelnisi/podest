@@ -25,6 +25,28 @@ extension RootViewController: Players {
   // Players explodes into following extensions:
 }
 
+// MARK: - ✨ New Player
+
+extension RootViewController {
+  func subscribe() {
+    Podcasts.player.$state.sink { state in
+      os_log(.debug, log: log, "** new player state: %{public}@", state.description)
+      switch state {
+      case let .mini(entry, player):
+        self.minivc.configure(with: player, entry: entry)
+      
+      default:
+        break
+      }
+    }
+    .store(in: &subscriptions)
+  }
+  
+  func unsubscribe() {
+    subscriptions.removeAll()
+  }
+}
+
 // MARK: - Placing the Mini-Player
 
 extension RootViewController {
@@ -61,8 +83,6 @@ extension RootViewController {
     os_log("hiding mini-player", log: log, type: .info)
 
     func done() {
-      minivc.locator = nil
-
       completion?()
     }
 
@@ -163,42 +183,6 @@ extension RootViewController {
   }
 }
 
-// MARK: - Controlling Playback
-
-extension RootViewController {
-
-  func play(_ entry: Entry) {
-    os_log("playing: %@", log: log, type: .info, entry.title)
-
-    Podcasts.userQueue.enqueue(entries: [entry], belonging: .user) { enqueued, er in
-      if let error = er {
-        os_log("enqueue error: %{public}@",
-               log: log, type: .error, error as CVarArg)
-      }
-
-      if !enqueued.isEmpty {
-        os_log("enqueued to play: %@", log: log, type: .info, enqueued)
-      }
-
-      do {
-        try Podcasts.userQueue.skip(to: entry)
-      } catch {
-        os_log("skip error: %{public}@",
-               log: log, type: .error, error as CVarArg)
-      }
-
-      Podcasts.playback.resume(entry, from: nil)
-    }
-  }
-
-  func pause() {
-    guard Podcasts.playback.currentItem != nil else {
-      return
-    }
-
-    Podcasts.playback.pause(nil, at: nil)
-  }
-}
 
 // MARK: - Presenting the Audio Player
 
@@ -346,7 +330,7 @@ extension RootViewController {
   func update(state: SimplePlaybackState?) {
     dispatchPrecondition(condition: .onQueue(.main))
 
-    var targets: [PlaybackResponding] = [self.minivc, self.qvc]
+    var targets: [PlaybackResponding] = [self.qvc]
     if let t = self.playervc { targets.append(t) }
 
     guard let now = state else {
@@ -385,7 +369,7 @@ extension RootViewController {
   }
 
   func playbackDidChange(session: PlaybackSession<Entry>, state: PlaybackState<Entry>) {
-    os_log("** playback state did change: %{public}@",
+    os_log("playback state did change: %{public}@",
            log: log, type: .info, String(describing: state))
 
     switch state {
@@ -423,10 +407,6 @@ extension RootViewController {
       }
 
     case let .listening(entry, asset):
-      os_log("** listening: %{public}@, %{public}@", log: log, type: .debug,
-             String(describing: entry), String(describing: asset)
-      )
-      
       DispatchQueue.main.async {
         let s = SimplePlaybackState(entry: entry, isPlaying: true, assetState: asset)
 
