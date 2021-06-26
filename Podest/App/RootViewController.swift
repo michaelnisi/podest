@@ -9,10 +9,10 @@
 import FeedKit
 import UIKit
 import os.log
-import AVKit
 import Ola
 import Podcasts
 import Combine
+import AVKit
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "root")
 
@@ -34,8 +34,7 @@ final class RootViewController: UIViewController, Routing {
 
   var minivc: MiniPlayerViewController!
   
-  /// The presented player view controller if any.
-  weak var playervc: PlaybackControlDelegate?
+  weak var playervc: PlayerViewController?
   
   var playerTransitioningDelegate: PlayerTransitioningDelegate?
 
@@ -82,8 +81,8 @@ extension RootViewController {
   override func viewDidLayoutSubviews() { 
     super.viewDidLayoutSubviews()
     
-    pnc.additionalSafeAreaInsets = miniPlayerEdgeInsets
-    snc.additionalSafeAreaInsets = miniPlayerEdgeInsets
+    pnc?.additionalSafeAreaInsets = miniPlayerEdgeInsets
+    snc?.additionalSafeAreaInsets = miniPlayerEdgeInsets
   }
     
   fileprivate func configureMiniPlayer() {
@@ -121,7 +120,6 @@ extension RootViewController {
     snc = ncs.last
 
     configureMiniPlayer()
-    installPlaybackHandlers()
 
     qvc.navigationDelegate = self
   }
@@ -420,9 +418,6 @@ extension RootViewController: UserProxy {
       }
 
       os_log("updating views", log: log, type: .info)
-
-      self.playervc?.isForwardable = Podcasts.userQueue.isForwardable
-      self.playervc?.isBackwardable = Podcasts.userQueue.isBackwardable
 
       guard let evc = self.episodeViewController, let entry = evc.entry else {
         completionBlock?(error)

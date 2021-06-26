@@ -22,12 +22,13 @@
 		4C21F57F21D8A56500ED5D26 /* SubtitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21F57D21D8A56500ED5D26 /* SubtitleTableViewCell.swift */; };
 		4C21F58021D8A56500ED5D26 /* SubtitleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C21F57E21D8A56500ED5D26 /* SubtitleTableViewCell.xib */; };
 		4C233A1525D8617F001782AE /* InsetPresentation in Frameworks */ = {isa = PBXBuildFile; productRef = 4C233A1425D8617F001782AE /* InsetPresentation */; };
+		4C2DAC18267A838A0069DD3F /* MiniPlayerHosting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2DAC17267A838A0069DD3F /* MiniPlayerHosting.swift */; };
+		4C2DAC1A267A87080069DD3F /* VideoPlayerHosting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2DAC19267A87080069DD3F /* VideoPlayerHosting.swift */; };
 		4C351CD11A7F5B7F00C5C88C /* SearchResultsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C351CD01A7F5B7E00C5C88C /* SearchResultsDataSource.swift */; };
 		4C377C8B2316D1D70038D9C8 /* ListTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C377C8A2316D1D70038D9C8 /* ListTableViewDelegate.swift */; };
 		4C3CDC282085A6C300BADBF8 /* StoreButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3CDC272085A6C300BADBF8 /* StoreButton.swift */; };
 		4C3D86F925979C4100B93DF4 /* AirPlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3D86F825979C4100B93DF4 /* AirPlayButton.swift */; };
 		4C3D872A25987D0400B93DF4 /* Epic in Frameworks */ = {isa = PBXBuildFile; productRef = 4C3D872925987D0400B93DF4 /* Epic */; };
-		4C40A3F622C0818A00B353AD /* PlayerMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C40A3F522C0818A00B353AD /* PlayerMessage.swift */; };
 		4C42D9FB22E827A6007F80E2 /* PieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C42D9FA22E827A6007F80E2 /* PieView.swift */; };
 		4C5F4E7C21CB79A300156D56 /* EntryRowSelectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5F4E7B21CB79A300156D56 /* EntryRowSelectable.swift */; };
 		4C6298E02310FC9800141103 /* Refreshing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6298DF2310FC9800141103 /* Refreshing.swift */; };
@@ -124,12 +125,13 @@
 		4C2CBBB625698C640097AD48 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		4C2CBBB725698C640097AD48 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4C2CBBB825698C640097AD48 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		4C2DAC17267A838A0069DD3F /* MiniPlayerHosting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerHosting.swift; sourceTree = "<group>"; };
+		4C2DAC19267A87080069DD3F /* VideoPlayerHosting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerHosting.swift; sourceTree = "<group>"; };
 		4C2EDA4D2239699100528E99 /* HTMLAttributor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = HTMLAttributor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C351CD01A7F5B7E00C5C88C /* SearchResultsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsDataSource.swift; sourceTree = "<group>"; };
 		4C377C8A2316D1D70038D9C8 /* ListTableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewDelegate.swift; sourceTree = "<group>"; };
 		4C3CDC272085A6C300BADBF8 /* StoreButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreButton.swift; sourceTree = "<group>"; };
 		4C3D86F825979C4100B93DF4 /* AirPlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayButton.swift; sourceTree = "<group>"; };
-		4C40A3F522C0818A00B353AD /* PlayerMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerMessage.swift; sourceTree = "<group>"; };
 		4C42D9FA22E827A6007F80E2 /* PieView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PieView.swift; sourceTree = "<group>"; };
 		4C5C9E4522396FED006DF298 /* fileproxy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = fileproxy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C5C9E542239715B006DF298 /* FileProxy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FileProxy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -267,6 +269,14 @@
 			path = NowPlaying;
 			sourceTree = "<group>";
 		};
+		4C2DAC1B267A870D0069DD3F /* VideoPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				4C2DAC19267A87080069DD3F /* VideoPlayerHosting.swift */,
+			);
+			path = VideoPlayer;
+			sourceTree = "<group>";
+		};
 		4C72D4332270A281008F8B96 /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -286,6 +296,7 @@
 				4EF1A34F1EB837D100E41F84 /* PlaySwitch.swift */,
 				4CB6EEC024252A48006F09B7 /* MiniPlayerContextMenuInteraction.swift */,
 				4E7F291E1E7FC11300E12846 /* MiniPlayerViewController.swift */,
+				4C2DAC17267A838A0069DD3F /* MiniPlayerHosting.swift */,
 				4CB6CF3B22BE7F91002452BF /* TopLine.swift */,
 				4E7F29221E7FDE9E00E12846 /* MiniPlayer.storyboard */,
 			);
@@ -341,9 +352,9 @@
 			children = (
 				4C17E47E2504034D0022EF0F /* NowPlaying */,
 				4CB6EEC224253D4B006F09B7 /* MiniPlayer */,
+				4C2DAC1B267A870D0069DD3F /* VideoPlayer */,
 				4C728DBF20623544005B739C /* PlaybackControlDelegate.swift */,
 				4CE8586C21A16B9D00D206FA /* Player.swift */,
-				4C40A3F522C0818A00B353AD /* PlayerMessage.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -678,8 +689,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C2DAC18267A838A0069DD3F /* MiniPlayerHosting.swift in Sources */,
 				4C07C97A21EBA69200ED8AB0 /* ArticleCollectionViewCell.swift in Sources */,
 				4CF7CB5525BDE69200356510 /* PlayerPresentationController.swift in Sources */,
+				4C2DAC1A267A87080069DD3F /* VideoPlayerHosting.swift in Sources */,
 				4CE20ACC1A31C66C0052C360 /* SearchResultsController.swift in Sources */,
 				4CED20D8226C2CFC0049B88D /* QueueTableViewDelegate.swift in Sources */,
 				4CB6EED324278050006F09B7 /* MakeList.swift in Sources */,
@@ -695,7 +708,6 @@
 				4ED4D4171E9D239A0011C28C /* SuggestionCell.swift in Sources */,
 				4C17C19F2307F2400051FE23 /* HomePresenting.swift in Sources */,
 				4CB6CF3C22BE7F91002452BF /* TopLine.swift in Sources */,
-				4C40A3F622C0818A00B353AD /* PlayerMessage.swift in Sources */,
 				4E684D4C1C5F3201004699A1 /* EpisodeViewController.swift in Sources */,
 				4C3D86F925979C4100B93DF4 /* AirPlayButton.swift in Sources */,
 				4E7F291F1E7FC11300E12846 /* MiniPlayerViewController.swift in Sources */,

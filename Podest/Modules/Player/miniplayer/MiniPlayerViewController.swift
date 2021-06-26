@@ -8,14 +8,11 @@
 
 import AVFoundation
 import AVKit
-import FeedKit
-import Foundation
 import UIKit
 import os.log
-import Playback
 import Ola
-import Podcasts
 import Epic
+import FeedKit
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
@@ -39,15 +36,7 @@ final class MiniPlayerViewController: UIViewController, Navigator {
 extension MiniPlayerViewController {
   
   @IBAction func onPlaySwitchValueChanged(_ sender: PlaySwitch) {
-    guard let entry = self.entry else {
-      return
-    }
-
-    if sender.isOn {
-      Podcasts.player.setItem(matching: EntryLocator(entry: entry))
-    } else {
-      Podcasts.player.pause()
-    }
+    sender.isOn ? model?.play() : model?.pause()
   }
   
   @available(iOS 13.0, *)
@@ -150,7 +139,7 @@ extension MiniPlayerViewController {
     
     titleLabel.text = model.item.title
     hero.image = model.item.image
-    playSwitch.isOn = model.isPlaying
+    playSwitch.isOn = model.playback == .playing 
   }
 }
 
@@ -239,8 +228,8 @@ private extension MiniPlayerViewController {
       guard hitArea.contains(p) else {
         return
       }
-
-      navigationDelegate?.showNowPlaying(entry: entry, animated: true, completion: nil)
+      
+      model?.showPlayer()
 
     case .possible, .changed:
       break
@@ -264,8 +253,8 @@ private extension MiniPlayerViewController {
 
     switch sender.state {
     case .ended:
-      navigationDelegate?.showNowPlaying(entry: entry, animated: true, completion: nil)
-
+      break
+    
     case .began, .changed, .cancelled, .failed, .possible:
       break
 

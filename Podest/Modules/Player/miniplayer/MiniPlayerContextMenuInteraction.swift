@@ -121,9 +121,6 @@ extension MiniPlayerContextMenuInteraction: UIContextMenuInteractionDelegate {
       guard let entry = self?.viewController?.entry else {
         return
       }
-      
-      self?.navigationDelegate?.showNowPlaying(
-        entry: entry, animated: true, completion: nil)
     }
   }
 }

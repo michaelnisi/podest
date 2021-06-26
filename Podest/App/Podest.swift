@@ -14,43 +14,6 @@ import AVFoundation.AVPlayer
 import UIKit
 import Playback
 
-// MARK: - Audio and Video Playback
-
-/// Playback section of the `ViewControllers` protocol.
-protocol Players {
-
-  // MARK: Mini Player
-
-  /// The mini-player edge insets, updated for device orientation.
-  var miniPlayerEdgeInsets: UIEdgeInsets { get }
-
-  /// Shows the mini-player or does nothing.
-  func showMiniPlayer(animated: Bool, completion: (() -> Void)?)
-
-  /// Hides the mini-player and/or resets values. Should be used to install
-  /// the mini-player initially.
-  func hideMiniPlayer(animated: Bool, completion: (() -> Void)?)
-
-  // MARK: Now Playing
-
-  /// Presents the main player with `entry`.
-  func showNowPlaying(entry: Entry, animated: Bool, completion: (() -> Void)?)
-
-  /// Dismisses the main player.
-  func hideNowPlaying(animated: Bool, completion: (() -> Void)?)
-
-  /// `true` if the main player, audio or video, is visible at the moment.
-  var isPlayerPresented: Bool { get }
-
-  // MARK: Video
-
-  /// Presents a video player controller with `player` or updates presented.
-  func showVideo(player: AVPlayer, animated: Bool, completion: (() -> Void)?)
-
-  /// Hides video player.
-  func hideVideoPlayer(animated: Bool, completion: (() -> Void)?)
-}
-
 // MARK: - Accessing Entries
 
 /// Often we are only interested in the entry represented by participants.
@@ -72,7 +35,7 @@ protocol EntryIndexPathMapping {
 /// The global controller API, the **root** view controller. This is the **Truth**.
 /// Instead of reaching deep into the controller hierarchy, things that need
 /// to be accessed from  outside should be exposed here.
-protocol ViewControllers: Players {
+protocol ViewControllers {
 
   // MARK: Browsing
 
