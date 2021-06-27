@@ -1,5 +1,5 @@
 //
-//  integration.swift - integrate players
+//  Player.swift
 //  Podest
 //
 //  Created by Michael Nisi on 18.11.18.

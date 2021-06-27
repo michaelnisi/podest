@@ -8,6 +8,12 @@ More immersive new player user interface adding some features:
 - AirPlay Routing Selection
 - Volume
 
+Technical improvements:
+
+- Extract into packages
+- More functional reactive modeling
+- Optimize for iOS 15
+
 ## 9.8 (2020-09-19)
 
 Basic adjustments for iOS 14, especially an updated background mode fetching all your latest episodes more efficiently.
