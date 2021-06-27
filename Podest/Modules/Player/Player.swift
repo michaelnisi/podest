@@ -9,12 +9,6 @@
 import FeedKit
 import UIKit
 import os.log
-import Playback
-import AVKit
-import AVFoundation
-import Ola
-import FileProxy
-import SwiftUI
 import Epic
 import Podcasts
 
@@ -34,9 +28,12 @@ extension RootViewController {
         self.showMiniPlayer(animated: true)
         
       case let .full(_, _, player):
-        self.showNowPlaying(model: player, animated: true, completion: nil)
+        self.showNowPlaying(model: player, animated: true)
+        
+      case .video(_, _):
+        os_log(.error, log: log, "** video: not handled yet")
       
-      default:
+      case .none:
         break
       }
     }
@@ -51,16 +48,11 @@ extension RootViewController {
 // MARK: - Presenting the Audio Player
 
 extension RootViewController {
-  func showNowPlaying(model: Epic.Player, animated: Bool, completion: (() -> Void)?) {
+  func showNowPlaying(model: Epic.Player, animated: Bool, completion: (() -> Void)? = nil) {
     os_log("showing now playing", log: log, type: .info)
     dispatchPrecondition(condition: .onQueue(.main))
     
-    let vc = PlayerViewController(model: model)
-    playervc = vc
-    playerTransitioningDelegate = PlayerTransitioningDelegate(from: self, to: vc)
-    vc.transitioningDelegate = playerTransitioningDelegate
-    
-    present(vc, interactiveDismissalType: .vertical) {
+    present(PlayerViewController(model: model), interactiveDismissalType: .vertical) {
       completion?()
     }
   }
@@ -88,4 +80,3 @@ extension RootViewController {
     presentedViewController is EntryPlayer
   }
 }
-

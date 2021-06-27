@@ -86,7 +86,7 @@ protocol ViewControllers {
 }
 
 /// Adopt `Navigator` to receive access to the navigation delegate.
-protocol Navigator: class {
+protocol Navigator: AnyObject {
 
   /// Use this API for navigation.
   var navigationDelegate: ViewControllers? { get set }

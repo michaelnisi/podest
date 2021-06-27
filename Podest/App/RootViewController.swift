@@ -34,10 +34,6 @@ final class RootViewController: UIViewController, Routing {
 
   var minivc: MiniPlayerViewController!
   
-  weak var playervc: PlayerViewController?
-  
-  var playerTransitioningDelegate: PlayerTransitioningDelegate?
-
   private var pnc: UINavigationController!
   private var snc: UINavigationController!
   

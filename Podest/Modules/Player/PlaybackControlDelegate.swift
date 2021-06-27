@@ -17,7 +17,7 @@ import Podcasts
 private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
 /// Receives callbacks for playback status changes.
-protocol PlaybackResponding: class {
+protocol PlaybackResponding: AnyObject {
   func playing(entry: Entry, asset: AssetState?)
   func pausing(entry: Entry, asset: AssetState?)
   func dismiss()
@@ -73,7 +73,5 @@ extension PlaybackControlDelegate {
 /// Player view controllers must adopt this protocol. It specifies a view
 /// controller that knows how to navigate this app, is able to control playback,
 /// and forwards its entry.
-protocol EntryPlayer: Navigator, PlaybackControlDelegate, InsetPresentable {
-  var readyForPresentation: (() -> Void)? { get set }
-}
+protocol EntryPlayer: Navigator, PlaybackControlDelegate, InsetPresentable {}
 

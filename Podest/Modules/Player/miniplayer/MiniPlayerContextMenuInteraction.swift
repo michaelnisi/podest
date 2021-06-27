@@ -10,20 +10,12 @@ import Foundation
 import UIKit
 import FeedKit
 
-protocol MiniPlayerContext: AnyObject {
-  var navigationDelegate: ViewControllers? { get }
-  var view: UIView! { get }
-  var entry: Entry? { get }
-}
-
-extension MiniPlayerViewController: MiniPlayerContext {}
-
 @available(iOS 13.0, *)
 class MiniPlayerContextMenuInteraction: NSObject { 
   
-  private weak var viewController: MiniPlayerContext?
+  private weak var viewController: MiniPlayerViewController?
   
-  init(viewController: MiniPlayerContext) {
+  init(viewController: MiniPlayerViewController) {
     self.viewController = viewController
   }
   

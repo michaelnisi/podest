@@ -14,7 +14,7 @@ import Podcasts
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "store")
 
-protocol CellProductsDelegate: class {
+protocol CellProductsDelegate: AnyObject {
   func cell(_ cell: UICollectionViewCell,
             payProductMatching productIdentifier: String)
 }

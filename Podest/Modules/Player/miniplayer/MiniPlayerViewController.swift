@@ -68,10 +68,10 @@ extension MiniPlayerViewController {
 
     swipe = UISwipeGestureRecognizer(target: self, action: #selector(onSwipe))
     swipe.delegate = self
+    swipe.direction = .up
     view.addGestureRecognizer(swipe)
 
-    let edgePan = UIScreenEdgePanGestureRecognizer(
-      target: self, action: #selector(onEdgePan))
+    let edgePan = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(onEdgePan))
     edgePan.edges = .bottom
     edgePan.delegate = self
     view.addGestureRecognizer(edgePan)
@@ -79,7 +79,6 @@ extension MiniPlayerViewController {
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    configureSwipe()
     installMiniPlayerContextMenu()
   }
 }
@@ -213,8 +212,7 @@ private extension MiniPlayerViewController {
     case .ended:
       hideMatte()
 
-      guard let entry = self.entry,
-        !isPlaySwitchHit(),
+      guard !isPlaySwitchHit(),
         !playSwitch.isTracking,
         !playSwitch.isCancelled else {
         playSwitch.isCancelled = false
@@ -243,17 +241,16 @@ private extension MiniPlayerViewController {
 // MARK: - UISwipeGestureRecognizer
 
 private extension MiniPlayerViewController {
-
   @objc func onSwipe(sender: UISwipeGestureRecognizer) {
     os_log("swipe received", log: log, type: .info)
 
-    guard let entry = self.entry, !playSwitch.isTracking else {
+    guard !playSwitch.isTracking else {
       return
     }
 
     switch sender.state {
     case .ended:
-      break
+      model?.showPlayer()
     
     case .began, .changed, .cancelled, .failed, .possible:
       break
@@ -262,17 +259,11 @@ private extension MiniPlayerViewController {
       fatalError("unknown case in switch: \(sender.state)")
     }
   }
-
-  /// Configures swipe for device orientation.
-  func configureSwipe() {
-    swipe.direction = isLandscape ? .left : .up
-  }
 }
 
 // MARK: - UIScreenEdgePanGestureRecognizer
 
 extension MiniPlayerViewController {
-  
   @objc func onEdgePan(sender: UIScreenEdgePanGestureRecognizer) {
     os_log("edge pan received", log: log, type: .info)
   }
