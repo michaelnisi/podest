@@ -52,6 +52,12 @@ extension RootViewController {
     os_log("showing now playing", log: log, type: .info)
     dispatchPrecondition(condition: .onQueue(.main))
     
+    guard !isPresentingNowPlaying else {
+      completion?()
+
+      return
+    }
+    
     present(PlayerViewController(model: model), interactiveDismissalType: .vertical) {
       completion?()
     }
@@ -61,7 +67,7 @@ extension RootViewController {
     os_log("hiding now playing", log: log, type: .info)
     dispatchPrecondition(condition: .onQueue(.main))
 
-    guard presentedViewController is EntryPlayer else {
+    guard isPresentingNowPlaying else {
       completion?()
 
       return
