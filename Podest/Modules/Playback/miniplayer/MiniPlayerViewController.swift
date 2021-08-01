@@ -18,7 +18,6 @@ private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
 /// The minimized AV player.
 final class MiniPlayerViewController: UIViewController, Navigator {
-  
   private (set) var entry: Entry?
   private var model: Epic.MiniPlayer?
   private var miniPlayerContext: AnyObject?
@@ -34,12 +33,10 @@ final class MiniPlayerViewController: UIViewController, Navigator {
 }
 
 extension MiniPlayerViewController {
-  
   @IBAction func onPlaySwitchValueChanged(_ sender: PlaySwitch) {
     sender.isOn ? model?.play() : model?.pause()
   }
   
-  @available(iOS 13.0, *)
   private func installMiniPlayerContextMenu() {
     (miniPlayerContext as? MiniPlayerContextMenuInteraction)?.invalidate()
     
@@ -84,7 +81,6 @@ extension MiniPlayerViewController {
 }
 
 private extension MiniPlayerViewController {
-  
   func insertEffect() {
     guard fx == nil, let sibling = titleLabel else {
       os_log("** ignoring visual effect", log: log, type: .error)
@@ -131,7 +127,6 @@ private extension MiniPlayerViewController {
 }
 
 extension MiniPlayerViewController {
-  
   func configure(with model: Epic.MiniPlayer, entry: Entry) {
     self.model = model
     self.entry = entry
@@ -145,7 +140,6 @@ extension MiniPlayerViewController {
 // MARK: - UIGestureRecognizerDelegate
 
 extension MiniPlayerViewController: UIGestureRecognizerDelegate {
-
   /// Returns `true` if we are vertically compact.
   var isLandscape: Bool {
     return traitCollection.containsTraits(
@@ -175,7 +169,6 @@ extension MiniPlayerViewController: UIGestureRecognizerDelegate {
 // MARK: - UITapGestureRecognizer
 
 private extension MiniPlayerViewController {
-
   func makeMatte() -> UIView {
     let v = UIView(frame: fx.contentView.frame)
 
@@ -227,7 +220,7 @@ private extension MiniPlayerViewController {
         return
       }
       
-      model?.showPlayer()
+      showPlayer()
 
     case .possible, .changed:
       break
@@ -250,7 +243,7 @@ private extension MiniPlayerViewController {
 
     switch sender.state {
     case .ended:
-      model?.showPlayer()
+      showPlayer()
     
     case .began, .changed, .cancelled, .failed, .possible:
       break
@@ -266,5 +259,13 @@ private extension MiniPlayerViewController {
 extension MiniPlayerViewController {
   @objc func onEdgePan(sender: UIScreenEdgePanGestureRecognizer) {
     os_log("edge pan received", log: log, type: .info)
+  }
+}
+
+// MARK: - Epic
+
+extension MiniPlayerViewController {
+  func showPlayer() {
+    model?.showPlayer()
   }
 }

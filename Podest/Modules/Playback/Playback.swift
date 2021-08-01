@@ -1,11 +1,3 @@
-//
-//  Player.swift
-//  Podest
-//
-//  Created by Michael Nisi on 18.11.18.
-//  Copyright © 2018 Michael Nisi. All rights reserved.
-//
-
 import FeedKit
 import UIKit
 import os.log
@@ -14,18 +6,17 @@ import Podcasts
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
-// MARK: - Players
-
-extension RootViewController {}
-
 extension RootViewController {
   func subscribe() {
     Podcasts.player.$state.sink { [unowned self] state in
       os_log(.debug, log: log, "** new player state: %{public}@", state.description)
       switch state {
       case let .mini(entry, _, player):
+
         self.minivc.configure(with: player, entry: entry)
-        self.showMiniPlayer(animated: true)
+        self.hideNowPlaying(animated: true) {
+          self.showMiniPlayer(animated: true)
+        }
         
       case let .full(_, _, player):
         self.showNowPlaying(model: player, animated: true)
@@ -83,6 +74,6 @@ extension RootViewController {
 
 extension RootViewController {
   var isPresentingNowPlaying: Bool {
-    presentedViewController is EntryPlayer
+    presentedViewController is PlayerViewController
   }
 }

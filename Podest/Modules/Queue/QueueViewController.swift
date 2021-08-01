@@ -284,21 +284,3 @@ extension QueueViewController: EntryProvider {
     return dataSource.entry(at: indexPath)
   }
 }
-
-// MARK: - PlaybackResponding
-
-extension QueueViewController: PlaybackResponding {
-
-  func dismiss() {
-    os_log("ignoring dismiss", log: log)
-  }
-
-  func playing(entry: Entry, asset: AssetState?) {
-    os_log("playing: %s", log: log, type: .info, entry.title)
-    dataSource.tableView(tableView, updateCellMatching: entry, isUnplayed: false)
-  }
-
-  func pausing(entry: Entry, asset: AssetState?) {
-    os_log("pausing: %s", log: log, type: .info, entry.title)
-  }
-}

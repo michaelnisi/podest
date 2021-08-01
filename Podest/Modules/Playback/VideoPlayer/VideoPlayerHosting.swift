@@ -62,7 +62,7 @@ extension RootViewController {
   }
 
   var isPlayerPresented: Bool {
-    isPresentingVideo || presentedViewController is EntryPlayer
+    isPresentingVideo || isPresentingNowPlaying
   }
 }
 

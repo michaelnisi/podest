@@ -61,7 +61,7 @@
 		4CE1445726223FAD00B60130 /* Gateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1445626223FAD00B60130 /* Gateway.swift */; };
 		4CE20ACC1A31C66C0052C360 /* SearchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE20ACB1A31C66C0052C360 /* SearchResultsController.swift */; };
 		4CE20AD01A31EAAD0052C360 /* SuggestionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CE20ACF1A31EAAD0052C360 /* SuggestionCell.xib */; };
-		4CE8586D21A16B9D00D206FA /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE8586C21A16B9D00D206FA /* Player.swift */; };
+		4CE8586D21A16B9D00D206FA /* Playback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE8586C21A16B9D00D206FA /* Playback.swift */; };
 		4CEC436521D68BD50097FFA7 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEC436321D68BD50097FFA7 /* MessageTableViewCell.swift */; };
 		4CEC436621D68BD50097FFA7 /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CEC436421D68BD50097FFA7 /* MessageTableViewCell.xib */; };
 		4CED20D8226C2CFC0049B88D /* QueueTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CED20D7226C2CFC0049B88D /* QueueTableViewDelegate.swift */; };
@@ -174,7 +174,7 @@
 		4CE1445626223FAD00B60130 /* Gateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gateway.swift; sourceTree = "<group>"; };
 		4CE20ACB1A31C66C0052C360 /* SearchResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsController.swift; sourceTree = "<group>"; };
 		4CE20ACF1A31EAAD0052C360 /* SuggestionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SuggestionCell.xib; sourceTree = "<group>"; };
-		4CE8586C21A16B9D00D206FA /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		4CE8586C21A16B9D00D206FA /* Playback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playback.swift; sourceTree = "<group>"; };
 		4CE9693721DF660C00AEF409 /* FanboyKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FanboyKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CE9693921DF660C00AEF409 /* FeedKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FeedKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CE9693B21DF660C00AEF409 /* MangerKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MangerKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -260,13 +260,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4C17E47E2504034D0022EF0F /* NowPlaying */ = {
+		4C17E47E2504034D0022EF0F /* Player */ = {
 			isa = PBXGroup;
 			children = (
 				4C3D86F825979C4100B93DF4 /* AirPlayButton.swift */,
 				4C17E47A2503F9440022EF0F /* PlayerViewController.swift */,
 			);
-			path = NowPlaying;
+			path = Player;
 			sourceTree = "<group>";
 		};
 		4C2DAC1B267A870D0069DD3F /* VideoPlayer */ = {
@@ -347,16 +347,16 @@
 			path = Podcast;
 			sourceTree = "<group>";
 		};
-		4CD697031FEBC66B00349580 /* Player */ = {
+		4CD697031FEBC66B00349580 /* Playback */ = {
 			isa = PBXGroup;
 			children = (
-				4C17E47E2504034D0022EF0F /* NowPlaying */,
+				4C17E47E2504034D0022EF0F /* Player */,
 				4CB6EEC224253D4B006F09B7 /* MiniPlayer */,
 				4C2DAC1B267A870D0069DD3F /* VideoPlayer */,
 				4C728DBF20623544005B739C /* PlaybackControlDelegate.swift */,
-				4CE8586C21A16B9D00D206FA /* Player.swift */,
+				4CE8586C21A16B9D00D206FA /* Playback.swift */,
 			);
-			path = Player;
+			path = Playback;
 			sourceTree = "<group>";
 		};
 		4CD697041FEBC68600349580 /* Queue */ = {
@@ -419,7 +419,7 @@
 				4CD697041FEBC68600349580 /* Queue */,
 				4CD697011FEBC60500349580 /* Podcast */,
 				4CD697051FEBC6DB00349580 /* Episode */,
-				4CD697031FEBC66B00349580 /* Player */,
+				4CD697031FEBC66B00349580 /* Playback */,
 				4CCBF20F20808C4500A7359F /* Store */,
 			);
 			path = Modules;
@@ -719,7 +719,7 @@
 				4C728DC020623544005B739C /* PlaybackControlDelegate.swift in Sources */,
 				4C07C97621EB0C9600ED8AB0 /* StoreLayout.swift in Sources */,
 				4CB6EECF24274265006F09B7 /* Dequeueing.swift in Sources */,
-				4CE8586D21A16B9D00D206FA /* Player.swift in Sources */,
+				4CE8586D21A16B9D00D206FA /* Playback.swift in Sources */,
 				4C72D4372270A5DA008F8B96 /* ActionSheetPresenting.swift in Sources */,
 				4CFEE33821C7B101008B2EC0 /* SearchControllerProxy.swift in Sources */,
 				4C351CD11A7F5B7F00C5C88C /* SearchResultsDataSource.swift in Sources */,

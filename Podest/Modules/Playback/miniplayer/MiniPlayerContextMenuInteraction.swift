@@ -10,18 +10,16 @@ import Foundation
 import UIKit
 import FeedKit
 
-@available(iOS 13.0, *)
-class MiniPlayerContextMenuInteraction: NSObject { 
-  
+class MiniPlayerContextMenuInteraction: NSObject {
   private weak var viewController: MiniPlayerViewController?
+  private var interaction: UIInteraction?
+  private var isInvalidated = false
+  private var view: UIView? { viewController?.view }
+  var navigationDelegate: ViewControllers? { viewController?.navigationDelegate }
   
   init(viewController: MiniPlayerViewController) {
     self.viewController = viewController
   }
-  
-  private var interaction: UIInteraction?
-  
-  private var view: UIView? { viewController?.view }
   
   func install() -> MiniPlayerContextMenuInteraction {
     precondition(!isInvalidated)
@@ -35,8 +33,6 @@ class MiniPlayerContextMenuInteraction: NSObject {
     return self
   }
   
-  private var isInvalidated = false
-  
   func invalidate() {
     isInvalidated = true
     
@@ -48,7 +44,7 @@ class MiniPlayerContextMenuInteraction: NSObject {
   }
   
   private func makeActionProvider(entry: Entry) -> UIContextMenuActionProvider {
-    return { [weak self] suggestedActions in
+    { [weak self] suggestedActions in
       var children = Array<UIMenuElement>()
       
       if let link = EpisodeContext.makeLinkAction(entry: entry) {
@@ -81,15 +77,11 @@ class MiniPlayerContextMenuInteraction: NSObject {
       )
     }
   }
-  
-  var navigationDelegate: ViewControllers? { viewController?.navigationDelegate }
 }
 
 // MARK: - UIContextMenuInteractionDelegate
 
-@available(iOS 13.0, *)
 extension MiniPlayerContextMenuInteraction: UIContextMenuInteractionDelegate {
-  
   func contextMenuInteraction(
     _ interaction: UIContextMenuInteraction, 
     configurationForMenuAtLocation location: CGPoint
@@ -110,9 +102,7 @@ extension MiniPlayerContextMenuInteraction: UIContextMenuInteractionDelegate {
     willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, 
     animator: UIContextMenuInteractionCommitAnimating) {
     animator.addCompletion { [weak self] in
-      guard let entry = self?.viewController?.entry else {
-        return
-      }
+      self?.viewController?.showPlayer()
     }
   }
 }
