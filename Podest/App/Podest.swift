@@ -1,12 +1,13 @@
+//===----------------------------------------------------------------------===//
 //
-//  Podest.swift
-//  Podest
+// This source file is part of the Podest open source project
 //
-//  The core API of the Podest podcast app.
+// Copyright (c) 2021 Michael Nisi and collaborators
+// Licensed under MIT License
 //
-//  Created by Michael on 4/17/17.
-//  Copyright © 2017 Michael Nisi. All rights reserved.
+// See https://github.com/michaelnisi/podest/blob/main/LICENSE for license information
 //
+//===----------------------------------------------------------------------===//
 
 import Foundation
 import FeedKit

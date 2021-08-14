@@ -1,10 +1,13 @@
+//===----------------------------------------------------------------------===//
 //
-//  QueueTableViewDelegate.swift
-//  Podest
+// This source file is part of the Podest open source project
 //
-//  Created by Michael Nisi on 21.04.19.
-//  Copyright © 2019 Michael Nisi. All rights reserved.
+// Copyright (c) 2021 Michael Nisi and collaborators
+// Licensed under MIT License
 //
+// See https://github.com/michaelnisi/podest/blob/main/LICENSE for license information
+//
+//===----------------------------------------------------------------------===//
 
 import Foundation
 import UIKit
@@ -115,23 +118,13 @@ extension QueueViewController: Unsubscribing, Dequeueing {
 // MARK: - Leading Swipe Actions
 
 extension QueueViewController {
-  
-  private static var playGlyph: UIImage {
-    if #available(iOS 13.0, *) {
-      return UIImage(systemName: "play.fill")!
-    } else {
-      return UIImage(named: "Play")!
-    }
-  }
-  
   private func makePlayAction(entry: Entry) -> UIContextualAction {
-    let action = UIContextualAction(style: .normal, title: nil) { 
-      action, sourceView, completionHandler in
-      let actionPerformed = Podcasts.playback.resume(entry, from: nil)
+    let action = UIContextualAction(style: .normal, title: nil) { action, sourceView, completionHandler in
+      Podcasts.player.setItem(matching: EntryLocator(entry: entry))
       
-      completionHandler(actionPerformed)
+      completionHandler(true)
     }
-    action.image = QueueViewController.playGlyph
+    action.image = UIImage(systemName: "play.fill")!
     action.backgroundColor = .systemGreen
     
     return action

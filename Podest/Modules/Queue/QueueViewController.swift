@@ -1,10 +1,13 @@
+//===----------------------------------------------------------------------===//
 //
-//  QueueViewController.swift
-//  Podest
+// This source file is part of the Podest open source project
 //
-//  Created by Michael on 11/11/14.
-//  Copyright (c) 2014 Michael Nisi. All rights reserved.
+// Copyright (c) 2021 Michael Nisi and collaborators
+// Licensed under MIT License
 //
+// See https://github.com/michaelnisi/podest/blob/main/LICENSE for license information
+//
+//===----------------------------------------------------------------------===//
 
 import FeedKit
 import UIKit
@@ -12,6 +15,7 @@ import os.log
 import Ola
 import Playback
 import Podcasts
+import Combine
 
 /// The `QueueViewController` is the initial/main view controller of this app,
 /// it renders the user’s queued episodes and, in its navigation item, provides
@@ -19,6 +23,8 @@ import Podcasts
 final class QueueViewController: UITableViewController, Navigator {
 
   let log = OSLog(subsystem: "ink.codes.podest", category: "queue")
+  
+  private var subscriptions = Set<AnyCancellable>()
 
   /// A state machine handling events from the search controller.
   private var searchProxy: SearchControllerProxy!
@@ -241,14 +247,34 @@ extension QueueViewController {
     updateStoreButton()
     choreographer.clear()
     reload()
+    _subscribe()
 
     super.viewDidAppear(animated)
   }
 
   override func viewWillDisappear(_ animated: Bool) {
     Podcasts.store.cancelReview()
+    _unsubscribe()
 
     super.viewWillDisappear(animated)
+  }
+}
+
+private extension QueueViewController {
+  func _subscribe() {
+    Podcasts.playback.$state.sink { [unowned self] state in
+      switch state {
+      case let .listening(entry, _), let .viewing(entry, _):
+        self.dataSource.tableView(self.tableView, updateCellMatching: entry, isUnplayed: false)
+      default:
+        break
+      }
+    }
+    .store(in: &subscriptions)
+  }
+  
+  func _unsubscribe() {
+    subscriptions.removeAll()
   }
 }
 

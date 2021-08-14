@@ -11,12 +11,12 @@
 		4C07C97A21EBA69200ED8AB0 /* ArticleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C07C97821EBA69200ED8AB0 /* ArticleCollectionViewCell.swift */; };
 		4C07C97B21EBA69200ED8AB0 /* ArticleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C07C97921EBA69200ED8AB0 /* ArticleCollectionViewCell.xib */; };
 		4C0BE2501A4C2162004E82BF /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 4C0BE24F1A4C2162004E82BF /* config.json */; };
-		4C12D0C3261B717700031140 /* Podcasts in Frameworks */ = {isa = PBXBuildFile; productRef = 4C12D0C2261B717700031140 /* Podcasts */; };
 		4C17C19D230723480051FE23 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C17C19C230723480051FE23 /* Home.storyboard */; };
 		4C17C19F2307F2400051FE23 /* HomePresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C17C19E2307F2400051FE23 /* HomePresenting.swift */; };
 		4C17E47B2503F9440022EF0F /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C17E47A2503F9440022EF0F /* PlayerViewController.swift */; };
 		4C1B32CC21E7046A00E57931 /* DisplayTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1B32CA21E7046A00E57931 /* DisplayTableViewCell.swift */; };
 		4C1B32CD21E7046A00E57931 /* DisplayTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C1B32CB21E7046A00E57931 /* DisplayTableViewCell.xib */; };
+		4C1B4F0926C7CA15007119C6 /* Podcasts in Frameworks */ = {isa = PBXBuildFile; productRef = 4C1B4F0826C7CA15007119C6 /* Podcasts */; };
 		4C1F57A720810D850067AB7C /* ProductsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F57A620810D850067AB7C /* ProductsViewController.swift */; };
 		4C1F57A92081C0690067AB7C /* ProductsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F57A82081C0690067AB7C /* ProductsDataSource.swift */; };
 		4C21F57F21D8A56500ED5D26 /* SubtitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21F57D21D8A56500ED5D26 /* SubtitleTableViewCell.swift */; };
@@ -249,7 +249,7 @@
 				4C937B79256AD840001B406D /* Playback in Frameworks */,
 				4C937B8F256AD8D2001B406D /* FileProxy in Frameworks */,
 				4E765EFE1FA1895100FD6D73 /* CloudKit.framework in Frameworks */,
-				4C12D0C3261B717700031140 /* Podcasts in Frameworks */,
+				4C1B4F0926C7CA15007119C6 /* Podcasts in Frameworks */,
 				4CF5674C207F362300C77C1D /* StoreKit.framework in Frameworks */,
 				4C3D872A25987D0400B93DF4 /* Epic in Frameworks */,
 				4C937B84256AD8B2001B406D /* HTMLAttributor in Frameworks */,
@@ -573,7 +573,7 @@
 				4C937BA0256AD910001B406D /* FeedKit */,
 				4C3D872925987D0400B93DF4 /* Epic */,
 				4C233A1425D8617F001782AE /* InsetPresentation */,
-				4C12D0C2261B717700031140 /* Podcasts */,
+				4C1B4F0826C7CA15007119C6 /* Podcasts */,
 			);
 			productName = Podest;
 			productReference = 4E8CA7011A126ADB004DE307 /* Podest.app */;
@@ -628,7 +628,7 @@
 				4C937B9F256AD910001B406D /* XCRemoteSwiftPackageReference "feedkit" */,
 				4C3D872825987D0400B93DF4 /* XCRemoteSwiftPackageReference "epic" */,
 				4C233A1325D8617F001782AE /* XCRemoteSwiftPackageReference "InsetPresentation" */,
-				4C12D0C1261B717700031140 /* XCRemoteSwiftPackageReference "podcasts" */,
+				4C1B4F0726C7CA15007119C6 /* XCRemoteSwiftPackageReference "podcasts" */,
 			);
 			productRefGroup = 4E8CA7021A126ADB004DE307 /* Products */;
 			projectDirPath = "";
@@ -891,7 +891,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X23V32HT8X;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Podest/Info.plist;
@@ -919,7 +919,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X23V32HT8X;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Podest/Info.plist;
@@ -962,11 +962,11 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		4C12D0C1261B717700031140 /* XCRemoteSwiftPackageReference "podcasts" */ = {
+		4C1B4F0726C7CA15007119C6 /* XCRemoteSwiftPackageReference "podcasts" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "file:///users/michael/swift/podcasts";
+			repositoryURL = "https://github.com/michaelnisi/podcasts";
 			requirement = {
-				branch = master;
+				branch = main;
 				kind = branch;
 			};
 		};
@@ -1029,9 +1029,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4C12D0C2261B717700031140 /* Podcasts */ = {
+		4C1B4F0826C7CA15007119C6 /* Podcasts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4C12D0C1261B717700031140 /* XCRemoteSwiftPackageReference "podcasts" */;
+			package = 4C1B4F0726C7CA15007119C6 /* XCRemoteSwiftPackageReference "podcasts" */;
 			productName = Podcasts;
 		};
 		4C233A1425D8617F001782AE /* InsetPresentation */ = {

@@ -127,6 +127,8 @@ extension ListViewController {
       actions.append(makeAddAction(entry: entry))
     }
     
+    Podcasts.player.setItem(matching: EntryLocator(entry: entry))
+    
     let conf = UISwipeActionsConfiguration(actions: actions)
     conf.performsFirstActionWithFullSwipe = true
     
