@@ -982,8 +982,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/michaelnisi/epic";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				branch = master;
+				kind = branch;
 			};
 		};
 		4C937B77256AD840001B406D /* XCRemoteSwiftPackageReference "playback" */ = {
@@ -991,7 +991,7 @@
 			repositoryURL = "https://github.com/michaelnisi/playback";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 11.0.0;
+				minimumVersion = 12.0.0;
 			};
 		};
 		4C937B82256AD8B2001B406D /* XCRemoteSwiftPackageReference "hattr" */ = {
