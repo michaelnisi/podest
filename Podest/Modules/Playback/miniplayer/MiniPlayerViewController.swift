@@ -1,10 +1,13 @@
+//===----------------------------------------------------------------------===//
 //
-//  MiniPlayerViewController.swift
-//  Podest
+// This source file is part of the Podest open source project
 //
-//  Created by Michael on 3/20/17.
-//  Copyright © 2017 Michael Nisi. All rights reserved.
+// Copyright (c) 2021 Michael Nisi and collaborators
+// Licensed under MIT License
 //
+// See https://github.com/michaelnisi/podest/blob/main/LICENSE for license information
+//
+//===----------------------------------------------------------------------===//
 
 import AVFoundation
 import AVKit
@@ -83,7 +86,7 @@ extension MiniPlayerViewController {
 private extension MiniPlayerViewController {
   func insertEffect() {
     guard fx == nil, let sibling = titleLabel else {
-      os_log("** ignoring visual effect", log: log, type: .error)
+      os_log("ignoring visual effect", log: log, type: .error)
       return
     }
     

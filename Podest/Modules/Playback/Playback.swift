@@ -1,3 +1,14 @@
+//===----------------------------------------------------------------------===//
+//
+// This source file is part of the Podest open source project
+//
+// Copyright (c) 2021 Michael Nisi and collaborators
+// Licensed under MIT License
+//
+// See https://github.com/michaelnisi/podest/blob/main/LICENSE for license information
+//
+//===----------------------------------------------------------------------===//
+
 import FeedKit
 import UIKit
 import os.log
@@ -9,7 +20,7 @@ private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 extension RootViewController {
   func subscribe() {
     Podcasts.player.$state.sink { [unowned self] state in
-      os_log(.debug, log: log, "** new player state: %{public}@", state.description)
+      os_log(.debug, log: log, "new player state: %{public}@", state.description)
       switch state {
       case let .mini(entry, _, player):
 
@@ -22,7 +33,7 @@ extension RootViewController {
         self.showNowPlaying(model: player, animated: true)
         
       case .video(_, _):
-        os_log(.error, log: log, "** video: not handled yet")
+        os_log(.error, log: log, "video: not handled yet")
       
       case .none:
         break

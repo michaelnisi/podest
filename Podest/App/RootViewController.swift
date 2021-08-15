@@ -170,7 +170,7 @@ extension RootViewController: ViewControllers {
   
   var isCollapsed: Bool {    
     guard svc.isCollapsed else {
-      os_log("** scrutinizing uncollapsed for ui-idiom: %{public}i", 
+      os_log("scrutinizing uncollapsed for ui-idiom: %{public}i", 
              log: log, traitCollection.userInterfaceIdiom.rawValue)
 
       return snc.children.isEmpty
@@ -563,7 +563,7 @@ extension RootViewController: UISplitViewControllerDelegate {
            log: log, type: .info, splitViewController)
     
     guard traitCollection.userInterfaceIdiom != .phone else {
-      os_log("** choosing primary view controller on phone", log: log, type: .info)
+      os_log("choosing primary view controller on phone", log: log, type: .info)
       return nil
     }
 
@@ -594,7 +594,7 @@ extension RootViewController: UISplitViewControllerDelegate {
            log: log, type: .info, primaryViewController)
     
     guard traitCollection.userInterfaceIdiom != .phone else {
-      os_log("** not collapsing on phone", log: log, type: .info)
+      os_log("not collapsing on phone", log: log, type: .info)
       return true
     }
 
@@ -632,7 +632,7 @@ extension RootViewController: UISplitViewControllerDelegate {
            log: log, type: .info, primaryViewController)
     
     guard traitCollection.userInterfaceIdiom != .phone else {
-      os_log("** not separating on phone", log: log, type: .info)
+      os_log("not separating on phone", log: log, type: .info)
       snc.setViewControllers([], animated: false)
       
       return snc
@@ -676,7 +676,7 @@ extension RootViewController {
   
   func splitViewController(_ svc: UISplitViewController, topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {
     guard traitCollection.userInterfaceIdiom != .phone else {
-      os_log("** choosing primary view controller on phone", log: log, type: .info)
+      os_log("choosing primary view controller on phone", log: log, type: .info)
       return .primary
     }
 

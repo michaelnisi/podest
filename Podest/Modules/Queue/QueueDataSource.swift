@@ -404,11 +404,11 @@ final class QueueDataSource: NSObject, SectionedDataSource {
       return next()
     }
 
-    os_log("** simulating iCloud pull", log: log)
+    os_log("simulating iCloud pull", log: log)
 
     iCloud.pull { newData, error in
       if let er = error {
-        os_log("** simulated iCloud pull failed: %{public}@",
+        os_log("simulated iCloud pull failed: %{public}@",
                log: log, er as CVarArg)
       }
       next()

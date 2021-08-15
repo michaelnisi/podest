@@ -1,10 +1,13 @@
+//===----------------------------------------------------------------------===//
 //
-//  ListViewController.swift
-//  Podest
+// This source file is part of the Podest open source project
 //
-//  Created by Michael on 11/11/14.
-//  Copyright (c) 2014 Michael Nisi. All rights reserved.
+// Copyright (c) 2021 Michael Nisi and collaborators
+// Licensed under MIT License
 //
+// See https://github.com/michaelnisi/podest/blob/main/LICENSE for license information
+//
+//===----------------------------------------------------------------------===//
 
 import UIKit
 import FeedKit
@@ -383,7 +386,7 @@ extension ListViewController {
   }
 
   private func configureNavigationItem(url: FeedURL) {
-    os_log("** configuring navigation item: %@",
+    os_log("configuring navigation item: %@",
            log: log, type: .info, self)
 
     let items = makeRightBarButtonItems(url: url)

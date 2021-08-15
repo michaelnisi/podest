@@ -1,10 +1,13 @@
+//===----------------------------------------------------------------------===//
 //
-//  HomePresenting.swift
-//  Podest
+// This source file is part of the Podest open source project
 //
-//  Created by Michael Nisi on 17.08.19.
-//  Copyright © 2019 Michael Nisi. All rights reserved.
+// Copyright (c) 2021 Michael Nisi and collaborators
+// Licensed under MIT License
 //
+// See https://github.com/michaelnisi/podest/blob/main/LICENSE for license information
+//
+//===----------------------------------------------------------------------===//
 
 import Foundation
 import UIKit

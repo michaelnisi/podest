@@ -1,10 +1,13 @@
+//===----------------------------------------------------------------------===//
 //
-//  ListUpdating.swift
-//  Podest
+// This source file is part of the Podest open source project
 //
-//  Created by Michael Nisi on 29.08.19.
-//  Copyright © 2019 Michael Nisi. All rights reserved.
+// Copyright (c) 2021 Michael Nisi and collaborators
+// Licensed under MIT License
 //
+// See https://github.com/michaelnisi/podest/blob/main/LICENSE for license information
+//
+//===----------------------------------------------------------------------===//
 
 import Foundation
 import BatchUpdates
@@ -39,7 +42,7 @@ extension ListViewController {
             if queue == 0, guids != 0 {
               os_log("queue not populated", log: log, type: .info)
             } else {
-              os_log("** out of sync: ( queue: %i, guids: %i )",
+              os_log("out of sync: ( queue: %i, guids: %i )",
                      log: log, type: .info, queue, guids)
             }
           default:

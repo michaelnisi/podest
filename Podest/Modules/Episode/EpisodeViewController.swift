@@ -1,10 +1,13 @@
+//===----------------------------------------------------------------------===//
 //
-//  EpisodeViewController.swift
-//  Podest
+// This source file is part of the Podest open source project
 //
-//  Created by Michael on 2/1/16.
-//  Copyright © 2016 Michael Nisi. All rights reserved.
+// Copyright (c) 2021 Michael Nisi and collaborators
+// Licensed under MIT License
 //
+// See https://github.com/michaelnisi/podest/blob/main/LICENSE for license information
+//
+//===----------------------------------------------------------------------===//
 
 import UIKit
 import FeedKit
@@ -286,7 +289,7 @@ extension EpisodeViewController {
               if queue == 0, guids != 0 {
                 os_log("queue not populated", log: log, type: .info)
               } else {
-                os_log("** out of sync: ( queue: %i, guids: %i )",
+                os_log("out of sync: ( queue: %i, guids: %i )",
                        log: log, type: .info, queue, guids)
               }
             default:
@@ -411,7 +414,7 @@ extension EpisodeViewController {
         }
 
         if dequeued.isEmpty {
-          os_log("** not dequeued", log: log)
+          os_log("not dequeued", log: log)
         }
 
         DispatchQueue.main.async {
@@ -534,7 +537,7 @@ extension EpisodeViewController {
       }
 
       if enqueued.isEmpty {
-        os_log("** not enqueued", log: log)
+        os_log("not enqueued", log: log)
       }
 
       DispatchQueue.main.async {
