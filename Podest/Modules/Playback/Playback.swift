@@ -23,17 +23,22 @@ extension RootViewController {
       os_log(.debug, log: log, "new player state: %{public}@", state.description)
       switch state {
       case let .mini(entry, _, player):
+        self.hideVideoPlayer(animated: true) {
+          self.minivc.configure(with: player, entry: entry)
+          self.hideNowPlaying(animated: true) {
+            self.showMiniPlayer(animated: true)
+          }
+        }
 
-        self.minivc.configure(with: player, entry: entry)
-        self.hideNowPlaying(animated: true) {
-          self.showMiniPlayer(animated: true)
+      case let .full(_, _, player):
+        self.hideVideoPlayer(animated: true) {
+          self.showNowPlaying(model: player, animated: true)
         }
         
-      case let .full(_, _, player):
-        self.showNowPlaying(model: player, animated: true)
-        
-      case .video(_, _):
-        os_log(.error, log: log, "video: not handled yet")
+      case let .video(_, player):
+        self.hideNowPlaying(animated: true) {
+          self.showVideo(player: player, animated: true, completion: nil)
+        }
       
       case .none:
         break
