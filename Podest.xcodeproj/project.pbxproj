@@ -69,8 +69,6 @@
 		4CED20DC226C30DE0049B88D /* QueueUpdating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CED20DB226C30DE0049B88D /* QueueUpdating.swift */; };
 		4CF2DEA221DDD8E300A0F6EC /* ReusableNib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF2DEA121DDD8E300A0F6EC /* ReusableNib.swift */; };
 		4CF5674C207F362300C77C1D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF5674B207F362300C77C1D /* StoreKit.framework */; };
-		4CF7CB4F25BDE65400356510 /* PlayerTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF7CB4E25BDE65400356510 /* PlayerTransitioningDelegate.swift */; };
-		4CF7CB5525BDE69200356510 /* PlayerPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF7CB5425BDE69200356510 /* PlayerPresentationController.swift */; };
 		4CFEE33821C7B101008B2EC0 /* SearchControllerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFEE33721C7B101008B2EC0 /* SearchControllerProxy.swift */; };
 		4E2EF3161E8D0C39008FE123 /* EpisodeAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2EF3151E8D0C39008FE123 /* EpisodeAnimator.swift */; };
 		4E684D4C1C5F3201004699A1 /* EpisodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E684D4B1C5F3201004699A1 /* EpisodeViewController.swift */; };
@@ -195,8 +193,6 @@
 		4CED210F226C35980049B88D /* BatchUpdates.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BatchUpdates.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CF2DEA121DDD8E300A0F6EC /* ReusableNib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableNib.swift; sourceTree = "<group>"; };
 		4CF5674B207F362300C77C1D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
-		4CF7CB4E25BDE65400356510 /* PlayerTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTransitioningDelegate.swift; sourceTree = "<group>"; };
-		4CF7CB5425BDE69200356510 /* PlayerPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerPresentationController.swift; sourceTree = "<group>"; };
 		4CFEE33721C7B101008B2EC0 /* SearchControllerProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchControllerProxy.swift; sourceTree = "<group>"; };
 		4E180F9B1F8394CC00976A3A /* Nuke.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Nuke.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E180FA41F83951A00976A3A /* FanboyKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FanboyKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -280,8 +276,6 @@
 		4C72D4332270A281008F8B96 /* App */ = {
 			isa = PBXGroup;
 			children = (
-				4CF7CB4E25BDE65400356510 /* PlayerTransitioningDelegate.swift */,
-				4CF7CB5425BDE69200356510 /* PlayerPresentationController.swift */,
 				4E7F291A1E7D799200E12846 /* RootViewController.swift */,
 				4ED4D4361EA470C90011C28C /* Podest.swift */,
 				4CE1445626223FAD00B60130 /* Gateway.swift */,
@@ -691,7 +685,6 @@
 			files = (
 				4C2DAC18267A838A0069DD3F /* MiniPlayerHosting.swift in Sources */,
 				4C07C97A21EBA69200ED8AB0 /* ArticleCollectionViewCell.swift in Sources */,
-				4CF7CB5525BDE69200356510 /* PlayerPresentationController.swift in Sources */,
 				4C2DAC1A267A87080069DD3F /* VideoPlayerHosting.swift in Sources */,
 				4CE20ACC1A31C66C0052C360 /* SearchResultsController.swift in Sources */,
 				4CED20D8226C2CFC0049B88D /* QueueTableViewDelegate.swift in Sources */,
@@ -744,7 +737,6 @@
 				4EA2F7661FB2D58000A72195 /* ListDataSource.swift in Sources */,
 				4CED20DC226C30DE0049B88D /* QueueUpdating.swift in Sources */,
 				4C1F57A720810D850067AB7C /* ProductsViewController.swift in Sources */,
-				4CF7CB4F25BDE65400356510 /* PlayerTransitioningDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
