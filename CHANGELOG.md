@@ -1,12 +1,18 @@
 ## 10 (planned)
 
-More immersive player user interface adding some features:
+More immersive new player user interface with some new features:
 
 - Scrubbing
 - Jump forward and backward
 - Sleep
 - AirPlay Routing Selection
 - Volume
+
+Technical improvements:
+
+- Extract into packages
+- More functional reactive modeling
+- Optimize for iOS 15
 
 ## 9.8 (2020-09-19)
 

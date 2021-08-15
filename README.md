@@ -2,7 +2,7 @@
 
 ### Enjoy fine podcasts
 
-Podest is a podcast player app for iOS. Here’s my lengthy [motivation](https://troubled.pro/2018/10/podest.html). 
+Podest is a podcast player app for iOS. Here’s my lengthy motivation [write-up](https://troubled.pro/2018/10/podest.html). 
 
 ⬇️ Download the app on the [App Store](https://itunes.apple.com/us/app/podest/id794983364).  
 ✨ Please leave a rating or review to support this project.

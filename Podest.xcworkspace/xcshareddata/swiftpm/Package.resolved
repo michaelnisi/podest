@@ -1,0 +1,142 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "BatchUpdates",
+        "repositoryURL": "https://github.com/michaelnisi/batchupdates",
+        "state": {
+          "branch": null,
+          "revision": "75cd389b2a4e5bfbdf4b30e6ac46a61f20c1eb5c",
+          "version": "4.0.0"
+        }
+      },
+      {
+        "package": "Clay",
+        "repositoryURL": "https://github.com/michaelnisi/clay",
+        "state": {
+          "branch": null,
+          "revision": "ba182b077b5d126ccb47d4ac023a0b670a9b5ba1",
+          "version": "1.0.1"
+        }
+      },
+      {
+        "package": "Epic",
+        "repositoryURL": "https://github.com/michaelnisi/epic",
+        "state": {
+          "branch": null,
+          "revision": "ee6a3a74cb30cbf3f6f6bf389b3ee766816dce9d",
+          "version": "1.0.2"
+        }
+      },
+      {
+        "package": "FanboyKit",
+        "repositoryURL": "https://github.com/michaelnisi/fanboy-kit",
+        "state": {
+          "branch": null,
+          "revision": "8b71a756e59fb1e91a3aaf05c0aa3ec7d1b66c65",
+          "version": "9.0.0"
+        }
+      },
+      {
+        "package": "FeedKit",
+        "repositoryURL": "https://github.com/michaelnisi/feedkit",
+        "state": {
+          "branch": null,
+          "revision": "09a775b625e8a01333a88cbd11fde639a2aed1f5",
+          "version": "17.0.0"
+        }
+      },
+      {
+        "package": "FileProxy",
+        "repositoryURL": "https://github.com/michaelnisi/fileproxy",
+        "state": {
+          "branch": null,
+          "revision": "9d62eb93cb80bc8f6ac498929f9fc33651beddce",
+          "version": "6.0.0"
+        }
+      },
+      {
+        "package": "HTMLAttributor",
+        "repositoryURL": "https://github.com/michaelnisi/hattr",
+        "state": {
+          "branch": null,
+          "revision": "7da09acfe0f79c41a6728d0d679c4066c71705b5",
+          "version": "6.0.0"
+        }
+      },
+      {
+        "package": "InsetPresentation",
+        "repositoryURL": "https://github.com/michaelnisi/InsetPresentation",
+        "state": {
+          "branch": null,
+          "revision": "4af0b8204e2b629ce70ed879e4da9e3614aa6b52",
+          "version": "1.1.1"
+        }
+      },
+      {
+        "package": "MangerKit",
+        "repositoryURL": "https://github.com/michaelnisi/manger-kit",
+        "state": {
+          "branch": null,
+          "revision": "4b024a2236117d022890b5b208bbd10e9908b7a2",
+          "version": "8.0.0"
+        }
+      },
+      {
+        "package": "Nuke",
+        "repositoryURL": "https://github.com/kean/nuke",
+        "state": {
+          "branch": null,
+          "revision": "7f73ceaeacd5df75a7994cd82e165ad9ff1815db",
+          "version": "9.6.1"
+        }
+      },
+      {
+        "package": "Ola",
+        "repositoryURL": "https://github.com/michaelnisi/ola",
+        "state": {
+          "branch": null,
+          "revision": "61379a00e4020b4e58241e972e9a1b0af8582232",
+          "version": "12.0.0"
+        }
+      },
+      {
+        "package": "Patron",
+        "repositoryURL": "https://github.com/michaelnisi/patron",
+        "state": {
+          "branch": null,
+          "revision": "b2e1b6e385c27da926f4d4743e1f084bf9ea70d6",
+          "version": "11.0.0"
+        }
+      },
+      {
+        "package": "Playback",
+        "repositoryURL": "https://github.com/michaelnisi/playback",
+        "state": {
+          "branch": null,
+          "revision": "e72fba56ca34f21c53f0022abf18e9443d598ceb",
+          "version": "11.0.0"
+        }
+      },
+      {
+        "package": "Podcasts",
+        "repositoryURL": "https://github.com/michaelnisi/podcasts",
+        "state": {
+          "branch": "main",
+          "revision": "210d87549cd8dbc36138d5bb0e8b376bd7aace3d",
+          "version": null
+        }
+      },
+      {
+        "package": "Skull",
+        "repositoryURL": "https://github.com/michaelnisi/skull",
+        "state": {
+          "branch": null,
+          "revision": "97024a5ba72db4317e5efe49542dfdef208bd230",
+          "version": "11.0.4"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
