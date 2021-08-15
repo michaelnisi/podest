@@ -974,7 +974,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/michaelnisi/epic";
 			requirement = {
-				branch = master;
+				branch = main;
 				kind = branch;
 			};
 		};
