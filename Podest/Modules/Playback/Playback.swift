@@ -12,7 +12,7 @@
 import FeedKit
 import UIKit
 import os.log
-import Epic
+import class Epic.Player
 import Podcasts
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
@@ -22,7 +22,8 @@ extension RootViewController {
     Podcasts.player.$state.sink { [unowned self] state in
       os_log(.debug, log: log, "new player state: %{public}@", state.description)
       switch state {
-      case let .mini(entry, _, player):
+      case let .mini(entry, _, player, message):
+        self.alertIfNecessary(showing: message)
         self.hideVideoPlayer(animated: true) {
           self.minivc.configure(with: player, entry: entry)
           self.hideNowPlaying(animated: true) {
@@ -40,8 +41,8 @@ extension RootViewController {
           self.showVideo(player: player, animated: true, completion: nil)
         }
       
-      case .none:
-        break
+      case let .none(message):
+        self.alertIfNecessary(showing: message)
       }
     }
     .store(in: &subscriptions)
@@ -82,6 +83,23 @@ extension RootViewController {
 
     dismiss(animated: animated)  {
       completion?()
+    }
+  }
+}
+
+// MARK: - Showing Messages
+
+private extension RootViewController {
+  func alertIfNecessary(showing message: PlaybackController.Message) {
+    switch message {
+    case let .error(title, message):
+      let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+      
+      alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default))
+      self.present(alert, animated: true, completion: nil)
+      
+    case .none:
+      break
     }
   }
 }
