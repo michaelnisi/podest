@@ -70,7 +70,6 @@
 		4CF2DEA221DDD8E300A0F6EC /* ReusableNib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF2DEA121DDD8E300A0F6EC /* ReusableNib.swift */; };
 		4CF5674C207F362300C77C1D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF5674B207F362300C77C1D /* StoreKit.framework */; };
 		4CFEE33821C7B101008B2EC0 /* SearchControllerProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFEE33721C7B101008B2EC0 /* SearchControllerProxy.swift */; };
-		4E2EF3161E8D0C39008FE123 /* EpisodeAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2EF3151E8D0C39008FE123 /* EpisodeAnimator.swift */; };
 		4E684D4C1C5F3201004699A1 /* EpisodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E684D4B1C5F3201004699A1 /* EpisodeViewController.swift */; };
 		4E765EFE1FA1895100FD6D73 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E65BB311F13E30600C7F1A3 /* CloudKit.framework */; };
 		4E7D10B31F6644DA0048CB43 /* QueueDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7D10B21F6644DA0048CB43 /* QueueDataSource.swift */; };
@@ -204,7 +203,6 @@
 		4E180FA81F83951A00976A3A /* Patron.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Patron.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E180FA91F83951A00976A3A /* Playback.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Playback.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E180FAA1F83951A00976A3A /* Skull.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Skull.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4E2EF3151E8D0C39008FE123 /* EpisodeAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EpisodeAnimator.swift; sourceTree = "<group>"; };
 		4E5C0F141EF2CC3600B090EF /* Playback.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Playback.framework; path = "../../Library/Developer/Xcode/DerivedData/podest-cxrwkbilpoiklmejexzjehpjqzub/Build/Products/Debug-iphonesimulator/Playback.framework"; sourceTree = "<group>"; };
 		4E65BB311F13E30600C7F1A3 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		4E684D4B1C5F3201004699A1 /* EpisodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = EpisodeViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -370,7 +368,6 @@
 			isa = PBXGroup;
 			children = (
 				4E7F29141E7AE1E100E12846 /* Episode.storyboard */,
-				4E2EF3151E8D0C39008FE123 /* EpisodeAnimator.swift */,
 				4E684D4B1C5F3201004699A1 /* EpisodeViewController.swift */,
 				4EFEEBDB1E7465EA00169153 /* MessageView.xib */,
 				4EFEEBDD1E75493900169153 /* MessageView.swift */,
@@ -697,7 +694,6 @@
 				4C776B2920847D0900A055CD /* ProductCell.swift in Sources */,
 				4C17E47B2503F9440022EF0F /* PlayerViewController.swift in Sources */,
 				4E7D10B31F6644DA0048CB43 /* QueueDataSource.swift in Sources */,
-				4E2EF3161E8D0C39008FE123 /* EpisodeAnimator.swift in Sources */,
 				4ED4D4171E9D239A0011C28C /* SuggestionCell.swift in Sources */,
 				4C17C19F2307F2400051FE23 /* HomePresenting.swift in Sources */,
 				4CB6CF3C22BE7F91002452BF /* TopLine.swift in Sources */,

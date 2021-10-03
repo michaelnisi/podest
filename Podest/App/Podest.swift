@@ -47,10 +47,12 @@ protocol ViewControllers {
   var entry: Entry? { get }
 
   /// Shows this entry.
+  func show(entry: Entry, animated: Bool)
   func show(entry: Entry)
 
   /// Shows this feed listing its entries.
   func show(feed: Feed, animated: Bool)
+  func show(feed: Feed)
   
   /// `true` if the Queue is currently visible.
   var isQueueVisible: Bool { get }

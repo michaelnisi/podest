@@ -9,22 +9,12 @@
 //
 //===----------------------------------------------------------------------===//
 
-import Foundation
 import FeedKit
-import UIKit
-import os.log
-import InsetPresentation
 
-import Podcasts
-
-private let log = OSLog(subsystem: "ink.codes.podest", category: "Playback")
-
-/// Handles playback view relevant playback events. We can have few of these,
-/// mini-player, player, now playing, etc.
+/// Handles playback view relevant playback events.
 protocol PlaybackControlDelegate {
   var entry: Entry? { get set }
   var isPlaying: Bool { get set }
-  
   var isForwardable: Bool { get set }
   var isBackwardable: Bool { get set }
 }

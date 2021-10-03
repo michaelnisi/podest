@@ -20,7 +20,6 @@ private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 extension RootViewController {
   func subscribe() {
     Podcasts.player.$state.sink { [unowned self] state in
-      os_log(.debug, log: log, "new player state: %{public}@", state.description)
       switch state {
       case let .mini(entry, _, player, message):
         self.alertIfNecessary(showing: message)
@@ -90,13 +89,16 @@ extension RootViewController {
 // MARK: - Showing Messages
 
 private extension RootViewController {
-  func alertIfNecessary(showing message: PlaybackController.Message) {
+  func alertIfNecessary(showing message: PlaybackController.Meta) {
     switch message {
     case let .error(title, message):
       let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
       
       alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default))
-      self.present(alert, animated: true, completion: nil)
+      present(alert, animated: true, completion: nil)
+      
+    case let .more(entry):
+      show(entry: entry)
       
     case .none:
       break

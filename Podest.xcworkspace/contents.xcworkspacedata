@@ -2,6 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:../clay">
+   </FileRef>
+   <FileRef
+      location = "group:../epic">
+   </FileRef>
+   <FileRef
       location = "group:../playback">
    </FileRef>
    <FileRef

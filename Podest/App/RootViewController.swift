@@ -226,6 +226,10 @@ extension RootViewController: ViewControllers {
     
     return vc.feed
   }
+  
+  func show(feed: Feed) {
+    show(feed: feed, animated: true)
+  }
 
   func show(feed: Feed, animated: Bool) {
     guard feed != self.feed else {
@@ -283,6 +287,10 @@ extension RootViewController: ViewControllers {
   }
 
   func show(entry: Entry) {
+    show(entry: entry, animated: true)
+  }
+  
+  func show(entry: Entry, animated: Bool) {
     os_log("showing entry: %{public}@", log: log, type: .info, entry.description)
 
     func go() {
@@ -293,14 +301,12 @@ extension RootViewController: ViewControllers {
       let evc = MakeEpisode.viewController(item: entry)
 
       if isCollapsed {
-        os_log("pushing view controller: %{public}@",
-               log: log, type: .info, evc)
-        self.pnc.pushViewController(evc, animated: true)
+        os_log("pushing view controller: %{public}@", log: log, type: .info, evc)
+        self.pnc.pushViewController(evc, animated: animated)
       } else {
         let vcs = [evc]
-        os_log("setting view controllers: %{public}@",
-               log: log, type: .info, vcs)
-        self.snc.setViewControllers(vcs, animated: false)
+        os_log("setting view controllers: %{public}@", log: log, type: .info, vcs)
+        self.snc.setViewControllers(vcs, animated: animated)
       }
     }
 

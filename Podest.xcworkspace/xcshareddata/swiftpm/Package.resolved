@@ -11,24 +11,6 @@
         }
       },
       {
-        "package": "Clay",
-        "repositoryURL": "https://github.com/michaelnisi/clay",
-        "state": {
-          "branch": null,
-          "revision": "ba182b077b5d126ccb47d4ac023a0b670a9b5ba1",
-          "version": "1.0.1"
-        }
-      },
-      {
-        "package": "Epic",
-        "repositoryURL": "https://github.com/michaelnisi/epic",
-        "state": {
-          "branch": "main",
-          "revision": "e75fa9f1973df1fe5c497606627e5710fe3056e4",
-          "version": null
-        }
-      },
-      {
         "package": "FanboyKit",
         "repositoryURL": "https://github.com/michaelnisi/fanboy-kit",
         "state": {

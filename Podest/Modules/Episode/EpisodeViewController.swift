@@ -354,15 +354,13 @@ extension EpisodeViewController {
 
     UIView.performWithoutAnimation {
       feedButton.setTitle(entry.feedTitle, for: .normal)
-    }
-
-    updatedLabel.text = StringRepository.string(from: entry.updated)
-
-    if let duration = entry.duration,
-      let text = StringRepository.string(from: duration) {
-      durationLabel.text = text
-    } else {
-      durationLabel.isHidden = true
+      updatedLabel.text = StringRepository.string(from: entry.updated)
+      if let duration = entry.duration,
+        let text = StringRepository.string(from: duration) {
+        durationLabel.text = text
+      } else {
+        durationLabel.isHidden = true
+      }
     }
 
     DispatchQueue.global(qos: .userInteractive).async { [weak self] in
