@@ -289,7 +289,7 @@ extension RootViewController: ViewControllers {
   }
 
   func show(entry: Entry) {
-    show(entry: entry, animated: true)
+    show(entry: entry, animated: svc.isCollapsed)
   }
   
   func show(entry: Entry, animated: Bool) {
@@ -558,8 +558,7 @@ extension RootViewController: UISplitViewControllerDelegate {
       }
     }
 
-    os_log("reduced for primary: %{public}@",
-           log: log, type: .info, vcs)
+    os_log("reduced for primary: %{public}@", log: log, type: .info, vcs)
 
     return vcs
   }
