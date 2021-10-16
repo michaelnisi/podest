@@ -6,6 +6,7 @@ More immersive new player user interface with some new features:
 - Jump forward and backward
 - AirPlay Routing Selection
 - Volume
+- Picture in Picture video playback
 
 Technical improvements:
 
