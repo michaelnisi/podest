@@ -19,7 +19,7 @@ class PlayerViewController: UIHostingController<PlayerView>, ObservableObject, I
   init(model: Epic.Player) {
     super.init(rootView: PlayerView(
       model: model,
-      airPlayButton: PlayerViewController.airPlayButton
+      actionsView: AnyView(VolumeAndRouteView())
     ))
   }
   
@@ -30,15 +30,5 @@ class PlayerViewController: UIHostingController<PlayerView>, ObservableObject, I
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     rootView.model.close()
-  }
-}
-
-private extension PlayerViewController {
-  static var emptyView: PlayerView {
-    PlayerView(model: Epic.Player(), airPlayButton: airPlayButton)
-  }
-  
-  static var airPlayButton: AnyView {
-    AnyView(AirPlayButton())
   }
 }

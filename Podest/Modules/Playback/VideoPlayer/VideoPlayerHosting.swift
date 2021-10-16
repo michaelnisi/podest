@@ -14,7 +14,11 @@ import AVKit
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "VideoPlayer")
 
-extension RootViewController {
+extension RootViewController: AVPlayerViewControllerDelegate {
+  override var prefersStatusBarHidden: Bool {
+    !traitCollection.containsTraits(in: UITraitCollection(horizontalSizeClass: .compact))
+  }
+  
   var videoPlayer: AVPlayerViewController? {
     dispatchPrecondition(condition: .onQueue(.main))
     return presentedViewController as? AVPlayerViewController
@@ -23,7 +27,7 @@ extension RootViewController {
   var isPresentingVideo: Bool {
     videoPlayer != nil
   }
-
+  
   func showVideo(player: AVPlayer, animated: Bool, completion: (() -> Void)? = nil) {
     guard videoPlayer == nil else {
       videoPlayer?.player = player
@@ -33,12 +37,12 @@ extension RootViewController {
 
     hideMiniPlayer(animated: true) { [weak self] in
       let vc = AVPlayerViewController()
-
       vc.modalPresentationCapturesStatusBarAppearance = false
       vc.modalPresentationStyle = .fullScreen
       vc.updatesNowPlayingInfoCenter = false
-      vc.allowsPictureInPicturePlayback = false
+      vc.allowsPictureInPicturePlayback = true
       vc.player = player
+      vc.delegate = self
 
       self?.present(vc, animated: animated) {
         os_log("presented video player", log: log, type: .info)
@@ -69,8 +73,23 @@ extension RootViewController {
   }
 }
 
-extension AVPlayerViewController {
-  override open var prefersStatusBarHidden: Bool {
-    !traitCollection.containsTraits(in: UITraitCollection(horizontalSizeClass: .compact))
+// MARK: - Picture in Picture Playback
+
+extension RootViewController {
+  func playerViewController(
+    _ playerViewController: AVPlayerViewController,
+    restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
+  ) {
+    guard playerViewController.player != nil else {
+      return completionHandler(false)
+    }
+    
+    present(playerViewController, animated: true) {
+      completionHandler(false)
+    }
+  }
+  
+  func playerViewControllerDidStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
+    pictureInPicture = playerViewController
   }
 }

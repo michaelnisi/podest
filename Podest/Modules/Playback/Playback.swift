@@ -18,30 +18,39 @@ import Podcasts
 private let log = OSLog(subsystem: "ink.codes.podest", category: "player")
 
 extension RootViewController {
+  private func dismissPictureInPicturePlayer() {
+    pictureInPicture?.player?.rate = 0
+    pictureInPicture?.player = nil
+    
+    pictureInPicture?.dismiss(animated: false, completion: nil)
+  }
+  
   func subscribe() {
     Podcasts.player.$state.sink { [unowned self] state in
+      dismissPictureInPicturePlayer()
+      
       switch state {
       case let .mini(entry, _, player, message):
-        self.alertIfNecessary(showing: message)
-        self.hideVideoPlayer(animated: true) {
-          self.minivc.configure(with: player, entry: entry)
-          self.hideNowPlaying(animated: true) {
-            self.showMiniPlayer(animated: true)
+        alertIfNecessary(showing: message)
+        hideVideoPlayer(animated: true) {
+          minivc.configure(with: player, entry: entry)
+          hideNowPlaying(animated: true) {
+            showMiniPlayer(animated: true)
           }
         }
 
       case let .full(_, _, player):
-        self.hideVideoPlayer(animated: true) {
-          self.showNowPlaying(model: player, animated: true)
+        hideVideoPlayer(animated: true) {
+          showNowPlaying(model: player, animated: true)
         }
         
       case let .video(_, player):
-        self.hideNowPlaying(animated: true) {
-          self.showVideo(player: player, animated: true, completion: nil)
+        hideNowPlaying(animated: true) {
+          showVideo(player: player, animated: true, completion: nil)
         }
       
       case let .none(message):
-        self.alertIfNecessary(showing: message)
+        alertIfNecessary(showing: message)
       }
     }
     .store(in: &subscriptions)

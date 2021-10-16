@@ -71,6 +71,8 @@ final class RootViewController: UIViewController, Routing {
 
   /// The width or height of the mini-player, taken from the storyboard.
   var miniPlayerConstant: CGFloat = 0
+  
+  weak var pictureInPicture: AVPlayerViewController?
 }
 
 // MARK: - UIViewController
