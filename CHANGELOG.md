@@ -6,7 +6,11 @@ More immersive new player user interface with some new features:
 - Jump forward and backward
 - AirPlay Routing Selection
 - Volume
+
+Plus:
+
 - Picture in Picture video playback
+- Slide Over Multitasking on iPad
 
 Technical improvements:
 

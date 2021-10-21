@@ -569,7 +569,7 @@ extension QueueDataSource: UITableViewDataSource {
       return cell
     }
   }
-
+  
   func tableView(
     _ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
     if case .message? = itemAt(indexPath: indexPath) {

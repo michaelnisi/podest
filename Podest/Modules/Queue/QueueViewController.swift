@@ -117,17 +117,6 @@ final class QueueViewController: UITableViewController, Navigator {
 
 // MARK: - UIRefreshControl
 
-extension UITableView {
-  open override var contentOffset: CGPoint {
-    set {
-      super.contentOffset = newValue
-    }
-    get {
-      super.contentOffset
-    }
-  }
-}
-
 extension QueueViewController {
 
   @objc func refreshControlValueChanged(target: UIRefreshControl) {
@@ -189,6 +178,7 @@ extension QueueViewController {
     tableView.estimatedRowHeight = 104
     var separatorInset = tableView.separatorInset
     separatorInset.left = UITableView.automaticDimension
+    separatorInset.right = 20
     tableView.separatorInset = separatorInset
     tableView.dataSource = dataSource
     tableView.prefetchDataSource = dataSource
@@ -220,18 +210,6 @@ extension QueueViewController {
     }
 
     isStoreAccessibleChanged = false
-  }
-
-  override func viewWillAppear(_ animated: Bool) {
-    let isCollapsed = (navigationDelegate?.isCollapsed)!
-    let isDifferent = entry != navigationDelegate?.entry
-    let isNotDismissed = !searchProxy.isSearchDismissed
-
-    clearsSelectionOnViewWillAppear = (
-      isCollapsed || isDifferent || isNotDismissed
-    )
-
-    super.viewWillAppear(animated)
   }
 
   override func viewDidAppear(_ animated: Bool) {

@@ -17,33 +17,19 @@ private let log = OSLog(subsystem: "ink.codes.podest", category: "app")
 
 protocol Routing: UserProxy, ViewControllers {}
 
-@UIApplicationMain
-final class AppDelegate: UIResponder, UIApplicationDelegate {
-  var window: UIWindow?
-
+@main
+class AppDelegate: UIResponder, UIApplicationDelegate {
   private var state = (restore: true, save: true)
-
-  private var root: Routing {
-    dispatchPrecondition(condition: .onQueue(.main))
-
-    guard let vc = window?.rootViewController as? Routing else {
-      fatalError("unexpected root view controller")
-    }
-    
-    return vc
-  }
 }
 
 // MARK: - Initializing the App
 
 extension AppDelegate {
-
   func application(
     _ application: UIApplication,
     willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?
   ) -> Bool {
     state.restore = launchOptions?[.url] == nil
-    window?.tintColor = UIColor(named: "Purple")!
 
     if !Podcasts.settings.noSync {
       application.registerForRemoteNotifications()
@@ -62,6 +48,14 @@ extension AppDelegate {
     }
 
     return true
+  }
+  
+  func application(
+    _ application: UIApplication,
+    configurationForConnecting connectingSceneSession: UISceneSession,
+    options: UIScene.ConnectionOptions
+  ) -> UISceneConfiguration {
+    .init(name: "Default Configuration", sessionRole: connectingSceneSession.role)
   }
 }
 
@@ -93,18 +87,6 @@ extension AppDelegate {
     }
     
     return .allButUpsideDown
-  }
-}
-
-// MARK: - Opening a URL-Specified Resource
-
-extension AppDelegate {
-
-  func application(
-    _ app: UIApplication,
-    open url: URL,
-    options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-    root.open(url: url)
   }
 }
 
@@ -152,19 +134,6 @@ extension AppDelegate {
 // MARK: - Responding to App State Changes and System Events
 
 extension AppDelegate {
-
-  func applicationWillResignActive(_ application: UIApplication) {
-    Podest.gateway.resign()
-  }
-
-  func applicationDidBecomeActive(_ application: UIApplication) {
-    Podest.gateway.install(router: root)
-  }
-
-  func applicationDidEnterBackground(_ application: UIApplication) {
-    Podest.gateway.schedule()
-  }
-
   func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
     Podest.gateway.flush()
   }

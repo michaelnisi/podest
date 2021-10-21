@@ -45,13 +45,6 @@ final class SearchControllerProxy: NSObject {
     sc.searchBar.autocorrectionType = .no
     sc.searchBar.autocapitalizationType = .none
 
-    
-    if #available(iOS 13.0, *) {
-      // NOP
-    } else {
-      targetController.definesPresentationContext = true
-    }
-
     targetController.navigationItem.searchController = sc
     
     self.searchController = sc
