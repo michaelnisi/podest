@@ -96,6 +96,10 @@ extension SearchResultsController {
     var separatorInset = tableView.separatorInset
     separatorInset.left = UITableView.automaticDimension
     tableView.separatorInset = separatorInset
+    
+    if #available(iOS 15.0, *) {
+      tableView.sectionHeaderTopPadding = 0
+    }
 
     clearsSelectionOnViewWillAppear = true
   }

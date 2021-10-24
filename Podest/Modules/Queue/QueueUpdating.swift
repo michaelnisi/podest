@@ -39,8 +39,6 @@ extension QueueViewController: Refreshing {
       }
     }
     
-    refreshControl?.beginRefreshing()
- 
     dataSource.reload { [weak self] changes, error in
       guard 
         let tv = self?.tableView, 

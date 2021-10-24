@@ -16,7 +16,7 @@ import Foundation
 import Playback
 import Podcasts
 
-private let log = OSLog.disabled
+private let log: OSLog = .disabled
 
 final class EpisodeViewController: UIViewController, EntryProvider, Navigator {
 
