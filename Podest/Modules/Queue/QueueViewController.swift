@@ -167,9 +167,9 @@ extension QueueViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    navigationController?.navigationBar.prefersLargeTitles = true
     navigationItem.title = "Queue"
     clearsSelectionOnViewWillAppear = true
-    
     searchProxy = SearchControllerProxy(viewController: self)
     choreographer.delegate = self
     

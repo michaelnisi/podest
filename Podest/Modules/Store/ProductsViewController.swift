@@ -68,7 +68,6 @@ extension ProductsViewController {
     super.viewDidLoad()
     
     navigationItem.title = "In-App Purchases"
-    navigationItem.largeTitleDisplayMode = .always
     navigationItem.rightBarButtonItem = UIBarButtonItem(
       barButtonSystemItem: .done, target: self, action: #selector(onDone))
 
