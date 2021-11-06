@@ -11,21 +11,30 @@
         }
       },
       {
+        "package": "Clay",
+        "repositoryURL": "https://github.com/michaelnisi/clay",
+        "state": {
+          "branch": null,
+          "revision": "e4c5800275ee3950551d9018b00830042d2cb5a5",
+          "version": "2.1.0"
+        }
+      },
+      {
+        "package": "Epic",
+        "repositoryURL": "https://github.com/michaelnisi/epic",
+        "state": {
+          "branch": null,
+          "revision": "541472a767772b8a82533f93c5d8ca45857fae94",
+          "version": "1.1.1"
+        }
+      },
+      {
         "package": "FanboyKit",
         "repositoryURL": "https://github.com/michaelnisi/fanboy-kit",
         "state": {
           "branch": null,
           "revision": "8b71a756e59fb1e91a3aaf05c0aa3ec7d1b66c65",
           "version": "9.0.0"
-        }
-      },
-      {
-        "package": "FeedKit",
-        "repositoryURL": "https://github.com/michaelnisi/feedkit",
-        "state": {
-          "branch": null,
-          "revision": "09a775b625e8a01333a88cbd11fde639a2aed1f5",
-          "version": "17.0.0"
         }
       },
       {
@@ -92,12 +101,39 @@
         }
       },
       {
+        "package": "Playback",
+        "repositoryURL": "https://github.com/michaelnisi/playback",
+        "state": {
+          "branch": null,
+          "revision": "7e03bba3c0919395cbf5453f245495e3f95bc9b0",
+          "version": "12.1.0"
+        }
+      },
+      {
+        "package": "Podcasts",
+        "repositoryURL": "https://github.com/michaelnisi/podcasts",
+        "state": {
+          "branch": null,
+          "revision": "d5e5bea465aefd860a9526853b515f7d52d49937",
+          "version": "1.0.1"
+        }
+      },
+      {
         "package": "Skull",
         "repositoryURL": "https://github.com/michaelnisi/skull",
         "state": {
           "branch": null,
           "revision": "97024a5ba72db4317e5efe49542dfdef208bd230",
           "version": "11.0.4"
+        }
+      },
+      {
+        "package": "SnapshotTesting",
+        "repositoryURL": "https://github.com/pointfreeco/swift-snapshot-testing",
+        "state": {
+          "branch": null,
+          "revision": "f8a9c997c3c1dab4e216a8ec9014e23144cbab37",
+          "version": "1.9.0"
         }
       }
     ]

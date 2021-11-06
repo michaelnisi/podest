@@ -21,8 +21,8 @@ struct VolumeAndRouteView: UIViewRepresentable {
     let environment = context.environment
     let (colorScheme, colors) = (environment.colorScheme, environment.colors)
     
-    let foreground = colorScheme == .dark ? colors.light : colors.dark
-    let background = colors.base
+    let foreground = colors.primary(matching: colorScheme)
+    let background = colors.secondary(matching: colorScheme)
     
     uiView.tint(
       foreground: .init(cgColor: foreground.cgColor!),

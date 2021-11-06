@@ -28,26 +28,6 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4E8CA7171A126ADC004DE307"
-               BuildableName = "PodestTests.xctest"
-               BlueprintName = "PodestTests"
-               ReferencedContainer = "container:Podest.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4C6AE30621CFFB7900476E7E"
-               BuildableName = "PodestUITests.xctest"
-               BlueprintName = "PodestUITests"
-               ReferencedContainer = "container:Podest.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

@@ -151,7 +151,6 @@ extension QueueViewController {
   override 
   func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
     choreographer.wait()
-    
     return !(scrollView.refreshControl?.isRefreshing ?? false)
   }
   

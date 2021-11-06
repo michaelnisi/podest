@@ -2,16 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../clay">
-   </FileRef>
-   <FileRef
-      location = "group:../epic">
-   </FileRef>
-   <FileRef
-      location = "group:../playback">
-   </FileRef>
-   <FileRef
-      location = "group:../podcasts">
+      location = "group:../feedkit">
    </FileRef>
    <FileRef
       location = "group:Podest.xcodeproj">

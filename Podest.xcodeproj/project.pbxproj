@@ -894,7 +894,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -922,7 +922,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -970,8 +970,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/michaelnisi/podcasts";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
 			};
 		};
 		4C233A1325D8617F001782AE /* XCRemoteSwiftPackageReference "InsetPresentation" */ = {
@@ -979,15 +979,15 @@
 			repositoryURL = "https://github.com/michaelnisi/InsetPresentation";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				minimumVersion = 1.1.1;
 			};
 		};
 		4C3D872825987D0400B93DF4 /* XCRemoteSwiftPackageReference "epic" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/michaelnisi/epic";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
 			};
 		};
 		4C937B77256AD840001B406D /* XCRemoteSwiftPackageReference "playback" */ = {
@@ -1026,8 +1026,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/michaelnisi/feedkit";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 17.0.0;
+				branch = master;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
