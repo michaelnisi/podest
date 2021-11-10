@@ -38,6 +38,15 @@
         }
       },
       {
+        "package": "FeedKit",
+        "repositoryURL": "https://github.com/michaelnisi/feedkit",
+        "state": {
+          "branch": null,
+          "revision": "552d344418614c0d264aea95835344fa5d200a0f",
+          "version": "18.0.0"
+        }
+      },
+      {
         "package": "FileProxy",
         "repositoryURL": "https://github.com/michaelnisi/fileproxy",
         "state": {
@@ -114,8 +123,8 @@
         "repositoryURL": "https://github.com/michaelnisi/podcasts",
         "state": {
           "branch": null,
-          "revision": "d5e5bea465aefd860a9526853b515f7d52d49937",
-          "version": "1.0.1"
+          "revision": "eb4ad1a40cc2b0f89fcf08971bf5fc0a5b5c36b5",
+          "version": "1.0.2"
         }
       },
       {
@@ -125,15 +134,6 @@
           "branch": null,
           "revision": "97024a5ba72db4317e5efe49542dfdef208bd230",
           "version": "11.0.4"
-        }
-      },
-      {
-        "package": "SnapshotTesting",
-        "repositoryURL": "https://github.com/pointfreeco/swift-snapshot-testing",
-        "state": {
-          "branch": null,
-          "revision": "f8a9c997c3c1dab4e216a8ec9014e23144cbab37",
-          "version": "1.9.0"
         }
       }
     ]
