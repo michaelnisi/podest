@@ -219,6 +219,12 @@ extension RootViewController: ViewControllers {
       openFeed(url: url, animated: true)
 
       return true
+      
+    case "restore":
+      Podcasts.store.restore()
+      
+      return true
+      
     default:
       return false
     }

@@ -14,17 +14,16 @@ import StoreKit
 import os.log
 import BatchUpdates
 import Podcasts
+import TipTop
 
-private let log = OSLog(subsystem: "ink.codes.podest", category: "store")
+private let log = OSLog(subsystem: "ink.codes.podest", category: "Store")
 
 protocol CellProductsDelegate: AnyObject {
-  func cell(_ cell: UICollectionViewCell,
-            payProductMatching productIdentifier: String)
+  func cell(_ cell: UICollectionViewCell, payProductMatching productIdentifier: String)
 }
 
 /// Provides a single section presenting in-app purchasing.
 final class ProductsDataSource: NSObject, SectionedDataSource {
-
   /// For making an attributed paragraph.
   struct Info: Summarizable {
     var summary: String?
@@ -100,25 +99,24 @@ final class ProductsDataSource: NSObject, SectionedDataSource {
   private var worker = DispatchQueue.global(qos: .userInteractive)
 
   private let store: Shopping
-
   private let contact: Contact
+  private let textDelegate: UITextViewDelegate
 
   /// Creates a new products data source.
   ///
   /// - Parameters:
   ///   - store: The store API to use.
   ///   - contact: The sellers contact information.
-  init(store: Shopping, contact: Contact) {
+  init(store: Shopping, contact: Contact, textDelegate: UITextViewDelegate) {
     self.store = store
     self.contact = contact
+    self.textDelegate = textDelegate
   }
-
 }
 
 // MARK: - UICollectionViewDataSource
 
 extension ProductsDataSource: UICollectionViewDataSource {
-
   /// Registers nib objects with `collectionView` under identifiers.
   static func registerCells(with collectionView: UICollectionView) {
     let pairs = [
@@ -139,11 +137,11 @@ extension ProductsDataSource: UICollectionViewDataSource {
     _ collectionView: UICollectionView,
     numberOfItemsInSection section: Int
   ) -> Int {
-    return sections[section].count
+    sections[section].count
   }
   
   func storeItem(where indexPath: IndexPath) -> Item {
-    return sections[indexPath.section][indexPath.row]
+    sections[indexPath.section][indexPath.row]
   }
   
   func collectionView(
@@ -159,6 +157,7 @@ extension ProductsDataSource: UICollectionViewDataSource {
         for: indexPath) as! ArticleCollectionViewCell
 
       cell.textView.attributedText = StringRepository.makeSummaryWithHeadline(info: info)
+      cell.textView.delegate = textDelegate
 
       return cell
     case .offline:
@@ -234,20 +233,17 @@ extension ProductsDataSource: UICollectionViewDataSource {
 // MARK: - CellProductsDelegate
 
 extension ProductsDataSource: CellProductsDelegate {
-  
   func cell(
     _ cell: UICollectionViewCell,
     payProductMatching productIdentifier: String
   ) {
     store.payProduct(matching: productIdentifier)
   }
-
 }
 
 // MARK: - ShoppingDelegate
 
 extension ProductsDataSource: StoreDelegate {
-
   /// Submits `new` items as our new sole section to the change handler on the
   /// main queue.
   private func submit(_ items: [Item]) {
@@ -293,8 +289,8 @@ extension ProductsDataSource: StoreDelegate {
 
     let claim = Info(
       summary: """
-      Chip in, help me make this app better. Please rate it or write a \
-      <a href="\(contact.review)">review</a> on the App Store. That helps a lot.
+      Chip in, help me make this app better. Please rate it or write a review on the App Store. \
+      That helps a lot.
       <p>
       Enjoy your podcasts. 🎧✨
       </p>
@@ -307,7 +303,7 @@ extension ProductsDataSource: StoreDelegate {
     let explain = Info(
       summary:"""
       Choose your price for a non-renewing subscription, granting you to use \
-      this app without restrictions for one year.
+      this app without restrictions for one year or <a href="podest://restore">restore</a>.
       <p>
       Thanks for using Podest.
       </p>
@@ -352,8 +348,7 @@ extension ProductsDataSource: StoreDelegate {
   }
   
   func store(_ store: Shopping, purchasing productIdentifier: String) {
-    os_log("store: purchasing: %{public}@",
-           log: log, type: .info, productIdentifier)
+    os_log("store: purchasing: %{public}@", log: log, type: .info, productIdentifier)
 
     DispatchQueue.main.async { [weak self] in
       guard let ip = self?.indexPath(matching: productIdentifier) else {
@@ -367,8 +362,7 @@ extension ProductsDataSource: StoreDelegate {
   }
   
   func store(_ store: Shopping, purchased productIdentifier: String) {
-    os_log("store: purchased: %{public}@",
-           log: log, type: .info, productIdentifier)
+    os_log("store: purchased: %{public}@", log: log, type: .info, productIdentifier)
     submit([.thanks])
   }
 
@@ -394,10 +388,11 @@ extension ProductsDataSource: StoreDelegate {
 
 extension StringRepository {
   static func makeSummaryWithHeadline(info: ProductsDataSource.Info) -> NSAttributedString {
-    return Summary<ProductsDataSource.Info>(
+    Summary<ProductsDataSource.Info>(
       item: info,
       items: summaries,
       attributes: summaryAttributes
-    ).attributedString
+    )
+    .attributedString
   }
 }

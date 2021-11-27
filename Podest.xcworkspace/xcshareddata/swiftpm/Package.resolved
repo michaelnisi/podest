@@ -38,15 +38,6 @@
         }
       },
       {
-        "package": "FeedKit",
-        "repositoryURL": "https://github.com/michaelnisi/feedkit",
-        "state": {
-          "branch": null,
-          "revision": "552d344418614c0d264aea95835344fa5d200a0f",
-          "version": "18.0.0"
-        }
-      },
-      {
         "package": "FileProxy",
         "repositoryURL": "https://github.com/michaelnisi/fileproxy",
         "state": {
@@ -110,30 +101,30 @@
         }
       },
       {
-        "package": "Playback",
-        "repositoryURL": "https://github.com/michaelnisi/playback",
-        "state": {
-          "branch": null,
-          "revision": "7e03bba3c0919395cbf5453f245495e3f95bc9b0",
-          "version": "12.1.0"
-        }
-      },
-      {
-        "package": "Podcasts",
-        "repositoryURL": "https://github.com/michaelnisi/podcasts",
-        "state": {
-          "branch": null,
-          "revision": "eb4ad1a40cc2b0f89fcf08971bf5fc0a5b5c36b5",
-          "version": "1.0.2"
-        }
-      },
-      {
         "package": "Skull",
         "repositoryURL": "https://github.com/michaelnisi/skull",
         "state": {
           "branch": null,
           "revision": "97024a5ba72db4317e5efe49542dfdef208bd230",
           "version": "11.0.4"
+        }
+      },
+      {
+        "package": "SnapshotTesting",
+        "repositoryURL": "https://github.com/pointfreeco/swift-snapshot-testing",
+        "state": {
+          "branch": null,
+          "revision": "f8a9c997c3c1dab4e216a8ec9014e23144cbab37",
+          "version": "1.9.0"
+        }
+      },
+      {
+        "package": "TipTop",
+        "repositoryURL": "https://github.com/michaelnisi/tiptop",
+        "state": {
+          "branch": null,
+          "revision": "af4ce4de8bfb0b52784af6b1d5eb7b4e4b966ae0",
+          "version": "1.0.0"
         }
       }
     ]

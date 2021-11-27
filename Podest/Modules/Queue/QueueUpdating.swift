@@ -74,8 +74,8 @@ extension QueueViewController: Refreshing {
     reload(true, completionBlock: nil)
   }
   
-  /// Updates the queue, fetching new episodes from the remote service, before refreshing table view 
-  /// contents.
+  /// Updates the queue – fetching new episodes from the remote service,
+  /// before refreshing table view contents.
   ///
   /// - Parameters:
   ///   - error: An upstream error to consider while updating.

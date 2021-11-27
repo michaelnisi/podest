@@ -8,13 +8,10 @@ if [[ -h $SOURCE ]]; then
 fi
 
 SOURCE_ROOT="${SOURCE_ROOT:-$( cd -P "$( dirname "$SOURCE" )/.." && pwd )}"
-
 PLISTBUDDY=/usr/libexec/PlistBuddy
 INFO_PLIST="$SOURCE_ROOT/Podest/Info.plist"
 SETTINGS_PLIST="$SOURCE_ROOT/Settings.bundle/Root.plist"
 
-VERSION_NUMBER="$($PLISTBUDDY -c 'Print CFBundleShortVersionString' $INFO_PLIST)"
-BUILD_NUMBER="$($PLISTBUDDY -c 'Print CFBundleVersion' $INFO_PLIST)"
-VERSION="$VERSION_NUMBER ($BUILD_NUMBER)"
+VERSION="$MARKETING_VERSION ($CURRENT_PROJECT_VERSION)"
 
 $PLISTBUDDY -c "Set :PreferenceSpecifiers:5:DefaultValue $VERSION" $SETTINGS_PLIST

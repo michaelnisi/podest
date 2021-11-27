@@ -19,14 +19,12 @@ import Playback
 
 /// Often we are only interested in the entry represented by participants.
 protocol EntryProvider {
-
   /// Provides an entry that makes sense in this context.
   var entry: Entry? { get }
 }
 
 /// Maps entries to index paths.
 protocol EntryIndexPathMapping {
-
   /// Returns the first index path matching `entry`.
   func indexPath(matching entry: Entry) -> IndexPath?
 }
@@ -37,7 +35,6 @@ protocol EntryIndexPathMapping {
 /// Instead of reaching deep into the controller hierarchy, things that need
 /// to be accessed from  outside should be exposed here.
 protocol ViewControllers {
-
   // MARK: Browsing
 
   /// The currently shown feed.
@@ -90,7 +87,6 @@ protocol ViewControllers {
 
 /// Adopt `Navigator` to receive access to the navigation delegate.
 protocol Navigator: AnyObject {
-
   /// Use this API for navigation.
   var navigationDelegate: ViewControllers? { get set }
 }
@@ -99,7 +95,6 @@ protocol Navigator: AnyObject {
 
 /// Defines a callback interface to the user library and queue.
 protocol UserProxy {
-
   /// Updates children with `urls` of currently subscribed podcasts.
   func updateIsSubscribed(using urls: Set<FeedURL>)
 
@@ -125,7 +120,8 @@ protocol UserProxy {
   func update(
     considering error: Error?,
     animated: Bool,
-    completionHandler: @escaping ((_ newData: Bool, _ error: Error?) -> Void))
+    completionHandler: @escaping ((_ newData: Bool, _ error: Error?) -> Void)
+  )
 
   /// Reloads queue, missing items might get fetched remotely, but saving time
   /// the queue doesn’t get updated.

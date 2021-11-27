@@ -21,7 +21,6 @@
   "contact": {
     "email": "@@AUTHOR_EMAIL@@",
     "github": "@@GITHUB_URL@@",
-    "privacy": "@@PRIVACY_URL@@",
-    "review": "@@REVIEW_URL@@"
+    "privacy": "@@PRIVACY_URL@@"
   }
 }

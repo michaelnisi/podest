@@ -19,7 +19,6 @@ private let log = OSLog(subsystem: "ink.codes.podest", category: "list")
 
 /// Loads podcast feed at `url` and its entries.
 class ListOperation: Operation, Receiving {
-  
   let url: String
   let originalFeed: Feed?
   let forcing: Bool
@@ -60,7 +59,7 @@ class ListOperation: Operation, Receiving {
   }
   
   override var description: String {
-    return """
+    """
     ListOperation: (\(url), \(originalFeed?.title ?? "none"), \
     \(forcing), \(withoutImage))
     """
@@ -175,7 +174,6 @@ class ListOperation: Operation, Receiving {
 }
 
 final class FetchFeedOperation: ListOperation, Providing {
-  
   /// The current sections.
   var current: [Array<Item>]!
   
@@ -252,7 +250,6 @@ final class FetchFeedOperation: ListOperation, Providing {
 }
 
 final class FetchEntriesOperation: ListOperation {
-  
   var locators: [EntryLocator]
   
   override init(operation: ListOperation) {
@@ -308,5 +305,4 @@ final class FetchEntriesOperation: ListOperation {
     os_log("executing updates block", log: log, type: .info)
     updatesBlock?(sections, updates, error)
   }
-  
 }

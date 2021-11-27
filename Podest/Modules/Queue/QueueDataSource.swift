@@ -15,15 +15,14 @@ import os.log
 import BatchUpdates
 import Playback
 import Podcasts
+import TipTop
 
 private let log = OSLog(subsystem: "ink.codes.podest", category: "queue")
 
 /// Provides access to queue and subscription data.
 final class QueueDataSource: NSObject, SectionedDataSource {
-
   /// Enumerates queue data source item types.
   enum Item: Hashable {
-    
     /// An enqueued entry and wether it has been played.
     case entry(Entry, Bool)
     
@@ -253,19 +252,14 @@ final class QueueDataSource: NSObject, SectionedDataSource {
     outside deadline: TimeInterval = 3600,
     setting: Bool = true
   ) -> Bool {
-    let k = UserDefaults.lastUpdateTimeKey
-    let ts = UserDefaults.standard.double(forKey: k)
-
-    let now = Date().timeIntervalSince1970
-    let diff = now - ts
-    let yes = diff > deadline
+    let (now, yes) = UserDefaults.standard.isLastUpdate(outside: deadline)
 
     if yes {
       if setting {
-        UserDefaults.standard.set(now, forKey: k)
+        UserDefaults.standard.lastUpdateTime = now
       }
     } else {
-      os_log("should not update: %f < %f", log: log, type: .info, diff, deadline)
+      os_log("not updating", log: log, type: .info)
       DispatchQueue.global(qos: .utility).async {
         Podcasts.files.preloadQueue(removingFiles: false, completionHandler: nil)
       }
@@ -276,7 +270,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
   /// Ready to update?
   var isReady: Bool {
-    return shouldUpdate(setting: false)
+    shouldUpdate(setting: false)
   }
 
   private var lastTimeFilesHaveBeenRemoved: TimeInterval = 0
@@ -310,7 +304,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
   private var _updateError: Error?
 
   private var updateError: Error? {
-    get { return sQueue.sync { _updateError } }
+    get { sQueue.sync { _updateError } }
     set { sQueue.sync { _updateError = newValue } }
   }
 
@@ -357,12 +351,10 @@ final class QueueDataSource: NSObject, SectionedDataSource {
         DispatchQueue.global(qos: .utility).async { [weak self] in
           self?.files.preloadQueue(removingFiles: rm) { error in
             if let er = error {
-              os_log("queue preloading error: %{public}@",
-                     log: log, type: .info, er as CVarArg)
+              os_log("queue preloading error: %{public}@", log: log, type: .info, er as CVarArg)
             }
 
-            os_log("updating complete: %i",
-                   log: log, type: .info, shouldUpdate)
+            os_log("updating complete: %i", log: log, type: .info, shouldUpdate)
 
             DispatchQueue.main.async {
               completionHandler?(newData, updateError)
@@ -376,8 +368,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
     func next() {
       guard shouldUpdate else {
-        os_log("ignoring excessive queue update request",
-               log: log, type: .info)
+        os_log("ignoring excessive queue update request", log: log, type: .info)
         return preload(forwarding: false, updateError: nil)
       }
 
@@ -386,12 +377,11 @@ final class QueueDataSource: NSObject, SectionedDataSource {
       userLibrary.update { newData, error in
         if let er = error {
           os_log("updating error: %{public}@", log: log, er as CVarArg)
+          
           self.updateError = error
         }
 
-        os_log("queue updating complete: %{public}i",
-               log: log, type: .info, newData)
-
+        os_log("queue updating complete: %{public}i", log: log, type: .info, newData)
         preload(forwarding: newData, updateError: error)
       }
     }
@@ -408,8 +398,7 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
     iCloud.pull { newData, error in
       if let er = error {
-        os_log("simulated iCloud pull failed: %{public}@",
-               log: log, er as CVarArg)
+        os_log("simulated iCloud pull failed: %{public}@", log: log, er as CVarArg)
       }
       next()
     }
@@ -424,18 +413,9 @@ final class QueueDataSource: NSObject, SectionedDataSource {
 
   /// The in-flight image prefetching requests. This property is serialized.
   private var requests: [ImageRequest]? {
-    get {
-      return sQueue.sync {
-        return _requests
-      }
-    }
-    set {
-      sQueue.sync {
-        _requests = newValue
-      }
-    }
+    get { sQueue.sync { _requests } }
+    set { sQueue.sync { _requests = newValue } }
   }
-
 }
 
 // MARK: - Image Loading
@@ -475,7 +455,6 @@ extension QueueDataSource {
 // MARK: - UITableViewDataSource
 
 extension QueueDataSource: UITableViewDataSource {
-
   /// Registers nib objects with `tableView` under identifiers.
   static func registerCells(with tableView: UITableView) {
     let cells = [
@@ -489,12 +468,11 @@ extension QueueDataSource: UITableViewDataSource {
   }
 
   func numberOfSections(in tableView: UITableView) -> Int {
-    return sections.count
+    sections.count
   }
 
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int
-  ) -> Int {
-    return sections[section].count
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    sections[section].count
   }
   
   private static func makeAccessory() -> UIView {
@@ -549,8 +527,7 @@ extension QueueDataSource: UITableViewDataSource {
       cell.textLabel?.text = entry.feedTitle ?? entry.title
       cell.detailTextLabel?.text = entry.title
       
-      return QueueDataSource
-        .updateIsUnplayed(cell: cell, isUnplayed: isUnplayed)
+      return QueueDataSource.updateIsUnplayed(cell: cell, isUnplayed: isUnplayed)
       
     case .feed:
       // We might reuse the feed cell from search here.
@@ -578,13 +555,11 @@ extension QueueDataSource: UITableViewDataSource {
 
     return true
   }
-
 }
 
 // MARK: - EntryDataSource
 
 extension QueueDataSource: EntryIndexPathMapping {
-
   func entry(at indexPath: IndexPath) -> Entry? {
     guard let item = itemAt(indexPath: indexPath) else {
       return nil
@@ -609,13 +584,11 @@ extension QueueDataSource: EntryIndexPathMapping {
     }
     return nil
   }
-
 }
 
 // MARK: - Handling Swipe Actions
 
 extension QueueDataSource {
-
   /// Returns a fresh contextual action handler for the row at `indexPath`,
   /// dequeueing its episode when submitted.
   func makeDequeueHandler(
@@ -649,7 +622,6 @@ extension QueueDataSource {
 // MARK: - UITableViewDataSourcePrefetching
 
 extension QueueDataSource: UITableViewDataSourcePrefetching  {
-
   private func imaginables(for indexPaths: [IndexPath]) -> [Imaginable] {
     return indexPaths.compactMap { indexPath in
       guard let item = itemAt(indexPath: indexPath) else {
@@ -696,7 +668,6 @@ extension QueueDataSource: UITableViewDataSourcePrefetching  {
 // MARK: - Updating Playback State
 
 extension QueueDataSource {
-  
   func tableView(_ tableView: UITableView, updateCellMatching entry: Entry, isUnplayed: Bool) {
     guard let indexPath = indexPath(matching: entry), 
       let cell = tableView.cellForRow(at: indexPath) else {

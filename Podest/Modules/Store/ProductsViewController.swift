@@ -23,7 +23,7 @@ final class ProductsViewController: UICollectionViewController {
 
   // Returns a newly created and installed data source.
   private func install() -> ProductsDataSource {
-    dataSource = ProductsDataSource(store: Podcasts.store, contact: Podcasts.contact)
+    dataSource = ProductsDataSource(store: Podcasts.store, contact: Podcasts.contact, textDelegate: self)
 
     dataSource.sectionsChangeHandler = { [weak self] changes in
       guard let cv = self?.collectionView else {
@@ -90,3 +90,9 @@ extension ProductsViewController {
 
 }
 
+extension ProductsViewController: UITextViewDelegate {
+  func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+      UIApplication.shared.open(URL)
+      return false
+  }
+}

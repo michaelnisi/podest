@@ -78,6 +78,7 @@ private extension RootViewController {
   
   func setupSplitViewController() {
     svc = (children.first as! UISplitViewController)
+    svc.delegate = self
   }
   
   func setupNavigation() {
@@ -86,6 +87,20 @@ private extension RootViewController {
     for nc in ncs {
       nc.view.backgroundColor = .systemBackground
       nc.delegate = self
+    }
+  }
+}
+
+// MARK: - UISplitViewControllerDelegate
+
+extension RootViewController: UISplitViewControllerDelegate {
+  func splitViewController(_ svc: UISplitViewController, willShow column: UISplitViewController.Column) {
+    switch svc.viewController(for: column) {
+    case let vc as Navigator:
+      vc.navigationDelegate = self
+      
+    default:
+      break
     }
   }
 }

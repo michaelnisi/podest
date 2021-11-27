@@ -22,7 +22,6 @@ config() {
     -e "s;@@AUTHOR_EMAIL@@;$AUTHOR_EMAIL;g" \
     -e "s;@@GITHUB_URL@@;$GITHUB_URL;g" \
     -e "s;@@PRIVACY_URL@@;$PRIVACY_URL;g" \
-    -e "s;@@REVIEW_URL@@;$REVIEW_URL;g" \
     $in > $out
 }
 

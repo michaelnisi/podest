@@ -42,7 +42,9 @@ extension AppDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?
   ) -> Bool {
-    UserDefaults.registerPodestDefaults()
+    UserDefaults.registerPodcastsDefaults()
+    UserDefaults.registerTipTopDefaults()
+    
     if !Podcasts.store.isExpired() {
       Podest.gateway.register()
     }
@@ -62,7 +64,6 @@ extension AppDelegate {
 // MARK: - Managing App State Restoration
 
 extension AppDelegate {
-
   func application(
     _ application: UIApplication,
     shouldRestoreApplicationState coder: NSCoder) -> Bool {
@@ -77,7 +78,6 @@ extension AppDelegate {
 // MARK: - Managing Interface Geometry
 
 extension AppDelegate {
-
   func application(
     _ application: UIApplication,
     supportedInterfaceOrientationsFor window: UIWindow?
@@ -93,7 +93,6 @@ extension AppDelegate {
 // MARK: - Downloading Data in the Background
 
 extension AppDelegate {
-
   func application(
     _ application: UIApplication,
     handleEventsForBackgroundURLSession identifier: String,
@@ -115,7 +114,6 @@ extension AppDelegate {
 // MARK: - Handling Remote Notification Registration
 
 extension AppDelegate {
-
   func application(
     _ application: UIApplication,
     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
