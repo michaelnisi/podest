@@ -19,7 +19,7 @@ import Podcasts
 private let logger: Logger? = .init(subsystem: "ink.codes.podest", category: "AppGateway")
 
 /// `AppGateway` routes actions between app modules. Its main responsibility is handling
-/// background launches and notifications.
+/// background launches and CloudKit notifications.
 class AppGateway {
   private var router: Routing!
   private var kvStoreObserver: NSObjectProtocol? // TODO: Observe store for played/unplayed flag
@@ -87,18 +87,18 @@ extension AppGateway {
     task.expirationHandler = {
       isExpired = true
     }
-
+    
     DispatchQueue.main.async { [unowned self] in
       logger?.notice("updating queue")
       
-      router?.update(considering: nil, animated: false) { newData, error in
-        guard !isExpired else {
-          task.setTaskCompleted(success: false)
-          logger?.warning("app refresh task expired")
-          
-          return
-        }
+      guard !isExpired else {
+        logger?.warning("app refresh task expired")
+        task.setTaskCompleted(success: false)
         
+        return
+      }
+      
+      router?.update(considering: nil, animated: false) { newData, error in
         let success = error == nil
         
         logger?.notice("setting task complete: \(success)")
@@ -179,8 +179,6 @@ extension AppGateway {
   ///
   /// Pulling has presedence over pushing.
   private func pull(onComplete: ((UIBackgroundFetchResult) -> Void)? = nil) {
-    dispatchPrecondition(condition: .onQueue(.main))
-    
     guard !isPushing else {
       return
     }
@@ -247,10 +245,14 @@ extension AppGateway: LibraryDelegate {
 // MARK: - QueueDelegate
 
 extension AppGateway: QueueDelegate {
-  func queue(_ queue: Queueing, willUpdate: (() -> Void)?) {
+  func queue(_ queue: Queueing, startUpdate: (() -> Void)?) {
     pull { _ in
-      willUpdate?()
+      startUpdate?()
     }
+  }
+  
+  func didUpdate(_ queue: Queueing) {
+    logger?.notice("did update queue")
   }
   
   func queue(_ queue: Queueing, enqueued guids: Set<EntryGUID>) {
