@@ -15,7 +15,7 @@ import os.log
 import BatchUpdates
 import Podcasts
 
-private let log = OSLog(subsystem: "ink.codes.podest", category: "list")
+private let log = OSLog(subsystem: "ink.codes.podest", category: "ListOperation")
 
 /// Loads podcast feed at `url` and its entries.
 class ListOperation: Operation, Receiving {

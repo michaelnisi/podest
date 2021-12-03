@@ -80,6 +80,10 @@ extension ListViewController {
       url: url, originalFeed: feed, withoutImage: !isCompact)
 
     op.feedBlock = { [weak self] feed, error in
+      guard error == nil, let feed = feed else {
+        return
+      }
+      
       DispatchQueue.main.async {
         self?.feed = feed
       }

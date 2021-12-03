@@ -16,15 +16,13 @@ import os.log
 import FeedKit
 import Podcasts
 
-private let logger: Logger? = .init(subsystem: "ink.codes.podest", category: "AppGateway")
-
 /// `AppGateway` routes actions between app modules. Its main responsibility is handling
 /// background launches and CloudKit notifications.
 class AppGateway {
   private var router: Routing!
   private var kvStoreObserver: NSObjectProtocol? // TODO: Observe store for played/unplayed flag
-  private var isPulling = false { didSet { logger?.log("isPulling: \(self.isPulling)") } }
-  private var isPushing = false { didSet { logger?.log("isPushing: \(self.isPushing)") } }
+  private let logger: Logger? = .init(subsystem: "ink.codes.podest", category: "AppGateway")
+  private var isSyncing = false { didSet { logger?.log("isSyncing: \(self.isSyncing)") } }
   
   /// Installs the gateway for callbacks and updates the user library.
   func install(router: Routing) {
@@ -34,12 +32,12 @@ class AppGateway {
     Podcasts.userQueue.queueDelegate = self
     Podcasts.userLibrary.libraryDelegate = self
     
-    Podcasts.userLibrary.update { newData, error in
-      AppGateway.makeResult("update", newData, error)
+    Podcasts.userLibrary.update { [unowned self] newData, error in
+      makeResult("update", newData, error)
     }
   }
 
-  /// Removes this `AppGateway`as delegate.
+  /// Uninstalls this `AppGateway` from the system. You can install it again.
   func uninstall() {
     logger?.notice("uninstalling")
     
@@ -101,6 +99,7 @@ extension AppGateway {
       router?.update(considering: nil, animated: false) { newData, error in
         let success = error == nil
         
+        // This logging is shit. For ordered log statements, use a single logger.
         logger?.notice("setting task complete: \(success)")
         
         guard newData else {
@@ -109,7 +108,7 @@ extension AppGateway {
           return
         }
         
-        push {
+        sync { _ in
           task.setTaskCompleted(success: success)
         }
       }
@@ -125,7 +124,7 @@ extension AppGateway {
     
     nc.addObserver(forName: .CKAccountChanged, object: nil, queue: .main) { [unowned self] _ in
       Podcasts.iCloud.resetAccountStatus()
-      pull()
+      sync()
     }
   }
 
@@ -144,7 +143,7 @@ extension AppGateway {
 
     switch subscriptionID {
     case UserDB.subscriptionID:
-      pull { result in
+      sync { result in
         onComplete(result)
       }
 
@@ -178,15 +177,15 @@ extension AppGateway {
   /// when done.
   ///
   /// Pulling has presedence over pushing.
-  private func pull(onComplete: ((UIBackgroundFetchResult) -> Void)? = nil) {
-    guard !isPushing else {
+  private func sync(onComplete: ((UIBackgroundFetchResult) -> Void)? = nil) {
+    guard !isSyncing else {
       return
     }
     
-    isPulling = true
+    isSyncing = true
     
-    Podcasts.iCloud.pull { [unowned self] newData, error in
-      let result = AppGateway.makeResult("pull", newData, error)
+    Podcasts.iCloud.synchronize { [unowned self] newData, error in
+      let result = makeResult("sync", newData, error)
 
       if case .newData = result {
         DispatchQueue.main.async {
@@ -197,37 +196,18 @@ extension AppGateway {
               logger?.error("reloading queue failed: \(error.localizedDescription)")
             }
             
-            isPulling = false
+            isSyncing = false
 
             onComplete?(result)
           }
         }
       } else {
         DispatchQueue.main.async {
-          isPulling = false
+          isSyncing = false
           
           onComplete?(result)
         }
       }
-    }
-  }
-
-  private func push(onComplete: (() -> Void)? = nil) {
-    guard !isPulling else {
-      onComplete?()
-      return
-    }
-    
-    isPushing = true
-
-    Podcasts.iCloud.push { [unowned self] error in
-      if let error = error {
-        logger?.error("push failed: \(error.localizedDescription)")
-      }
-      
-      isPushing = false
-      
-      onComplete?()
     }
   }
 }
@@ -246,7 +226,7 @@ extension AppGateway: LibraryDelegate {
 
 extension AppGateway: QueueDelegate {
   func queue(_ queue: Queueing, startUpdate: (() -> Void)?) {
-    pull { _ in
+    sync { _ in
       startUpdate?()
     }
   }
@@ -259,7 +239,7 @@ extension AppGateway: QueueDelegate {
     DispatchQueue.main.async { [unowned self] in
       router?.updateIsEnqueued(using: guids)
       router?.reload { _ in
-        push()
+        sync()
       }
     }
   }
@@ -319,7 +299,9 @@ extension AppGateway {
 // MARK: - Factory
 
 extension AppGateway {
-  @discardableResult private static
+  /// Returns a new `UIBackgroundFetchResult` from `newData` and `error`
+  /// and logs it prepended by `info`.
+  @discardableResult private
   func makeResult(_ info: String, _ newData: Bool, _ error: Error?) -> UIBackgroundFetchResult {
     guard error == nil else {
       if newData {

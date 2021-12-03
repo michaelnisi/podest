@@ -17,7 +17,7 @@ import Playback
 import Podcasts
 import TipTop
 
-private let log = OSLog(subsystem: "ink.codes.podest", category: "queue")
+private let log = OSLog(subsystem: "ink.codes.podest", category: "QueueDataSource")
 
 /// Provides access to queue and subscription data.
 final class QueueDataSource: NSObject, SectionedDataSource {
