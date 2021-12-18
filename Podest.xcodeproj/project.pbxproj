@@ -977,7 +977,7 @@
 			repositoryURL = "https://github.com/michaelnisi/podcasts";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				minimumVersion = 1.1.1;
 			};
 		};
 		4C233A1325D8617F001782AE /* XCRemoteSwiftPackageReference "InsetPresentation" */ = {
