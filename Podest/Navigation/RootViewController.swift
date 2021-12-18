@@ -17,7 +17,7 @@ import Podcasts
 import Combine
 import AVKit
 
-private let log = OSLog(subsystem: "ink.codes.podest", category: "root")
+private let log = OSLog(subsystem: "ink.codes.podest", category: "RootViewController")
 
 final class RootViewController: UIViewController, Routing {
   @IBOutlet var miniPlayerTop: NSLayoutConstraint!
@@ -31,18 +31,12 @@ final class RootViewController: UIViewController, Routing {
   
   /// The singular queue view controller.
   var qvc: QueueViewController {
-    let vc = pnc.queueViewController!
-    vc.navigationDelegate = self
-    
-    return vc
+    pnc.queueViewController!
   }
   
   /// The singular episode view controller.
   var episodeViewController: EpisodeViewController? {
-    let vc = (isCollapsed ? pnc : snc).episodeViewController
-    vc?.navigationDelegate = self
-    
-    return vc
+    (isCollapsed ? pnc : snc).episodeViewController
   }
 
   /// The singular podcast view controller.
@@ -78,7 +72,6 @@ private extension RootViewController {
   
   func setupSplitViewController() {
     svc = (children.first as! UISplitViewController)
-    svc.delegate = self
   }
   
   func setupNavigation() {
@@ -91,20 +84,6 @@ private extension RootViewController {
   }
 }
 
-// MARK: - UISplitViewControllerDelegate
-
-extension RootViewController: UISplitViewControllerDelegate {
-  func splitViewController(_ svc: UISplitViewController, willShow column: UISplitViewController.Column) {
-    switch svc.viewController(for: column) {
-    case let vc as Navigator:
-      vc.navigationDelegate = self
-      
-    default:
-      break
-    }
-  }
-}
-
 // MARK: - UIViewController
 
 extension RootViewController {
@@ -113,6 +92,10 @@ extension RootViewController {
     
     pnc.additionalSafeAreaInsets = miniPlayerEdgeInsets
     snc.additionalSafeAreaInsets = miniPlayerEdgeInsets
+    
+    for vc in pnc.viewControllers + snc.viewControllers {
+      (vc as? Navigator)?.navigationDelegate = self
+    }
   }
     
   override func viewDidLoad() {

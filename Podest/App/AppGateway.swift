@@ -22,7 +22,36 @@ class AppGateway {
   private var router: Routing!
   private var kvStoreObserver: NSObjectProtocol? // TODO: Observe store for played/unplayed flag
   private let logger: Logger? = .init(subsystem: "ink.codes.podest", category: "AppGateway")
-  private var isSyncing = false { didSet { logger?.log("isSyncing: \(self.isSyncing)") } }
+  
+  private let sQueue = DispatchQueue(
+    label: "ink.codes.podest.AppGateway)",
+    target: .global(qos: .userInitiated)
+  )
+  
+  private var _isSyncing = false
+  
+  /// The thread-safe `isSyncing` property is `true` while we are pushing to or pulling from iCloud.
+  ///
+  /// Be aware that we receive multiple notifications per change, one per zone. For example:
+  ///
+  /// - user-changes completed with no data
+  /// - user-changes completed with no data
+  /// - user-changes completed with new data
+  private var isSyncing: Bool {
+    get { sQueue.sync { _isSyncing } }
+    
+    set {
+      sQueue.sync {
+        guard newValue != _isSyncing else {
+          return
+        }
+        
+        logger?.log("isSyncing: \(newValue)")
+        
+        _isSyncing = newValue
+      }
+    }
+  }
   
   /// Installs the gateway for callbacks and updates the user library.
   func install(router: Routing) {
@@ -30,6 +59,7 @@ class AppGateway {
 
     self.router = router
     Podcasts.userQueue.queueDelegate = self
+    Podcasts.userQueue.enclosureDelegate = self
     Podcasts.userLibrary.libraryDelegate = self
     
     Podcasts.userLibrary.update { [unowned self] newData, error in
@@ -97,19 +127,20 @@ extension AppGateway {
       }
       
       router?.update(considering: nil, animated: false) { newData, error in
-        let success = error == nil
-        
-        // This logging is shit. For ordered log statements, use a single logger.
-        logger?.notice("setting task complete: \(success)")
-        
-        guard newData else {
-          task.setTaskCompleted(success: success)
+        let updateResult = makeResult("update", newData, error)
+
+        guard !isExpired, !isSyncing, updateResult == .newData else {
+          task.setTaskCompleted(success: updateResult != .failed)
           
           return
         }
         
-        sync { _ in
-          task.setTaskCompleted(success: success)
+        isSyncing = true
+        
+        Podcasts.iCloud.push { error in
+          isSyncing = false
+          
+          task.setTaskCompleted(success: makeResult("push", newData, error) != .failed)
         }
       }
     }
@@ -122,9 +153,8 @@ extension AppGateway {
   func didRegisterForRemoteNotificationsWithDeviceToken(_ deviceToken: Data) {
     let nc = NotificationCenter.default
     
-    nc.addObserver(forName: .CKAccountChanged, object: nil, queue: .main) { [unowned self] _ in
+    nc.addObserver(forName: .CKAccountChanged, object: nil, queue: .main) { _ in
       Podcasts.iCloud.resetAccountStatus()
-      sync()
     }
   }
 
@@ -135,7 +165,6 @@ extension AppGateway {
     guard
       let notification = CKNotification(fromRemoteNotificationDictionary: userInfo),
       let subscriptionID = notification.subscriptionID else {
-        
       logger?.error("unhandled remote notification")
         
       return
@@ -143,10 +172,32 @@ extension AppGateway {
 
     switch subscriptionID {
     case UserDB.subscriptionID:
-      sync { result in
-        onComplete(result)
+      guard !isSyncing else {
+        onComplete(makeResult(subscriptionID, false, nil))
+        
+        return
       }
-
+      
+      isSyncing = true
+      
+      Podcasts.iCloud.pull { [unowned self] newData, error in
+        func done() -> Void {
+          isSyncing = false
+          
+          onComplete(makeResult(subscriptionID, newData, error))
+        }
+        
+        guard newData else {
+          return done()
+        }
+        
+        DispatchQueue.main.async {
+          router?.reload { error in
+            done()
+          }
+        }
+      }
+      
     default:
       logger?.error("unidentified subscription: \(subscriptionID)")
       onComplete(.failed)
@@ -166,52 +217,6 @@ extension AppGateway {
   }
 }
 
-// MARK: - Syncing with iCloud
-
-extension AppGateway {
-  /// Pulls iCloud, integrates new data, and reloads the queue locally to update
-  /// views for snapshotting.
-  ///
-  /// - Parameters:
-  ///   - onComplete: The completion block executing on the main queue.
-  /// when done.
-  ///
-  /// Pulling has presedence over pushing.
-  private func sync(onComplete: ((UIBackgroundFetchResult) -> Void)? = nil) {
-    guard !isSyncing else {
-      return
-    }
-    
-    isSyncing = true
-    
-    Podcasts.iCloud.synchronize { [unowned self] newData, error in
-      let result = makeResult("sync", newData, error)
-
-      if case .newData = result {
-        DispatchQueue.main.async {
-          router?.reload { error in
-            dispatchPrecondition(condition: .onQueue(.main))
-
-            if let error = error {
-              logger?.error("reloading queue failed: \(error.localizedDescription)")
-            }
-            
-            isSyncing = false
-
-            onComplete?(result)
-          }
-        }
-      } else {
-        DispatchQueue.main.async {
-          isSyncing = false
-          
-          onComplete?(result)
-        }
-      }
-    }
-  }
-}
-
 // MARK: - LibraryDelegate
 
 extension AppGateway: LibraryDelegate {
@@ -226,24 +231,50 @@ extension AppGateway: LibraryDelegate {
 
 extension AppGateway: QueueDelegate {
   func queue(_ queue: Queueing, startUpdate: (() -> Void)?) {
-    sync { _ in
+    guard !isSyncing else {
+      return
+    }
+    
+    isSyncing = true
+    
+    Podcasts.iCloud.pull { [unowned self] newData, error in
+      isSyncing = false
+      
+      makeResult("pull", newData, error)
+      logger?.notice("starting update")
       startUpdate?()
     }
   }
   
-  func didUpdate(_ queue: Queueing) {
+  func didUpdate(_ queue: Queueing, newData: Bool, error: Error?) {
     logger?.notice("did update queue")
   }
   
   func queue(_ queue: Queueing, enqueued guids: Set<EntryGUID>) {
+    logger?.notice("enqueued: \(guids.count)")
+    
     DispatchQueue.main.async { [unowned self] in
       router?.updateIsEnqueued(using: guids)
-      router?.reload { _ in
-        sync()
+      router?.reload { error in
+        guard !isSyncing else {
+          return
+        }
+        
+        isSyncing = true
+        
+        Podcasts.iCloud.push { error in
+          isSyncing = false
+          
+          makeResult("push", true, error)
+        }
       }
     }
   }
+}
 
+// MARK: - EnclosureDelegate
+
+extension AppGateway: EnclosureDelegate {
   func queue(_ queue: Queueing, enqueued: EntryGUID, enclosure: Enclosure?) {
     guard let str = enclosure?.url, let url = URL(string: str) else {
       logger?.error("missing enclosure: \(enqueued)")
@@ -298,29 +329,28 @@ extension AppGateway {
 
 // MARK: - Factory
 
-extension AppGateway {
-  /// Returns a new `UIBackgroundFetchResult` from `newData` and `error`
-  /// and logs it prepended by `info`.
-  @discardableResult private
-  func makeResult(_ info: String, _ newData: Bool, _ error: Error?) -> UIBackgroundFetchResult {
+private extension AppGateway {
+  /// Returns a new `UIBackgroundFetchResult` from `newData` and `error` and logs `subject`.
+  @discardableResult
+  func makeResult(_ subject: String, _ newData: Bool, _ error: Error?) -> UIBackgroundFetchResult {
     guard error == nil else {
       if newData {
-        logger?.error("\(info) completed: \(error!.localizedDescription)")
+        logger?.error("\(subject) completed: \(error!.localizedDescription)")
         
         return .newData
       } else {
-        logger?.error("\(info) failed: \(error!.localizedDescription)")
+        logger?.error("\(subject) failed: \(error!.localizedDescription)")
         
         return .failed
       }
     }
 
     if newData {
-      logger?.info("\(info) completed with new data")
+      logger?.notice("\(subject) completed with new data")
       
       return .newData
     } else {
-      logger?.info("\(info) completed with no data")
+      logger?.notice("\(subject) completed with no data")
       
       return .noData
     }
