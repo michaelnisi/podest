@@ -1,4 +1,4 @@
-## 10 (planned)
+## 10 (2021-12-19)
 
 More immersive new player user interface with some new features:
 
