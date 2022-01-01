@@ -1,3 +1,7 @@
+## 10.1 (2022-01-01)
+
+Improved resilience regarding redirected and manually added feeds.
+
 ## 10 (2021-12-19)
 
 More immersive new player user interface with some new features:

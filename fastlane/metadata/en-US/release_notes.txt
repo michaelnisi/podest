@@ -1,9 +1,0 @@
-This version is optimized for iOS 13 and supports Dark Mode.
-
-Additional improvements focus around the Queue:
-
-* Swipe right to play
-* Context menus for quick episode actions
-* Large title and improved pull-to-refresh
-
-I’d love to get your feedback.
