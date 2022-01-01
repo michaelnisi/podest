@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/michaelnisi/feedkit",
         "state": {
           "branch": null,
-          "revision": "00677ed2b05378ec5769a08ac218db36331050a0",
-          "version": "18.1.0"
+          "revision": "4e170f0f07941467a3ce49ba06b60e34d601fa6c",
+          "version": "19.0.0"
         }
       },
       {
@@ -123,8 +123,8 @@
         "repositoryURL": "https://github.com/michaelnisi/podcasts",
         "state": {
           "branch": null,
-          "revision": "8478829fef2bc564b4d1328fee64987881c5fc12",
-          "version": "1.1.1"
+          "revision": "8b0e9bfdf33d0831a77b274a1a7a7ce30ea10b6e",
+          "version": "1.2.0"
         }
       },
       {

@@ -46,7 +46,7 @@
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
-			<string>10 (11)</string>
+			<string>10 (2)</string>
 			<key>Key</key>
 			<string>enabled_preference</string>
 			<key>Title</key>

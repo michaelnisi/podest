@@ -200,14 +200,14 @@ extension ListDataSource: UITableViewDataSource {
       cell.selectionStyle = .none
 
       images.cancel(displaying: cell.largeImageView)
-      cell.invalidate(image: UIImage(named: "Oval"))
+      cell.invalidate(image: UIImage.defaultFeedImage)
 
       cell.layoutSubviewsBlock = { [weak self] imageView in
         self?.images.loadImage(
           representing: feed,
           into: imageView,
           options: FKImageLoadingOptions(
-            fallbackImage: UIImage(named: "Oval"),
+            fallbackImage: UIImage.defaultFeedImage,
             quality: .high,
             isClean: true
           )

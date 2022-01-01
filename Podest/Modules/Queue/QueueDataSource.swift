@@ -430,7 +430,7 @@ extension QueueDataSource {
     }
     
     images.cancel(displaying: cell.imageView)
-    cell.invalidate(image: UIImage(named: "Oval"))
+    cell.invalidate(image: UIImage.defaultFeedImage)
 
     cell.tag = entry.hashValue
     
@@ -443,7 +443,7 @@ extension QueueDataSource {
         representing: entry,
         into: imageView,
         options: FKImageLoadingOptions(
-          fallbackImage: UIImage(named: "Oval"),
+          fallbackImage: UIImage.defaultFeedImage,
           quality: .medium,
           isDirect: true
         )

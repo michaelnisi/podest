@@ -502,14 +502,14 @@ extension SearchResultsDataSource: UITableViewDataSource {
         cell.accessoryType = .disclosureIndicator
 
         images.cancel(displaying: cell.imageView)
-        cell.invalidate(image: UIImage(named: "Oval"))
+        cell.invalidate(image: UIImage.defaultFeedImage)
 
         cell.layoutSubviewsBlock = { [weak self] imageView in
           self?.images.loadImage(
             representing: feed,
             into: imageView,
             options: FKImageLoadingOptions(
-              fallbackImage: UIImage(named: "Oval"),
+              fallbackImage: UIImage.defaultFeedImage,
               quality: .medium,
               isDirect: true
             )

@@ -91,6 +91,14 @@ protocol Navigator: AnyObject {
   var navigationDelegate: ViewControllers? { get set }
 }
 
+// MARK: - UIImage
+
+extension UIImage {
+  static var defaultFeedImage: UIImage {
+    UIImage(named: "Oval")!
+  }
+}
+
 // MARK: - Accessing User Library and Queue
 
 /// Defines a callback interface to the user library and queue.
