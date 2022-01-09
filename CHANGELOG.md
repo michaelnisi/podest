@@ -1,3 +1,7 @@
+## 11 (planned)
+
+Rewrite as multiplatform app including watch.
+
 ## 10.1 (2022-01-01)
 
 Improved resilience regarding redirected and manually added feeds.
