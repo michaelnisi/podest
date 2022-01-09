@@ -1,0 +1,1300 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4C43DD09278B4ECC00C7D269 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD08278B4ECC00C7D269 /* Tests_iOS.swift */; };
+		4C43DD0B278B4ECC00C7D269 /* Tests_iOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD0A278B4ECC00C7D269 /* Tests_iOSLaunchTests.swift */; };
+		4C43DD15278B4ECC00C7D269 /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD14278B4ECC00C7D269 /* Tests_macOS.swift */; };
+		4C43DD17278B4ECC00C7D269 /* Tests_macOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD16278B4ECC00C7D269 /* Tests_macOSLaunchTests.swift */; };
+		4C43DD18278B4ECC00C7D269 /* Podest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DCED278B4ECB00C7D269 /* Podest.xcdatamodeld */; };
+		4C43DD19278B4ECC00C7D269 /* Podest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DCED278B4ECB00C7D269 /* Podest.xcdatamodeld */; };
+		4C43DD1A278B4ECC00C7D269 /* PodestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DCEF278B4ECB00C7D269 /* PodestApp.swift */; };
+		4C43DD1B278B4ECC00C7D269 /* PodestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DCEF278B4ECB00C7D269 /* PodestApp.swift */; };
+		4C43DD1C278B4ECC00C7D269 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DCF0278B4ECB00C7D269 /* ContentView.swift */; };
+		4C43DD1D278B4ECC00C7D269 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DCF0278B4ECB00C7D269 /* ContentView.swift */; };
+		4C43DD1E278B4ECC00C7D269 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DCF1278B4ECB00C7D269 /* Persistence.swift */; };
+		4C43DD1F278B4ECC00C7D269 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DCF1278B4ECB00C7D269 /* Persistence.swift */; };
+		4C43DD20278B4ECC00C7D269 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C43DCF2278B4ECC00C7D269 /* Assets.xcassets */; };
+		4C43DD21278B4ECC00C7D269 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C43DCF2278B4ECC00C7D269 /* Assets.xcassets */; };
+		4C43DD35278B4EF000C7D269 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C43DD34278B4EF000C7D269 /* Assets.xcassets */; };
+		4C43DD3B278B4EF000C7D269 /* Watch WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4C43DD3A278B4EF000C7D269 /* Watch WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4C43DD40278B4EF000C7D269 /* PodestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD3F278B4EF000C7D269 /* PodestApp.swift */; };
+		4C43DD42278B4EF000C7D269 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD41278B4EF000C7D269 /* ContentView.swift */; };
+		4C43DD44278B4EF000C7D269 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD43278B4EF000C7D269 /* NotificationController.swift */; };
+		4C43DD46278B4EF000C7D269 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD45278B4EF000C7D269 /* NotificationView.swift */; };
+		4C43DD48278B4EF000C7D269 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD47278B4EF000C7D269 /* ComplicationController.swift */; };
+		4C43DD4A278B4EF000C7D269 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C43DD49278B4EF000C7D269 /* Assets.xcassets */; };
+		4C43DD4D278B4EF000C7D269 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C43DD4C278B4EF000C7D269 /* Preview Assets.xcassets */; };
+		4C43DD59278B4EF000C7D269 /* WatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD58278B4EF000C7D269 /* WatchTests.swift */; };
+		4C43DD63278B4EF000C7D269 /* WatchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD62278B4EF000C7D269 /* WatchUITests.swift */; };
+		4C43DD65278B4EF000C7D269 /* WatchUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD64278B4EF000C7D269 /* WatchUITestsLaunchTests.swift */; };
+		4C43DD68278B4EF000C7D269 /* Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 4C43DD32278B4EEF00C7D269 /* Watch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4C43DD05278B4ECC00C7D269 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4C43DCE8278B4ECB00C7D269 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4C43DCF6278B4ECC00C7D269;
+			remoteInfo = "Podest (iOS)";
+		};
+		4C43DD11278B4ECC00C7D269 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4C43DCE8278B4ECB00C7D269 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4C43DCFC278B4ECC00C7D269;
+			remoteInfo = "Podest (macOS)";
+		};
+		4C43DD3C278B4EF000C7D269 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4C43DCE8278B4ECB00C7D269 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4C43DD39278B4EF000C7D269;
+			remoteInfo = "Watch WatchKit Extension";
+		};
+		4C43DD55278B4EF000C7D269 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4C43DCE8278B4ECB00C7D269 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4C43DD39278B4EF000C7D269;
+			remoteInfo = "Watch WatchKit Extension";
+		};
+		4C43DD5F278B4EF000C7D269 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4C43DCE8278B4ECB00C7D269 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4C43DD31278B4EEF00C7D269;
+			remoteInfo = Watch;
+		};
+		4C43DD66278B4EF000C7D269 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4C43DCE8278B4ECB00C7D269 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4C43DD31278B4EEF00C7D269;
+			remoteInfo = Watch;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4C43DD6C278B4EF000C7D269 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				4C43DD3B278B4EF000C7D269 /* Watch WatchKit Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DD70278B4EF000C7D269 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				4C43DD68278B4EF000C7D269 /* Watch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		4C43DCEE278B4ECB00C7D269 /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
+		4C43DCEF278B4ECB00C7D269 /* PodestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodestApp.swift; sourceTree = "<group>"; };
+		4C43DCF0278B4ECB00C7D269 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		4C43DCF1278B4ECB00C7D269 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		4C43DCF2278B4ECC00C7D269 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4C43DCF7278B4ECC00C7D269 /* Podest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Podest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C43DCFD278B4ECC00C7D269 /* Podest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Podest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C43DCFF278B4ECC00C7D269 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
+		4C43DD04278B4ECC00C7D269 /* Tests iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C43DD08278B4ECC00C7D269 /* Tests_iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOS.swift; sourceTree = "<group>"; };
+		4C43DD0A278B4ECC00C7D269 /* Tests_iOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOSLaunchTests.swift; sourceTree = "<group>"; };
+		4C43DD10278B4ECC00C7D269 /* Tests macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C43DD14278B4ECC00C7D269 /* Tests_macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOS.swift; sourceTree = "<group>"; };
+		4C43DD16278B4ECC00C7D269 /* Tests_macOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOSLaunchTests.swift; sourceTree = "<group>"; };
+		4C43DD32278B4EEF00C7D269 /* Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Watch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C43DD34278B4EF000C7D269 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4C43DD3A278B4EF000C7D269 /* Watch WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Watch WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C43DD3F278B4EF000C7D269 /* PodestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodestApp.swift; sourceTree = "<group>"; };
+		4C43DD41278B4EF000C7D269 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		4C43DD43278B4EF000C7D269 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		4C43DD45278B4EF000C7D269 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
+		4C43DD47278B4EF000C7D269 /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
+		4C43DD49278B4EF000C7D269 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4C43DD4C278B4EF000C7D269 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		4C43DD4E278B4EF000C7D269 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4C43DD4F278B4EF000C7D269 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
+		4C43DD54278B4EF000C7D269 /* WatchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WatchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C43DD58278B4EF000C7D269 /* WatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchTests.swift; sourceTree = "<group>"; };
+		4C43DD5E278B4EF000C7D269 /* WatchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WatchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C43DD62278B4EF000C7D269 /* WatchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchUITests.swift; sourceTree = "<group>"; };
+		4C43DD64278B4EF000C7D269 /* WatchUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4C43DCF4278B4ECC00C7D269 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DCFA278B4ECC00C7D269 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DD01278B4ECC00C7D269 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DD0D278B4ECC00C7D269 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DD37278B4EF000C7D269 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DD51278B4EF000C7D269 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DD5B278B4EF000C7D269 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4C43DCE7278B4ECB00C7D269 = {
+			isa = PBXGroup;
+			children = (
+				4C43DCEC278B4ECB00C7D269 /* Shared */,
+				4C43DCFE278B4ECC00C7D269 /* macOS */,
+				4C43DD07278B4ECC00C7D269 /* Tests iOS */,
+				4C43DD13278B4ECC00C7D269 /* Tests macOS */,
+				4C43DD33278B4EEF00C7D269 /* Watch */,
+				4C43DD3E278B4EF000C7D269 /* Watch WatchKit Extension */,
+				4C43DD57278B4EF000C7D269 /* WatchTests */,
+				4C43DD61278B4EF000C7D269 /* WatchUITests */,
+				4C43DCF8278B4ECC00C7D269 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4C43DCEC278B4ECB00C7D269 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				4C43DCEF278B4ECB00C7D269 /* PodestApp.swift */,
+				4C43DCF0278B4ECB00C7D269 /* ContentView.swift */,
+				4C43DCF1278B4ECB00C7D269 /* Persistence.swift */,
+				4C43DCF2278B4ECC00C7D269 /* Assets.xcassets */,
+				4C43DCED278B4ECB00C7D269 /* Podest.xcdatamodeld */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		4C43DCF8278B4ECC00C7D269 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4C43DCF7278B4ECC00C7D269 /* Podest.app */,
+				4C43DCFD278B4ECC00C7D269 /* Podest.app */,
+				4C43DD04278B4ECC00C7D269 /* Tests iOS.xctest */,
+				4C43DD10278B4ECC00C7D269 /* Tests macOS.xctest */,
+				4C43DD32278B4EEF00C7D269 /* Watch.app */,
+				4C43DD3A278B4EF000C7D269 /* Watch WatchKit Extension.appex */,
+				4C43DD54278B4EF000C7D269 /* WatchTests.xctest */,
+				4C43DD5E278B4EF000C7D269 /* WatchUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4C43DCFE278B4ECC00C7D269 /* macOS */ = {
+			isa = PBXGroup;
+			children = (
+				4C43DCFF278B4ECC00C7D269 /* macOS.entitlements */,
+			);
+			path = macOS;
+			sourceTree = "<group>";
+		};
+		4C43DD07278B4ECC00C7D269 /* Tests iOS */ = {
+			isa = PBXGroup;
+			children = (
+				4C43DD08278B4ECC00C7D269 /* Tests_iOS.swift */,
+				4C43DD0A278B4ECC00C7D269 /* Tests_iOSLaunchTests.swift */,
+			);
+			path = "Tests iOS";
+			sourceTree = "<group>";
+		};
+		4C43DD13278B4ECC00C7D269 /* Tests macOS */ = {
+			isa = PBXGroup;
+			children = (
+				4C43DD14278B4ECC00C7D269 /* Tests_macOS.swift */,
+				4C43DD16278B4ECC00C7D269 /* Tests_macOSLaunchTests.swift */,
+			);
+			path = "Tests macOS";
+			sourceTree = "<group>";
+		};
+		4C43DD33278B4EEF00C7D269 /* Watch */ = {
+			isa = PBXGroup;
+			children = (
+				4C43DD34278B4EF000C7D269 /* Assets.xcassets */,
+			);
+			path = Watch;
+			sourceTree = "<group>";
+		};
+		4C43DD3E278B4EF000C7D269 /* Watch WatchKit Extension */ = {
+			isa = PBXGroup;
+			children = (
+				4C43DD3F278B4EF000C7D269 /* PodestApp.swift */,
+				4C43DD41278B4EF000C7D269 /* ContentView.swift */,
+				4C43DD43278B4EF000C7D269 /* NotificationController.swift */,
+				4C43DD45278B4EF000C7D269 /* NotificationView.swift */,
+				4C43DD47278B4EF000C7D269 /* ComplicationController.swift */,
+				4C43DD49278B4EF000C7D269 /* Assets.xcassets */,
+				4C43DD4E278B4EF000C7D269 /* Info.plist */,
+				4C43DD4F278B4EF000C7D269 /* PushNotificationPayload.apns */,
+				4C43DD4B278B4EF000C7D269 /* Preview Content */,
+			);
+			path = "Watch WatchKit Extension";
+			sourceTree = "<group>";
+		};
+		4C43DD4B278B4EF000C7D269 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				4C43DD4C278B4EF000C7D269 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		4C43DD57278B4EF000C7D269 /* WatchTests */ = {
+			isa = PBXGroup;
+			children = (
+				4C43DD58278B4EF000C7D269 /* WatchTests.swift */,
+			);
+			path = WatchTests;
+			sourceTree = "<group>";
+		};
+		4C43DD61278B4EF000C7D269 /* WatchUITests */ = {
+			isa = PBXGroup;
+			children = (
+				4C43DD62278B4EF000C7D269 /* WatchUITests.swift */,
+				4C43DD64278B4EF000C7D269 /* WatchUITestsLaunchTests.swift */,
+			);
+			path = WatchUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4C43DCF6278B4ECC00C7D269 /* Podest (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C43DD24278B4ECC00C7D269 /* Build configuration list for PBXNativeTarget "Podest (iOS)" */;
+			buildPhases = (
+				4C43DCF3278B4ECC00C7D269 /* Sources */,
+				4C43DCF4278B4ECC00C7D269 /* Frameworks */,
+				4C43DCF5278B4ECC00C7D269 /* Resources */,
+				4C43DD70278B4EF000C7D269 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4C43DD67278B4EF000C7D269 /* PBXTargetDependency */,
+			);
+			name = "Podest (iOS)";
+			productName = "Podest (iOS)";
+			productReference = 4C43DCF7278B4ECC00C7D269 /* Podest.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4C43DCFC278B4ECC00C7D269 /* Podest (macOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C43DD27278B4ECC00C7D269 /* Build configuration list for PBXNativeTarget "Podest (macOS)" */;
+			buildPhases = (
+				4C43DCF9278B4ECC00C7D269 /* Sources */,
+				4C43DCFA278B4ECC00C7D269 /* Frameworks */,
+				4C43DCFB278B4ECC00C7D269 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Podest (macOS)";
+			productName = "Podest (macOS)";
+			productReference = 4C43DCFD278B4ECC00C7D269 /* Podest.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4C43DD03278B4ECC00C7D269 /* Tests iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C43DD2A278B4ECC00C7D269 /* Build configuration list for PBXNativeTarget "Tests iOS" */;
+			buildPhases = (
+				4C43DD00278B4ECC00C7D269 /* Sources */,
+				4C43DD01278B4ECC00C7D269 /* Frameworks */,
+				4C43DD02278B4ECC00C7D269 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4C43DD06278B4ECC00C7D269 /* PBXTargetDependency */,
+			);
+			name = "Tests iOS";
+			productName = "Tests iOS";
+			productReference = 4C43DD04278B4ECC00C7D269 /* Tests iOS.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		4C43DD0F278B4ECC00C7D269 /* Tests macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C43DD2D278B4ECC00C7D269 /* Build configuration list for PBXNativeTarget "Tests macOS" */;
+			buildPhases = (
+				4C43DD0C278B4ECC00C7D269 /* Sources */,
+				4C43DD0D278B4ECC00C7D269 /* Frameworks */,
+				4C43DD0E278B4ECC00C7D269 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4C43DD12278B4ECC00C7D269 /* PBXTargetDependency */,
+			);
+			name = "Tests macOS";
+			productName = "Tests macOS";
+			productReference = 4C43DD10278B4ECC00C7D269 /* Tests macOS.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		4C43DD31278B4EEF00C7D269 /* Watch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C43DD6D278B4EF000C7D269 /* Build configuration list for PBXNativeTarget "Watch" */;
+			buildPhases = (
+				4C43DD30278B4EEF00C7D269 /* Resources */,
+				4C43DD6C278B4EF000C7D269 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4C43DD3D278B4EF000C7D269 /* PBXTargetDependency */,
+			);
+			name = Watch;
+			productName = Watch;
+			productReference = 4C43DD32278B4EEF00C7D269 /* Watch.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		4C43DD39278B4EF000C7D269 /* Watch WatchKit Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C43DD69278B4EF000C7D269 /* Build configuration list for PBXNativeTarget "Watch WatchKit Extension" */;
+			buildPhases = (
+				4C43DD36278B4EF000C7D269 /* Sources */,
+				4C43DD37278B4EF000C7D269 /* Frameworks */,
+				4C43DD38278B4EF000C7D269 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Watch WatchKit Extension";
+			productName = "Watch WatchKit Extension";
+			productReference = 4C43DD3A278B4EF000C7D269 /* Watch WatchKit Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
+		};
+		4C43DD53278B4EF000C7D269 /* WatchTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C43DD71278B4EF000C7D269 /* Build configuration list for PBXNativeTarget "WatchTests" */;
+			buildPhases = (
+				4C43DD50278B4EF000C7D269 /* Sources */,
+				4C43DD51278B4EF000C7D269 /* Frameworks */,
+				4C43DD52278B4EF000C7D269 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4C43DD56278B4EF000C7D269 /* PBXTargetDependency */,
+			);
+			name = WatchTests;
+			productName = WatchTests;
+			productReference = 4C43DD54278B4EF000C7D269 /* WatchTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		4C43DD5D278B4EF000C7D269 /* WatchUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C43DD74278B4EF000C7D269 /* Build configuration list for PBXNativeTarget "WatchUITests" */;
+			buildPhases = (
+				4C43DD5A278B4EF000C7D269 /* Sources */,
+				4C43DD5B278B4EF000C7D269 /* Frameworks */,
+				4C43DD5C278B4EF000C7D269 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4C43DD60278B4EF000C7D269 /* PBXTargetDependency */,
+			);
+			name = WatchUITests;
+			productName = WatchUITests;
+			productReference = 4C43DD5E278B4EF000C7D269 /* WatchUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4C43DCE8278B4ECB00C7D269 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1320;
+				LastUpgradeCheck = 1320;
+				TargetAttributes = {
+					4C43DCF6278B4ECC00C7D269 = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+					4C43DCFC278B4ECC00C7D269 = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+					4C43DD03278B4ECC00C7D269 = {
+						CreatedOnToolsVersion = 13.2.1;
+						TestTargetID = 4C43DCF6278B4ECC00C7D269;
+					};
+					4C43DD0F278B4ECC00C7D269 = {
+						CreatedOnToolsVersion = 13.2.1;
+						TestTargetID = 4C43DCFC278B4ECC00C7D269;
+					};
+					4C43DD31278B4EEF00C7D269 = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+					4C43DD39278B4EF000C7D269 = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+					4C43DD53278B4EF000C7D269 = {
+						CreatedOnToolsVersion = 13.2.1;
+						TestTargetID = 4C43DD39278B4EF000C7D269;
+					};
+					4C43DD5D278B4EF000C7D269 = {
+						CreatedOnToolsVersion = 13.2.1;
+						TestTargetID = 4C43DD31278B4EEF00C7D269;
+					};
+				};
+			};
+			buildConfigurationList = 4C43DCEB278B4ECB00C7D269 /* Build configuration list for PBXProject "Podest" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4C43DCE7278B4ECB00C7D269;
+			productRefGroup = 4C43DCF8278B4ECC00C7D269 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4C43DCF6278B4ECC00C7D269 /* Podest (iOS) */,
+				4C43DCFC278B4ECC00C7D269 /* Podest (macOS) */,
+				4C43DD03278B4ECC00C7D269 /* Tests iOS */,
+				4C43DD0F278B4ECC00C7D269 /* Tests macOS */,
+				4C43DD31278B4EEF00C7D269 /* Watch */,
+				4C43DD39278B4EF000C7D269 /* Watch WatchKit Extension */,
+				4C43DD53278B4EF000C7D269 /* WatchTests */,
+				4C43DD5D278B4EF000C7D269 /* WatchUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4C43DCF5278B4ECC00C7D269 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C43DD20278B4ECC00C7D269 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DCFB278B4ECC00C7D269 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C43DD21278B4ECC00C7D269 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DD02278B4ECC00C7D269 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DD0E278B4ECC00C7D269 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DD30278B4EEF00C7D269 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C43DD35278B4EF000C7D269 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DD38278B4EF000C7D269 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C43DD4D278B4EF000C7D269 /* Preview Assets.xcassets in Resources */,
+				4C43DD4A278B4EF000C7D269 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DD52278B4EF000C7D269 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DD5C278B4EF000C7D269 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4C43DCF3278B4ECC00C7D269 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C43DD1A278B4ECC00C7D269 /* PodestApp.swift in Sources */,
+				4C43DD1E278B4ECC00C7D269 /* Persistence.swift in Sources */,
+				4C43DD18278B4ECC00C7D269 /* Podest.xcdatamodeld in Sources */,
+				4C43DD1C278B4ECC00C7D269 /* ContentView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DCF9278B4ECC00C7D269 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C43DD1B278B4ECC00C7D269 /* PodestApp.swift in Sources */,
+				4C43DD1F278B4ECC00C7D269 /* Persistence.swift in Sources */,
+				4C43DD19278B4ECC00C7D269 /* Podest.xcdatamodeld in Sources */,
+				4C43DD1D278B4ECC00C7D269 /* ContentView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DD00278B4ECC00C7D269 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C43DD0B278B4ECC00C7D269 /* Tests_iOSLaunchTests.swift in Sources */,
+				4C43DD09278B4ECC00C7D269 /* Tests_iOS.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DD0C278B4ECC00C7D269 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C43DD17278B4ECC00C7D269 /* Tests_macOSLaunchTests.swift in Sources */,
+				4C43DD15278B4ECC00C7D269 /* Tests_macOS.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DD36278B4EF000C7D269 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C43DD44278B4EF000C7D269 /* NotificationController.swift in Sources */,
+				4C43DD42278B4EF000C7D269 /* ContentView.swift in Sources */,
+				4C43DD48278B4EF000C7D269 /* ComplicationController.swift in Sources */,
+				4C43DD40278B4EF000C7D269 /* PodestApp.swift in Sources */,
+				4C43DD46278B4EF000C7D269 /* NotificationView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DD50278B4EF000C7D269 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C43DD59278B4EF000C7D269 /* WatchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C43DD5A278B4EF000C7D269 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C43DD65278B4EF000C7D269 /* WatchUITestsLaunchTests.swift in Sources */,
+				4C43DD63278B4EF000C7D269 /* WatchUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4C43DD06278B4ECC00C7D269 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4C43DCF6278B4ECC00C7D269 /* Podest (iOS) */;
+			targetProxy = 4C43DD05278B4ECC00C7D269 /* PBXContainerItemProxy */;
+		};
+		4C43DD12278B4ECC00C7D269 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4C43DCFC278B4ECC00C7D269 /* Podest (macOS) */;
+			targetProxy = 4C43DD11278B4ECC00C7D269 /* PBXContainerItemProxy */;
+		};
+		4C43DD3D278B4EF000C7D269 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4C43DD39278B4EF000C7D269 /* Watch WatchKit Extension */;
+			targetProxy = 4C43DD3C278B4EF000C7D269 /* PBXContainerItemProxy */;
+		};
+		4C43DD56278B4EF000C7D269 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4C43DD39278B4EF000C7D269 /* Watch WatchKit Extension */;
+			targetProxy = 4C43DD55278B4EF000C7D269 /* PBXContainerItemProxy */;
+		};
+		4C43DD60278B4EF000C7D269 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4C43DD31278B4EEF00C7D269 /* Watch */;
+			targetProxy = 4C43DD5F278B4EF000C7D269 /* PBXContainerItemProxy */;
+		};
+		4C43DD67278B4EF000C7D269 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4C43DD31278B4EEF00C7D269 /* Watch */;
+			targetProxy = 4C43DD66278B4EF000C7D269 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		4C43DD22278B4ECC00C7D269 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		4C43DD23278B4ECC00C7D269 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		4C43DD25278B4ECC00C7D269 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest;
+				PRODUCT_NAME = Podest;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4C43DD26278B4ECC00C7D269 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest;
+				PRODUCT_NAME = Podest;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4C43DD28278B4ECC00C7D269 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest;
+				PRODUCT_NAME = Podest;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		4C43DD29278B4ECC00C7D269 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest;
+				PRODUCT_NAME = Podest;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		4C43DD2B278B4ECC00C7D269 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "ink.codes.Tests-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Podest (iOS)";
+			};
+			name = Debug;
+		};
+		4C43DD2C278B4ECC00C7D269 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "ink.codes.Tests-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Podest (iOS)";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4C43DD2E278B4ECC00C7D269 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "ink.codes.Tests-macOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Podest (macOS)";
+			};
+			name = Debug;
+		};
+		4C43DD2F278B4ECC00C7D269 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "ink.codes.Tests-macOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Podest (macOS)";
+			};
+			name = Release;
+		};
+		4C43DD6A278B4EF000C7D269 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Watch WatchKit Extension/Preview Content\"";
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Watch WatchKit Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Watch WatchKit Extension";
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = Watch_WatchKit_Extension.ComplicationController;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 8.3;
+			};
+			name = Debug;
+		};
+		4C43DD6B278B4EF000C7D269 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Watch WatchKit Extension/Preview Content\"";
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Watch WatchKit Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Watch WatchKit Extension";
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = Watch_WatchKit_Extension.ComplicationController;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 8.3;
+			};
+			name = Release;
+		};
+		4C43DD6E278B4EF000C7D269 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				GENERATE_INFOPLIST_FILE = YES;
+				IBSC_MODULE = Watch_WatchKit_Extension;
+				INFOPLIST_KEY_CFBundleDisplayName = Watch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = ink.codes.Podest;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 8.3;
+			};
+			name = Debug;
+		};
+		4C43DD6F278B4EF000C7D269 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				GENERATE_INFOPLIST_FILE = YES;
+				IBSC_MODULE = Watch_WatchKit_Extension;
+				INFOPLIST_KEY_CFBundleDisplayName = Watch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = ink.codes.Podest;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 8.3;
+			};
+			name = Release;
+		};
+		4C43DD72278B4EF000C7D269 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest.WatchTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Watch WatchKit Extension.appex/Watch WatchKit Extension";
+				WATCHOS_DEPLOYMENT_TARGET = 8.3;
+			};
+			name = Debug;
+		};
+		4C43DD73278B4EF000C7D269 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest.WatchTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Watch WatchKit Extension.appex/Watch WatchKit Extension";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 8.3;
+			};
+			name = Release;
+		};
+		4C43DD75278B4EF000C7D269 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest.WatchUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = Watch;
+				WATCHOS_DEPLOYMENT_TARGET = 8.3;
+			};
+			name = Debug;
+		};
+		4C43DD76278B4EF000C7D269 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest.WatchUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = Watch;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 8.3;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4C43DCEB278B4ECB00C7D269 /* Build configuration list for PBXProject "Podest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C43DD22278B4ECC00C7D269 /* Debug */,
+				4C43DD23278B4ECC00C7D269 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4C43DD24278B4ECC00C7D269 /* Build configuration list for PBXNativeTarget "Podest (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C43DD25278B4ECC00C7D269 /* Debug */,
+				4C43DD26278B4ECC00C7D269 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4C43DD27278B4ECC00C7D269 /* Build configuration list for PBXNativeTarget "Podest (macOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C43DD28278B4ECC00C7D269 /* Debug */,
+				4C43DD29278B4ECC00C7D269 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4C43DD2A278B4ECC00C7D269 /* Build configuration list for PBXNativeTarget "Tests iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C43DD2B278B4ECC00C7D269 /* Debug */,
+				4C43DD2C278B4ECC00C7D269 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4C43DD2D278B4ECC00C7D269 /* Build configuration list for PBXNativeTarget "Tests macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C43DD2E278B4ECC00C7D269 /* Debug */,
+				4C43DD2F278B4ECC00C7D269 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4C43DD69278B4EF000C7D269 /* Build configuration list for PBXNativeTarget "Watch WatchKit Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C43DD6A278B4EF000C7D269 /* Debug */,
+				4C43DD6B278B4EF000C7D269 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4C43DD6D278B4EF000C7D269 /* Build configuration list for PBXNativeTarget "Watch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C43DD6E278B4EF000C7D269 /* Debug */,
+				4C43DD6F278B4EF000C7D269 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4C43DD71278B4EF000C7D269 /* Build configuration list for PBXNativeTarget "WatchTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C43DD72278B4EF000C7D269 /* Debug */,
+				4C43DD73278B4EF000C7D269 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4C43DD74278B4EF000C7D269 /* Build configuration list for PBXNativeTarget "WatchUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C43DD75278B4EF000C7D269 /* Debug */,
+				4C43DD76278B4EF000C7D269 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		4C43DCED278B4ECB00C7D269 /* Podest.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				4C43DCEE278B4ECB00C7D269 /* Shared.xcdatamodel */,
+			);
+			currentVersion = 4C43DCEE278B4ECB00C7D269 /* Shared.xcdatamodel */;
+			path = Podest.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 4C43DCE8278B4ECB00C7D269 /* Project object */;
+}
