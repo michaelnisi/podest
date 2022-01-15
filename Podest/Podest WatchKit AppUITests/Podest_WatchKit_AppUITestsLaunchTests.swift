@@ -1,13 +1,13 @@
 //
-//  Tests_macOSLaunchTests.swift
-//  Tests macOS
+//  Podest_WatchKit_AppUITestsLaunchTests.swift
+//  Podest WatchKit AppUITests
 //
-//  Created by Michael Nisi on 09.01.22.
+//  Created by Michael Nisi on 15.01.22.
 //
 
 import XCTest
 
-class Tests_macOSLaunchTests: XCTestCase {
+class Podest_WatchKit_AppUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

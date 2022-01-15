@@ -1,15 +1,15 @@
 //
 //  ContentView.swift
-//  Watch WatchKit Extension
+//  Podest
 //
-//  Created by Michael Nisi on 09.01.22.
+//  Created by Michael Nisi on 15.01.22.
 //
 
 import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Text("Hello, World!")
+        Text("Hello, world!")
             .padding()
     }
 }

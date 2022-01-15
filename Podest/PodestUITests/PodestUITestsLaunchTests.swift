@@ -1,13 +1,13 @@
 //
-//  WatchUITestsLaunchTests.swift
-//  WatchUITests
+//  PodestUITestsLaunchTests.swift
+//  PodestUITests
 //
-//  Created by Michael Nisi on 09.01.22.
+//  Created by Michael Nisi on 15.01.22.
 //
 
 import XCTest
 
-class WatchUITestsLaunchTests: XCTestCase {
+class PodestUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

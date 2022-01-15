@@ -7,99 +7,92 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4C43DD09278B4ECC00C7D269 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD08278B4ECC00C7D269 /* Tests_iOS.swift */; };
-		4C43DD0B278B4ECC00C7D269 /* Tests_iOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD0A278B4ECC00C7D269 /* Tests_iOSLaunchTests.swift */; };
-		4C43DD15278B4ECC00C7D269 /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD14278B4ECC00C7D269 /* Tests_macOS.swift */; };
-		4C43DD17278B4ECC00C7D269 /* Tests_macOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD16278B4ECC00C7D269 /* Tests_macOSLaunchTests.swift */; };
-		4C43DD18278B4ECC00C7D269 /* Podest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DCED278B4ECB00C7D269 /* Podest.xcdatamodeld */; };
-		4C43DD19278B4ECC00C7D269 /* Podest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DCED278B4ECB00C7D269 /* Podest.xcdatamodeld */; };
-		4C43DD1A278B4ECC00C7D269 /* PodestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DCEF278B4ECB00C7D269 /* PodestApp.swift */; };
-		4C43DD1B278B4ECC00C7D269 /* PodestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DCEF278B4ECB00C7D269 /* PodestApp.swift */; };
-		4C43DD1C278B4ECC00C7D269 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DCF0278B4ECB00C7D269 /* ContentView.swift */; };
-		4C43DD1D278B4ECC00C7D269 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DCF0278B4ECB00C7D269 /* ContentView.swift */; };
-		4C43DD1E278B4ECC00C7D269 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DCF1278B4ECB00C7D269 /* Persistence.swift */; };
-		4C43DD1F278B4ECC00C7D269 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DCF1278B4ECB00C7D269 /* Persistence.swift */; };
-		4C43DD20278B4ECC00C7D269 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C43DCF2278B4ECC00C7D269 /* Assets.xcassets */; };
-		4C43DD21278B4ECC00C7D269 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C43DCF2278B4ECC00C7D269 /* Assets.xcassets */; };
-		4C43DD35278B4EF000C7D269 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C43DD34278B4EF000C7D269 /* Assets.xcassets */; };
-		4C43DD3B278B4EF000C7D269 /* Watch WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4C43DD3A278B4EF000C7D269 /* Watch WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		4C43DD40278B4EF000C7D269 /* PodestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD3F278B4EF000C7D269 /* PodestApp.swift */; };
-		4C43DD42278B4EF000C7D269 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD41278B4EF000C7D269 /* ContentView.swift */; };
-		4C43DD44278B4EF000C7D269 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD43278B4EF000C7D269 /* NotificationController.swift */; };
-		4C43DD46278B4EF000C7D269 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD45278B4EF000C7D269 /* NotificationView.swift */; };
-		4C43DD48278B4EF000C7D269 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD47278B4EF000C7D269 /* ComplicationController.swift */; };
-		4C43DD4A278B4EF000C7D269 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C43DD49278B4EF000C7D269 /* Assets.xcassets */; };
-		4C43DD4D278B4EF000C7D269 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C43DD4C278B4EF000C7D269 /* Preview Assets.xcassets */; };
-		4C43DD59278B4EF000C7D269 /* WatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD58278B4EF000C7D269 /* WatchTests.swift */; };
-		4C43DD63278B4EF000C7D269 /* WatchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD62278B4EF000C7D269 /* WatchUITests.swift */; };
-		4C43DD65278B4EF000C7D269 /* WatchUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C43DD64278B4EF000C7D269 /* WatchUITestsLaunchTests.swift */; };
-		4C43DD68278B4EF000C7D269 /* Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 4C43DD32278B4EEF00C7D269 /* Watch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4CA166DF27933A550007248A /* PodestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA166DE27933A550007248A /* PodestApp.swift */; };
+		4CA166E127933A550007248A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA166E027933A550007248A /* ContentView.swift */; };
+		4CA166E327933A560007248A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4CA166E227933A560007248A /* Assets.xcassets */; };
+		4CA166E627933A560007248A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4CA166E527933A560007248A /* Preview Assets.xcassets */; };
+		4CA166F027933A560007248A /* PodestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA166EF27933A560007248A /* PodestTests.swift */; };
+		4CA166FA27933A560007248A /* PodestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA166F927933A560007248A /* PodestUITests.swift */; };
+		4CA166FC27933A560007248A /* PodestUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA166FB27933A560007248A /* PodestUITestsLaunchTests.swift */; };
+		4CA1670027933A560007248A /* Podest WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 4CA166FF27933A560007248A /* Podest WatchKit App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4CA1670527933A560007248A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4CA1670427933A560007248A /* Assets.xcassets */; };
+		4CA1670B27933A560007248A /* Podest WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4CA1670A27933A560007248A /* Podest WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4CA1671027933A560007248A /* PodestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1670F27933A560007248A /* PodestApp.swift */; };
+		4CA1671227933A560007248A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1671127933A560007248A /* ContentView.swift */; };
+		4CA1671427933A560007248A /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1671327933A560007248A /* NotificationController.swift */; };
+		4CA1671627933A560007248A /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1671527933A560007248A /* NotificationView.swift */; };
+		4CA1671827933A560007248A /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1671727933A560007248A /* ComplicationController.swift */; };
+		4CA1671A27933A570007248A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4CA1671927933A570007248A /* Assets.xcassets */; };
+		4CA1671D27933A570007248A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4CA1671C27933A570007248A /* Preview Assets.xcassets */; };
+		4CA1672927933A570007248A /* Podest_WatchKit_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1672827933A570007248A /* Podest_WatchKit_AppTests.swift */; };
+		4CA1673327933A570007248A /* Podest_WatchKit_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1673227933A570007248A /* Podest_WatchKit_AppUITests.swift */; };
+		4CA1673527933A570007248A /* Podest_WatchKit_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1673427933A570007248A /* Podest_WatchKit_AppUITestsLaunchTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4C43DD05278B4ECC00C7D269 /* PBXContainerItemProxy */ = {
+		4CA166EC27933A560007248A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 4C43DCE8278B4ECB00C7D269 /* Project object */;
+			containerPortal = 4CA166D327933A550007248A /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 4C43DCF6278B4ECC00C7D269;
-			remoteInfo = "Podest (iOS)";
+			remoteGlobalIDString = 4CA166DA27933A550007248A;
+			remoteInfo = Podest;
 		};
-		4C43DD11278B4ECC00C7D269 /* PBXContainerItemProxy */ = {
+		4CA166F627933A560007248A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 4C43DCE8278B4ECB00C7D269 /* Project object */;
+			containerPortal = 4CA166D327933A550007248A /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 4C43DCFC278B4ECC00C7D269;
-			remoteInfo = "Podest (macOS)";
+			remoteGlobalIDString = 4CA166DA27933A550007248A;
+			remoteInfo = Podest;
 		};
-		4C43DD3C278B4EF000C7D269 /* PBXContainerItemProxy */ = {
+		4CA1670127933A560007248A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 4C43DCE8278B4ECB00C7D269 /* Project object */;
+			containerPortal = 4CA166D327933A550007248A /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 4C43DD39278B4EF000C7D269;
-			remoteInfo = "Watch WatchKit Extension";
+			remoteGlobalIDString = 4CA166FE27933A560007248A;
+			remoteInfo = "Podest WatchKit App";
 		};
-		4C43DD55278B4EF000C7D269 /* PBXContainerItemProxy */ = {
+		4CA1670C27933A560007248A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 4C43DCE8278B4ECB00C7D269 /* Project object */;
+			containerPortal = 4CA166D327933A550007248A /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 4C43DD39278B4EF000C7D269;
-			remoteInfo = "Watch WatchKit Extension";
+			remoteGlobalIDString = 4CA1670927933A560007248A;
+			remoteInfo = "Podest WatchKit Extension";
 		};
-		4C43DD5F278B4EF000C7D269 /* PBXContainerItemProxy */ = {
+		4CA1672527933A570007248A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 4C43DCE8278B4ECB00C7D269 /* Project object */;
+			containerPortal = 4CA166D327933A550007248A /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 4C43DD31278B4EEF00C7D269;
-			remoteInfo = Watch;
+			remoteGlobalIDString = 4CA1670927933A560007248A;
+			remoteInfo = "Podest WatchKit Extension";
 		};
-		4C43DD66278B4EF000C7D269 /* PBXContainerItemProxy */ = {
+		4CA1672F27933A570007248A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 4C43DCE8278B4ECB00C7D269 /* Project object */;
+			containerPortal = 4CA166D327933A550007248A /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 4C43DD31278B4EEF00C7D269;
-			remoteInfo = Watch;
+			remoteGlobalIDString = 4CA166FE27933A560007248A;
+			remoteInfo = "Podest WatchKit App";
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		4C43DD6C278B4EF000C7D269 /* Embed App Extensions */ = {
+		4CA1673B27933A570007248A /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				4C43DD3B278B4EF000C7D269 /* Watch WatchKit Extension.appex in Embed App Extensions */,
+				4CA1670B27933A560007248A /* Podest WatchKit Extension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C43DD70278B4EF000C7D269 /* Embed Watch Content */ = {
+		4CA1673F27933A570007248A /* Embed Watch Content */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				4C43DD68278B4EF000C7D269 /* Watch.app in Embed Watch Content */,
+				4CA1670027933A560007248A /* Podest WatchKit App.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -107,83 +100,72 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4C43DCEE278B4ECB00C7D269 /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
-		4C43DCEF278B4ECB00C7D269 /* PodestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodestApp.swift; sourceTree = "<group>"; };
-		4C43DCF0278B4ECB00C7D269 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		4C43DCF1278B4ECB00C7D269 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
-		4C43DCF2278B4ECC00C7D269 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		4C43DCF7278B4ECC00C7D269 /* Podest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Podest.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4C43DCFD278B4ECC00C7D269 /* Podest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Podest.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4C43DCFF278B4ECC00C7D269 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
-		4C43DD04278B4ECC00C7D269 /* Tests iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4C43DD08278B4ECC00C7D269 /* Tests_iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOS.swift; sourceTree = "<group>"; };
-		4C43DD0A278B4ECC00C7D269 /* Tests_iOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOSLaunchTests.swift; sourceTree = "<group>"; };
-		4C43DD10278B4ECC00C7D269 /* Tests macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4C43DD14278B4ECC00C7D269 /* Tests_macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOS.swift; sourceTree = "<group>"; };
-		4C43DD16278B4ECC00C7D269 /* Tests_macOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOSLaunchTests.swift; sourceTree = "<group>"; };
-		4C43DD32278B4EEF00C7D269 /* Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Watch.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4C43DD34278B4EF000C7D269 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		4C43DD3A278B4EF000C7D269 /* Watch WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Watch WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4C43DD3F278B4EF000C7D269 /* PodestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodestApp.swift; sourceTree = "<group>"; };
-		4C43DD41278B4EF000C7D269 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		4C43DD43278B4EF000C7D269 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
-		4C43DD45278B4EF000C7D269 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
-		4C43DD47278B4EF000C7D269 /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
-		4C43DD49278B4EF000C7D269 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		4C43DD4C278B4EF000C7D269 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		4C43DD4E278B4EF000C7D269 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4C43DD4F278B4EF000C7D269 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
-		4C43DD54278B4EF000C7D269 /* WatchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WatchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4C43DD58278B4EF000C7D269 /* WatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchTests.swift; sourceTree = "<group>"; };
-		4C43DD5E278B4EF000C7D269 /* WatchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WatchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4C43DD62278B4EF000C7D269 /* WatchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchUITests.swift; sourceTree = "<group>"; };
-		4C43DD64278B4EF000C7D269 /* WatchUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		4CA166DB27933A550007248A /* Podest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Podest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CA166DE27933A550007248A /* PodestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodestApp.swift; sourceTree = "<group>"; };
+		4CA166E027933A550007248A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		4CA166E227933A560007248A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4CA166E527933A560007248A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		4CA166EB27933A560007248A /* PodestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PodestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CA166EF27933A560007248A /* PodestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodestTests.swift; sourceTree = "<group>"; };
+		4CA166F527933A560007248A /* PodestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PodestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CA166F927933A560007248A /* PodestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodestUITests.swift; sourceTree = "<group>"; };
+		4CA166FB27933A560007248A /* PodestUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodestUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		4CA166FF27933A560007248A /* Podest WatchKit App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Podest WatchKit App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CA1670427933A560007248A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4CA1670A27933A560007248A /* Podest WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Podest WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CA1670F27933A560007248A /* PodestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodestApp.swift; sourceTree = "<group>"; };
+		4CA1671127933A560007248A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		4CA1671327933A560007248A /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		4CA1671527933A560007248A /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
+		4CA1671727933A560007248A /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
+		4CA1671927933A570007248A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4CA1671C27933A570007248A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		4CA1671E27933A570007248A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4CA1671F27933A570007248A /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
+		4CA1672427933A570007248A /* Podest WatchKit AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Podest WatchKit AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CA1672827933A570007248A /* Podest_WatchKit_AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Podest_WatchKit_AppTests.swift; sourceTree = "<group>"; };
+		4CA1672E27933A570007248A /* Podest WatchKit AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Podest WatchKit AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CA1673227933A570007248A /* Podest_WatchKit_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Podest_WatchKit_AppUITests.swift; sourceTree = "<group>"; };
+		4CA1673427933A570007248A /* Podest_WatchKit_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Podest_WatchKit_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		4C43DCF4278B4ECC00C7D269 /* Frameworks */ = {
+		4CA166D827933A550007248A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C43DCFA278B4ECC00C7D269 /* Frameworks */ = {
+		4CA166E827933A560007248A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C43DD01278B4ECC00C7D269 /* Frameworks */ = {
+		4CA166F227933A560007248A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C43DD0D278B4ECC00C7D269 /* Frameworks */ = {
+		4CA1670727933A560007248A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C43DD37278B4EF000C7D269 /* Frameworks */ = {
+		4CA1672127933A570007248A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C43DD51278B4EF000C7D269 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4C43DD5B278B4EF000C7D269 /* Frameworks */ = {
+		4CA1672B27933A570007248A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -193,309 +175,285 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4C43DCE7278B4ECB00C7D269 = {
+		4CA166D227933A550007248A = {
 			isa = PBXGroup;
 			children = (
-				4C43DCEC278B4ECB00C7D269 /* Shared */,
-				4C43DCFE278B4ECC00C7D269 /* macOS */,
-				4C43DD07278B4ECC00C7D269 /* Tests iOS */,
-				4C43DD13278B4ECC00C7D269 /* Tests macOS */,
-				4C43DD33278B4EEF00C7D269 /* Watch */,
-				4C43DD3E278B4EF000C7D269 /* Watch WatchKit Extension */,
-				4C43DD57278B4EF000C7D269 /* WatchTests */,
-				4C43DD61278B4EF000C7D269 /* WatchUITests */,
-				4C43DCF8278B4ECC00C7D269 /* Products */,
+				4CA166DD27933A550007248A /* Podest */,
+				4CA166EE27933A560007248A /* PodestTests */,
+				4CA166F827933A560007248A /* PodestUITests */,
+				4CA1670327933A560007248A /* Podest WatchKit App */,
+				4CA1670E27933A560007248A /* Podest WatchKit Extension */,
+				4CA1672727933A570007248A /* Podest WatchKit AppTests */,
+				4CA1673127933A570007248A /* Podest WatchKit AppUITests */,
+				4CA166DC27933A550007248A /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		4C43DCEC278B4ECB00C7D269 /* Shared */ = {
+		4CA166DC27933A550007248A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4C43DCEF278B4ECB00C7D269 /* PodestApp.swift */,
-				4C43DCF0278B4ECB00C7D269 /* ContentView.swift */,
-				4C43DCF1278B4ECB00C7D269 /* Persistence.swift */,
-				4C43DCF2278B4ECC00C7D269 /* Assets.xcassets */,
-				4C43DCED278B4ECB00C7D269 /* Podest.xcdatamodeld */,
-			);
-			path = Shared;
-			sourceTree = "<group>";
-		};
-		4C43DCF8278B4ECC00C7D269 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				4C43DCF7278B4ECC00C7D269 /* Podest.app */,
-				4C43DCFD278B4ECC00C7D269 /* Podest.app */,
-				4C43DD04278B4ECC00C7D269 /* Tests iOS.xctest */,
-				4C43DD10278B4ECC00C7D269 /* Tests macOS.xctest */,
-				4C43DD32278B4EEF00C7D269 /* Watch.app */,
-				4C43DD3A278B4EF000C7D269 /* Watch WatchKit Extension.appex */,
-				4C43DD54278B4EF000C7D269 /* WatchTests.xctest */,
-				4C43DD5E278B4EF000C7D269 /* WatchUITests.xctest */,
+				4CA166DB27933A550007248A /* Podest.app */,
+				4CA166EB27933A560007248A /* PodestTests.xctest */,
+				4CA166F527933A560007248A /* PodestUITests.xctest */,
+				4CA166FF27933A560007248A /* Podest WatchKit App.app */,
+				4CA1670A27933A560007248A /* Podest WatchKit Extension.appex */,
+				4CA1672427933A570007248A /* Podest WatchKit AppTests.xctest */,
+				4CA1672E27933A570007248A /* Podest WatchKit AppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4C43DCFE278B4ECC00C7D269 /* macOS */ = {
+		4CA166DD27933A550007248A /* Podest */ = {
 			isa = PBXGroup;
 			children = (
-				4C43DCFF278B4ECC00C7D269 /* macOS.entitlements */,
+				4CA166DE27933A550007248A /* PodestApp.swift */,
+				4CA166E027933A550007248A /* ContentView.swift */,
+				4CA166E227933A560007248A /* Assets.xcassets */,
+				4CA166E427933A560007248A /* Preview Content */,
 			);
-			path = macOS;
+			path = Podest;
 			sourceTree = "<group>";
 		};
-		4C43DD07278B4ECC00C7D269 /* Tests iOS */ = {
+		4CA166E427933A560007248A /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
-				4C43DD08278B4ECC00C7D269 /* Tests_iOS.swift */,
-				4C43DD0A278B4ECC00C7D269 /* Tests_iOSLaunchTests.swift */,
-			);
-			path = "Tests iOS";
-			sourceTree = "<group>";
-		};
-		4C43DD13278B4ECC00C7D269 /* Tests macOS */ = {
-			isa = PBXGroup;
-			children = (
-				4C43DD14278B4ECC00C7D269 /* Tests_macOS.swift */,
-				4C43DD16278B4ECC00C7D269 /* Tests_macOSLaunchTests.swift */,
-			);
-			path = "Tests macOS";
-			sourceTree = "<group>";
-		};
-		4C43DD33278B4EEF00C7D269 /* Watch */ = {
-			isa = PBXGroup;
-			children = (
-				4C43DD34278B4EF000C7D269 /* Assets.xcassets */,
-			);
-			path = Watch;
-			sourceTree = "<group>";
-		};
-		4C43DD3E278B4EF000C7D269 /* Watch WatchKit Extension */ = {
-			isa = PBXGroup;
-			children = (
-				4C43DD3F278B4EF000C7D269 /* PodestApp.swift */,
-				4C43DD41278B4EF000C7D269 /* ContentView.swift */,
-				4C43DD43278B4EF000C7D269 /* NotificationController.swift */,
-				4C43DD45278B4EF000C7D269 /* NotificationView.swift */,
-				4C43DD47278B4EF000C7D269 /* ComplicationController.swift */,
-				4C43DD49278B4EF000C7D269 /* Assets.xcassets */,
-				4C43DD4E278B4EF000C7D269 /* Info.plist */,
-				4C43DD4F278B4EF000C7D269 /* PushNotificationPayload.apns */,
-				4C43DD4B278B4EF000C7D269 /* Preview Content */,
-			);
-			path = "Watch WatchKit Extension";
-			sourceTree = "<group>";
-		};
-		4C43DD4B278B4EF000C7D269 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				4C43DD4C278B4EF000C7D269 /* Preview Assets.xcassets */,
+				4CA166E527933A560007248A /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		4C43DD57278B4EF000C7D269 /* WatchTests */ = {
+		4CA166EE27933A560007248A /* PodestTests */ = {
 			isa = PBXGroup;
 			children = (
-				4C43DD58278B4EF000C7D269 /* WatchTests.swift */,
+				4CA166EF27933A560007248A /* PodestTests.swift */,
 			);
-			path = WatchTests;
+			path = PodestTests;
 			sourceTree = "<group>";
 		};
-		4C43DD61278B4EF000C7D269 /* WatchUITests */ = {
+		4CA166F827933A560007248A /* PodestUITests */ = {
 			isa = PBXGroup;
 			children = (
-				4C43DD62278B4EF000C7D269 /* WatchUITests.swift */,
-				4C43DD64278B4EF000C7D269 /* WatchUITestsLaunchTests.swift */,
+				4CA166F927933A560007248A /* PodestUITests.swift */,
+				4CA166FB27933A560007248A /* PodestUITestsLaunchTests.swift */,
 			);
-			path = WatchUITests;
+			path = PodestUITests;
+			sourceTree = "<group>";
+		};
+		4CA1670327933A560007248A /* Podest WatchKit App */ = {
+			isa = PBXGroup;
+			children = (
+				4CA1670427933A560007248A /* Assets.xcassets */,
+			);
+			path = "Podest WatchKit App";
+			sourceTree = "<group>";
+		};
+		4CA1670E27933A560007248A /* Podest WatchKit Extension */ = {
+			isa = PBXGroup;
+			children = (
+				4CA1670F27933A560007248A /* PodestApp.swift */,
+				4CA1671127933A560007248A /* ContentView.swift */,
+				4CA1671327933A560007248A /* NotificationController.swift */,
+				4CA1671527933A560007248A /* NotificationView.swift */,
+				4CA1671727933A560007248A /* ComplicationController.swift */,
+				4CA1671927933A570007248A /* Assets.xcassets */,
+				4CA1671E27933A570007248A /* Info.plist */,
+				4CA1671F27933A570007248A /* PushNotificationPayload.apns */,
+				4CA1671B27933A570007248A /* Preview Content */,
+			);
+			path = "Podest WatchKit Extension";
+			sourceTree = "<group>";
+		};
+		4CA1671B27933A570007248A /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				4CA1671C27933A570007248A /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		4CA1672727933A570007248A /* Podest WatchKit AppTests */ = {
+			isa = PBXGroup;
+			children = (
+				4CA1672827933A570007248A /* Podest_WatchKit_AppTests.swift */,
+			);
+			path = "Podest WatchKit AppTests";
+			sourceTree = "<group>";
+		};
+		4CA1673127933A570007248A /* Podest WatchKit AppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				4CA1673227933A570007248A /* Podest_WatchKit_AppUITests.swift */,
+				4CA1673427933A570007248A /* Podest_WatchKit_AppUITestsLaunchTests.swift */,
+			);
+			path = "Podest WatchKit AppUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4C43DCF6278B4ECC00C7D269 /* Podest (iOS) */ = {
+		4CA166DA27933A550007248A /* Podest */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4C43DD24278B4ECC00C7D269 /* Build configuration list for PBXNativeTarget "Podest (iOS)" */;
+			buildConfigurationList = 4CA1674027933A570007248A /* Build configuration list for PBXNativeTarget "Podest" */;
 			buildPhases = (
-				4C43DCF3278B4ECC00C7D269 /* Sources */,
-				4C43DCF4278B4ECC00C7D269 /* Frameworks */,
-				4C43DCF5278B4ECC00C7D269 /* Resources */,
-				4C43DD70278B4EF000C7D269 /* Embed Watch Content */,
+				4CA166D727933A550007248A /* Sources */,
+				4CA166D827933A550007248A /* Frameworks */,
+				4CA166D927933A550007248A /* Resources */,
+				4CA1673F27933A570007248A /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				4C43DD67278B4EF000C7D269 /* PBXTargetDependency */,
+				4CA1670227933A560007248A /* PBXTargetDependency */,
 			);
-			name = "Podest (iOS)";
-			productName = "Podest (iOS)";
-			productReference = 4C43DCF7278B4ECC00C7D269 /* Podest.app */;
+			name = Podest;
+			productName = Podest;
+			productReference = 4CA166DB27933A550007248A /* Podest.app */;
 			productType = "com.apple.product-type.application";
 		};
-		4C43DCFC278B4ECC00C7D269 /* Podest (macOS) */ = {
+		4CA166EA27933A560007248A /* PodestTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4C43DD27278B4ECC00C7D269 /* Build configuration list for PBXNativeTarget "Podest (macOS)" */;
+			buildConfigurationList = 4CA1674327933A570007248A /* Build configuration list for PBXNativeTarget "PodestTests" */;
 			buildPhases = (
-				4C43DCF9278B4ECC00C7D269 /* Sources */,
-				4C43DCFA278B4ECC00C7D269 /* Frameworks */,
-				4C43DCFB278B4ECC00C7D269 /* Resources */,
+				4CA166E727933A560007248A /* Sources */,
+				4CA166E827933A560007248A /* Frameworks */,
+				4CA166E927933A560007248A /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				4CA166ED27933A560007248A /* PBXTargetDependency */,
 			);
-			name = "Podest (macOS)";
-			productName = "Podest (macOS)";
-			productReference = 4C43DCFD278B4ECC00C7D269 /* Podest.app */;
-			productType = "com.apple.product-type.application";
-		};
-		4C43DD03278B4ECC00C7D269 /* Tests iOS */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4C43DD2A278B4ECC00C7D269 /* Build configuration list for PBXNativeTarget "Tests iOS" */;
-			buildPhases = (
-				4C43DD00278B4ECC00C7D269 /* Sources */,
-				4C43DD01278B4ECC00C7D269 /* Frameworks */,
-				4C43DD02278B4ECC00C7D269 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4C43DD06278B4ECC00C7D269 /* PBXTargetDependency */,
-			);
-			name = "Tests iOS";
-			productName = "Tests iOS";
-			productReference = 4C43DD04278B4ECC00C7D269 /* Tests iOS.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
-		4C43DD0F278B4ECC00C7D269 /* Tests macOS */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4C43DD2D278B4ECC00C7D269 /* Build configuration list for PBXNativeTarget "Tests macOS" */;
-			buildPhases = (
-				4C43DD0C278B4ECC00C7D269 /* Sources */,
-				4C43DD0D278B4ECC00C7D269 /* Frameworks */,
-				4C43DD0E278B4ECC00C7D269 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4C43DD12278B4ECC00C7D269 /* PBXTargetDependency */,
-			);
-			name = "Tests macOS";
-			productName = "Tests macOS";
-			productReference = 4C43DD10278B4ECC00C7D269 /* Tests macOS.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
-		4C43DD31278B4EEF00C7D269 /* Watch */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4C43DD6D278B4EF000C7D269 /* Build configuration list for PBXNativeTarget "Watch" */;
-			buildPhases = (
-				4C43DD30278B4EEF00C7D269 /* Resources */,
-				4C43DD6C278B4EF000C7D269 /* Embed App Extensions */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4C43DD3D278B4EF000C7D269 /* PBXTargetDependency */,
-			);
-			name = Watch;
-			productName = Watch;
-			productReference = 4C43DD32278B4EEF00C7D269 /* Watch.app */;
-			productType = "com.apple.product-type.application.watchapp2";
-		};
-		4C43DD39278B4EF000C7D269 /* Watch WatchKit Extension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4C43DD69278B4EF000C7D269 /* Build configuration list for PBXNativeTarget "Watch WatchKit Extension" */;
-			buildPhases = (
-				4C43DD36278B4EF000C7D269 /* Sources */,
-				4C43DD37278B4EF000C7D269 /* Frameworks */,
-				4C43DD38278B4EF000C7D269 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Watch WatchKit Extension";
-			productName = "Watch WatchKit Extension";
-			productReference = 4C43DD3A278B4EF000C7D269 /* Watch WatchKit Extension.appex */;
-			productType = "com.apple.product-type.watchkit2-extension";
-		};
-		4C43DD53278B4EF000C7D269 /* WatchTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4C43DD71278B4EF000C7D269 /* Build configuration list for PBXNativeTarget "WatchTests" */;
-			buildPhases = (
-				4C43DD50278B4EF000C7D269 /* Sources */,
-				4C43DD51278B4EF000C7D269 /* Frameworks */,
-				4C43DD52278B4EF000C7D269 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4C43DD56278B4EF000C7D269 /* PBXTargetDependency */,
-			);
-			name = WatchTests;
-			productName = WatchTests;
-			productReference = 4C43DD54278B4EF000C7D269 /* WatchTests.xctest */;
+			name = PodestTests;
+			productName = PodestTests;
+			productReference = 4CA166EB27933A560007248A /* PodestTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		4C43DD5D278B4EF000C7D269 /* WatchUITests */ = {
+		4CA166F427933A560007248A /* PodestUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4C43DD74278B4EF000C7D269 /* Build configuration list for PBXNativeTarget "WatchUITests" */;
+			buildConfigurationList = 4CA1674627933A570007248A /* Build configuration list for PBXNativeTarget "PodestUITests" */;
 			buildPhases = (
-				4C43DD5A278B4EF000C7D269 /* Sources */,
-				4C43DD5B278B4EF000C7D269 /* Frameworks */,
-				4C43DD5C278B4EF000C7D269 /* Resources */,
+				4CA166F127933A560007248A /* Sources */,
+				4CA166F227933A560007248A /* Frameworks */,
+				4CA166F327933A560007248A /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				4C43DD60278B4EF000C7D269 /* PBXTargetDependency */,
+				4CA166F727933A560007248A /* PBXTargetDependency */,
 			);
-			name = WatchUITests;
-			productName = WatchUITests;
-			productReference = 4C43DD5E278B4EF000C7D269 /* WatchUITests.xctest */;
+			name = PodestUITests;
+			productName = PodestUITests;
+			productReference = 4CA166F527933A560007248A /* PodestUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		4CA166FE27933A560007248A /* Podest WatchKit App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4CA1673C27933A570007248A /* Build configuration list for PBXNativeTarget "Podest WatchKit App" */;
+			buildPhases = (
+				4CA166FD27933A560007248A /* Resources */,
+				4CA1673B27933A570007248A /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4CA1670D27933A560007248A /* PBXTargetDependency */,
+			);
+			name = "Podest WatchKit App";
+			productName = "Podest WatchKit App";
+			productReference = 4CA166FF27933A560007248A /* Podest WatchKit App.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		4CA1670927933A560007248A /* Podest WatchKit Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4CA1673827933A570007248A /* Build configuration list for PBXNativeTarget "Podest WatchKit Extension" */;
+			buildPhases = (
+				4CA1670627933A560007248A /* Sources */,
+				4CA1670727933A560007248A /* Frameworks */,
+				4CA1670827933A560007248A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Podest WatchKit Extension";
+			productName = "Podest WatchKit Extension";
+			productReference = 4CA1670A27933A560007248A /* Podest WatchKit Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
+		};
+		4CA1672327933A570007248A /* Podest WatchKit AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4CA1674927933A570007248A /* Build configuration list for PBXNativeTarget "Podest WatchKit AppTests" */;
+			buildPhases = (
+				4CA1672027933A570007248A /* Sources */,
+				4CA1672127933A570007248A /* Frameworks */,
+				4CA1672227933A570007248A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4CA1672627933A570007248A /* PBXTargetDependency */,
+			);
+			name = "Podest WatchKit AppTests";
+			productName = "Podest WatchKit AppTests";
+			productReference = 4CA1672427933A570007248A /* Podest WatchKit AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		4CA1672D27933A570007248A /* Podest WatchKit AppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4CA1674C27933A570007248A /* Build configuration list for PBXNativeTarget "Podest WatchKit AppUITests" */;
+			buildPhases = (
+				4CA1672A27933A570007248A /* Sources */,
+				4CA1672B27933A570007248A /* Frameworks */,
+				4CA1672C27933A570007248A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4CA1673027933A570007248A /* PBXTargetDependency */,
+			);
+			name = "Podest WatchKit AppUITests";
+			productName = "Podest WatchKit AppUITests";
+			productReference = 4CA1672E27933A570007248A /* Podest WatchKit AppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		4C43DCE8278B4ECB00C7D269 /* Project object */ = {
+		4CA166D327933A550007248A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1320;
 				LastUpgradeCheck = 1320;
 				TargetAttributes = {
-					4C43DCF6278B4ECC00C7D269 = {
+					4CA166DA27933A550007248A = {
 						CreatedOnToolsVersion = 13.2.1;
 					};
-					4C43DCFC278B4ECC00C7D269 = {
+					4CA166EA27933A560007248A = {
+						CreatedOnToolsVersion = 13.2.1;
+						TestTargetID = 4CA166DA27933A550007248A;
+					};
+					4CA166F427933A560007248A = {
+						CreatedOnToolsVersion = 13.2.1;
+						TestTargetID = 4CA166DA27933A550007248A;
+					};
+					4CA166FE27933A560007248A = {
 						CreatedOnToolsVersion = 13.2.1;
 					};
-					4C43DD03278B4ECC00C7D269 = {
-						CreatedOnToolsVersion = 13.2.1;
-						TestTargetID = 4C43DCF6278B4ECC00C7D269;
-					};
-					4C43DD0F278B4ECC00C7D269 = {
-						CreatedOnToolsVersion = 13.2.1;
-						TestTargetID = 4C43DCFC278B4ECC00C7D269;
-					};
-					4C43DD31278B4EEF00C7D269 = {
+					4CA1670927933A560007248A = {
 						CreatedOnToolsVersion = 13.2.1;
 					};
-					4C43DD39278B4EF000C7D269 = {
+					4CA1672327933A570007248A = {
 						CreatedOnToolsVersion = 13.2.1;
+						TestTargetID = 4CA1670927933A560007248A;
 					};
-					4C43DD53278B4EF000C7D269 = {
+					4CA1672D27933A570007248A = {
 						CreatedOnToolsVersion = 13.2.1;
-						TestTargetID = 4C43DD39278B4EF000C7D269;
-					};
-					4C43DD5D278B4EF000C7D269 = {
-						CreatedOnToolsVersion = 13.2.1;
-						TestTargetID = 4C43DD31278B4EEF00C7D269;
+						TestTargetID = 4CA166FE27933A560007248A;
 					};
 				};
 			};
-			buildConfigurationList = 4C43DCEB278B4ECB00C7D269 /* Build configuration list for PBXProject "Podest" */;
+			buildConfigurationList = 4CA166D627933A550007248A /* Build configuration list for PBXProject "Podest" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -503,79 +461,71 @@
 				en,
 				Base,
 			);
-			mainGroup = 4C43DCE7278B4ECB00C7D269;
-			productRefGroup = 4C43DCF8278B4ECC00C7D269 /* Products */;
+			mainGroup = 4CA166D227933A550007248A;
+			productRefGroup = 4CA166DC27933A550007248A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4C43DCF6278B4ECC00C7D269 /* Podest (iOS) */,
-				4C43DCFC278B4ECC00C7D269 /* Podest (macOS) */,
-				4C43DD03278B4ECC00C7D269 /* Tests iOS */,
-				4C43DD0F278B4ECC00C7D269 /* Tests macOS */,
-				4C43DD31278B4EEF00C7D269 /* Watch */,
-				4C43DD39278B4EF000C7D269 /* Watch WatchKit Extension */,
-				4C43DD53278B4EF000C7D269 /* WatchTests */,
-				4C43DD5D278B4EF000C7D269 /* WatchUITests */,
+				4CA166DA27933A550007248A /* Podest */,
+				4CA166EA27933A560007248A /* PodestTests */,
+				4CA166F427933A560007248A /* PodestUITests */,
+				4CA166FE27933A560007248A /* Podest WatchKit App */,
+				4CA1670927933A560007248A /* Podest WatchKit Extension */,
+				4CA1672327933A570007248A /* Podest WatchKit AppTests */,
+				4CA1672D27933A570007248A /* Podest WatchKit AppUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		4C43DCF5278B4ECC00C7D269 /* Resources */ = {
+		4CA166D927933A550007248A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C43DD20278B4ECC00C7D269 /* Assets.xcassets in Resources */,
+				4CA166E627933A560007248A /* Preview Assets.xcassets in Resources */,
+				4CA166E327933A560007248A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C43DCFB278B4ECC00C7D269 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4C43DD21278B4ECC00C7D269 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4C43DD02278B4ECC00C7D269 /* Resources */ = {
+		4CA166E927933A560007248A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C43DD0E278B4ECC00C7D269 /* Resources */ = {
+		4CA166F327933A560007248A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C43DD30278B4EEF00C7D269 /* Resources */ = {
+		4CA166FD27933A560007248A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C43DD35278B4EF000C7D269 /* Assets.xcassets in Resources */,
+				4CA1670527933A560007248A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C43DD38278B4EF000C7D269 /* Resources */ = {
+		4CA1670827933A560007248A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C43DD4D278B4EF000C7D269 /* Preview Assets.xcassets in Resources */,
-				4C43DD4A278B4EF000C7D269 /* Assets.xcassets in Resources */,
+				4CA1671D27933A570007248A /* Preview Assets.xcassets in Resources */,
+				4CA1671A27933A570007248A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C43DD52278B4EF000C7D269 /* Resources */ = {
+		4CA1672227933A570007248A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C43DD5C278B4EF000C7D269 /* Resources */ = {
+		4CA1672C27933A570007248A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -585,112 +535,98 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		4C43DCF3278B4ECC00C7D269 /* Sources */ = {
+		4CA166D727933A550007248A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C43DD1A278B4ECC00C7D269 /* PodestApp.swift in Sources */,
-				4C43DD1E278B4ECC00C7D269 /* Persistence.swift in Sources */,
-				4C43DD18278B4ECC00C7D269 /* Podest.xcdatamodeld in Sources */,
-				4C43DD1C278B4ECC00C7D269 /* ContentView.swift in Sources */,
+				4CA166E127933A550007248A /* ContentView.swift in Sources */,
+				4CA166DF27933A550007248A /* PodestApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C43DCF9278B4ECC00C7D269 /* Sources */ = {
+		4CA166E727933A560007248A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C43DD1B278B4ECC00C7D269 /* PodestApp.swift in Sources */,
-				4C43DD1F278B4ECC00C7D269 /* Persistence.swift in Sources */,
-				4C43DD19278B4ECC00C7D269 /* Podest.xcdatamodeld in Sources */,
-				4C43DD1D278B4ECC00C7D269 /* ContentView.swift in Sources */,
+				4CA166F027933A560007248A /* PodestTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C43DD00278B4ECC00C7D269 /* Sources */ = {
+		4CA166F127933A560007248A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C43DD0B278B4ECC00C7D269 /* Tests_iOSLaunchTests.swift in Sources */,
-				4C43DD09278B4ECC00C7D269 /* Tests_iOS.swift in Sources */,
+				4CA166FA27933A560007248A /* PodestUITests.swift in Sources */,
+				4CA166FC27933A560007248A /* PodestUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C43DD0C278B4ECC00C7D269 /* Sources */ = {
+		4CA1670627933A560007248A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C43DD17278B4ECC00C7D269 /* Tests_macOSLaunchTests.swift in Sources */,
-				4C43DD15278B4ECC00C7D269 /* Tests_macOS.swift in Sources */,
+				4CA1671427933A560007248A /* NotificationController.swift in Sources */,
+				4CA1671227933A560007248A /* ContentView.swift in Sources */,
+				4CA1671827933A560007248A /* ComplicationController.swift in Sources */,
+				4CA1671027933A560007248A /* PodestApp.swift in Sources */,
+				4CA1671627933A560007248A /* NotificationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C43DD36278B4EF000C7D269 /* Sources */ = {
+		4CA1672027933A570007248A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C43DD44278B4EF000C7D269 /* NotificationController.swift in Sources */,
-				4C43DD42278B4EF000C7D269 /* ContentView.swift in Sources */,
-				4C43DD48278B4EF000C7D269 /* ComplicationController.swift in Sources */,
-				4C43DD40278B4EF000C7D269 /* PodestApp.swift in Sources */,
-				4C43DD46278B4EF000C7D269 /* NotificationView.swift in Sources */,
+				4CA1672927933A570007248A /* Podest_WatchKit_AppTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C43DD50278B4EF000C7D269 /* Sources */ = {
+		4CA1672A27933A570007248A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C43DD59278B4EF000C7D269 /* WatchTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4C43DD5A278B4EF000C7D269 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4C43DD65278B4EF000C7D269 /* WatchUITestsLaunchTests.swift in Sources */,
-				4C43DD63278B4EF000C7D269 /* WatchUITests.swift in Sources */,
+				4CA1673527933A570007248A /* Podest_WatchKit_AppUITestsLaunchTests.swift in Sources */,
+				4CA1673327933A570007248A /* Podest_WatchKit_AppUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		4C43DD06278B4ECC00C7D269 /* PBXTargetDependency */ = {
+		4CA166ED27933A560007248A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4C43DCF6278B4ECC00C7D269 /* Podest (iOS) */;
-			targetProxy = 4C43DD05278B4ECC00C7D269 /* PBXContainerItemProxy */;
+			target = 4CA166DA27933A550007248A /* Podest */;
+			targetProxy = 4CA166EC27933A560007248A /* PBXContainerItemProxy */;
 		};
-		4C43DD12278B4ECC00C7D269 /* PBXTargetDependency */ = {
+		4CA166F727933A560007248A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4C43DCFC278B4ECC00C7D269 /* Podest (macOS) */;
-			targetProxy = 4C43DD11278B4ECC00C7D269 /* PBXContainerItemProxy */;
+			target = 4CA166DA27933A550007248A /* Podest */;
+			targetProxy = 4CA166F627933A560007248A /* PBXContainerItemProxy */;
 		};
-		4C43DD3D278B4EF000C7D269 /* PBXTargetDependency */ = {
+		4CA1670227933A560007248A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4C43DD39278B4EF000C7D269 /* Watch WatchKit Extension */;
-			targetProxy = 4C43DD3C278B4EF000C7D269 /* PBXContainerItemProxy */;
+			target = 4CA166FE27933A560007248A /* Podest WatchKit App */;
+			targetProxy = 4CA1670127933A560007248A /* PBXContainerItemProxy */;
 		};
-		4C43DD56278B4EF000C7D269 /* PBXTargetDependency */ = {
+		4CA1670D27933A560007248A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4C43DD39278B4EF000C7D269 /* Watch WatchKit Extension */;
-			targetProxy = 4C43DD55278B4EF000C7D269 /* PBXContainerItemProxy */;
+			target = 4CA1670927933A560007248A /* Podest WatchKit Extension */;
+			targetProxy = 4CA1670C27933A560007248A /* PBXContainerItemProxy */;
 		};
-		4C43DD60278B4EF000C7D269 /* PBXTargetDependency */ = {
+		4CA1672627933A570007248A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4C43DD31278B4EEF00C7D269 /* Watch */;
-			targetProxy = 4C43DD5F278B4EF000C7D269 /* PBXContainerItemProxy */;
+			target = 4CA1670927933A560007248A /* Podest WatchKit Extension */;
+			targetProxy = 4CA1672527933A570007248A /* PBXContainerItemProxy */;
 		};
-		4C43DD67278B4EF000C7D269 /* PBXTargetDependency */ = {
+		4CA1673027933A570007248A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4C43DD31278B4EEF00C7D269 /* Watch */;
-			targetProxy = 4C43DD66278B4EF000C7D269 /* PBXContainerItemProxy */;
+			target = 4CA166FE27933A560007248A /* Podest WatchKit App */;
+			targetProxy = 4CA1672F27933A570007248A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		4C43DD22278B4ECC00C7D269 /* Debug */ = {
+		4CA1673627933A570007248A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -749,7 +685,7 @@
 			};
 			name = Debug;
 		};
-		4C43DD23278B4ECC00C7D269 /* Release */ = {
+		4CA1673727933A570007248A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -801,215 +737,19 @@
 			};
 			name = Release;
 		};
-		4C43DD25278B4ECC00C7D269 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X23V32HT8X;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest;
-				PRODUCT_NAME = Podest;
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		4C43DD26278B4ECC00C7D269 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X23V32HT8X;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest;
-				PRODUCT_NAME = Podest;
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		4C43DD28278B4ECC00C7D269 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X23V32HT8X;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest;
-				PRODUCT_NAME = Podest;
-				SDKROOT = macosx;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		4C43DD29278B4ECC00C7D269 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X23V32HT8X;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest;
-				PRODUCT_NAME = Podest;
-				SDKROOT = macosx;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		4C43DD2B278B4ECC00C7D269 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X23V32HT8X;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "ink.codes.Tests-iOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "Podest (iOS)";
-			};
-			name = Debug;
-		};
-		4C43DD2C278B4ECC00C7D269 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X23V32HT8X;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "ink.codes.Tests-iOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "Podest (iOS)";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		4C43DD2E278B4ECC00C7D269 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X23V32HT8X;
-				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "ink.codes.Tests-macOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = "Podest (macOS)";
-			};
-			name = Debug;
-		};
-		4C43DD2F278B4ECC00C7D269 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X23V32HT8X;
-				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "ink.codes.Tests-macOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = "Podest (macOS)";
-			};
-			name = Release;
-		};
-		4C43DD6A278B4EF000C7D269 /* Debug */ = {
+		4CA1673927933A570007248A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Watch WatchKit Extension/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Podest WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Watch WatchKit Extension/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Watch WatchKit Extension";
-				INFOPLIST_KEY_CLKComplicationPrincipalClass = Watch_WatchKit_Extension.ComplicationController;
+				INFOPLIST_FILE = "Podest WatchKit Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Podest WatchKit Extension";
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1029,19 +769,19 @@
 			};
 			name = Debug;
 		};
-		4C43DD6B278B4EF000C7D269 /* Release */ = {
+		4CA1673A27933A570007248A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Watch WatchKit Extension/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Podest WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Watch WatchKit Extension/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Watch WatchKit Extension";
-				INFOPLIST_KEY_CLKComplicationPrincipalClass = Watch_WatchKit_Extension.ComplicationController;
+				INFOPLIST_FILE = "Podest WatchKit Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Podest WatchKit Extension";
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1062,7 +802,7 @@
 			};
 			name = Release;
 		};
-		4C43DD6E278B4EF000C7D269 /* Debug */ = {
+		4CA1673D27933A570007248A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -1072,8 +812,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				GENERATE_INFOPLIST_FILE = YES;
-				IBSC_MODULE = Watch_WatchKit_Extension;
-				INFOPLIST_KEY_CFBundleDisplayName = Watch;
+				IBSC_MODULE = Podest_WatchKit_Extension;
+				INFOPLIST_KEY_CFBundleDisplayName = "Podest WatchKit App";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = ink.codes.Podest;
 				MARKETING_VERSION = 1.0;
@@ -1088,7 +828,7 @@
 			};
 			name = Debug;
 		};
-		4C43DD6F278B4EF000C7D269 /* Release */ = {
+		4CA1673E27933A570007248A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -1098,8 +838,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				GENERATE_INFOPLIST_FILE = YES;
-				IBSC_MODULE = Watch_WatchKit_Extension;
-				INFOPLIST_KEY_CFBundleDisplayName = Watch;
+				IBSC_MODULE = Podest_WatchKit_Extension;
+				INFOPLIST_KEY_CFBundleDisplayName = "Podest WatchKit App";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = ink.codes.Podest;
 				MARKETING_VERSION = 1.0;
@@ -1115,7 +855,154 @@
 			};
 			name = Release;
 		};
-		4C43DD72278B4EF000C7D269 /* Debug */ = {
+		4CA1674127933A570007248A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Podest/Preview Content\"";
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4CA1674227933A570007248A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Podest/Preview Content\"";
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4CA1674427933A570007248A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.PodestTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Podest.app/Podest";
+			};
+			name = Debug;
+		};
+		4CA1674527933A570007248A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.PodestTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Podest.app/Podest";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4CA1674727933A570007248A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.PodestUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Podest;
+			};
+			name = Debug;
+		};
+		4CA1674827933A570007248A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = X23V32HT8X;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.PodestUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Podest;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4CA1674A27933A570007248A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -1125,18 +1012,18 @@
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest.WatchTests;
+				PRODUCT_BUNDLE_IDENTIFIER = "ink.codes.Podest-WatchKit-AppTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Watch WatchKit Extension.appex/Watch WatchKit Extension";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Podest WatchKit Extension.appex/Podest WatchKit Extension";
 				WATCHOS_DEPLOYMENT_TARGET = 8.3;
 			};
 			name = Debug;
 		};
-		4C43DD73278B4EF000C7D269 /* Release */ = {
+		4CA1674B27933A570007248A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -1146,19 +1033,19 @@
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest.WatchTests;
+				PRODUCT_BUNDLE_IDENTIFIER = "ink.codes.Podest-WatchKit-AppTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Watch WatchKit Extension.appex/Watch WatchKit Extension";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Podest WatchKit Extension.appex/Podest WatchKit Extension";
 				VALIDATE_PRODUCT = YES;
 				WATCHOS_DEPLOYMENT_TARGET = 8.3;
 			};
 			name = Release;
 		};
-		4C43DD75278B4EF000C7D269 /* Debug */ = {
+		4CA1674D27933A570007248A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -1166,18 +1053,18 @@
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest.WatchUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = "ink.codes.Podest-WatchKit-AppUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				TEST_TARGET_NAME = Watch;
+				TEST_TARGET_NAME = "Podest WatchKit App";
 				WATCHOS_DEPLOYMENT_TARGET = 8.3;
 			};
 			name = Debug;
 		};
-		4C43DD76278B4EF000C7D269 /* Release */ = {
+		4CA1674E27933A570007248A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -1185,13 +1072,13 @@
 				DEVELOPMENT_TEAM = X23V32HT8X;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ink.codes.Podest.WatchUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = "ink.codes.Podest-WatchKit-AppUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				TEST_TARGET_NAME = Watch;
+				TEST_TARGET_NAME = "Podest WatchKit App";
 				VALIDATE_PRODUCT = YES;
 				WATCHOS_DEPLOYMENT_TARGET = 8.3;
 			};
@@ -1200,101 +1087,79 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4C43DCEB278B4ECB00C7D269 /* Build configuration list for PBXProject "Podest" */ = {
+		4CA166D627933A550007248A /* Build configuration list for PBXProject "Podest" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4C43DD22278B4ECC00C7D269 /* Debug */,
-				4C43DD23278B4ECC00C7D269 /* Release */,
+				4CA1673627933A570007248A /* Debug */,
+				4CA1673727933A570007248A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4C43DD24278B4ECC00C7D269 /* Build configuration list for PBXNativeTarget "Podest (iOS)" */ = {
+		4CA1673827933A570007248A /* Build configuration list for PBXNativeTarget "Podest WatchKit Extension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4C43DD25278B4ECC00C7D269 /* Debug */,
-				4C43DD26278B4ECC00C7D269 /* Release */,
+				4CA1673927933A570007248A /* Debug */,
+				4CA1673A27933A570007248A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4C43DD27278B4ECC00C7D269 /* Build configuration list for PBXNativeTarget "Podest (macOS)" */ = {
+		4CA1673C27933A570007248A /* Build configuration list for PBXNativeTarget "Podest WatchKit App" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4C43DD28278B4ECC00C7D269 /* Debug */,
-				4C43DD29278B4ECC00C7D269 /* Release */,
+				4CA1673D27933A570007248A /* Debug */,
+				4CA1673E27933A570007248A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4C43DD2A278B4ECC00C7D269 /* Build configuration list for PBXNativeTarget "Tests iOS" */ = {
+		4CA1674027933A570007248A /* Build configuration list for PBXNativeTarget "Podest" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4C43DD2B278B4ECC00C7D269 /* Debug */,
-				4C43DD2C278B4ECC00C7D269 /* Release */,
+				4CA1674127933A570007248A /* Debug */,
+				4CA1674227933A570007248A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4C43DD2D278B4ECC00C7D269 /* Build configuration list for PBXNativeTarget "Tests macOS" */ = {
+		4CA1674327933A570007248A /* Build configuration list for PBXNativeTarget "PodestTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4C43DD2E278B4ECC00C7D269 /* Debug */,
-				4C43DD2F278B4ECC00C7D269 /* Release */,
+				4CA1674427933A570007248A /* Debug */,
+				4CA1674527933A570007248A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4C43DD69278B4EF000C7D269 /* Build configuration list for PBXNativeTarget "Watch WatchKit Extension" */ = {
+		4CA1674627933A570007248A /* Build configuration list for PBXNativeTarget "PodestUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4C43DD6A278B4EF000C7D269 /* Debug */,
-				4C43DD6B278B4EF000C7D269 /* Release */,
+				4CA1674727933A570007248A /* Debug */,
+				4CA1674827933A570007248A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4C43DD6D278B4EF000C7D269 /* Build configuration list for PBXNativeTarget "Watch" */ = {
+		4CA1674927933A570007248A /* Build configuration list for PBXNativeTarget "Podest WatchKit AppTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4C43DD6E278B4EF000C7D269 /* Debug */,
-				4C43DD6F278B4EF000C7D269 /* Release */,
+				4CA1674A27933A570007248A /* Debug */,
+				4CA1674B27933A570007248A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4C43DD71278B4EF000C7D269 /* Build configuration list for PBXNativeTarget "WatchTests" */ = {
+		4CA1674C27933A570007248A /* Build configuration list for PBXNativeTarget "Podest WatchKit AppUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4C43DD72278B4EF000C7D269 /* Debug */,
-				4C43DD73278B4EF000C7D269 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4C43DD74278B4EF000C7D269 /* Build configuration list for PBXNativeTarget "WatchUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4C43DD75278B4EF000C7D269 /* Debug */,
-				4C43DD76278B4EF000C7D269 /* Release */,
+				4CA1674D27933A570007248A /* Debug */,
+				4CA1674E27933A570007248A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		4C43DCED278B4ECB00C7D269 /* Podest.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				4C43DCEE278B4ECB00C7D269 /* Shared.xcdatamodel */,
-			);
-			currentVersion = 4C43DCEE278B4ECB00C7D269 /* Shared.xcdatamodel */;
-			path = Podest.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
-	rootObject = 4C43DCE8278B4ECB00C7D269 /* Project object */;
+	rootObject = 4CA166D327933A550007248A /* Project object */;
 }
