@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Podium">
+   </FileRef>
+   <FileRef
       location = "group:Podest/Podest.xcodeproj">
    </FileRef>
 </Workspace>

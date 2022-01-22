@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C0CEC46279C1AF700FB3D42 /* QueueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0CEC45279C1AF700FB3D42 /* QueueModel.swift */; };
+		4C0CEC48279C1BD100FB3D42 /* QueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0CEC47279C1BD100FB3D42 /* QueueView.swift */; };
+		4C0CEC4B279C20F200FB3D42 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0CEC4A279C20F200FB3D42 /* SearchView.swift */; };
+		4C0CEC4F279C6C9400FB3D42 /* QueueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0CEC45279C1AF700FB3D42 /* QueueModel.swift */; };
+		4C0CEC50279C6CA200FB3D42 /* QueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0CEC47279C1BD100FB3D42 /* QueueView.swift */; };
+		4C0CEC51279C6CA200FB3D42 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0CEC4A279C20F200FB3D42 /* SearchView.swift */; };
+		4C0CEC54279C6F3800FB3D42 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0CEC53279C6F3800FB3D42 /* ContentView.swift */; };
 		4CA166DF27933A550007248A /* PodestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA166DE27933A550007248A /* PodestApp.swift */; };
 		4CA166E127933A550007248A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA166E027933A550007248A /* ContentView.swift */; };
 		4CA166E327933A560007248A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4CA166E227933A560007248A /* Assets.xcassets */; };
@@ -18,7 +25,6 @@
 		4CA1670527933A560007248A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4CA1670427933A560007248A /* Assets.xcassets */; };
 		4CA1670B27933A560007248A /* Podest WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4CA1670A27933A560007248A /* Podest WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4CA1671027933A560007248A /* PodestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1670F27933A560007248A /* PodestApp.swift */; };
-		4CA1671227933A560007248A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1671127933A560007248A /* ContentView.swift */; };
 		4CA1671427933A560007248A /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1671327933A560007248A /* NotificationController.swift */; };
 		4CA1671627933A560007248A /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1671527933A560007248A /* NotificationView.swift */; };
 		4CA1671827933A560007248A /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1671727933A560007248A /* ComplicationController.swift */; };
@@ -100,6 +106,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4C0CEC45279C1AF700FB3D42 /* QueueModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueModel.swift; sourceTree = "<group>"; };
+		4C0CEC47279C1BD100FB3D42 /* QueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueView.swift; sourceTree = "<group>"; };
+		4C0CEC4A279C20F200FB3D42 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		4C0CEC53279C6F3800FB3D42 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4CA166DB27933A550007248A /* Podest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Podest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CA166DE27933A550007248A /* PodestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodestApp.swift; sourceTree = "<group>"; };
 		4CA166E027933A550007248A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -114,7 +124,6 @@
 		4CA1670427933A560007248A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4CA1670A27933A560007248A /* Podest WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Podest WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CA1670F27933A560007248A /* PodestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodestApp.swift; sourceTree = "<group>"; };
-		4CA1671127933A560007248A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4CA1671327933A560007248A /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		4CA1671527933A560007248A /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		4CA1671727933A560007248A /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
@@ -175,9 +184,44 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4C0CEC49279C20AB00FB3D42 /* Queue */ = {
+			isa = PBXGroup;
+			children = (
+				4C0CEC45279C1AF700FB3D42 /* QueueModel.swift */,
+				4C0CEC47279C1BD100FB3D42 /* QueueView.swift */,
+			);
+			path = Queue;
+			sourceTree = "<group>";
+		};
+		4C0CEC4C279C215600FB3D42 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				4C0CEC4A279C20F200FB3D42 /* SearchView.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		4C0CEC4D279C217E00FB3D42 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				4C0CEC49279C20AB00FB3D42 /* Queue */,
+				4C0CEC4C279C215600FB3D42 /* Search */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		4C0CEC4E279C6C5100FB3D42 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				4C0CEC4D279C217E00FB3D42 /* Modules */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		4CA166D227933A550007248A = {
 			isa = PBXGroup;
 			children = (
+				4C0CEC4E279C6C5100FB3D42 /* Shared */,
 				4CA166DD27933A550007248A /* Podest */,
 				4CA166EE27933A560007248A /* PodestTests */,
 				4CA166F827933A560007248A /* PodestUITests */,
@@ -251,7 +295,7 @@
 			isa = PBXGroup;
 			children = (
 				4CA1670F27933A560007248A /* PodestApp.swift */,
-				4CA1671127933A560007248A /* ContentView.swift */,
+				4C0CEC53279C6F3800FB3D42 /* ContentView.swift */,
 				4CA1671327933A560007248A /* NotificationController.swift */,
 				4CA1671527933A560007248A /* NotificationView.swift */,
 				4CA1671727933A560007248A /* ComplicationController.swift */,
@@ -539,8 +583,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C0CEC4B279C20F200FB3D42 /* SearchView.swift in Sources */,
 				4CA166E127933A550007248A /* ContentView.swift in Sources */,
 				4CA166DF27933A550007248A /* PodestApp.swift in Sources */,
+				4C0CEC48279C1BD100FB3D42 /* QueueView.swift in Sources */,
+				4C0CEC46279C1AF700FB3D42 /* QueueModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -566,10 +613,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				4CA1671427933A560007248A /* NotificationController.swift in Sources */,
-				4CA1671227933A560007248A /* ContentView.swift in Sources */,
 				4CA1671827933A560007248A /* ComplicationController.swift in Sources */,
+				4C0CEC54279C6F3800FB3D42 /* ContentView.swift in Sources */,
 				4CA1671027933A560007248A /* PodestApp.swift in Sources */,
+				4C0CEC51279C6CA200FB3D42 /* SearchView.swift in Sources */,
 				4CA1671627933A560007248A /* NotificationView.swift in Sources */,
+				4C0CEC4F279C6C9400FB3D42 /* QueueModel.swift in Sources */,
+				4C0CEC50279C6CA200FB3D42 /* QueueView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
