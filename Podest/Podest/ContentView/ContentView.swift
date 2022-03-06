@@ -11,21 +11,26 @@
 
 import SwiftUI
 
-enum Mode: String {
-  case main
-  case onboarding
-  
-  static let start: Self = .onboarding
-  static let key = "ContentView.selectedMode"
+struct ContentView: View {
+  @Environment(\.scenePhase) private var scenePhase
+  @AppStorage(Mode.key) private var selectedMode = Mode.start
+
+  var body: some View {
+    switch selectedMode {
+    case .main:
+      MainView()
+   
+    case .onboarding:
+      OnboardingView()
+        .ignoresSafeArea()
+    }
+  }
 }
 
-@main
-struct PodestApp: App {
-  @AppStorage(Mode.key) private var selectedMode = Mode.start
-  
-  var body: some Scene {
-    WindowGroup {
-      ContentView()
-    }
+struct ContentView_Previews: PreviewProvider {
+  static var previews: some View {
+    ContentView()
+      .preferredColorScheme(.dark)
+      .previewInterfaceOrientation(.landscapeLeft)
   }
 }

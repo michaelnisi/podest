@@ -11,21 +11,20 @@
 
 import SwiftUI
 
-enum Mode: String {
-  case main
-  case onboarding
+struct MainView: View {
+  @Environment(\.horizontalSizeClass) var horizontalSizeClass
   
-  static let start: Self = .onboarding
-  static let key = "ContentView.selectedMode"
+  var body: some View {
+    if horizontalSizeClass == .compact {
+      TabContainer()
+    } else {
+      QueueContainer()
+    }
+  }
 }
 
-@main
-struct PodestApp: App {
-  @AppStorage(Mode.key) private var selectedMode = Mode.start
-  
-  var body: some Scene {
-    WindowGroup {
-      ContentView()
-    }
+struct MainView_Previews: PreviewProvider {
+  static var previews: some View {
+    MainView()
   }
 }

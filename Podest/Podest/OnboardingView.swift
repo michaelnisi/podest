@@ -11,21 +11,22 @@
 
 import SwiftUI
 
-enum Mode: String {
-  case main
-  case onboarding
-  
-  static let start: Self = .onboarding
-  static let key = "ContentView.selectedMode"
-}
-
-@main
-struct PodestApp: App {
+struct OnboardingView: View {
   @AppStorage(Mode.key) private var selectedMode = Mode.start
   
-  var body: some Scene {
-    WindowGroup {
-      ContentView()
+  var body: some View {
+    VStack {
+      Button("Start") {
+        selectedMode = .main
+      }
     }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(Color.yellow)
   }
+}
+
+struct OnboardingView_Previews: PreviewProvider {
+    static var previews: some View {
+        OnboardingView()
+    }
 }

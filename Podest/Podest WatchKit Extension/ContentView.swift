@@ -13,33 +13,35 @@ struct ContentView: View {
   @EnvironmentObject var queueModel: QueueModel
   
   enum Tab: String {
-      case queue
-      case search
+    case queue
+    case search
   }
   
   var body: some View {
     TabView(selection: $selectedTab) {
-      NavigationView {
-        QueueView()
-          .navigationTitle("Queue")
-      }
-      .navigationViewStyle(.stack)
-      .tabItem {
-        Image(systemName: "list.bullet.circle.fill")
-        Text("Queue")
-      }
-      .tag(Tab.queue)
+
       
       NavigationView {
         SearchView()
           .navigationTitle("Discover")
+          .navigationBarTitleDisplayMode(.inline)
       }
       .navigationViewStyle(.stack)
       .tabItem {
         Image(systemName: "magnifyingglass.circle.fill")
-        Text("Search")
       }
       .tag(Tab.search)
+      
+      NavigationView {
+        QueueView()
+          .navigationTitle("Queue")
+          .navigationBarTitleDisplayMode(.inline)
+      }
+      .navigationViewStyle(.stack)
+      .tabItem {
+        Image(systemName: "list.bullet.circle.fill")
+      }
+      .tag(Tab.queue)
     }
     .onChange(of: scenePhase) { newScenePhase in
       if newScenePhase == .background {

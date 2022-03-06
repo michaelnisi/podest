@@ -1,9 +1,13 @@
+//===----------------------------------------------------------------------===//
 //
-//  QueueModel.swift
-//  Podest
+// This source file is part of the Podest open source project
 //
-//  Created by Michael Nisi on 22.01.22.
+// Copyright (c) 2022 Michael Nisi and collaborators
+// Licensed under MIT License
 //
+// See https://github.com/michaelnisi/podest/blob/main/LICENSE for license information
+//
+//===----------------------------------------------------------------------===//
 
 import Foundation
 

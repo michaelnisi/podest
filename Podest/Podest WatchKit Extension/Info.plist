@@ -7,7 +7,7 @@
 		<key>NSExtensionAttributes</key>
 		<dict>
 			<key>WKAppBundleIdentifier</key>
-			<string>ink.codes.Podest.watchkitapp</string>
+			<string>$(APP_BUNDLE_ID).watchkitapp</string>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.watchkit</string>
