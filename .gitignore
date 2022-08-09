@@ -23,6 +23,7 @@ xcuserdata
 */config.json
 */products.json
 .env
+Podest/Configuration/DeveloperSettings.xcconfig
 
 # Fastlane
 
