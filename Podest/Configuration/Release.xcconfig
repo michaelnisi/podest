@@ -12,6 +12,6 @@
 // Configuration settings file format documentation can be found at:
 // https://help.apple.com/xcode/#/dev745c5c974
 
-APP_BUNDLE_ID = ink.codes.Podest
-
 #include? "DeveloperSettings.xcconfig"
+
+APP_BUNDLE_ID = $(ORGANIZATION_IDENTIFIER).Podest
